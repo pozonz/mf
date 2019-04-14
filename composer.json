@@ -1,18 +1,18 @@
 {
-    "name": "pozoltd/millennium-falcon",
-    "description": "CMS",
-    "type": "symfony-bundle",
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "Weida Xue",
-            "email": "weida@gravitate.co.nz"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "MillenniumFalcon\\" : ""
-        },
-    },
-    "require": {}
+  "name": "pozoltd/millennium-falcon",
+  "description": "CMS",
+  "type": "symfony-bundle",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Weida Xue",
+      "email": "weida@gravitate.co.nz"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "MillenniumFalcon\\": ""
+    }
+  }
 }
