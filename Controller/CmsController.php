@@ -1,6 +1,6 @@
 <?php
 
-namespace Tatooine\Controller;
+namespace MillenniumFalcon\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
