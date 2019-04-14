@@ -9,5 +9,10 @@
             "email": "weida@gravitate.co.nz"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "MillenniumFalcon\\" : ""
+        },
+    },
     "require": {}
 }
