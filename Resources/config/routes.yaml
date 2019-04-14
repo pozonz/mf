@@ -1,3 +1,7 @@
+install:
+  resource: "../../Installation"
+  type: annotation
+
 cms:
   resource: "../../Controller"
   type: annotation
