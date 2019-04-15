@@ -1,0 +1,20 @@
+{
+    "id": "5",
+    "uniqid": "5be656306e2d8",
+    "slug": "page-templates",
+    "rank": "4",
+    "added": "2018-09-04 20:38:56",
+    "modified": "2019-01-02 17:10:02",
+    "status": "1",
+    "title": "Page Templates",
+    "className": "PageTemplate",
+    "namespace": "Pz\\Orm",
+    "modelType": 1,
+    "dataType": 1,
+    "dataGroups": null,
+    "listType": 0,
+    "numberPerPage": "50",
+    "defaultSortBy": "id",
+    "defaultOrder": 1,
+    "columnsJson": "[{\"id\":\"z1536050309787\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1536050322375\",\"column\":\"name\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"File name:\",\"field\":\"filename\",\"required\":0,\"sql\":\"\"}]"
+}

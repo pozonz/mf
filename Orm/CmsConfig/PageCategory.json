@@ -1,0 +1,20 @@
+{
+    "id": "4",
+    "uniqid": "5b90ab3526483",
+    "slug": "page-categories",
+    "rank": "3",
+    "added": "2018-09-04 20:38:13",
+    "modified": "2019-01-02 17:25:01",
+    "status": "1",
+    "title": "Page Categories",
+    "className": "PageCategory",
+    "namespace": "Pz\\Orm",
+    "modelType": 1,
+    "dataType": 1,
+    "dataGroups": null,
+    "listType": 0,
+    "numberPerPage": "50",
+    "defaultSortBy": "id",
+    "defaultOrder": 1,
+    "columnsJson": "[{\"id\":\"z1536050259442\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1536050277193\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Code:\",\"field\":\"code\",\"required\":0,\"sql\":\"\"}]"
+}

@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core;
 
 use Cocur\Slugify\Slugify;
+use MillenniumFalcon\Orm\_Model;
 
 abstract class Orm implements \JsonSerializable
 {
@@ -537,7 +538,7 @@ abstract class Orm implements \JsonSerializable
     public static function getEncodedModel()
     {
         $rc = static::getReflectionClass();
-        return file_get_contents(dirname($rc->getFileName()) . '/Generated/ModelJson/' . $rc->getShortName() . '.json');
+        return file_get_contents(dirname($rc->getFileName()) . '/CmsConfig/' . $rc->getShortName() . '.json');
     }
 
     /**

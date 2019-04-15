@@ -1,0 +1,20 @@
+{
+    "id": "2",
+    "uniqid": "5b90bd994e802",
+    "slug": "assets",
+    "rank": "1",
+    "added": "2018-09-03 19:42:12",
+    "modified": "2019-01-02 17:25:01",
+    "status": "1",
+    "title": "Assets",
+    "className": "Asset",
+    "namespace": "Pz\\Orm",
+    "modelType": 1,
+    "dataType": 2,
+    "dataGroups": null,
+    "listType": 2,
+    "numberPerPage": "50",
+    "defaultSortBy": "id",
+    "defaultOrder": 1,
+    "columnsJson": "[{\"id\":\"z1535960350583\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"sql\":\"\"},{\"id\":\"z1535960414591\",\"column\":\"description\",\"widget\":\"\\\\Pz\\\\Form\\\\Type\\\\AssetPicker\",\"label\":\"Description:\",\"field\":\"description\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1535960420704\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\HiddenType\",\"label\":\"Is folder?\",\"field\":\"isFolder\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1535960424545\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"File name:\",\"field\":\"fileName\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1535960428311\",\"column\":\"extra4\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"File type:\",\"field\":\"fileType\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1535960430473\",\"column\":\"extra5\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"File size:\",\"field\":\"fileSize\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1535960433312\",\"column\":\"extra6\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"File location:\",\"field\":\"fileLocation\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1537346809051\",\"column\":\"extra3\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\HiddenType\",\"label\":\"Parent:\",\"field\":\"parentId\",\"required\":0,\"sql\":\"\"}]"
+}
