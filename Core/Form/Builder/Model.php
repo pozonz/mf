@@ -27,24 +27,28 @@ class Model extends AbstractType
         $defaultSortByOptions = isset($options['defaultSortByOptions']) ? $options['defaultSortByOptions'] : array();
         $dataGroups = isset($options['dataGroups']) ? $options['dataGroups'] : array();
 
-        $builder->add('title', TextType::class, array(
+        $builder
+            ->add('title', TextType::class, array(
             'label' => 'Name:',
             'constraints' => array(
                 new Assert\NotBlank()
             )
-        ))->add('className', TextType::class, array(
+        ))
+            ->add('className', TextType::class, array(
             'label' => 'Class Name:',
             'constraints' => array(
                 new Assert\NotBlank()
             )
-        ))->add('modelType', ChoiceType::class, array(
+        ))
+            ->add('modelType', ChoiceType::class, array(
             'label' => 'Model Type:',
             'expanded' => true,
             'choices' => array(
                 'Customised' => 0,
                 'Built in' => 1,
             )
-        ))->add('dataType', ChoiceType::class, array(
+        ))
+            ->add('dataType', ChoiceType::class, array(
             'label' => 'Data Type:',
             'expanded' => true,
             'choices' => array(
@@ -52,7 +56,8 @@ class Model extends AbstractType
                 'User' => 0,
                 'None' => 2,
             )
-        ))->add('listType', ChoiceType::class, array(
+        ))
+            ->add('listType', ChoiceType::class, array(
             'label' => 'Listing Type:',
             'expanded' => true,
             'choices' => array(
@@ -60,22 +65,27 @@ class Model extends AbstractType
                 'Pagination' => 1,
                 'Tree' => 2,
             )
-        ))->add('dataGroups', ChoiceMultiJson::class, array(
-            'label' => 'Data Groups:',
-            'choices' => $dataGroups,
-        ))->add('numberPerPage', TextType::class, array(
+        ))
+//            ->add('dataGroups', ChoiceMultiJson::class, array(
+//            'label' => 'Data Groups:',
+//            'choices' => $dataGroups,
+//        ))
+            ->add('numberPerPage', TextType::class, array(
             'label' => 'Page Size:',
-        ))->add('defaultSortBy', ChoiceType::class, array(
+        ))
+            ->add('defaultSortBy', ChoiceType::class, array(
             'label' => 'Sort:',
             'choices' => $defaultSortByOptions,
-        ))->add('defaultOrder', ChoiceType::class, array(
+        ))
+            ->add('defaultOrder', ChoiceType::class, array(
             'label' => 'Order:',
             'expanded' => true,
             'choices' => array(
                 'ASC' => 0,
                 'DESC' => 1,
             )
-        ))->add('columnsJson', TextareaType::class);
+        ))
+            ->add('columnsJson', TextareaType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
