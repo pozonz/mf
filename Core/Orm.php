@@ -3,7 +3,7 @@
 namespace MillenniumFalcon\Core;
 
 use Cocur\Slugify\Slugify;
-use MillenniumFalcon\Orm\_Model;
+use MillenniumFalcon\Core\Orm\_Model;
 
 abstract class Orm implements \JsonSerializable
 {

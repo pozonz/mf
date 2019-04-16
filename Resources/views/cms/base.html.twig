@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="author" content="Gravitate - www.gravitate.co.nz">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE"/>
+    <meta http-equiv="EXPIRES" content="Mon, 22 Jul 2002 11:12:01 GMT"/>
+    <meta http-equiv="PRAGMA" content="NO-CACHE"/>
+    <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+
+    <title>CMS</title>
+
+    <link href="/cms/css/styles.css?v=20180702" rel="stylesheet" type="text/css"/>
+    <link href="/cms/css/dropzone.css" rel="stylesheet" type="text/css"/>
+    <link href="/cms/css/jquery.Jcrop.css" rel="stylesheet" type="text/css"/>
+    <link href="/cms/css/originate.form.builder.css" rel="stylesheet" type="text/css" media="screen"/>
+
+    {#<script src="/cms/js/handlebars-v1.3.0.js" language="javascript"></script>#}
+    {#<script src="/cms/js/redactor.js?v=5" language="javascript"></script>#}
+    {#<script src="/cms/js/imageedit.redactor.js" language="javascript"></script>#}
+    {#<script src="/cms/js/filepicker.redactor.js" language="javascript"></script>#}
+    {#<script src="/cms/js/insertfile.redactor.js?v=1" language="javascript"></script>#}
+    {#<script src="/cms/js/originate.js?v=1" language="javascript"></script>#}
+    {#<script src="/cms/js/jquery.Jcrop.js" language="javascript"></script>#}
+    {#<script src="/cms/js/cms.js" language="javascript"></script>#}
+    {#<script src="/cms/js/mkvp.js" language="javascript"></script>#}
+    {#<script src="/cms/js/mkvvp.js" language="javascript"></script>#}
+    {#<script src="/cms/js/jquery.datetimepicker.full.js"></script>#}
+    {#<script src="/cms/js/jquery.json-2.4.min.js" language="javascript"></script>#}
+    {#<script src="/cms/js/originate.form.builder.js?20180622" language="javascript"></script>#}
+    {#<script src="/cms/js/dropzone.js" language="javascript"></script>#}
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" language="javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js" language="javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js" language="javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" type="text/css" media="screen"/>
+
+    <style>
+        .toggle-icon {
+            background: url("/cms/images/icon-nestable-active.png") no-repeat scroll center center #fff;
+            width: 20px;
+            height: 25px;
+            position: absolute;
+            right: 1em;
+        }
+        .toggle-icon:focus,.toggle-icon:hover {
+            background-repeat: no-repeat;
+            background-color: #fff;
+        }
+        .toggle-icon.selected {
+            background: url("/cms/images/icon-nestable.png") no-repeat scroll center center #fff;
+        }
+        .subcategory {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .selected a {
+            color: darkblue;
+        }
+    </style>
+    <script>
+        $(function() {
+            $('.toggle-icon').click(function(ev) {
+                ev.preventDefault();
+                $(this).toggleClass('selected');
+                if ($(this).hasClass('selected')) {
+                    $('[data-source=' + $(this).attr('data-target') + ']').slideDown(150);
+                } else {
+                    $('[data-source=' + $(this).attr('data-target') + ']').slideUp(150);
+                }
+            });
+        });
+    </script>
+</head>
+
+
+<body>
+<!--[if lt IE 10]>
+<p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+
+<div class="header" id="headContainer">
+    <div id="head">
+        <a class="logo" href="/" target="_blank" title="View my site &rsaquo;"></a>
+    </div>
+</div>
+
+
+<div id="menuContainer">
+    <div id="menuTop">
+        <ul class="menuTop">
+            <li><a href="./index.php?viewModeSent=0&amp;fileNo=13">Home</a></li>
+            <li><a href="./index.php?viewModeSent=0&amp;fileNo=17">Contact</a></li>
+            <li><a href="./index.php?viewModeSent=0&amp;fileNo=14">Change Password</a></li>
+            <li><a href="./index.php?viewModeSent=0&amp;fileNo=18">Help</a></li>
+            <li><a href="./cmsLogout.php">Logout</a></li>
+        </ul>
+
+        <ul id="viewModes" class="icon">
+            {% for itm in root.children %}
+                <li id="{{ itm.icon }}" {% if itm.contains(node) %}class="selected"{% endif %}>
+                    <a href="{{ itm.url }}"> <span>{{ itm.title }}</span> </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div id="contentContainer">
+
+    <div id="maincontent">
+
+
+        <div id="verticalMenu">
+            <div id="cms_sidebarIndex">
+                <ul class="verticalMenu">
+                    {% for itm in node.topAncestor(root).children %}
+                        {% if itm.url %}
+                            <li {% if itm.contains(node) %}class="selected"{% endif %}>
+                                <div>
+                                    <a href="{{ itm.url }}">{{ itm.title }}</a>
+                                </div>
+                            </li>
+                        {% else %}
+                            {% if loop.index > 1 %}
+                                </ul>
+                                <ul class="verticalMenu">
+                            {% endif %}
+                            <li class="menuHeading">{{ itm.title }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        {% block container %}
+            <div id="bodyContent">
+                <div id="h1">
+                    <h1>Millennium Falcon CMS</h1>
+                </div>
+                <p>The Millennium Falcon CMS allows you to update content on your website.</p>
+                <p>Use the menu to the left to navigate to the correct page or record. Where appropriate, navigation links to sub-pages will open out when you click on a menu item.</p>
+            </div>
+        {% endblock %}
+    </div>
+</div>
+
+</body>
+</html>

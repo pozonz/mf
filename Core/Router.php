@@ -4,11 +4,11 @@ namespace MillenniumFalcon\Core;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Nestable\Tree;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class Router extends AbstractController
+abstract class Router extends Controller
 {
     /**
      * @var Tree
@@ -31,10 +31,7 @@ abstract class Router extends AbstractController
     {
         $fragments = explode('/', trim($requestUri, '/'));
         $args = array();
-        $node = $this->tree->getNodeByUrl($requestUri . '/');
-        if (!$node) {
-            $node = $this->tree->getNodeByUrl($requestUri);
-        }
+        $node = $this->tree->getNodeByUrl($requestUri);
         if (!$node) {
             for ($i = count($fragments), $il = 0; $i > $il; $i--) {
                 $parts = array_slice($fragments, 0, $i);

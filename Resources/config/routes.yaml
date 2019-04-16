@@ -1,5 +1,5 @@
 install:
-  resource: "../../Installation"
+  resource: "../../Core/Installation"
   type: annotation
 
 cms:

@@ -1,0 +1,47 @@
+{% extends 'cms/base.html.twig' %}
+
+{% set modelType = fragments|last == 'customised' ? 0 : 1 %}
+{% set models = model.data('_Model',{whereSql:'m.modelType=?',params:[modelType]}) %}
+
+{% block extraHeaderLeft %}
+    <h2>Manage <label class="label label-warning-light">{{ modelType ? 'Built-in' : 'Customised' }} Models</label></h2>
+{% endblock %}
+
+{% block container %}
+    <div id="bodyContent">
+        <div id="h1">
+            <h1>Models</h1>
+            <a class="addForm button" href="/cms/html/index.php?fileNo=27">Add new model ›</a>
+        </div>
+
+        <table class="contentListTable ui-sortable">
+            <tbody>
+                <td class="tableHead" width="180px">Class</td>
+                <td class="tableHead">Name</td>
+                <td class="tableHead" width="120px">Type</td>
+                <td class="tableHead col5" width="180px" align="right">Action</td>
+            </tbody>
+            <tbody>
+                {% for itm in models %}
+                    <tr id="{{ itm.id }}" class="content-container">
+                        <td>{{ itm.className }}</td>
+                        <td>{{ itm.title }}</td>
+                        <td>
+                            {% if itm.modelType == 1 %}
+                                Built in
+                            {% elseif itm.modelType == 2 %}
+                                Customised
+                            {% endif %}
+                        </td>
+                        <td class="iconCell" align="right">
+                            <a href="#" class="approve" rel="on" data-formid="402" id="approve_2854"><img src="/cms/images/dotGreen.gif" alt="" border="0"></a>
+                            <a href="/manage/admin/model-builder/{{ itm.id }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
+                            <a href=""><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
+                            <a href=""><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -184,4 +184,18 @@ trait NodeExtraTrait
         }
         return $result;
     }
+
+    /**
+     * @param Node $root
+     * @return mixed
+     */
+    public function getTopAncestor(Node $root)
+    {
+        foreach ($root->getChildren() as $child) {
+            if ($child->contains($this) || $child->getId() == $this->getId()) {
+                return $child;
+            }
+        }
+        return null;
+    }
 }
