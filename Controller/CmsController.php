@@ -49,7 +49,7 @@ class CmsController extends Router
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($orm->getModelType() == 0) {
-                $orm->setNamespace('Web\\Orm');
+                $orm->setNamespace('App\\Orm');
             } else {
                 $orm->setNamespace('MillenniumFalcon\\Core\\Orm');
             }
@@ -180,7 +180,7 @@ EOD;
         $str = str_replace('{fields}', join("\n", $fields), $str);
         $str = str_replace('{methods}', join("\n", $methods), $str);
 
-        $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/Web/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/Generated/';
+        $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/Generated/';
 
         $file = $path . '../CmsConfig/' . $orm->getClassName() . '.json';
         $dir = dirname($file);
@@ -202,7 +202,7 @@ EOD;
      */
     private function setCustomFile(_Model $orm)
     {
-        $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/Web/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/';
+        $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/';
 
         if ($orm->getModelType() == 1) {
             $file = $path . 'Traits/' . $orm->getClassName() . 'Trait.php';
