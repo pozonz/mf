@@ -8,6 +8,7 @@ use MillenniumFalcon\Core\Form\Builder\Model;
 use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Orm\DataGroup;
+use MillenniumFalcon\Core\Redirect\RedirectException;
 use MillenniumFalcon\Core\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -55,19 +56,13 @@ class CmsController extends Router
 
 //            $orm->setRank($orm->getId() - 1);
 //            $orm->save();
-//
-//            $baseUrl = "/pz/admin/models/" . ($orm->getModelType() == 0 ? 'customised' : 'built-in');
-//            $redirectUrl = "$baseUrl/sync/{$orm->getId()}?returnUrl=";
-//            if ($request->get('submit') == 'Apply') {
-//                $url = $request->getPathInfo();
-//                $url = rtrim($url, '/');
-//                if (count(explode('/', $url)) < 7) {
-//                    $url .= '/' . $orm->getId();
-//                }
-//                throw new RedirectException($redirectUrl . urlencode($url), 301);
-//            } else if ($request->get('submit') == 'Save') {
-//                throw new RedirectException($redirectUrl . urlencode($baseUrl), 301);
-//            }
+
+            $baseUrl = '/manage/admin/model-builder';
+            if ($request->get('submit') == 'Apply') {
+                throw new RedirectException($baseUrl . '/' . $orm->getId(), 301);
+            } else if ($request->get('submit') == 'Save') {
+                throw new RedirectException($baseUrl, 301);
+            }
         }
 
         $params['orm'] = $orm;
@@ -201,7 +196,7 @@ EOD;
         $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/Web/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/';
 
         if ($orm->getModelType() == 1) {
-            $file = $path . 'Trait/' . $orm->getClassName() . 'Trait.php';
+            $file = $path . 'Traits/' . $orm->getClassName() . 'Trait.php';
             if (!file_exists($file)) {
                 $str = file_get_contents($this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/orm_custom_trait.txt');
                 $str = str_replace('{time}', date('Y-m-d H:i:s'), $str);

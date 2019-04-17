@@ -2,6 +2,6 @@
 //Last updated: {time}
 namespace {namespace}\OrmTrait;
 
-trait Trait{classname}
+trait {classname}Trait
 {
 }
