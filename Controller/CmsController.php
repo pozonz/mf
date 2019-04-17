@@ -19,7 +19,7 @@ class CmsController extends Router
      * @route("/manage/admin/model-builder/{ormId}")
      * @return Response
      */
-    public function model($ormId)
+    public function model($ormId = null)
     {
         $params = $this->prepareParams();
         
@@ -28,6 +28,9 @@ class CmsController extends Router
         $pdo = $connection->getWrappedConnection();
 
         $orm = _Model::getById($pdo, $ormId);
+        if (!$orm) {
+            $orm = new _Model($pdo);
+        }
 
         $dataGroups = array();
         /** @var DataGroup[] $result */
@@ -53,6 +56,9 @@ class CmsController extends Router
             $this->setGenereatedFile($orm);
             $this->setCustomFile($orm);
             $orm->save();
+
+            $fullClassname = $orm->getNamespace() . '\\' . $orm->getClassName();
+            $fullClassname::sync($pdo);
 
 //            $orm->setRank($orm->getId() - 1);
 //            $orm->save();
@@ -122,6 +128,9 @@ class CmsController extends Router
         return $nodes;
     }
 
+    /**
+     * @param _Model $orm
+     */
     private function setGenereatedFile(_Model $orm)
     {
         $connection = $this->container->get('doctrine.dbal.default_connection');
@@ -171,7 +180,7 @@ EOD;
         $str = str_replace('{fields}', join("\n", $fields), $str);
         $str = str_replace('{methods}', join("\n", $methods), $str);
 
-        $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/Web/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/Generated/';
+        $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/Web/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/Generated/';
 
         $file = $path . '../CmsConfig/' . $orm->getClassName() . '.json';
         $dir = dirname($file);
@@ -186,14 +195,14 @@ EOD;
             mkdir($dir, 0777, true);
         }
         file_put_contents($file, $str);
-
-        $fullClassname = $orm->getNamespace() . '\\' . $orm->getClassName();
-        $fullClassname::sync($pdo);
     }
 
+    /**
+     * @param _Model $orm
+     */
     private function setCustomFile(_Model $orm)
     {
-        $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/Web/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/';
+        $path = $this->container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/Web/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/';
 
         if ($orm->getModelType() == 1) {
             $file = $path . 'Traits/' . $orm->getClassName() . 'Trait.php';

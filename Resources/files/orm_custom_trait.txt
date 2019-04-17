@@ -1,6 +1,6 @@
 <?php
 //Last updated: {time}
-namespace {namespace}\OrmTrait;
+namespace {namespace}\Traits;
 
 trait {classname}Trait
 {

@@ -2,13 +2,13 @@
 //Last updated: {time}
 namespace {namespace};
 
-use Pz\Axiom\Walle;
-use Pz\Router\InterfaceNode;
-use Pz\Router\TraitNodeExtras;
+use MillenniumFalcon\Core\Orm;
+use MillenniumFalcon\Core\Nestable\NodeInterface;
+use MillenniumFalcon\Core\Nestable\NodeExtraTrait;
 
-class {classname} extends Walle implements InterfaceNode
+class {classname} extends Orm implements NodeInterface
 {
-    use TraitNodeExtras;
+    use NodeExtraTrait;
 
     /**
      * @var array
