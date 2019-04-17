@@ -1,0 +1,7 @@
+<?php
+//Last updated: {time}
+namespace {namespace}\OrmTrait;
+
+trait Trait{classname}
+{
+}

@@ -1,7 +1,9 @@
 <?php
+
 namespace MillenniumFalcon\Core\Form\Builder;
 
-use Pz\Form\Type\ChoiceMultiJson;
+//use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
+use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -29,62 +31,58 @@ class Model extends AbstractType
 
         $builder
             ->add('title', TextType::class, array(
-            'label' => 'Name:',
-            'constraints' => array(
-                new Assert\NotBlank()
-            )
-        ))
+                'label' => 'Name:',
+                'constraints' => array(
+                    new Assert\NotBlank()
+                )
+            ))
             ->add('className', TextType::class, array(
-            'label' => 'Class Name:',
-            'constraints' => array(
-                new Assert\NotBlank()
-            )
-        ))
+                'label' => 'Class Name:',
+                'constraints' => array(
+                    new Assert\NotBlank()
+                )
+            ))
             ->add('modelType', ChoiceType::class, array(
-            'label' => 'Model Type:',
-            'expanded' => true,
-            'choices' => array(
-                'Customised' => 0,
-                'Built in' => 1,
-            )
-        ))
-            ->add('dataType', ChoiceType::class, array(
-            'label' => 'Data Type:',
-            'expanded' => true,
-            'choices' => array(
-                'Admin' => 1,
-                'User' => 0,
-                'None' => 2,
-            )
-        ))
+                'label' => 'Model Type:',
+                'choices' => array(
+                    'Customised' => 0,
+                    'Built in' => 1,
+                )
+            ))
             ->add('listType', ChoiceType::class, array(
-            'label' => 'Listing Type:',
-            'expanded' => true,
-            'choices' => array(
-                'Drag & Drop' => 0,
-                'Pagination' => 1,
-                'Tree' => 2,
-            )
-        ))
-//            ->add('dataGroups', ChoiceMultiJson::class, array(
-//            'label' => 'Data Groups:',
-//            'choices' => $dataGroups,
-//        ))
+                'label' => 'Listing Type:',
+                'choices' => array(
+                    'Drag & Drop' => 0,
+                    'Pagination' => 1,
+                    'Tree' => 2,
+                )
+            ))
             ->add('numberPerPage', TextType::class, array(
-            'label' => 'Page Size:',
-        ))
+                'label' => 'Page Size:',
+            ))
             ->add('defaultSortBy', ChoiceType::class, array(
-            'label' => 'Sort:',
-            'choices' => $defaultSortByOptions,
-        ))
+                'label' => 'Default Sorted By:',
+                'choices' => $defaultSortByOptions,
+            ))
+            ->add('dataType', ChoiceType::class, array(
+                'label' => 'CMS Section(s):',
+                'choices' => array(
+                    'Admin' => 1,
+                    'Custom Sections' => 0,
+                    'Hidden' => 2,
+                )
+            ))
             ->add('defaultOrder', ChoiceType::class, array(
-            'label' => 'Order:',
-            'expanded' => true,
-            'choices' => array(
-                'ASC' => 0,
-                'DESC' => 1,
-            )
-        ))
+                'label' => 'Default Order:',
+                'choices' => array(
+                    'ASC' => 0,
+                    'DESC' => 1,
+                )
+            ))
+            ->add('dataGroups', ChoiceMultiJson::class, array(
+                'label' => 'Sections:',
+                'choices' => $dataGroups,
+            ))
             ->add('columnsJson', TextareaType::class);
     }
 

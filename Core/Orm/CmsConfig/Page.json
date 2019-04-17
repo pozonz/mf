@@ -8,7 +8,7 @@
     "status": "1",
     "title": "Pages",
     "className": "Page",
-    "namespace": "Pz\\Orm",
+    "namespace": "MillenniumFalcon\\Core\\Orm",
     "modelType": 1,
     "dataType": 2,
     "dataGroups": null,

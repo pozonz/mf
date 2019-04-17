@@ -8,7 +8,7 @@
     "status": "1",
     "title": "Content Block Tags",
     "className": "FragmentTag",
-    "namespace": "Pz\\Orm",
+    "namespace": "MillenniumFalcon\\Core\\Orm",
     "modelType": 1,
     "dataType": 1,
     "dataGroups": null,

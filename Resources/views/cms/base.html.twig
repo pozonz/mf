@@ -73,6 +73,34 @@
         .selected a {
             color: darkblue;
         }
+        .model-pagination-detail {
+            padding: 5px 0;
+            text-align: center;
+            background: #eee;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+        }
+        .model-pagination-detail .formStyle {
+            text-align: left;
+            width: 30%;
+        }
+        .model-data-group {
+            padding: 5px 0;
+            text-align: center;
+            background: #eee;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            width: 47.7%;
+        }
+        .model-data-group .formStyle {
+            text-align: left;
+            width: 90%;
+        }
+        .columns-container {
+            margin-top: 10px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
     </style>
     <script>
         $(function() {
@@ -123,10 +151,7 @@
 </div>
 
 <div id="contentContainer">
-
     <div id="maincontent">
-
-
         <div id="verticalMenu">
             <div id="cms_sidebarIndex">
                 <ul class="verticalMenu">
@@ -149,17 +174,18 @@
             </div>
         </div>
 
-        {% block container %}
-            <div id="bodyContent">
+        <div id="bodyContent">
+            {% block container %}
                 <div id="h1">
                     <h1>Millennium Falcon CMS</h1>
                 </div>
                 <p>The Millennium Falcon CMS allows you to update content on your website.</p>
                 <p>Use the menu to the left to navigate to the correct page or record. Where appropriate, navigation links to sub-pages will open out when you click on a menu item.</p>
-            </div>
-        {% endblock %}
+            {% endblock %}
+        </div>
     </div>
 </div>
 
+{% block externalFooter %}{% endblock %}
 </body>
 </html>

@@ -1,5 +1,125 @@
 {% extends 'cms/base.html.twig' %}
+{% form_theme form 'cms/form.twig' %}
 
 {% block container %}
-    fdas
+    <div id="h1">
+        <h1>Model "{{ orm.className }}"</h1>
+    </div>
+
+    <form method="post" autocomplete="off" novalidate class="edit">
+        <div class="">
+            <div class="formStyle">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.title) }}
+            </div>
+            <div class="formStyle">
+                {{ form_label(form.className) }}
+                {{ form_widget(form.className, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.className) }}
+            </div>
+            <div class="formStyle">
+                {{ form_label(form.modelType) }}
+                {{ form_widget(form.modelType) }}
+                {{ form_errors(form.modelType) }}
+            </div>
+            <div class="formStyle">
+                {{ form_label(form.listType) }}
+                {{ form_widget(form.listType) }}
+                {{ form_errors(form.listType) }}
+            </div>
+            <div class="js-model-pagination-detail model-pagination-detail" style="display: none;">
+                <div class="formStyle">
+                    {{ form_label(form.numberPerPage) }}
+                    {{ form_widget(form.numberPerPage, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.numberPerPage) }}
+                </div>
+                <div class="formStyle">
+                    {{ form_label(form.defaultSortBy) }}
+                    {{ form_widget(form.defaultSortBy, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.defaultSortBy) }}
+                </div>
+                <div class="formStyle">
+                    {{ form_label(form.defaultOrder) }}
+                    {{ form_widget(form.defaultOrder) }}
+                    {{ form_errors(form.defaultOrder) }}
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="formStyle">
+                {{ form_label(form.dataType) }}
+                {{ form_widget(form.dataType) }}
+                {{ form_errors(form.dataType) }}
+            </div>
+
+            <div class="model-data-group js-model-data-group" style="display: none;">
+                <div class="formStyle">
+                    {{ form_label(form.dataGroups) }}
+                    {{ form_widget(form.dataGroups, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.dataGroups) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="columns-container">
+            <div class="formStyle"></div>
+            <div class="formStyle">
+                <select id="fields" class="chosen-select form-control" data-placeholder="Add a field"></select>
+            </div>
+
+            <div class="">
+                <table id="columns" class="edit">
+                    <tbody>
+                        <tr>
+                            <td class="tableHead" width="20%">Widget</td>
+                            <td class="tableHead" width="30%">Label</td>
+                            <td class="tableHead" width="25%">Field</td>
+                            <td class="tableHead" width="10%">Column</td>
+                            <td class="tableHead" width="10%">Required</td>
+                            <td class="tableHead" width="5%"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group" style="display: none;">
+            {{ form_label(form.columnsJson) }}
+            {{ form_widget(form.columnsJson, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.columnsJson) }}
+        </div>
+
+        <div class="form-group">
+            {#{{ form_widget(form._token) }}#}
+            <button class="btn btn-primary" name='submit' value='Save'>
+                <i class="icon"></i>
+                <span class="txt">Save</span>
+            </button>
+            <button class="btn btn-success" name='submit' value='Apply'>
+                <i class="icon"></i>
+                <span class="txt">Apply</span>
+            </button>
+            {#<a href="/pz/admin/models/{{ orm.modelType == 0 ? 'customised' : 'built-in' }}" class="btn">#}
+                {#<span class="txt">Cancel</span>#}
+            {#</a>#}
+        </div>
+    </form>
+{% endblock %}
+
+
+{% block externalFooter %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    <script src="/cms/js/handlebar-helpers.js"></script>
+    <script id="field-source" type="text/x-handlebars-template">{% include 'cms/admin/model-field.handlebar.twig' %}</script>
+    <script>
+        window._columns = JSON.parse('{{ form.columnsJson.vars.value|e('js') ?: '[]' }}');
+        window._fields = {{ orm.fieldChoices|keys|json_encode|raw }};
+        window._metas = {{ orm.parentFields|keys|json_encode|raw }};
+        window._widgets = {{ orm.widgetChoices|json_encode|raw }};
+        window._defaultSortBy = '{{ form.defaultSortBy.vars.value ?: 'id' }}';
+    </script>
+
+    <script src="/cms/js/model.js"></script>
 {% endblock %}

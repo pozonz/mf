@@ -1,0 +1,143 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{% block form_row %}
+    {% spaceless %}
+        <div class="box {{ block_prefixes[block_prefixes|length - 2] }}">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <ul class="formValidationErrors">
+            {%- for error in errors -%}
+                <li class="formValidationError">{{ error.message }}</li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
+{%- endblock form_errors -%}
+
+{% block datepicker_widget -%}
+    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('Y-m-d') : '' }}"/>
+{%- endblock datepicker_widget %}
+
+{% block datetimepicker_widget -%}
+    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('Y-m-d H:i:s') : '' }}"/>
+{%- endblock datetimepicker_widget %}
+
+{% block choice_multi_json_widget -%}
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
+    <select id="{{ id }}_select" class="js-choice_multi_json" multiple>
+        {% for choice in choices %}
+            <option value="{{ choice.value }}" {% if '"' ~ choice.value ~ '"' in value %}selected{% endif %}>{{ choice.label }}</option>
+        {% endfor %}
+    </select>
+{%- endblock choice_multi_json_widget %}
+
+{% block choice_multi_json_tree_widget -%}
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
+    <select id="{{ id }}_select" class="js-choice_multi_json" multiple>
+        {% for choice in choices %}
+            {% set vals = choice.label|split('@') %}
+            <option style="padding-left: {{ vals.1 * 20 }}px" value="{{ choice.value }}" {% if '"' ~ choice.value ~ '"' in value %}selected{% endif %}>{{ vals.0 }}</option>
+        {% endfor %}
+    </select>
+{%- endblock choice_multi_json_tree_widget %}
+
+{% block choice_tree_widget -%}
+    <select {{ block('widget_attributes') }} class="js-choice_multi_json">
+        {% for choice in choices %}
+            {% set vals = choice.label|split('@') %}
+            <option style="padding-left: {{ vals.1 * 20 }}px" value="{{ choice.value }}" {% if choice.value == value %}selected{% endif %}>{{ vals.0 }}</option>
+        {% endfor %}
+    </select>
+{%- endblock choice_tree_widget %}
+
+{% block wysiwyg_widget -%}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{%- endblock wysiwyg_widget -%}
+
+{% block assetpicker_widget -%}
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
+    <div class="row">
+        <div class="col-lg-6 text-center">
+            <a class="js-fancybox" id="{{ id }}-preview" href="/assets/image/{{ value ?: 0 }}/large">
+                <div class="image-holder" style="background: url('/assets/image/{{ value ?: 0 }}/small') no-repeat center center; height: 100px;"></div>
+            </a>
+        </div>
+        <div class="col-lg-6">
+            <button type="button" class="btn btn-primary btn-sm btn-block js-asset-change" data-id="#{{ id }}"><i class="fa fa-file-image-o"></i> Choose</button>
+            <button type="button" class="btn btn-danger btn-outline btn-sm btn-block js-asset-delete" data-id="#{{ id }}"><i class="fa fa-times"></i> Delete</button>
+        </div>
+    </div>
+{%- endblock assetpicker_widget -%}
+
+{% block assetfolderpicker_row -%}
+    <hr />
+    {% spaceless %}
+        <div class="box {{ block_prefixes[block_prefixes|length - 2] }}">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% endspaceless %}
+    {#<hr />#}
+{%- endblock assetfolderpicker_row -%}
+
+{%- block assetfolderpicker_label -%}
+    {% if label is not same as(false) -%}
+        {% if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif -%}
+        {% if required -%}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {%- endif -%}
+        {% if label is empty -%}
+            {%- if label_format is not empty -%}
+                {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+                }) %}
+            {%- else -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {%- endif -%}
+        <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}  style="display: inline-block;">
+        {%- if translation_domain is same as(false) -%}
+            {{- label -}}
+        {%- else -%}
+            {{- label|trans({}, translation_domain) -}}
+        {%- endif -%}
+        </{{ element|default('label') }}>
+
+        <div style="display: inline-block; margin-left: 10px;">
+            <button type="button" class="btn btn-success btn-outline btn-sm change" style="margin-right: .2em;" data-id="#{{ id }}"><i class="fa fa-pencil-square-o"></i> Manage</button>
+            <button type="button" class="btn btn-danger btn-outline btn-sm delete" data-id="#{{ id }}"><i class="fa fa-times"></i> Empty</button>
+        </div>
+    {%- endif -%}
+{%- endblock assetfolderpicker_label -%}
+
+{% block assetfolderpicker_widget -%}
+    <div class="widget style1 js-gallery-widget ibox" style="padding: 0; margin: 0;">
+        <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" data-attributename="{{ id }}"/>
+        <div class="ibox-content" style="border: none">
+            <div class="sk-spinner sk-spinner-double-bounce">
+                <div class="sk-double-bounce1"></div>
+                <div class="sk-double-bounce2"></div>
+            </div>
+            <div class="alert alert-info js-loading">
+                Loading images, please wait...
+            </div>
+            <div class="alert gray-bg js-no-results" style="display: none;">
+                No images selected
+            </div>
+            <div class="js-gallery-container"></div>
+        </div>
+    </div>
+{%- endblock assetfolderpicker_widget -%}
+
+
+{% use 'cms/form-content-block.twig' %}

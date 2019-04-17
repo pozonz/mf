@@ -8,7 +8,7 @@
     "status": "1",
     "title": "Page Templates",
     "className": "PageTemplate",
-    "namespace": "Pz\\Orm",
+    "namespace": "MillenniumFalcon\\Core\\Orm",
     "modelType": 1,
     "dataType": 1,
     "dataGroups": null,

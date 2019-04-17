@@ -1,0 +1,20 @@
+<?php
+//Last updated: {time}
+namespace {namespace};
+
+use Pz\Axiom\Walle;
+use Pz\Router\InterfaceNode;
+use Pz\Router\TraitNodeExtras;
+
+class {classname} extends Walle implements InterfaceNode
+{
+    use TraitNodeExtras;
+
+    /**
+     * @var array
+     */
+    private $children = array();
+
+{fields}
+{methods}
+}

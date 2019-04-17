@@ -1,0 +1,7 @@
+<?php
+//Last updated: {time}
+namespace {namespace};
+
+class {classname} extends \{namespace}\Generated\{classname}
+{
+}
