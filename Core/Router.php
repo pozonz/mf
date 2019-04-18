@@ -16,10 +16,16 @@ abstract class Router extends Controller
     protected $tree;
 
     /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
      * Router constructor.
      */
-    public function __construct()
+    public function __construct(Connection $connection)
     {
+        $this->connection = $connection;
         $this->tree = new Tree($this->getNodes());
     }
 
@@ -62,6 +68,9 @@ abstract class Router extends Controller
         );
     }
 
+    /**
+     * @return mixed
+     */
     abstract function getNodes();
 
 }

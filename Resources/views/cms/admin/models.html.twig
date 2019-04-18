@@ -1,7 +1,6 @@
 {% extends 'cms/base.html.twig' %}
 
-{% set modelType = fragments|last == 'customised' ? 0 : 1 %}
-{% set models = model.data('_Model',{whereSql:'m.modelType=?',params:[modelType]}) %}
+{% set models = model.data('_Model') %}
 
 {% block extraHeaderLeft %}
     <h2>Manage <label class="label label-warning-light">{{ modelType ? 'Built-in' : 'Customised' }} Models</label></h2>
@@ -10,7 +9,7 @@
 {% block container %}
     <div id="h1">
         <h1>Models</h1>
-        <a class="addForm button" href="/manage/admin/model-builder/0">Add new model ›</a>
+        <a class="addForm button" href="/manage/admin/model-builder/new">Add new model ›</a>
     </div>
 
     <table class="contentListTable ui-sortable">
@@ -18,7 +17,7 @@
             <td class="tableHead" width="180px">Class</td>
             <td class="tableHead">Name</td>
             <td class="tableHead" width="120px">Type</td>
-            <td class="tableHead col5" width="180px" align="right">Action</td>
+            <td class="tableHead" width="180px" align="right">Action</td>
         </tbody>
         <tbody>
             {% for itm in models %}
@@ -26,10 +25,10 @@
                     <td>{{ itm.className }}</td>
                     <td>{{ itm.title }}</td>
                     <td>
-                        {% if itm.modelType == 1 %}
-                            Built in
-                        {% elseif itm.modelType == 2 %}
+                        {% if itm.modelType == 0 %}
                             Customised
+                        {% elseif itm.modelType == 1 %}
+                            Built in
                         {% endif %}
                     </td>
                     <td class="iconCell" align="right">

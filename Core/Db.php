@@ -4,15 +4,32 @@ namespace MillenniumFalcon\Core;
 
 class Db
 {
+    /**
+     * @var \PDO
+     */
     private $pdo;
+
+    /**
+     * @var
+     */
     private $table;
 
+    /**
+     * Db constructor.
+     * @param \PDO $pdo
+     * @param $table
+     */
     public function __construct(\PDO $pdo, $table)
     {
         $this->pdo = $pdo;
         $this->table = $table;
     }
 
+    /**
+     * @param $oldColumn
+     * @param $tableColumns
+     * @return string
+     */
     private function getTrashColumnName($oldColumn, $tableColumns)
     {
         $idx = 1;
@@ -25,6 +42,11 @@ class Db
         return $oldColumn;
     }
 
+    /**
+     * @param $oldColumn
+     * @param $tableColumns
+     * @return string
+     */
     private function getLastColumn($oldColumn, $tableColumns)
     {
         $result = array_reverse($tableColumns);
@@ -36,6 +58,9 @@ class Db
         return 'id';
     }
 
+    /**
+     * @return array
+     */
     public function getFields()
     {
         $fields = array();
@@ -49,6 +74,9 @@ class Db
         return $fields;
     }
 
+    /**
+     * @param $ormFields
+     */
     public function sync($ormFields)
     {
         $tableFields = $this->getFields();
@@ -75,6 +103,12 @@ class Db
         }
     }
 
+    /**
+     * @param $column
+     * @param $attrs
+     * @param string $lastColumn
+     * @return bool
+     */
     public function addColumn($column, $attrs, $lastColumn = '')
     {
         try {
@@ -88,6 +122,13 @@ class Db
         }
     }
 
+    /**
+     * @param $oldColumn
+     * @param $newColumn
+     * @param $dataType
+     * @param string $lastColumn
+     * @return bool
+     */
     public function renameColumn($oldColumn, $newColumn, $dataType, $lastColumn = '')
     {
         try {
@@ -101,6 +142,9 @@ class Db
         }
     }
 
+    /**
+     *
+     */
     public function create()
     {
         try {
@@ -115,6 +159,9 @@ class Db
         }
     }
 
+    /**
+     * @param $newTableName
+     */
     public function rename($newTableName)
     {
         try {
@@ -128,6 +175,9 @@ class Db
         }
     }
 
+    /**
+     * @return int
+     */
     public function exists()
     {
         try {
@@ -142,6 +192,11 @@ class Db
         return 0;
     }
 
+    /**
+     * @param $index
+     * @param $column
+     * @return bool
+     */
     public function addIndex($index, $column)
     {
         try {
@@ -156,6 +211,9 @@ class Db
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function drop()
     {
         $sql = "DROP TABLE IF EXISTS `$this->table`";

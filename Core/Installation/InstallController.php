@@ -12,37 +12,14 @@ class InstallController extends Controller
      */
     public function index()
     {
-        $folders = [
-            '.',
-            '..',
-            'CmsConfig',
-            'Generated',
-            'Trait',
-        ];
-
         $connection = $this->container->get('doctrine.dbal.default_connection');
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        $files = array();
-        $dir = $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm';
-        $files = array_diff(array_merge($files, scandir($dir)), $folders);
-
-        $pdo->beginTransaction();
-        foreach ($files as $file) {
-            $className = "MillenniumFalcon\\Core\\Orm\\" . substr($file, 0, strrpos($file, '.'));
-            $tableName = $className::getTableName();
-            $created = $this->tableExists($pdo, $tableName);
-            if (!$created) {
-                $className::sync($pdo);
-            }
+        static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
+        if (file_exists($this->container->getParameter('kernel.project_dir') . '/src/Orm/')) {
+            static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/src/Orm/', "App\\Orm\\");
         }
-
-        foreach ($files as $file) {
-            $className = "MillenniumFalcon\\Core\\Orm\\" . substr($file, 0, strrpos($file, '.'));
-            $className::updateModel($pdo);
-        }
-        $pdo->commit();
 
         return $this->json([
             'message' => 'Welcome to your new controller!',
@@ -52,10 +29,44 @@ class InstallController extends Controller
 
     /**
      * @param $pdo
+     * @param $dir
+     * @param $namespace
+     */
+    static public function populateDb($pdo, $dir, $namespace) {
+        $folders = [
+            '.',
+            '..',
+            'CmsConfig',
+            'Generated',
+            'Traits',
+        ];
+
+        $files = array();
+        $files = array_diff(array_merge($files, scandir($dir)), $folders);
+
+        $pdo->beginTransaction();
+        foreach ($files as $file) {
+            $className = $namespace . substr($file, 0, strrpos($file, '.'));
+            $tableName = $className::getTableName();
+            $created = static::tableExists($pdo, $tableName);
+            if (!$created) {
+                $className::sync($pdo);
+            }
+        }
+
+        foreach ($files as $file) {
+            $className = $namespace . substr($file, 0, strrpos($file, '.'));
+            $className::updateModel($pdo);
+        }
+        $pdo->commit();
+    }
+
+    /**
+     * @param $pdo
      * @param $id
      * @return bool
      */
-    function tableExists($pdo, $id)
+    static public function tableExists($pdo, $id)
     {
         $results = $pdo->query("SHOW TABLES LIKE '$id'");
         if (!$results) {

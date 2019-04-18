@@ -1,20 +1,15 @@
 <?php
-//Last updated: 2019-04-18 11:48:42
+//Last updated: 2019-04-18 10:08:12
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
 
-class DataGroup extends Orm
+class NewModel extends Orm
 {
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $title;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $icon;
     
     /**
      * @return mixed
@@ -30,22 +25,6 @@ class DataGroup extends Orm
     public function setTitle($title)
     {
         $this->title = $title;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-    
-    /**
-     * @param mixed icon
-     */
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
     }
     
 }

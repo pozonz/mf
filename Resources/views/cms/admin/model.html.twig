@@ -3,7 +3,11 @@
 
 {% block container %}
     <div id="h1">
-        <h1>Model "{{ orm.className }}"</h1>
+        {% if model.id %}
+            <h1>Editing {{ model.className }}</h1>
+        {% else %}
+            <h1>Creating new model...</h1>
+        {% endif %}
     </div>
 
     <form method="post" autocomplete="off" novalidate class="edit">
@@ -91,19 +95,11 @@
             {{ form_errors(form.columnsJson) }}
         </div>
 
-        <div class="form-group">
+        <div class="submit-area">
             {#{{ form_widget(form._token) }}#}
-            <button class="btn btn-primary" name='submit' value='Save'>
-                <i class="icon"></i>
-                <span class="txt">Save</span>
-            </button>
-            <button class="btn btn-success" name='submit' value='Apply'>
-                <i class="icon"></i>
-                <span class="txt">Apply</span>
-            </button>
-            {#<a href="/pz/admin/models/{{ orm.modelType == 0 ? 'customised' : 'built-in' }}" class="btn">#}
-                {#<span class="txt">Cancel</span>#}
-            {#</a>#}
+            <a class="back-button button" href="/manage/admin/model-builder">‹ Back</a>
+            <button class="submit button save-content" style="background: #2281cf;" name='submit' value='Apply'>Apply</button>
+            <button class="submit button" name='submit' value='Save'>Save & Exit ›</button>
         </div>
     </form>
 {% endblock %}
@@ -115,9 +111,9 @@
     <script id="field-source" type="text/x-handlebars-template">{% include 'cms/admin/model-field.handlebar.twig' %}</script>
     <script>
         window._columns = JSON.parse('{{ form.columnsJson.vars.value|e('js') ?: '[]' }}');
-        window._fields = {{ orm.fieldChoices|keys|json_encode|raw }};
-        window._metas = {{ orm.parentFields|keys|json_encode|raw }};
-        window._widgets = {{ orm.widgetChoices|json_encode|raw }};
+        window._fields = {{ model.fieldChoices|keys|json_encode|raw }};
+        window._metas = {{ model.parentFields|keys|json_encode|raw }};
+        window._widgets = {{ model.widgetChoices|json_encode|raw }};
         window._defaultSortBy = '{{ form.defaultSortBy.vars.value ?: 'id' }}';
     </script>
 

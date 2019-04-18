@@ -2,7 +2,7 @@
 
 {% block form_row %}
     {% spaceless %}
-        <div class="box {{ block_prefixes[block_prefixes|length - 2] }}">
+        <div class="formStyle {{ block_prefixes[block_prefixes|length - 2] }}">
             {{ form_label(form) }}
             {{ form_widget(form) }}
             {{ form_errors(form) }}
@@ -12,11 +12,9 @@
 
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
-        <ul class="formValidationErrors">
-            {%- for error in errors -%}
-                <li class="formValidationError">{{ error.message }}</li>
-            {%- endfor -%}
-        </ul>
+        {%- for error in errors -%}
+            <div class="error">{{ error.message }}</div>
+        {%- endfor -%}
     {%- endif -%}
 {%- endblock form_errors -%}
 
