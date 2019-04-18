@@ -40,12 +40,6 @@
     {#<script src="/cms/js/originate.form.builder.js?20180622" language="javascript"></script>#}
     {#<script src="/cms/js/dropzone.js" language="javascript"></script>#}
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" language="javascript"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js" language="javascript"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js" language="javascript"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
-
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" type="text/css" media="screen"/>
 
@@ -129,20 +123,10 @@
             -webkit-transition: all .2s ease;
             transition: all .2s ease
         }
+        .ui-button-icon-only {
+            text-indent: -9999px;
+        }
     </style>
-    <script>
-        $(function() {
-            $('.toggle-icon').click(function(ev) {
-                ev.preventDefault();
-                $(this).toggleClass('selected');
-                if ($(this).hasClass('selected')) {
-                    $('[data-source=' + $(this).attr('data-target') + ']').slideDown(150);
-                } else {
-                    $('[data-source=' + $(this).attr('data-target') + ']').slideUp(150);
-                }
-            });
-        });
-    </script>
 </head>
 
 
@@ -231,6 +215,14 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
+
+{#<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js" language="javascript"></script>#}
+
+<script src="/cms/js/main.js"></script>
 
 {% block externalFooter %}{% endblock %}
 </body>

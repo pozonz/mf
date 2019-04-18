@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-04-18 15:48:55
+//Last updated: 2019-04-18 17:37:22
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -9,17 +9,17 @@ class User extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $title;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
     private $password;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $passwordInput;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $title;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -45,22 +45,6 @@ class User extends Orm
      * #pz datetime DEFAULT NULL
      */
     private $resetDate;
-    
-    /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-    
-    /**
-     * @param mixed title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
     
     /**
      * @return mixed
@@ -92,6 +76,22 @@ class User extends Orm
     public function setPasswordInput($passwordInput)
     {
         $this->passwordInput = $passwordInput;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
+    /**
+     * @param mixed title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
     }
     
     /**

@@ -43,6 +43,10 @@ class Orm extends AbstractType
         }
     }
 
+    /**
+     * @param $column
+     * @return array
+     */
     private function getOptoins($column) {
         $options = array(
             'label' => $column->label,

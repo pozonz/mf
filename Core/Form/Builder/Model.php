@@ -65,10 +65,10 @@ class Model extends AbstractType
                 'choices' => $defaultSortByOptions,
             ))
             ->add('dataType', ChoiceType::class, array(
-                'label' => 'CMS Section(s):',
+                'label' => 'Display At:',
                 'choices' => array(
                     'Admin' => 1,
-                    'Custom Sections' => 0,
+                    'Custom Partitions' => 0,
                     'Hidden' => 2,
                 )
             ))
@@ -80,7 +80,7 @@ class Model extends AbstractType
                 )
             ))
             ->add('dataGroups', ChoiceMultiJson::class, array(
-                'label' => 'Sections:',
+                'label' => 'Partitions:',
                 'choices' => $dataGroups,
             ))
             ->add('columnsJson', TextareaType::class);
