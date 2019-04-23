@@ -42,12 +42,23 @@ trait CmsOrmTrait
         /** @var _Model $model */
         $model = _Model::getByField($pdo, 'className', end($fragments));
         $fullClassname = $model->getNamespace() . '\\' . $model->getClassName();
-        $orms = $fullClassname::data($pdo, array(
-            "page" => $pageNum,
-            "limit" => $model->getNumberPerPage(),
-            "sort" => $model->getDefaultSortBy(),
-            "order" => $model->getDefaultOrder() == 0 ? 'ASC' : 'DESC',
-        ));
+
+        if ($model->getListType() == 0) {
+            $orms = $fullClassname::data($pdo);
+
+        } elseif ($model->getListType() == 1) {
+            $orms = $fullClassname::data($pdo, array(
+                "page" => $pageNum,
+                "limit" => $model->getNumberPerPage(),
+                "sort" => $model->getDefaultSortBy(),
+                "order" => $model->getDefaultOrder() == 0 ? 'ASC' : 'DESC',
+            ));
+
+        } elseif ($model->getListType() == 2) {
+
+
+        }
+
 
         $params['model'] = $model;
         $params['orms'] = $orms;

@@ -4,6 +4,7 @@ namespace MillenniumFalcon\Core;
 
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\Orm\AssetOrm;
 
 abstract class Orm implements \JsonSerializable
 {
@@ -188,6 +189,20 @@ abstract class Orm implements \JsonSerializable
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCmsOrmsTwig() {
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCmsOrmTwig() {
+        return null;
     }
 
     /**
@@ -573,19 +588,5 @@ abstract class Orm implements \JsonSerializable
     {
         $rc = static::getReflectionClass();
         return file_get_contents(dirname($rc->getFileName()) . '/CmsConfig/' . $rc->getShortName() . '.json');
-    }
-
-    /**
-     * @return string
-     */
-    static public function getCmsOrmsTwig() {
-        return 'cms/orms.html.twig';
-    }
-
-    /**
-     * @return string
-     */
-    static public function getCmsOrmTwig() {
-        return 'cms/orm.html.twig';
     }
 }

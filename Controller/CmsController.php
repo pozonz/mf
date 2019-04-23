@@ -8,5 +8,6 @@ class CmsController extends Router
 {
     use CmsOrmTrait,
         CmsModelTrait,
+        CmsRestTrait,
         CmsTrait;
 }

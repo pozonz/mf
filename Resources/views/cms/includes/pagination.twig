@@ -1,0 +1,22 @@
+{% if totalPages is defined and pageNum is defined and url is defined and totalPages > 1 %}
+    {% set all = 13 %}
+    {% set half = (all - 1) / 2 %}
+    {% if totalPages > pageNum + half %}
+        {% set start = max(pageNum - half, 1) %}
+        {% set end = min(start + all - 1, totalPages) %}
+    {% else %}
+        {% set end = totalPages %}
+        {% set start = max(totalPages - all + 1, 1) %}
+    {% endif %}
+
+    <div class="text-center">
+        <div class="btn-group">
+            <a class="btn btn-white" type="button" href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ max(pageNum - 1, 1) }}"><i class="fa fa-chevron-left"></i></a>
+            {% for i in start..end %}
+                <a class="btn btn-white {% if pageNum == i %}active{% endif %}" href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ i }}">{{ i }}</a>
+                {#<li class="item {% if pageNum == i %}active{% endif %}"><a href="{{ url }}/{{ i }}">{{ i }}</a></li>#}
+            {% endfor %}
+            <a class="btn btn-white" type="button" href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ min(pageNum + 1, totalPages) }}"><i class="fa fa-chevron-right"></i></a>
+        </div>
+    </div>
+{% endif %}
