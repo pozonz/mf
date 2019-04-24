@@ -75,10 +75,10 @@
             display: block;
         }
         .selected a {
-            color: darkblue;
+            background: #98a6ba;
         }
         .selected-subitm a {
-            color: darkblue !important;
+            background: #1155cc !important;
         }
         .model-pagination-detail {
             padding: 5px 0;
@@ -130,7 +130,7 @@
 </head>
 
 
-<body>
+<body {% block extraBody %}{% endblock %}>
 <!--[if lt IE 10]>
 <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
 <![endif]-->
@@ -179,13 +179,13 @@
                                     </a>
                                     {% if itm.hasActiveChildren() %}
                                         <ul data-source="{{ itm.id }}" class="subcategory sub-1" {% if itm.contains(node) %}style="display: block;"{% endif %}>
-                                            {% for subitm in itm.children %}
-                                             <li {% if subitm.contains(node) %}class="selected-subitm"{% endif %}>
-                                                <div>
-                                                    <a href="{{ subitm.url }}">{{ subitm.title }}</a>
-                                                    <div class="clear"></div>
-                                                </div>
-                                             </li>
+                                            {% for subitm in itm.children if subitm.status == 1 %}
+                                                 <li {% if subitm.contains(node) %}class="selected-subitm"{% endif %}>
+                                                    <div>
+                                                        <a href="{{ subitm.url }}">{{ subitm.title }}</a>
+                                                        <div class="clear"></div>
+                                                    </div>
+                                                 </li>
                                             {% endfor %}
                                         </ul>
                                     {% endif %}

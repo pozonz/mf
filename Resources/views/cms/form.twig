@@ -10,6 +10,16 @@
     {% endspaceless %}
 {% endblock form_row %}
 
+{% block content_block_row %}
+    {% spaceless %}
+        <div class="formStyle {{ block_prefixes[block_prefixes|length - 2] }} type34">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock content_block_row %}
+
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
         {%- for error in errors -%}

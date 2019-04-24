@@ -192,20 +192,6 @@ abstract class Orm implements \JsonSerializable
     }
 
     /**
-     * @return mixed
-     */
-    public function getCmsOrmsTwig() {
-        return null;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCmsOrmTwig() {
-        return null;
-    }
-
-    /**
      * @return array|null
      */
     public function getModel() {
@@ -322,6 +308,20 @@ abstract class Orm implements \JsonSerializable
             $obj->{$field} = $this->$getMethod();
         }
         return $obj;
+    }
+
+    /**
+     * @return mixed
+     */
+    static public function getCmsOrmsTwig() {
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    static public function getCmsOrmTwig() {
+        return null;
     }
 
     /**

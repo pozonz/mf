@@ -1,8 +1,6 @@
 {% extends 'cms/base.html.twig' %}
-{% block extraBodyClass %}page-content{% endblock %}
 
 {% form_theme form 'cms/form.twig' %}
-
 
 {% block container %}
 	<div id="h1">
@@ -31,13 +29,8 @@
 {% endblock %}
 
 
-{#{% block extraFooter %}#}
-	{#<script id="gallery-file" type="text/x-handlebars-template">{% include 'pz/javascript/gallery-file.twig' %}</script>#}
+{% block externalFooter %}
 
-    {#{% include 'pz/html/file-manager.html.twig' %}#}
 
-	{#<script id="loading" type="text/x-handlebars-template">{% include 'pz/javascript/loading.twig' %}</script>#}
-	{#<script id="folder" type="text/x-handlebars-template">{% include 'pz/javascript/fm-folders.twig' %}</script>#}
-	{#<script id="file" type="text/x-handlebars-template">{% include 'pz/javascript/fm-file.twig' %}</script>#}
-	{#<script id="nav" type="text/x-handlebars-template">{% include 'pz/javascript/fm-nav.twig' %}</script>#}
-{#{% endblock %}#}
+	<script src="/cms/js/orm.js"></script>
+{% endblock %}

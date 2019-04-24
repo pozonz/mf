@@ -1,10 +1,7 @@
 {% extends 'cms/base.html.twig' %}
+{% block extraBody %}data-class="_Model"{% endblock %}
 
 {% set models = model.data('_Model') %}
-
-{% block extraHeaderLeft %}
-    <h2>Manage <label class="label label-warning-light">{{ modelType ? 'Built-in' : 'Customised' }} Models</label></h2>
-{% endblock %}
 
 {% block container %}
     <div id="h1">
@@ -21,26 +18,26 @@
                 <td class="tableHead" width="180px" align="right">Action</td>
             </tr>
         </tbody>
-
-        {% for itm in models %}
-            <tr id="{{ itm.id }}" class="tableContent">
-                <td class="tableLine">{{ itm.className }}</td>
-                <td class="tableLine">{{ itm.title }}</td>
-                <td class="tableLine">
-                    {% if itm.modelType == 0 %}
-                        Customised
-                    {% elseif itm.modelType == 1 %}
-                        Built in
-                    {% endif %}
-                </td>
-                <td  class="tableLine" align="right">
-                    <a href="#" class="approve" rel="on" data-formid="402" id="approve_2854"><img src="/cms/images/dotGreen.gif" alt="" border="0"></a>
-                    <a href="/manage/admin/model-builder/{{ itm.id }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
-                    <a href=""><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
-                    <a href="" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
-                </td>
-            </tr>
-        {% endfor %}
-
+        <tbody class="js-sort-column">
+            {% for itm in models %}
+                <tr id="{{ itm.id }}" class="js-orm-info">
+                    <td class="tableLine">{{ itm.className }}</td>
+                    <td class="tableLine">{{ itm.title }}</td>
+                    <td class="tableLine">
+                        {% if itm.modelType == 0 %}
+                            Customised
+                        {% elseif itm.modelType == 1 %}
+                            Built in
+                        {% endif %}
+                    </td>
+                    <td  class="tableLine" align="right">
+                        <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
+                        <a href="/manage/admin/model-builder/{{ itm.id }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
+                        <a href="/manage/admin/model-builder/copy/{{ itm.id }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
+                        <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

@@ -1,32 +1,16 @@
-{% extends 'cms/base.html.twig' %}
+{% extends 'cms/orms-pagination.html.twig' %}
 
-{% block container %}
-    <div id="h1">
-        <h1>{{ model.title }}</h1>
-        <a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
-    </div>
 
-    <table class="table table-striped table-bordered table-hover table-middle">
-        <tbody>
-            <tr>
-                <td class="tableHead" width="40px">ID</td>
-                <td class="tableHead" >Title</td>
-                <td class="tableHead" width="180px" align="right">Action</td>
-            </tr>
-        </tbody>
-        <tbody id="columns">
-            {% for itm in orms %}
-                <tr class="js-orm-info" data-id="{{ itm.id }}" data-class="{{ model.className }}">
-                    <td>{{ itm.id }}</td>
-                    <td>{{ itm.title }}</td>
-                    <td class="iconCell" align="right">
-                        <a href="#" class="approve" rel="on" data-formid="402" id="approve_2854"><img src="/cms/images/dotGreen.gif" alt="" border="0"></a>
-                        <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
-                        <a href=""><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
-                        <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% block tableHead %}
+    <tbody>
+        <tr>
+            <td class="tableHead" width="40px">ID</td>
+            <td class="tableHead">Title</td>
+            <td class="tableHead" width="180px" align="right">Action</td>
+        </tr>
+    </tbody>
 {% endblock %}
+
+{% block extraColumns %}class="js-sort-column"{% endblock %}
+{% block dataPagination %}{% endblock %}
+

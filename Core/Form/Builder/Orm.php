@@ -2,7 +2,9 @@
 
 namespace MillenniumFalcon\Core\Form\Builder;
 
+use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
+use MillenniumFalcon\Core\Nestable\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -27,6 +29,7 @@ class Orm extends AbstractType
 
         $model = isset($options['model']) ? $options['model'] : null;
         $orm = isset($options['orm']) ? $options['orm'] : null;
+        $pdo = isset($options['pdo']) ? $options['pdo'] : null;
 
         $columnsJson = json_decode($model->getColumnsJson());
 //        var_dump($columnsJson);exit;
@@ -38,7 +41,7 @@ class Orm extends AbstractType
             }
 
             $widget = $itm->widget;
-            $options = $this->getOptoins($itm);
+            $options = $this->getOptoins($pdo, $itm);
             $builder->add($itm->field, $widget, $options);
         }
     }
@@ -47,7 +50,7 @@ class Orm extends AbstractType
      * @param $column
      * @return array
      */
-    private function getOptoins($column) {
+    private function getOptoins($pdo, $column) {
         $options = array(
             'label' => $column->label,
         );
@@ -76,6 +79,7 @@ class Orm extends AbstractType
                     $options['choices'][$val->value] = $val->key;
                 }
                 $options['required'] = false;
+                break;
 
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceMultiJsonTree':
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceTree':
@@ -112,6 +116,7 @@ class Orm extends AbstractType
                     $count++;
                 }
                 $options['required'] = false;
+                break;
         }
 
         if ($column->required == 1) {
@@ -129,6 +134,7 @@ class Orm extends AbstractType
         $resolver->setDefaults(array(
             'model' => null,
             'orm' => null,
+            'pdo' => null,
         ));
     }
 }

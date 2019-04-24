@@ -28,8 +28,6 @@ trait CmsModelTrait
      */
     public function model($modelId)
     {
-        $params = $this->prepareParams();
-
         $connection = $this->container->get('doctrine.dbal.default_connection');
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
@@ -39,6 +37,36 @@ trait CmsModelTrait
             $model = new _Model($pdo);
         }
 
+        return $this->_model($pdo, $model);
+    }
+
+    /**
+     * @route("/manage/admin/model-builder/copy/{modelId}")
+     * @return Response
+     */
+    public function copyModel($modelId)
+    {
+        $connection = $this->container->get('doctrine.dbal.default_connection');
+        /** @var \PDO $pdo */
+        $pdo = $connection->getWrappedConnection();
+
+        $model = _Model::getById($pdo, $modelId);
+        if (!$model) {
+            $model = new _Model($pdo);
+        }
+
+        $model->setId(null);
+        return $this->_model($pdo, $model);
+    }
+
+    /**
+     * @param $pdo
+     * @param $model
+     * @return mixed
+     * @throws RedirectException
+     */
+    private function _model($pdo, $model) {
+        $params = $this->prepareParams();
         $dataGroups = array();
         /** @var DataGroup[] $result */
         $result = DataGroup::active($pdo);

@@ -9,14 +9,16 @@
         {% set start = max(totalPages - all + 1, 1) %}
     {% endif %}
 
-    <div class="text-center">
-        <div class="btn-group">
-            <a class="btn btn-white" type="button" href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ max(pageNum - 1, 1) }}"><i class="fa fa-chevron-left"></i></a>
-            {% for i in start..end %}
-                <a class="btn btn-white {% if pageNum == i %}active{% endif %}" href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ i }}">{{ i }}</a>
-                {#<li class="item {% if pageNum == i %}active{% endif %}"><a href="{{ url }}/{{ i }}">{{ i }}</a></li>#}
-            {% endfor %}
-            <a class="btn btn-white" type="button" href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ min(pageNum + 1, totalPages) }}"><i class="fa fa-chevron-right"></i></a>
-        </div>
+    <div class="grey">
+        {#<a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ max(pageNum - 1, 1) }}">&#60;</a>#}
+        {% for i in start..end %}
+            {% if pageNum == i %}
+                {{ i }}{% if not loop.last %} |{% endif %}
+            {% else %}
+                <a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ i }}">{{ i }}</a>{% if not loop.last %} |{% endif %}
+            {% endif %}
+            {#<li class="item {% if pageNum == i %}active{% endif %}"><a href="{{ url }}/{{ i }}">{{ i }}</a></li>#}
+        {% endfor %}
+        {#<a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ min(pageNum + 1, totalPages) }}">&#62;</a>#}
     </div>
 {% endif %}

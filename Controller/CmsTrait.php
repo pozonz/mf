@@ -80,7 +80,11 @@ trait CmsTrait
         $nodes[] = new PageNode(999, null, 999, 1, 'Admin', '/manage/admin', 'cms/admin.html.twig', 'cms_viewmode_admin');
 
         $nodes[] = new PageNode(9991, 999, 1, 1, 'TOOLS');
-        $nodes[] = new PageNode(9992, 999, 2, 1, 'Webpage Builder', '/manage/admin/web-page-builder', 'cms/admin/pages.html.twig');
+        $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 999, array(
+            'Webpage Builder' => 'Page',
+        ), '/manage/admin/orms/', 2));
+
+//        $nodes[] = new PageNode(9992, 999, 2, 1, 'Webpage Builder', '/manage/admin/web-page-builder', 'cms/admin/pages.html.twig');
         $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 9992, array(
             'Manage Templates' => 'PageTemplate',
             'Manage Categories' => 'PageCategory',
@@ -88,6 +92,7 @@ trait CmsTrait
 
         $nodes[] = new PageNode(9993, 999, 3, 1, 'Model Builder', '/manage/admin/model-builder', 'cms/admin/models.html.twig');
         $nodes[] = new PageNode(99931, 9993, 1, 2, 'Model', '/manage/admin/model-builder/', 'cms/admin/model.html.twig', null, 1, 1);
+        $nodes[] = new PageNode(99932, 9993, 2, 2, 'Model', '/manage/admin/model-builder/copy/', 'cms/admin/model.html.twig', null, 1, 1);
 
 //        $nodes[] = new PageNode(9994, 999, 4, 1, 'Form Descriptors', '/manage/admin/form-builder', 'cms/admin/forms.html.twig');
 
@@ -118,17 +123,18 @@ trait CmsTrait
 
         $ormDefaultTwig = 'cms/orm.html.twig';
 
-
         $nodes = array();
         $count = $start;
         foreach ($data as $idx => $itm) {
             /** @var _Model $model */
             $model = _Model::getByField($pdo, 'className', $itm);
-            $ormsTwig = $model->getCmsOrmsTwig();
+            $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
+
+            $ormsTwig = $fullClass::getCmsOrmsTwig();
             if (!$ormsTwig) {
                 $ormsTwig = $ormsListTwig[$model->getListType()];
             }
-            $ormTwig = $model->getCmsOrmTwig();
+            $ormTwig = $fullClass::getCmsOrmTwig();
             if (!$ormTwig) {
                 $ormTwig = $ormDefaultTwig;
             }
@@ -136,6 +142,7 @@ trait CmsTrait
             $modelNodeId = $parentId . $count;
             $nodes[] = new PageNode($modelNodeId, $parentId, $count, 1, $idx, $baseUrl . $itm, $ormsTwig);
             $nodes[] = new PageNode($modelNodeId . 1, $modelNodeId, 1, 2, '', $baseUrl . $itm . '/', $ormTwig, null, 1, 1);
+            $nodes[] = new PageNode($modelNodeId . 2, $modelNodeId, 2, 2, '', $baseUrl . $itm . '/copy/', $ormTwig, null, 1, 1);
 
             $count++;
         }

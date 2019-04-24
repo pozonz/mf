@@ -1,0 +1,46 @@
+{% macro nest(node, model, depth) %}
+    {% from _self import nest as nest %}
+    <li class="dd-item dd3-item content-container {% if node.closed == 1 %}dd-collapsed{% endif %}" data-id="{{ node.id }}">
+        <div class="dd-handle dd3-handle"></div>
+        <div class="dd-handle dd3-handle"></div>
+        <div class="dd3-content">
+            <span>{{ node.title }}</span>
+            {% set classes = [
+                {
+                    color: 'btn-danger',
+                    icon: 'fa-ban'
+                },
+                {
+                    color: 'btn-primary',
+                    icon: 'fa-check'
+                },
+                {
+                    color: 'btn-success',
+                    icon: 'fa-eye'
+                }
+            ] %}
+            {% set status = node.status >= classes|length ? 0 : node.status %}
+            <a href="#"
+               data-id="{{ node.id }}"
+               data-classname="{{ model.className }}"
+               data-status="{{ status }}"
+               class="js-status isactive btn btn-xs btn-circle {{ classes[status]['color'] }}">
+
+                {% for itm in classes %}
+                    <input type="hidden" class="js-status-opt" data-color="{{ itm.color }}" data-icon="{{ itm.icon }}" value="{{ loop.index0 }}">
+                {% endfor %}
+                <i class="fa {{ classes[status]['icon'] }}"></i>
+            </a>
+            <a href="/pz/{{ model.dataType == 0 ? 'database' : 'admin' }}/{{ model.id }}/detail/{{ node.id }}?returnUrl={{ app.request.uri|url_encode }}" class="edit btn btn-xs btn-circle btn-primary btn-outline"><i class="fa fa-pencil"></i></a>
+            <a href="/pz/{{ model.dataType == 0 ? 'database' : 'admin' }}/{{ model.id }}/copy/{{ node.id }}?returnUrl={{ app.request.uri|url_encode }}" class="copy btn btn-xs btn-circle btn-primary btn-outline"><i class="fa fa-copy"></i></a>
+            <a href="#" data-id="{{ node.id }}" data-classname="{{ model.className }}" class="js-delete delete btn btn-xs btn-circle btn-outline btn-danger"><i class="fa fa-times"></i></a>
+        </div>
+        {% if node.children|length %}
+            <ol class="dd-list">
+                {% for itm in node.children %}
+                    {{ nest(itm, model, depth + 1) }}
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </li>
+{% endmacro %}
