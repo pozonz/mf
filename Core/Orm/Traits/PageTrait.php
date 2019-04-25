@@ -2,10 +2,40 @@
 
 namespace MillenniumFalcon\Core\Orm\Traits;
 
+use MillenniumFalcon\Core\Nestable\NodeInterface;
 use MillenniumFalcon\Core\Orm\PageTemplate;
 
 trait PageTrait
 {
+    /**
+     * @var array
+     */
+    private $children = array();
+
+    /**
+     * @return array
+     */
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param array $children
+     */
+    public function setChildren(array $children)
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * @param NodeInterface $child
+     */
+    public function addChild(NodeInterface $child)
+    {
+        $this->children[] = $child;
+    }
+
     /**
      * @return string
      */
@@ -45,6 +75,6 @@ trait PageTrait
      */
     static public function getCmsOrmsTwig()
     {
-        return 'cms/orms-custom-pages.html.twig';
+        return 'cms/orms/orms-custom-pages.html.twig';
     }
 }

@@ -1,0 +1,45 @@
+{% extends 'cms/orms/orm.html.twig' %}
+
+{% block formWidgets %}
+	<div class="formStyle">
+		{{ form_label(form.title) }}
+		{{ form_widget(form.title) }}
+		{{ form_errors(form.title) }}
+	</div>
+	<div class="formStyle">
+		{{ form_label(form.attr) }}
+		{{ form_widget(form.attr) }}
+		{{ form_errors(form.attr) }}
+	</div>
+
+	<div class="formStyle type6 ">
+		{{ form_label(form.content) }}
+		{{ form_widget(form.content,{attr:{style:'display:none;'}}) }}
+
+		<table id="content-block-container">
+			<tbody>
+				<tr>
+					<td class="tableHead">ID</td>
+					<td class="tableHead">Title</td>
+					<td class="tableHead">Tags</td>
+					<td class="tableHead">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+		<button id="add" type="button" class="btn">Add</button>
+		<div>&nbsp;</div>
+		{{ form_errors(form.content) }}
+	</div>
+
+	{{ form_rest(form) }}
+{% endblock %}
+
+{% block externalFooter %}
+	{{ parent() }}
+
+	<script id="row" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm-custom-fragmentdefault.tr.twig' %}</script>
+	<script>
+		window._blockWidgets = {{ model.active('FragmentTag')|json_encode|raw }};
+	</script>
+	<script src="/cms/js/orm-fragmentdefault.js"></script>
+{% endblock %}

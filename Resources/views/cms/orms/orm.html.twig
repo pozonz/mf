@@ -1,6 +1,13 @@
 {% extends 'cms/base.html.twig' %}
+{% block extraBody %}class="page-orm"{% endblock %}
 
 {% form_theme form 'cms/form.twig' %}
+
+{% block externalHead %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/themes/default/style.min.css" />
+	<link rel="stylesheet" href="/cms/redactor/redactor/redactor.css" />
+{% endblock %}
 
 {% block container %}
 	<div id="h1">
@@ -30,7 +37,12 @@
 
 
 {% block externalFooter %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/jstree.min.js"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 
+	<script src="/cms/redactor/redactor/redactor.js" language="javascript"></script>
+	<script src="/cms/js/handlebar-helpers.js"></script>
 	<script src="/cms/js/orm.js"></script>
 {% endblock %}

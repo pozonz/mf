@@ -109,7 +109,7 @@ trait CmsModelTrait
         }
 
         $params['form'] = $form->createView();
-        $params['model'] = $model;
+        $params['ormModel'] = $model;
         return $this->render($params['node']->getTemplate(), $params);
     }
 

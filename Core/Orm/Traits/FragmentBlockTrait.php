@@ -4,4 +4,10 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 
 trait FragmentBlockTrait
 {
+    /**
+     * @return string
+     */
+    static public function getCmsOrmTwig() {
+        return 'cms/orms/orm-custom-fragmentblock.html.twig';
+    }
 }

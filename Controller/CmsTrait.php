@@ -50,104 +50,142 @@ trait CmsTrait
     /**
      * @return array
      */
-    public function getNodes()
+    protected function getNodes()
     {
         /** @var \PDO $pdo */
         $pdo = $this->connection->getWrappedConnection();
 
         $nodes = [];
-        $nodes[] = new PageNode(1, null, 0, 1, 'Pages', '/manage/pages', 'cms/pages.html.twig', 'cms_viewmode_cms');
+        //Set up major nav
+        $nodes[] = new PageNode(uniqid(), null, 0, 1, 'Pages', '/manage/pages', 'cms/pages.html.twig', 'cms_viewmode_cms');
 
+        //Set up custom partitions
         $orms = DataGroup::active($pdo);
         foreach ($orms as $idx => $itm) {
-            $id = $idx + 2;
-            $nodes[] = new PageNode($id, null, $id, 1, $itm->getTitle(), '/manage/section/' . $itm->getId(), 'cms/files.html.twig', $itm->getIcon());
-            $nodes[] = new PageNode($id . 0, $id, 0, 1, 'DATA');
-
             /** @var _Model[] $models */
             $models = _Model::active($pdo, array(
                 'whereSql' => 'm.dataGroups LIKE ? AND m.dataType = 0',
                 'params' => array('%"' . $itm->getId() . '"%'),
             ));
-            $data = [];
+
+            $id = uniqid();
+            $nodes[] = new PageNode($id, null, $idx + 1, 1, $itm->getTitle(), '/manage/section/' . $itm->getId(), 'cms/files.html.twig', $itm->getIcon());
+
+            $data = array();
+            $data['Data'] = null;
             foreach ($models as $model) {
-                $data[$model->getTitle()] = $model->getClassName();
+                $data[$model->getTitle()] = array(
+                    'class' => $model->getClassName(),
+                    'children' => array(),
+                );
             }
             $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $id, $data, '/manage/orms/'));
         }
 
+        //Set up assets
         $nodes[] = new PageNode(998, null, 998, 1, 'Assets', '/manage/files', 'cms/files.html.twig', 'cms_viewmode_asset');
+
+        //Set up admin
         $nodes[] = new PageNode(999, null, 999, 1, 'Admin', '/manage/admin', 'cms/admin.html.twig', 'cms_viewmode_admin');
-
-        $nodes[] = new PageNode(9991, 999, 1, 1, 'TOOLS');
         $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 999, array(
-            'Webpage Builder' => 'Page',
-        ), '/manage/admin/orms/', 2));
-
-//        $nodes[] = new PageNode(9992, 999, 2, 1, 'Webpage Builder', '/manage/admin/web-page-builder', 'cms/admin/pages.html.twig');
-        $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 9992, array(
-            'Manage Templates' => 'PageTemplate',
-            'Manage Categories' => 'PageCategory',
+            'TOOLS' => null,
+            'Webpage Builder' => array(
+                'class' => 'Page',
+                'children' => array(
+                    'Manage Templates' => array(
+                        'class' => 'PageTemplate',
+                        'children' => array(),
+                    ),
+                    'Manage Categories' => array(
+                        'class' => 'PageCategory',
+                        'children' => array(),
+                    ),
+                ),
+            ),
         ), '/manage/admin/orms/'));
 
-        $nodes[] = new PageNode(9993, 999, 3, 1, 'Model Builder', '/manage/admin/model-builder', 'cms/admin/models.html.twig');
-        $nodes[] = new PageNode(99931, 9993, 1, 2, 'Model', '/manage/admin/model-builder/', 'cms/admin/model.html.twig', null, 1, 1);
-        $nodes[] = new PageNode(99932, 9993, 2, 2, 'Model', '/manage/admin/model-builder/copy/', 'cms/admin/model.html.twig', null, 1, 1);
+        //Set up model builder in admin
+        $nodes[] = new PageNode(9992, 999, 2, 1, 'Model Builder', '/manage/admin/model-builder', 'cms/models/models.html.twig');
+        $nodes[] = new PageNode(99921, 9992, 1, 2, 'Model', '/manage/admin/model-builder/', 'cms/models/model.html.twig', null, 1, 1);
+        $nodes[] = new PageNode(99922, 9992, 2, 2, 'Model', '/manage/admin/model-builder/copy/', 'cms/models/model.html.twig', null, 1, 1);
+        $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 9992, array(
+            'Content Blocks' => array(
+                'class' => 'FragmentBlock',
+                'children' => array(),
+            ),
+            'Content Block Tags' => array(
+                'class' => 'FragmentTag',
+                'children' => array(),
+            ),
+            'Content Block Defaults' => array(
+                'class' => 'FragmentDefault',
+                'children' => array(),
+            ),
+        ), '/manage/admin/orms/', 10));
 
-//        $nodes[] = new PageNode(9994, 999, 4, 1, 'Form Descriptors', '/manage/admin/form-builder', 'cms/admin/forms.html.twig');
-
+        //Set up rest in admin
         $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 999, array(
-            'Image Sizes' => 'AssetSize',
-        ), '/manage/admin/orms/', 5));
-
-//        $nodes[] = new PageNode(9995, 999, 5, 1, 'Image Sizes', '/manage/admin/orms/AssetSize', AssetSize::getCmsOrmsTwig());
-//        $nodes[] = new PageNode(99951, 9995, 1, 2, 'Image Size', '/manage/admin/orms/AssetSize/', AssetSize::getCmsOrmTwig(), null, 1, 1);
-
-        $nodes[] = new PageNode(9996, 999, 6, 1, 'ADMIN');
-        $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 999, array(
-            'Users' => 'User',
-            'CMS Partitions' => 'DataGroup',
-        ), '/manage/admin/orms/', 7));
-
-//        var_dump($nodes);exit;
+            'Image Sizes' => array(
+                'class' => 'AssetSize',
+                'children' => array(),
+            ),
+            'Admin' => null,
+            'Users' => array(
+                'class' => 'User',
+                'children' => array(),
+            ),
+            'Partitions' => array(
+                'class' => 'DataGroup',
+                'children' => array(),
+            ),
+        ), '/manage/admin/orms/', 10));
         return $nodes;
     }
 
     static public function appendModelsToParent($pdo, $parentId, $data = array(), $baseUrl, $start = 1)
     {
         $ormsListTwig = array(
-            0 => 'cms/orms-dragdrop.html.twig',
-            1 => 'cms/orms-pagination.html.twig',
-            2 => 'cms/orms-tree.html.twig',
+            0 => 'cms/orms/orms-dragdrop.html.twig',
+            1 => 'cms/orms/orms-pagination.html.twig',
+            2 => 'cms/orms/orms-tree.html.twig',
         );
 
-        $ormDefaultTwig = 'cms/orm.html.twig';
+        $ormDefaultTwig = 'cms/orms/orm.html.twig';
 
         $nodes = array();
         $count = $start;
         foreach ($data as $idx => $itm) {
-            /** @var _Model $model */
-            $model = _Model::getByField($pdo, 'className', $itm);
-            $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
+            if ($itm === null) {
+                $nodes[] = new PageNode(uniqid(), $parentId, $count, 1, $idx);
+            } else {
+                $className = $itm['class'];
+                $children = $itm['children'];
 
-            $ormsTwig = $fullClass::getCmsOrmsTwig();
-            if (!$ormsTwig) {
-                $ormsTwig = $ormsListTwig[$model->getListType()];
+                /** @var _Model $model */
+                $model = _Model::getByField($pdo, 'className', $className);
+                $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
+
+                $ormsTwig = $fullClass::getCmsOrmsTwig();
+                if (!$ormsTwig) {
+                    $ormsTwig = $ormsListTwig[$model->getListType()];
+                }
+                $ormTwig = $fullClass::getCmsOrmTwig();
+                if (!$ormTwig) {
+                    $ormTwig = $ormDefaultTwig;
+                }
+
+                $modelNodeId = uniqid();
+                $nodes[] = new PageNode($modelNodeId, $parentId, $count, 1, $idx, $baseUrl . $className, $ormsTwig);
+                $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $baseUrl . $className . '/', $ormTwig, null, 1, 1);
+                $nodes[] = new PageNode(uniqid(), $modelNodeId, 2, 2, '', $baseUrl . $className . '/copy/', $ormTwig, null, 1, 1);
+
+                if (count($children)) {
+                    $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $modelNodeId, $children, $baseUrl, 3));
+                }
+
             }
-            $ormTwig = $fullClass::getCmsOrmTwig();
-            if (!$ormTwig) {
-                $ormTwig = $ormDefaultTwig;
-            }
-
-            $modelNodeId = $parentId . $count;
-            $nodes[] = new PageNode($modelNodeId, $parentId, $count, 1, $idx, $baseUrl . $itm, $ormsTwig);
-            $nodes[] = new PageNode($modelNodeId . 1, $modelNodeId, 1, 2, '', $baseUrl . $itm . '/', $ormTwig, null, 1, 1);
-            $nodes[] = new PageNode($modelNodeId . 2, $modelNodeId, 2, 2, '', $baseUrl . $itm . '/copy/', $ormTwig, null, 1, 1);
-
             $count++;
         }
         return $nodes;
     }
-
-
 }

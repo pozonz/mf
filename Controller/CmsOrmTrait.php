@@ -36,50 +36,18 @@ trait CmsOrmTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
+        $request = Request::createFromGlobals();
+
         /** @var _Model $model */
         $model = _Model::getByField($pdo, 'className', 'Page');
-        $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
 
         $categories = PageCategory::active($pdo);
-
-        $request = Request::createFromGlobals();
-        $category = $request->get('cat') || $request->get('cat') === 0 ? $request->get('cat') : $categories[0]->getId();
-//                    {% set cat = app.request.get('cat') or app.request.get('cat') is same as('0') ? app.request.get('cat') : categories.0.id %}
-
-        $pages = Page::data($pdo);
-        $nodes = array();
-        foreach ($pages as $page) {
-            $category = $page->getCategory() ? json_decode($page->getCategory()) : [];
-            if (!in_array($cat, $category) && !($cat == 0 && count($category) == 0)) {
-                continue;
-            }
-            $categoryParent = (array)json_decode($page->getCategoryParent());
-            $categoryRank = (array)json_decode($page->getCategoryRank());
-            $categoryClosed = (array)json_decode($page->getCategoryClosed());
-
-            $categoryParentValue = isset($categoryParent["cat$cat"]) ? $categoryParent["cat$cat"] : 0;
-            $categoryRankValue = isset($categoryRank["cat$cat"]) ? $categoryRank["cat$cat"] : 0;
-            $categoryClosedValue = isset($categoryClosed["cat$cat"]) ? $categoryClosed["cat$cat"] : 0;
-
-            $page->setParentId($categoryParentValue);
-            $page->setRank($categoryRankValue);
-            $page->setClosed($categoryClosedValue);
-
-            $nodes[] =$page;
-        }
-
-        $tree = new Tree($nodes);
-        $pageRoot = $tree->getRoot();
+        $cat = $request->get('cat') || $request->get('cat') === '0' ? $request->get('cat') : $categories[0]->getId();
 
         $params = $this->prepareParams();
-
-//        var_dump($params);exit;
-//        var_dump($model->getListType());exit;
-
-        $params['pageRoot'] = $pageRoot;
         $params['categories'] = $categories;
-        $params['category'] = $category;
-        $params['model'] = $model;
+        $params['cat'] = $cat;
+        $params['ormModel'] = $model;
         return $this->render($params['node']->getTemplate(), $params);
     }
 
@@ -128,7 +96,7 @@ trait CmsOrmTrait
 
         }
 
-        $params['model'] = $model;
+        $params['ormModel'] = $model;
         $params['orms'] = $orms;
         return $this->render($params['node']->getTemplate(), $params);
     }
@@ -202,9 +170,9 @@ trait CmsOrmTrait
             $isNew = $orm->getId() ? 0 : 1;
             $orm->save();
 
-            $baseUrl = '/manage/orms/' . $model->getClassName();
+            $baseUrl = str_replace('copy/', '', $params['node']->getUrl());
             if ($request->get('submit') == 'Apply') {
-                throw new RedirectException($baseUrl . '/' . $orm->getId());
+                throw new RedirectException($baseUrl . $orm->getId() . '?returnUrl=' . urlencode($returnUrl));
             } else if ($request->get('submit') == 'Save') {
                 throw new RedirectException($returnUrl);
             }
@@ -212,7 +180,7 @@ trait CmsOrmTrait
 
         $params['returnUrl'] = $returnUrl;
         $params['form'] = $form->createView();
-        $params['model'] = $model;
+        $params['ormModel'] = $model;
         $params['orm'] = $orm;
         return $this->render($params['node']->getTemplate(), $params);
     }

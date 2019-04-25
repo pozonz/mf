@@ -2,9 +2,9 @@
 
 namespace MillenniumFalcon\Controller;
 
-use MillenniumFalcon\Core\Router;
+use MillenniumFalcon\Core\RouterController;
 
-class CmsController extends Router
+class CmsController extends RouterController
 {
     use CmsOrmTrait,
         CmsModelTrait,

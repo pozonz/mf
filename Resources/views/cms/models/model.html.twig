@@ -1,0 +1,123 @@
+{% extends 'cms/base.html.twig' %}
+{% block extraBody %}class="page-model"{% endblock %}
+
+{% form_theme form 'cms/form.twig' %}
+
+{% block container %}
+    <div id="h1">
+        {% if ormModel.id %}
+            <h1>Editing {{ ormModel.className }}</h1>
+        {% else %}
+            <h1>Creating new model...</h1>
+        {% endif %}
+    </div>
+
+    <form method="post" autocomplete="off" novalidate class="edit">
+        <div class="">
+            <div class="formStyle">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.title) }}
+            </div>
+            <div class="formStyle">
+                {{ form_label(form.className) }}
+                {{ form_widget(form.className, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.className) }}
+            </div>
+            <div class="formStyle">
+                {{ form_label(form.modelType) }}
+                {{ form_widget(form.modelType) }}
+                {{ form_errors(form.modelType) }}
+            </div>
+            <div class="formStyle">
+                {{ form_label(form.listType) }}
+                {{ form_widget(form.listType) }}
+                {{ form_errors(form.listType) }}
+            </div>
+            <div class="js-model-pagination-detail model-pagination-detail" style="display: none;">
+                <div class="formStyle">
+                    {{ form_label(form.numberPerPage) }}
+                    {{ form_widget(form.numberPerPage, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.numberPerPage) }}
+                </div>
+                <div class="formStyle">
+                    {{ form_label(form.defaultSortBy) }}
+                    {{ form_widget(form.defaultSortBy, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.defaultSortBy) }}
+                </div>
+                <div class="formStyle">
+                    {{ form_label(form.defaultOrder) }}
+                    {{ form_widget(form.defaultOrder) }}
+                    {{ form_errors(form.defaultOrder) }}
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="formStyle">
+                {{ form_label(form.dataType) }}
+                {{ form_widget(form.dataType) }}
+                {{ form_errors(form.dataType) }}
+            </div>
+
+            <div class="model-data-group js-model-data-group" style="display: none;">
+                <div class="formStyle">
+                    {{ form_label(form.dataGroups) }}
+                    {{ form_widget(form.dataGroups, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.dataGroups) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="columns-container">
+            <div class="formStyle"></div>
+            <div class="formStyle">
+                <select id="fields" class="chosen-select form-control" data-placeholder="Add a field"></select>
+            </div>
+
+            <div class="">
+                <table id="columns" class="edit">
+                    <tbody>
+                        <tr>
+                            <td class="tableHead" width="20%">Widget</td>
+                            <td class="tableHead" width="30%">Label</td>
+                            <td class="tableHead" width="25%">Field</td>
+                            <td class="tableHead" width="10%">Column</td>
+                            <td class="tableHead" width="10%">Required</td>
+                            <td class="tableHead" width="5%"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group" style="display: none;">
+            {{ form_label(form.columnsJson) }}
+            {{ form_widget(form.columnsJson, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.columnsJson) }}
+        </div>
+
+        <div class="submit-area">
+            {#{{ form_widget(form._token) }}#}
+            <a class="back-button button" href="/manage/admin/model-builder">‹ Back</a>
+            <button class="submit button save-content" style="background: #2281cf;" name='submit' value='Apply'>Apply</button>
+            <button class="submit button" name='submit' value='Save'>Save & Exit ›</button>
+        </div>
+    </form>
+{% endblock %}
+
+
+{% block externalFooter %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    <script src="/cms/js/handlebar-helpers.js"></script>
+    <script id="field-source" type="text/x-handlebars-template">{% include 'cms/models/handlebar/model.tr.twig' %}</script>
+    <script>
+        window._columns = JSON.parse('{{ form.columnsJson.vars.value|e('js') ?: '[]' }}');
+        window._fields = {{ ormModel.fieldChoices|keys|json_encode|raw }};
+        window._metas = {{ ormModel.parentFields|keys|json_encode|raw }};
+        window._widgets = {{ ormModel.widgetChoices|ksort|json_encode|raw }};
+        window._defaultSortBy = '{{ form.defaultSortBy.vars.value ?: 'id' }}';
+    </script>
+
+    <script src="/cms/js/model.js"></script>
+{% endblock %}

@@ -2,11 +2,11 @@
 
 namespace MillenniumFalcon\Core\Twig;
 
-use Pz\Orm\_Model;
-use Pz\Orm\Page;
-use Pz\Redirect\RedirectException;
-use Pz\Router\Tree;
-use Pz\Service\DbService;
+use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\Orm\Page;
+use MillenniumFalcon\Core\Redirect\RedirectException;
+use MillenniumFalcon\Core\Nestable\Tree;
+
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -37,7 +37,6 @@ class Extension extends AbstractExtension
     {
         return array(
             'getenv' => new TwigFunction('getenv', 'getenv'),
-            'css' => new TwigFunction('css', array($this, 'css')),
             'redirect' => new TwigFunction('redirect', [$this, 'throwRedirectException']),
             'not_found' => new TwigFunction('not_found', [$this, 'throwNotFoundException']),
             'http_exception' => new TwigFunction('http_exception', [$this, 'throwHttpException'])
@@ -50,26 +49,26 @@ class Extension extends AbstractExtension
     public function getFilters()
     {
         return array(
-            'jsondecode' => new TwigFilter('jsondecode', array($this, 'jsondecode')),
+            'json_decode' => new TwigFilter('json_decode', array($this, 'json_decode')),
+            'ksort' => new TwigFilter('ksort', array($this, 'ksort')),
             'block' => new TwigFilter('block', array($this, 'block')),
             'section' => new TwigFilter('section', array($this, 'section')),
             'sections' => new TwigFilter('sections', array($this, 'sections')),
-            'nestable' => new TwigFilter('nestable', array($this, 'nestable')),
             'nestablePges' => new TwigFilter('nestablePges', array($this, 'nestablePges')),
         );
 
     }
 
-    public function css($path)
-    {
-//        while (@ob_end_clean());
-//        var_dump($this->container->getParameter('kernel.project_dir') . '/public/' . $path);exit;
-        return file_get_contents($this->container->getParameter('kernel.project_dir') . '/public/' . $path);
-    }
 
-    public function jsondecode($value)
+    public function json_decode($value)
     {
         return json_decode($value);
+    }
+
+    public function ksort($array)
+    {
+        ksort($array);
+        return $array;
     }
 
     public function block($block)
@@ -106,13 +105,34 @@ class Extension extends AbstractExtension
     }
 
     /**
-     * @param array $orms
-     * @param _Model $model
-     * @return \Pz\Router\InterfaceNode
+     * @param $pages
+     * @param $cat
+     * @return mixed
      */
-    public static function nestable(array $orms, _Model $model)
+    static public function nestablePges($pages, $cat)
     {
-        $tree = new Tree($orms);
+        $nodes = array();
+        foreach ($pages as $page) {
+            $category = $page->getCategory() ? json_decode($page->getCategory()) : [];
+            if (!in_array($cat, $category) && !($cat == 0 && count($category) == 0)) {
+                continue;
+            }
+            $categoryParent = (array)json_decode($page->getCategoryParent());
+            $categoryRank = (array)json_decode($page->getCategoryRank());
+            $categoryClosed = (array)json_decode($page->getCategoryClosed());
+
+            $categoryParentValue = isset($categoryParent["cat$cat"]) ? $categoryParent["cat$cat"] : 0;
+            $categoryRankValue = isset($categoryRank["cat$cat"]) ? $categoryRank["cat$cat"] : 0;
+            $categoryClosedValue = isset($categoryClosed["cat$cat"]) ? $categoryClosed["cat$cat"] : 0;
+
+            $page->setParentId($categoryParentValue);
+            $page->setRank($categoryRankValue);
+            $page->setClosed($categoryClosedValue);
+
+            $nodes[] =$page;
+        }
+
+        $tree = new Tree($nodes);
         return $tree->getRoot();
     }
 
