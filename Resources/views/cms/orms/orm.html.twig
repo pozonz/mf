@@ -6,7 +6,8 @@
 {% block externalHead %}
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/themes/default/style.min.css" />
-	<link rel="stylesheet" href="/cms/redactor/redactor/redactor.css" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	<link rel="stylesheet" href="/cms/redactor/redactor.min.css" />
 {% endblock %}
 
 {% block container %}
@@ -37,12 +38,15 @@
 
 
 {% block externalFooter %}
+	<script id="gallery-file" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.gallery-file.twig' %}</script>
+
+	<script src="/cms/redactor/redactor.min.js" language="javascript"></script>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/jstree.min.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
-
-	<script src="/cms/redactor/redactor/redactor.js" language="javascript"></script>
 	<script src="/cms/js/handlebar-helpers.js"></script>
 	<script src="/cms/js/orm.js"></script>
 {% endblock %}

@@ -1,0 +1,43 @@
+{% verbatim %}
+    <li class="tableContent" id="">
+        <div class="asset-img">
+            <a href="" title=""><img src="/Images/Assets/5432/5/" alt="" class="mceImage" border="0"></a>
+        </div>
+        <div class="details">
+            <a href="" title="">{{file.title}}</a>
+
+            <div class="asset-controls">
+                <a href="#" class="icon approve" rel="on" id="approve_5432"><img src="/cms/images/dotGreen.gif" alt="" border="0"></a>
+                <a class="icon" href="" title="24 October 2018 Panuku Board Meeting_for_testing"><img src="/cms/images/editIcon.gif" alt="Edit record" title="Edit record" border="0"></a>
+                <a class="icon" href=""><img src="/cms/images/binIcon.gif" alt="" border="0"></a>
+                <div class="doc-code-meta">{{file.id}}</div>
+            </div>
+        </div>
+    </li>
+{% endverbatim %}
+
+
+{#<div class="file-box {#}{#compare 1 file._selected operator="=="}}active{{/compare}}" data-id="{{file.id}}" data-title="{{file.title}}" id="{{file.id}}">#}
+{#<button type="button" class="pz-file-delete btn btn-danger btn-circle js-file-delete"><i class="fa fa-times"></i></button>#}
+{#<div class="file ui-state-default">#}
+    {#<a href="/assets/download/{{file.id}}">#}
+        {#<span class="corner"></span>#}
+        {#<div class="icon">#}
+            {#<img src="/assets/image/{{file.id}}/small" />#}
+        {#</div>#}
+        {#<div class="file-name">#}
+            {#{{file.title}}#}
+            {#<br/>#}
+            {#<small>{{file.added}}</small>#}
+        {#</div>#}
+    {#</a>#}
+    {#{#}{#compare 1 mode operator="=="}}#}
+    {#<div class="select-area">#}
+        {#<a href="#" class="selected js-select {#}{#compare 1 file._selected operator="=="}}active{{/compare}}">#}
+        {#{#}{#compare 1 file._selected operator="=="}}<i class="fa fa-toggle-on fa-2x"></i>{{/compare}}#}
+        {#{#}{#compare 1 file._selected operator="!="}}<i class="fa fa-toggle-off fa-2x"></i>{{/compare}}#}
+        {#</a>#}
+    {#</div>#}
+    {#{{/compare}}#}
+{#</div>#}
+{#</div>#}

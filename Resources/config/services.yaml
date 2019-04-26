@@ -1,0 +1,15 @@
+MillenniumFalcon\:
+    resource: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/*'
+    exclude: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+MillenniumFalcon\Core\Redirect\RedirectExceptionListener:
+    tags:
+        - { name: 'kernel.event_listener', event: 'kernel.exception', priority: 11}
+
+MillenniumFalcon\Controller\:
+        resource: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/Controller'
+        tags: ['controller.service_arguments']
+
+MillenniumFalcon\Core\Twig\Extension:
+    arguments:
+        $container: '@service_container'

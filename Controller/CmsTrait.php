@@ -69,7 +69,7 @@ trait CmsTrait
             ));
 
             $id = uniqid();
-            $nodes[] = new PageNode($id, null, $idx + 1, 1, $itm->getTitle(), '/manage/section/' . $itm->getId(), 'cms/files.html.twig', $itm->getIcon());
+            $nodes[] = new PageNode($id, null, $idx + 1, 1, $itm->getTitle(), '/manage/section/' . $itm->getId(), 'cms/admin.html.twig', $itm->getIcon());
 
             $data = array();
             $data['Data'] = null;
@@ -83,7 +83,7 @@ trait CmsTrait
         }
 
         //Set up assets
-        $nodes[] = new PageNode(998, null, 998, 1, 'Assets', '/manage/files', 'cms/files.html.twig', 'cms_viewmode_asset');
+        $nodes[] = new PageNode(998, null, 998, 1, 'Assets', '/manage/files', 'cms/files/files.html.twig', 'cms_viewmode_asset');
 
         //Set up admin
         $nodes[] = new PageNode(999, null, 999, 1, 'Admin', '/manage/admin', 'cms/admin.html.twig', 'cms_viewmode_admin');
@@ -105,7 +105,7 @@ trait CmsTrait
         ), '/manage/admin/orms/'));
 
         //Set up model builder in admin
-        $nodes[] = new PageNode(9992, 999, 2, 1, 'Model Builder', '/manage/admin/model-builder', 'cms/models/models.html.twig');
+        $nodes[] = new PageNode(9992, 999, 3, 1, 'Model Builder', '/manage/admin/model-builder', 'cms/models/models.html.twig');
         $nodes[] = new PageNode(99921, 9992, 1, 2, 'Model', '/manage/admin/model-builder/', 'cms/models/model.html.twig', null, 1, 1);
         $nodes[] = new PageNode(99922, 9992, 2, 2, 'Model', '/manage/admin/model-builder/copy/', 'cms/models/model.html.twig', null, 1, 1);
         $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 9992, array(

@@ -1,0 +1,30 @@
+{% extends 'cms/base.html.twig' %}
+{% block extraBody %}class="page-files mode-asset"{% endblock %}
+
+{% block externalHead %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.30.0/css/jquery.fileupload.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/themes/default/style.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+{% endblock %}
+
+{% block container %}
+    <div class="wrapper wrapper-content">
+        {% include 'cms/includes/file-manager.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block externalFooter %}
+    <script id="loading" type="text/x-handlebars-template">{% include 'cms/files/handlebar/loading.twig' %}</script>
+    <script id="folder" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-folders.twig' %}</script>
+    <script id="file" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-file.twig' %}</script>
+    <script id="nav" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-nav.twig' %}</script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.30.0/js/jquery.fileupload.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/jstree.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    <script src="/cms/js/handlebar-helpers.js"></script>
+    <script src="/cms/js/fm.js"></script>
+    <script src="/cms/js/files.js"></script>
+{% endblock %}
