@@ -1,16 +1,20 @@
 {% verbatim %}
-    <li class="tableContent js-tableContent" id="">
+    <li class="tableContent" >
         <div class="asset-img">
-            <a href="" title=""><img src="/Images/Assets/5432/5/" alt="" class="mceImage" border="0"></a>
+            <img src="/Images/Assets/{{ documentCode }}/5/" alt="Test" border="0" class="mceImage"><br>
         </div>
         <div class="details">
-            <a href="" title="">{{file.title}}</a>
-
-            <div class="asset-controls">
-                <a href="#" class="icon approve" rel="on" id="approve_5432"><img src="/cms/images/dotGreen.gif" alt="" border="0"></a>
-                <a class="icon" href="" title="24 October 2018 Panuku Board Meeting_for_testing"><img src="/cms/images/editIcon.gif" alt="Edit record" title="Edit record" border="0"></a>
-                <a class="icon" href=""><img src="/cms/images/binIcon.gif" alt="" border="0"></a>
-                <div class="doc-code-meta">{{file.id}}</div>
+            <div>
+                {{#if active }}
+                    <a href="#" class="approve" rel="on" id="approve_{{ documentCode }}"><img src="/cms/images/dotGreen.gif" title="approve content" alt="approve content" border="0"></a>
+                {{ else }}
+                    <a href="#" class="approve" rel="off" id="approve_{{ documentCode }}"><img src="/cms/images/dotRed.gif" title="approve content" alt="approve content" border="0"></a>
+                {{/if}}
+                <br>
+                <a href="/cms/html/index.php?fileNo=169&amp;formid=220&amp;parent={{ parent }}&amp;documentCode={{ documentCode }}" title="{{ name }}">{{ name }}</a>
+            </div>
+            <div>
+                {{ rank }}
             </div>
         </div>
     </li>

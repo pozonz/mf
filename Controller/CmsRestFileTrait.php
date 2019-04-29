@@ -397,14 +397,9 @@ trait CmsRestFileTrait
         $pdo = $connection->getWrappedConnection();
 
         $request = Request::createFromGlobals();
-        $files = $request->files->get('files');
-        if ($files && is_array($files) && count($files) > 0) {
-            return $this->processUploadedFile($pdo, $files[0]);
-        } else {
-            $file = $files = $request->files->get('file');
-            if ($file) {
-                return $this->processUploadedFile($pdo, $file);
-            }
+        $file = $files = $request->files->get('file');
+        if ($file) {
+            return $this->processUploadedFile($pdo, $file);
         }
 
         return new Response(json_encode(array(
@@ -429,16 +424,19 @@ trait CmsRestFileTrait
 
         $orm = new Asset($pdo);
         $orm->setIsFolder(0);
-        $orm->setParentId($request->get('parentId'));
+        $orm->setParentId($request->request->get('parentId'));
         $orm->setRank($min);
         $orm->setTitle($originalName);
         $orm->setFileName($originalName);
-        $orm->setFileLocation($orm->getId() . '.' . $ext);
         $orm->setFileType($file->getType());
         $orm->setFileSize($file->getSize());
         $orm->save();
 
         $file->move($this->container->getParameter('kernel.project_dir') . '/uploads/');
+
+        $orm->setFileLocation($orm->getId() . '.' . $ext);
+        $orm->save();
+
         if (file_exists($this->container->getParameter('kernel.project_dir') . '/uploads/' . $file->getFilename())) {
             rename($this->container->getParameter('kernel.project_dir') . '/uploads/' . $file->getFilename(), dirname($_SERVER['SCRIPT_FILENAME']) . '/../uploads/' . $orm->getId() . '.' . $ext);
         }
