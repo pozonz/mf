@@ -399,11 +399,11 @@ trait CmsRestFileTrait
         $request = Request::createFromGlobals();
         $files = $request->files->get('files');
         if ($files && is_array($files) && count($files) > 0) {
-            $this->processUploadedFile($pdo, $files[0]);
+            return $this->processUploadedFile($pdo, $files[0]);
         } else {
             $file = $files = $request->files->get('file');
             if ($file) {
-                $this->processUploadedFile($pdo, $file);
+                return $this->processUploadedFile($pdo, $file);
             }
         }
 
@@ -433,23 +433,14 @@ trait CmsRestFileTrait
         $orm->setRank($min);
         $orm->setTitle($originalName);
         $orm->setFileName($originalName);
-        $orm->save();
-
-        require_once $this->container->getParameter('kernel.project_dir') . '/vendor/blueimp/jquery-file-upload/server/php/UploadHandler.php';
-        $uploader = new \UploadHandler(array(
-            'upload_dir' => $this->container->getParameter('kernel.project_dir') . '/uploads/',
-            'image_versions' => array()
-        ), false);
-        $_SERVER['HTTP_CONTENT_DISPOSITION'] = $orm->getId();
-        $result = $uploader->post(false);
-
         $orm->setFileLocation($orm->getId() . '.' . $ext);
-        $orm->setFileType($result['files'][0]->type);
-        $orm->setFileSize($result['files'][0]->size);
+        $orm->setFileType($file->getType());
+        $orm->setFileSize($file->getSize());
         $orm->save();
 
-        if (file_exists($this->container->getParameter('kernel.project_dir') . '/uploads/' . $result['files'][0]->name)) {
-            rename($this->container->getParameter('kernel.project_dir') . '/uploads/' . $result['files'][0]->name, dirname($_SERVER['SCRIPT_FILENAME']) . '/../uploads/' . $orm->getId() . '.' . $ext);
+        $file->move($this->container->getParameter('kernel.project_dir') . '/uploads/');
+        if (file_exists($this->container->getParameter('kernel.project_dir') . '/uploads/' . $file->getFilename())) {
+            rename($this->container->getParameter('kernel.project_dir') . '/uploads/' . $file->getFilename(), dirname($_SERVER['SCRIPT_FILENAME']) . '/../uploads/' . $orm->getId() . '.' . $ext);
         }
 
         return new JsonResponse($orm);

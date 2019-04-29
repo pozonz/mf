@@ -24,12 +24,6 @@
         </h1>
         <div class="addForm">
             {{#compare '' keyword operator="=="}}
-                <button class="btn btn-xs btn-circle btn-primary btn-outline" onclick="$('#fileupload').click();">
-                    Upload Files
-                </button>
-            {{/compare}}
-
-            {{#compare '' keyword operator="=="}}
                 {{#ifMoreThan1 path}}
                     <button class="btn btn-xs btn-circle btn-warning" data-toggle="modal" data-target="#js-edit-dialog">
                        Change Folder Name
