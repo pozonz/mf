@@ -25,35 +25,35 @@
         <div class="addForm">
             {{#compare '' keyword operator="=="}}
                 <button class="btn btn-xs btn-circle btn-primary btn-outline" onclick="$('#fileupload').click();">
-                    Upload
+                    Upload Files
                 </button>
             {{/compare}}
 
             {{#compare '' keyword operator="=="}}
                 {{#ifMoreThan1 path}}
                     <button class="btn btn-xs btn-circle btn-warning" data-toggle="modal" data-target="#js-edit-dialog">
-                       Edit
+                       Change Folder Name
                     </button>
                 {{/ifMoreThan1}}
             {{/compare}}
 
             {{#compare '' keyword operator="=="}}
                 <button class="btn btn-xs btn-circle btn-info" data-toggle="modal" data-target="#js-add-dialog">
-                    Add
+                    Add Subfolder
                 </button>
             {{/compare}}
 
             {{#compare '' keyword operator="=="}}
                 {{#ifMoreThan1 path}}
                     <button class="btn btn-xs btn-circle btn-danger btn-outline js-folder-delete" data-id="{{currentFolder.id}}" data-parent="{{currentFolder.parentId}}">
-                        Delete
+                        Delete Folder
                     </button>
                 {{/ifMoreThan1}}
             {{/compare}}
         </div>
     </div>
     <div class="clearfix"></div>
-    <input id="fileupload" type="file" name="files[]" multiple style="display: none;">
+    <input id="fileupload" type="file" name="file[]" multiple style="display: none;">
     <div class="progress progress-striped" style="display: none;">
         <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
     </div>

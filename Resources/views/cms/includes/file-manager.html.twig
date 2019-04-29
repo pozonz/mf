@@ -13,25 +13,15 @@
         <div class="col-lg-3">
             <div id="js-folders"></div>
         </div>
-        <div class="col-lg-9">
+        <div id="js-files" class="col-lg-9">
             <ul id="filesImageList" class="contentListTable assets-images ui-sortable">
-                {% for i in 1..200 %}
-                    <li class="tableContent" id="documentCode-5432">
-                        <div class="asset-img">
-                            <a href="" title=""><img src="/Images/Assets/5432/5/" alt="" class="mceImage" border="0"></a>
-                        </div>
-                        <div class="details">
-                            <a href="" title="">24 October 2018 Panu...</a>
-
-                            <div class="asset-controls">
-                                <a href="#" class="icon approve" rel="on" id="approve_5432"><img src="/cms/images/dotGreen.gif" alt="" border="0"></a>
-                                <a class="icon" href="" title="24 October 2018 Panuku Board Meeting_for_testing"><img src="/cms/images/editIcon.gif" alt="Edit record" title="Edit record" border="0"></a>
-                                <a class="icon" href=""><img src="/cms/images/binIcon.gif" alt="" border="0"></a>
-                                <div class="doc-code-meta">5432</div>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
+                <li class="dropzone-wrap" id="dropzone-wrap">
+                    <div>
+                        <form class="dropzone dz-clickable" action="/manage/rest/asset/files/upload" method="post" enctype="multipart/form-data" id="cms_form-dropzone">
+                            <div class="dz-default dz-message"><span>Drop files here to upload</span></div>
+                        </form>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>

@@ -12,6 +12,7 @@ use MillenniumFalcon\Core\Nestable\AssetNode;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Twig\Extension;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -396,51 +397,62 @@ trait CmsRestFileTrait
         $pdo = $connection->getWrappedConnection();
 
         $request = Request::createFromGlobals();
-
         $files = $request->files->get('files');
         if ($files && is_array($files) && count($files) > 0) {
-            $originalName = $files[0]->getClientOriginalName();
-            $ext = pathinfo($originalName, PATHINFO_EXTENSION);
-
-            $rank = Asset::data($pdo, array(
-                'select' => 'MIN(m.rank) AS min',
-                'orm' => 0,
-                'whereSql' => 'm.parentId = ?',
-                'params' => array($request->get('parentId')),
-                'oneOrNull' => 1,
-            ));
-            $min = $rank['min'] - 1;
-
-            $orm = new Asset($pdo);
-            $orm->setIsFolder(0);
-            $orm->setParentId($request->get('parentId'));
-            $orm->setRank($min);
-            $orm->setTitle($originalName);
-            $orm->setFileName($originalName);
-            $orm->save();
-
-            require_once $this->container->getParameter('kernel.project_dir') . '/vendor/blueimp/jquery-file-upload/server/php/UploadHandler.php';
-            $uploader = new \UploadHandler(array(
-                'upload_dir' => $this->container->getParameter('kernel.project_dir') . '/uploads/',
-                'image_versions' => array()
-            ), false);
-            $_SERVER['HTTP_CONTENT_DISPOSITION'] = $orm->getId();
-            $result = $uploader->post(false);
-
-            $orm->setFileLocation($orm->getId() . '.' . $ext);
-            $orm->setFileType($result['files'][0]->type);
-            $orm->setFileSize($result['files'][0]->size);
-            $orm->save();
-
-            if (file_exists($this->container->getParameter('kernel.project_dir') . '/uploads/' . $result['files'][0]->name)) {
-                rename($this->container->getParameter('kernel.project_dir') . '/uploads/' . $result['files'][0]->name, dirname($_SERVER['SCRIPT_FILENAME']) . '/../uploads/' . $orm->getId() . '.' . $ext);
+            $this->processUploadedFile($pdo, $files[0]);
+        } else {
+            $file = $files = $request->files->get('file');
+            if ($file) {
+                $this->processUploadedFile($pdo, $file);
             }
-
-            return new JsonResponse($orm);
         }
+
         return new Response(json_encode(array(
             'failed'
         )));
+    }
+
+    private function processUploadedFile(\PDO $pdo, UploadedFile $file) {
+        $request = Request::createFromGlobals();
+
+        $originalName = $file->getClientOriginalName();
+        $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+
+        $rank = Asset::data($pdo, array(
+            'select' => 'MIN(m.rank) AS min',
+            'orm' => 0,
+            'whereSql' => 'm.parentId = ?',
+            'params' => array($request->get('parentId')),
+            'oneOrNull' => 1,
+        ));
+        $min = $rank['min'] - 1;
+
+        $orm = new Asset($pdo);
+        $orm->setIsFolder(0);
+        $orm->setParentId($request->get('parentId'));
+        $orm->setRank($min);
+        $orm->setTitle($originalName);
+        $orm->setFileName($originalName);
+        $orm->save();
+
+        require_once $this->container->getParameter('kernel.project_dir') . '/vendor/blueimp/jquery-file-upload/server/php/UploadHandler.php';
+        $uploader = new \UploadHandler(array(
+            'upload_dir' => $this->container->getParameter('kernel.project_dir') . '/uploads/',
+            'image_versions' => array()
+        ), false);
+        $_SERVER['HTTP_CONTENT_DISPOSITION'] = $orm->getId();
+        $result = $uploader->post(false);
+
+        $orm->setFileLocation($orm->getId() . '.' . $ext);
+        $orm->setFileType($result['files'][0]->type);
+        $orm->setFileSize($result['files'][0]->size);
+        $orm->save();
+
+        if (file_exists($this->container->getParameter('kernel.project_dir') . '/uploads/' . $result['files'][0]->name)) {
+            rename($this->container->getParameter('kernel.project_dir') . '/uploads/' . $result['files'][0]->name, dirname($_SERVER['SCRIPT_FILENAME']) . '/../uploads/' . $orm->getId() . '.' . $ext);
+        }
+
+        return new JsonResponse($orm);
     }
 
     /**
