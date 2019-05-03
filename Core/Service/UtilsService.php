@@ -114,4 +114,54 @@ class UtilsService
         }
         return strip_tags($value[1]);
     }
+
+    /**
+     * @param $valLength
+     * @return bool|string
+     */
+    static public function generateUniqueHex($valLength, $exists)
+    {
+        do {
+            $uniqeHex = static::generateHex($valLength);
+        } while (in_array($uniqeHex, $exists));
+        return $uniqeHex;
+    }
+
+    /**
+     * @param $valLength
+     * @return bool|string
+     */
+    static public function generateHex($valLength)
+    {
+        $result = '';
+        $moduleLength = 40;   // we use sha1, so module is 40 chars
+        $steps = round(($valLength / $moduleLength) + 0.5);
+
+        for ($i = 0; $i < $steps; $i++) {
+            $result .= sha1(uniqid() . md5(rand() . uniqid()));
+        }
+
+        return substr($result, 0, $valLength);
+    }
+
+    /**
+     * Convert a multi-dimensional array into a single-dimensional array.
+     * @author Sean Cannon, LitmusBox.com | seanc@litmusbox.com
+     * @param  array $array The multi-dimensional array.
+     * @return array
+     */
+    static public function flattenArray($array) {
+        if (!is_array($array)) {
+            return false;
+        }
+        $result = array();
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result = array_merge($result, static::flattenArray($value));
+            } else {
+                $result[] = $value;
+            }
+        }
+        return $result;
+    }
 }

@@ -8,6 +8,7 @@ use MillenniumFalcon\Core\Form\Builder\Model;
 use MillenniumFalcon\Core\Form\Builder\Orm;
 use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\Orm\Asset;
 use MillenniumFalcon\Core\Orm\AssetSize;
 use MillenniumFalcon\Core\Orm\DataGroup;
 use MillenniumFalcon\Core\Orm\PageCategory;
@@ -84,6 +85,7 @@ trait CmsTrait
 
         //Set up assets
         $nodes[] = new PageNode(998, null, 998, 1, 'Assets', '/manage/files', 'cms/files/files.html.twig', 'cms_viewmode_asset');
+        $nodes[] = new PageNode(9981, 998, 1, 2, 'Assets', '/manage/orms/Asset/', 'cms/orms/orm.html.twig', null, 1, 1);
 
         //Set up admin
         $nodes[] = new PageNode(999, null, 999, 1, 'Admin', '/manage/admin', 'cms/admin.html.twig', 'cms_viewmode_admin');

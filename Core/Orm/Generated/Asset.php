@@ -1,11 +1,15 @@
 <?php
-
+//Last updated: 2019-04-30 14:18:08
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
+use MillenniumFalcon\Core\Nestable\NodeInterface;
+use MillenniumFalcon\Core\Nestable\NodeExtraTrait;
 
-class Asset extends Orm
+class Asset extends Orm implements NodeInterface
 {
+    use NodeExtraTrait;
+
     /**
      * @var array
      */
@@ -19,12 +23,12 @@ class Asset extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $description;
+    private $code;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $isFolder;
+    private $description;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -45,6 +49,11 @@ class Asset extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $fileLocation;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $isFolder;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -70,6 +79,22 @@ class Asset extends Orm
     /**
      * @return mixed
      */
+    public function getCode()
+    {
+        return $this->code;
+    }
+    
+    /**
+     * @param mixed code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getDescription()
     {
         return $this->description;
@@ -81,22 +106,6 @@ class Asset extends Orm
     public function setDescription($description)
     {
         $this->description = $description;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getIsFolder()
-    {
-        return $this->isFolder;
-    }
-    
-    /**
-     * @param mixed isFolder
-     */
-    public function setIsFolder($isFolder)
-    {
-        $this->isFolder = $isFolder;
     }
     
     /**
@@ -161,6 +170,22 @@ class Asset extends Orm
     public function setFileLocation($fileLocation)
     {
         $this->fileLocation = $fileLocation;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getIsFolder()
+    {
+        return $this->isFolder;
+    }
+    
+    /**
+     * @param mixed isFolder
+     */
+    public function setIsFolder($isFolder)
+    {
+        $this->isFolder = $isFolder;
     }
     
     /**

@@ -1,0 +1,14 @@
+{% verbatim %}
+    <ul id="filesImageList" class="contentListTable assets-images ui-sortable">
+        {{#compare 1 showUploadButton operator="=="}}
+            <li class="dropzone-wrap" id="dropzone-wrap">
+                <div>
+                    <div class="dropzone-custom dz-clickable" action="/manage/rest/asset/files/upload" id="cmsFormDropzone">
+                        <div class="dz-default dz-message"><span>Drop files here to upload</span></div>
+                        <div class="dz-default dz-message dz-progress"><span>Start Uploading...</span></div>
+                    </div>
+                </div>
+            </li>
+        {{/compare}}
+    </ul>
+{% endverbatim %}

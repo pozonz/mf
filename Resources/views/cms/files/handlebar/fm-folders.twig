@@ -3,7 +3,7 @@
         <div class="input-group">
             <input type="text" class="form-control js-search pz-search" name="keyword" value="{{keyword}}">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-default js-search-button"><i class="fa fa-search"></i></button>
             </span>
         </div>
     </form>
@@ -14,7 +14,7 @@
     {{/compare}}
 
     {{#compare '' keyword operator="!="}}
-        <small><a href="#" class="js-reset">&#10096; Browse folders</a></small>
+        <a href="#" class="js-reset">&#10096; Browse by folders</a>
     {{/compare}}
     <div class="clearfix"></div>
 {% endverbatim %}

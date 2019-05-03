@@ -1,5 +1,5 @@
 {% extends 'cms/base.html.twig' %}
-{% block extraBody %}class="page-files mode-asset"{% endblock %}
+{% block extraBody %}class="page-files mode-asset" data-class="Asset"{% endblock %}
 
 {% block externalHead %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.30.0/css/jquery.fileupload.min.css" />
@@ -17,7 +17,10 @@
     <script id="loading" type="text/x-handlebars-template">{% include 'cms/files/handlebar/loading.twig' %}</script>
     <script id="folder" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-folders.twig' %}</script>
     <script id="file" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-file.twig' %}</script>
+    <script id="files" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-files.twig' %}</script>
     <script id="nav" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-nav.twig' %}</script>
+
+    <script id="file-progress" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-file-progress.twig' %}</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
@@ -28,4 +31,23 @@
     <script src="/cms/js/handlebar-helpers.js"></script>
     <script src="/cms/js/fm.js"></script>
     <script src="/cms/js/files.js"></script>
+
+    <script>
+        function callbackAfterDeleteFolder() {
+            fm.selectFolder($(this).data('parent'));
+            fm.getFolders();
+            fm.getNav();
+            fm.getFiles();
+        };
+
+        function callbackAfterDeleteFile() {
+            for (var idx in fm.files) {
+                var itm = fm.files[idx];
+                if (itm.id == $(this).data('id')) {
+                    fm.files.splice(idx, 1)
+                }
+            }
+            fm.renderFiles();
+        };
+    </script>
 {% endblock %}

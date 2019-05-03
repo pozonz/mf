@@ -10,6 +10,7 @@ use MillenniumFalcon\Core\Orm\Page;
 use MillenniumFalcon\Core\Orm\PageCategory;
 use MillenniumFalcon\Core\Nestable\AssetNode;
 use MillenniumFalcon\Core\Nestable\Tree;
+use MillenniumFalcon\Core\Service\UtilsService;
 use MillenniumFalcon\Core\Twig\Extension;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -204,9 +205,7 @@ trait CmsRestFileTrait
                     $assetOrm->save();
                 }
             }
-        }
-
-        elseif ($addOrDelete == 2) {
+        } elseif ($addOrDelete == 2) {
 
             $assetOrms = AssetOrm::data($pdo, array(
                 'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
@@ -259,12 +258,16 @@ trait CmsRestFileTrait
             'select' => 'MAX(m.rank) AS max',
             'orm' => 0,
             'whereSql' => 'm.parentId = ?',
-            'params' => array($request->get('__parentId')),
+            'params' => array($parentId),
             'oneOrNull' => 1,
         ));
         $max = ($rank['max'] ?: 0) + 1;
 
         $orm = new Asset($pdo);
+        $orm->setCode(UtilsService::generateUniqueHex(4, UtilsService::flattenArray(Asset::data($pdo, array(
+            'select' => 'm.code',
+            'orm' => 0,
+        )))));
         $orm->setTitle($title);
         $orm->setParentId($parentId);
         $orm->setRank($max);
@@ -402,12 +405,22 @@ trait CmsRestFileTrait
             return $this->processUploadedFile($pdo, $file);
         }
 
-        return new Response(json_encode(array(
-            'failed'
-        )));
+        return new JsonResponse(array(
+            'status' => 0,
+            'orm' => array(
+                'title' => 'Error Occurred',
+                'code' => 'Oops'
+            ),
+        ));
     }
 
-    private function processUploadedFile(\PDO $pdo, UploadedFile $file) {
+    /**
+     * @param \PDO $pdo
+     * @param UploadedFile $file
+     * @return JsonResponse
+     */
+    private function processUploadedFile(\PDO $pdo, UploadedFile $file)
+    {
         $request = Request::createFromGlobals();
 
         $originalName = $file->getClientOriginalName();
@@ -423,6 +436,10 @@ trait CmsRestFileTrait
         $min = $rank['min'] - 1;
 
         $orm = new Asset($pdo);
+        $orm->setCode(UtilsService::generateUniqueHex(4, UtilsService::flattenArray(Asset::data($pdo, array(
+            'select' => 'm.code',
+            'orm' => 0,
+        )))));
         $orm->setIsFolder(0);
         $orm->setParentId($request->request->get('parentId'));
         $orm->setRank($min);
@@ -441,7 +458,10 @@ trait CmsRestFileTrait
             rename($this->container->getParameter('kernel.project_dir') . '/uploads/' . $file->getFilename(), dirname($_SERVER['SCRIPT_FILENAME']) . '/../uploads/' . $orm->getId() . '.' . $ext);
         }
 
-        return new JsonResponse($orm);
+        return new JsonResponse(array(
+            'status' => 1,
+            'orm' => $orm,
+        ));
     }
 
     /**
@@ -490,7 +510,7 @@ trait CmsRestFileTrait
             }
             $childrenCount[$itm->getParentId()]++;
 
-            $nodes[] = new AssetNode($itm->getId(), $itm->getParentId() ?: 0, $itm->getRank(), 1,$itm->getTitle() ?: 'Home', $baseurl . $itm->getId(), array('opened' => true, 'selected' => $currentFolderId == $itm->getId()));
+            $nodes[] = new AssetNode($itm->getId(), $itm->getParentId() ?: 0, $itm->getRank(), 1, $itm->getTitle() ?: 'Home', $baseurl . $itm->getId(), array('opened' => true, 'selected' => $currentFolderId == $itm->getId()));
         }
 
         /** @var AssetNode[] $nodes */

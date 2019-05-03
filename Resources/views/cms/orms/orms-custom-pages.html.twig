@@ -1,8 +1,7 @@
-{% extends 'cms/orms/orms-pagination.html.twig' %}
+{% extends 'cms/orms/orms.html.twig' %}
 {% from "cms/includes/nestable.twig" import nest as nest %}
 
 {% set pageRoot = model.data('Page')|nestablePges(cat) %}
-
 
 {% block container %}
     <div id="h1">
