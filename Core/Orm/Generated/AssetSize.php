@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-04-18 16:58:51
+//Last updated: 2019-05-03 21:21:06
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -15,6 +15,11 @@ class AssetSize extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $width;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $NoCrop;
     
     /**
      * @return mixed
@@ -46,6 +51,22 @@ class AssetSize extends Orm
     public function setWidth($width)
     {
         $this->width = $width;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getNoCrop()
+    {
+        return $this->NoCrop;
+    }
+    
+    /**
+     * @param mixed NoCrop
+     */
+    public function setNoCrop($NoCrop)
+    {
+        $this->NoCrop = $NoCrop;
     }
     
 }
