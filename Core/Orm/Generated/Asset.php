@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-04-30 14:18:08
+//Last updated: 2019-05-05 09:37:27
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -49,6 +49,11 @@ class Asset extends Orm implements NodeInterface
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $fileLocation;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $fileExtension;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -170,6 +175,22 @@ class Asset extends Orm implements NodeInterface
     public function setFileLocation($fileLocation)
     {
         $this->fileLocation = $fileLocation;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getFileExtension()
+    {
+        return $this->fileExtension;
+    }
+    
+    /**
+     * @param mixed fileExtension
+     */
+    public function setFileExtension($fileExtension)
+    {
+        $this->fileExtension = $fileExtension;
     }
     
     /**

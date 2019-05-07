@@ -445,8 +445,9 @@ trait CmsRestFileTrait
         $orm->setRank($min);
         $orm->setTitle($originalName);
         $orm->setFileName($originalName);
-        $orm->setFileType($file->getType());
+        $orm->setFileType($file->getMimeType());
         $orm->setFileSize($file->getSize());
+        $orm->setFileExtension($file->getClientOriginalExtension());
         $orm->save();
 
         $file->move($this->container->getParameter('kernel.project_dir') . '/uploads/');
