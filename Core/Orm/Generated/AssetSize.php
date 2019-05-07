@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-05-03 21:21:06
+//Last updated: 2019-05-07 20:42:00
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -14,12 +14,17 @@ class AssetSize extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $code;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $width;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $NoCrop;
+    private $showInCrop;
     
     /**
      * @return mixed
@@ -35,6 +40,22 @@ class AssetSize extends Orm
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+    
+    /**
+     * @param mixed code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
     }
     
     /**
@@ -56,17 +77,17 @@ class AssetSize extends Orm
     /**
      * @return mixed
      */
-    public function getNoCrop()
+    public function getShowInCrop()
     {
-        return $this->NoCrop;
+        return $this->showInCrop;
     }
     
     /**
-     * @param mixed NoCrop
+     * @param mixed showInCrop
      */
-    public function setNoCrop($NoCrop)
+    public function setShowInCrop($showInCrop)
     {
-        $this->NoCrop = $NoCrop;
+        $this->showInCrop = $showInCrop;
     }
     
 }

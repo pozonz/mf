@@ -33,7 +33,7 @@ class AssetController extends Controller
         }
 
         /** @var AssetSize $assetSize */
-        $assetSize = AssetSize::getByField($pdo, 'title', $assetSizeCode);
+        $assetSize = AssetSize::getByField($pdo, 'code', $assetSizeCode);
         if (!$assetSize) {
             throw new NotFoundHttpException();
         }

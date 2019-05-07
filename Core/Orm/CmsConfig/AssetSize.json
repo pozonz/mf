@@ -4,7 +4,7 @@
     "slug": "image-sizes",
     "rank": "2",
     "added": "2018-09-03 19:44:02",
-    "modified": "2019-05-03 20:56:03",
+    "modified": "2019-05-07 20:41:03",
     "status": "1",
     "title": "Image Sizes",
     "className": "AssetSize",
@@ -16,5 +16,5 @@
     "numberPerPage": "50",
     "defaultSortBy": "id",
     "defaultOrder": 1,
-    "columnsJson": "[{\"id\":\"z1535960623556\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"sql\":\"\"},{\"id\":\"z1535962076537\",\"column\":\"latitude\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Width:\",\"field\":\"width\",\"required\":1,\"sql\":\"\"},{\"id\":\"z1556875227873\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\CheckboxType\",\"label\":\"No Cropping:\",\"field\":\"NoCrop\",\"required\":0,\"sql\":\"\"}]"
+    "columnsJson": "[{\"id\":\"z1535960623556\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"sql\":\"\"},{\"id\":\"z1557218372067\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Code:\",\"field\":\"code\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1535962076537\",\"column\":\"latitude\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Width:\",\"field\":\"width\",\"required\":1,\"sql\":\"\"},{\"id\":\"z1556875227873\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\CheckboxType\",\"label\":\"Show in cropping:\",\"field\":\"showInCrop\",\"required\":0,\"sql\":\"\"}]"
 }
