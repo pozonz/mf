@@ -1,0 +1,57 @@
+{% verbatim %}
+    <header id="redactor_modal_header" style="cursor: move;">Crop Image</header>
+    <div id="redactor_modal_inner">
+        <table class="image-cropper">
+            <tbody>
+            <tr valign="top">
+                <td>
+                    <section class="image-settings">
+                        <label>Choose a size</label>
+                        <select id="redactor_image_size">
+                            <option value="2">50px Wide Asset</option>
+                        </select>
+                    </section>
+                </td>
+                <td width="750">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <div class="presets" id="preset_show">
+                                    <div id="preset_crop_custom"><span><i></i></span>Custom</div>
+                                    <div id="preset_crop_square"><span><i></i></span><b>Square</b></div>
+                                    <div id="preset_crop_20_9"><span><i></i></span><b>20:9</b></div>
+                                    <div id="preset_crop_4_3"><span><i></i></span><b>4:3</b></div>
+                                    <div id="preset_crop_6_4"><span><i></i></span><b>6:4</b></div>
+                                    <div id="preset_crop_16_9"><span><i></i></span><b>16:9</b></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%" height="350">
+                                <img class="ajax-load" src="/cms/images/ajax-loader.gif">
+                                <div class="crop_area" style="display: none; height: 350px;"><label>Original</label>
+                                    <div id="imageSize" class="image-size">512x511</div>
+                                    <img id="image_crop" src="/images/assets/{{ code }}">
+                                </div>
+                            </td>
+                            <td width="50%" height="350">
+                                <div class="crop_area" style="display: none; height: 350px;"><label>Actual preview</label>
+                                    <div id="imageSizeCrop" class="image-size">50x50</div>
+                                    <img id="previewCrop" src="/images/assets/{{ code }}/asset_small">
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <footer>
+            <a href="#" class="button redactor_modal_btn redactor_btn_modal_close">Cancel</a>
+            <input type="button" name="save" class="redactor_modal_btn" style="background: #2281cf;" value="Apply">
+            <input type="button" name="save" class="redactor_modal_btn" style="background: #82ad1d;" value="Apply & Close">
+        </footer>
+    </div>
+{% endverbatim %}

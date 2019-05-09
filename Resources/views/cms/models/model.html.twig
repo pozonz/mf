@@ -108,8 +108,6 @@
 
 
 {% block externalFooter %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
-    <script src="/cms/js/handlebar-helpers.js"></script>
     <script id="field-source" type="text/x-handlebars-template">{% include 'cms/models/handlebar/model.tr.twig' %}</script>
     <script>
         window._columns = JSON.parse('{{ form.columnsJson.vars.value|e('js') ?: '[]' }}');
