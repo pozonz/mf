@@ -23,30 +23,15 @@
 
     <title>CMS</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/2.0.4/css/Jcrop.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/css/jquery.Jcrop.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" type="text/css" media="screen"/>
 
     {#<link href="/cms/css/cms.css" rel="stylesheet" type="text/css" media="screen"/>#}
     <link href="/cms/css/dropzone.css" rel="stylesheet" type="text/css"/>
     <link href="/cms/css/originate.form.builder.css" rel="stylesheet" type="text/css" media="screen"/>
     <link href="/cms/css/styles.css" rel="stylesheet" type="text/css"/>
 
-    {#<script src="/cms/js/handlebars-v1.3.0.js" language="javascript"></script>#}
-    {#<script src="/cms/js/redactor.js?v=5" language="javascript"></script>#}
-    {#<script src="/cms/js/imageedit.redactor.js" language="javascript"></script>#}
-    {#<script src="/cms/js/filepicker.redactor.js" language="javascript"></script>#}
-    {#<script src="/cms/js/insertfile.redactor.js?v=1" language="javascript"></script>#}
-    {#<script src="/cms/js/originate.js?v=1" language="javascript"></script>#}
-    {#<script src="/cms/js/jquery.Jcrop.js" language="javascript"></script>#}
-    {#<script src="/cms/js/cms.js" language="javascript"></script>#}
-    {#<script src="/cms/js/mkvp.js" language="javascript"></script>#}
-    {#<script src="/cms/js/mkvvp.js" language="javascript"></script>#}
-    {#<script src="/cms/js/jquery.datetimepicker.full.js"></script>#}
-    {#<script src="/cms/js/jquery.json-2.4.min.js" language="javascript"></script>#}
-    {#<script src="/cms/js/originate.form.builder.js?20180622" language="javascript"></script>#}
-    {#<script src="/cms/js/dropzone.js" language="javascript"></script>#}
-
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" type="text/css" media="screen"/>
     <link href="/cms/develop.css" rel="stylesheet" type="text/css"/>
     {% block externalHead %}{% endblock %}
 </head>
@@ -67,11 +52,11 @@
 <div id="menuContainer">
     <div id="menuTop">
         <ul class="menuTop">
-            <li><a href="./index.php?viewModeSent=0&amp;fileNo=13">Home</a></li>
-            <li><a href="./index.php?viewModeSent=0&amp;fileNo=17">Contact</a></li>
-            <li><a href="./index.php?viewModeSent=0&amp;fileNo=14">Change Password</a></li>
-            <li><a href="./index.php?viewModeSent=0&amp;fileNo=18">Help</a></li>
-            <li><a href="./cmsLogout.php">Logout</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Change Password</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">Logout</a></li>
         </ul>
 
         <ul id="viewModes" class="icon">
@@ -91,37 +76,37 @@
                 <div id="cms_sidebarIndex">
                     <ul class="verticalMenu">
                         {% for itm in verticalMenuItems %}
-                        {% if itm.url %}
-                        <li {% if itm.contains(node) %}class="selected"{% endif %}>
-                            <div>
-                                <a href="{{ itm.url }}">
-                                    {{ itm.title }}
-                                    {% if itm.hasActiveChildren() %}
-                                        <button data-target="{{ itm.id }}" class="toggle-icon {% if itm.contains(node) %}selected{% endif %}">&nbsp;</button>
-                                    {% endif %}
-                                </a>
-                                {% if itm.hasActiveChildren() %}
-                                    <ul data-source="{{ itm.id }}" class="subcategory sub-1" {% if itm.contains(node) %}style="display: block;"{% endif %}>
-                                        {% for subitm in itm.children if subitm.status == 1 %}
-                                            <li {% if subitm.contains(node) %}class="selected-subitm"{% endif %}>
-                                                <div>
-                                                    <a href="{{ subitm.url }}">{{ subitm.title }}</a>
-                                                    <div class="clear"></div>
-                                                </div>
-                                            </li>
-                                        {% endfor %}
+                            {% if itm.url %}
+                                <li {% if itm.contains(node) %}class="selected"{% endif %}>
+                                    <div>
+                                        <a href="{{ itm.url }}">
+                                            {{ itm.title }}
+                                            {% if itm.hasActiveChildren() %}
+                                                <button data-target="{{ itm.id }}" class="toggle-icon {% if itm.contains(node) %}selected{% endif %}">&nbsp;</button>
+                                            {% endif %}
+                                        </a>
+                                        {% if itm.hasActiveChildren() %}
+                                            <ul data-source="{{ itm.id }}" class="subcategory sub-1" {% if itm.contains(node) %}style="display: block;"{% endif %}>
+                                                {% for subitm in itm.children if subitm.status == 1 %}
+                                                    <li {% if subitm.contains(node) %}class="selected-subitm"{% endif %}>
+                                                        <div>
+                                                            <a href="{{ subitm.url }}">{{ subitm.title }}</a>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                            {% else %}
+                                {% if loop.index > 1 %}
                                     </ul>
+                                    <ul class="verticalMenu">
                                 {% endif %}
-                                <div class="clear"></div>
-                            </div>
-                        </li>
-                        {% else %}
-                        {% if loop.index > 1 %}
-                    </ul>
-                    <ul class="verticalMenu">
-                        {% endif %}
-                        <li class="menuHeading">{{ itm.title }}</li>
-                        {% endif %}
+                                <li class="menuHeading">{{ itm.title }}</li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
@@ -144,7 +129,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/2.0.4/js/Jcrop.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/js/jquery.Jcrop.min.js"></script>
 {#<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js" language="javascript"></script>#}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
@@ -152,6 +137,21 @@
 <script src="/cms/js/main.js"></script>
 
 <script id="crop-image" type="text/x-handlebars-template">{% include 'cms/handlebar/base.crop-image.twig' %}</script>
+<script>
+    $(function () {
+        window._imageSizes = [];
+        {% set AssetSizes = model.active('AssetSize', {
+            whereSql: 'showInCrop = 1'
+        }) %}
+        {% for itm in AssetSizes %}
+            window._imageSizes.push({
+                id: '{{ itm.id }}',
+                title: '{{ itm.title }}',
+                code: '{{ itm.code }}',
+            })
+        {% endfor %}
+    });
+</script>
 <div id="crop-image-modal" style="display: none;"></div>
 
 {% block externalFooter %}{% endblock %}

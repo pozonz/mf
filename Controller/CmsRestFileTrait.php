@@ -5,7 +5,9 @@ namespace MillenniumFalcon\Controller;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Orm\Asset;
+use MillenniumFalcon\Core\Orm\AssetCrop;
 use MillenniumFalcon\Core\Orm\AssetOrm;
+use MillenniumFalcon\Core\Orm\AssetSize;
 use MillenniumFalcon\Core\Orm\Page;
 use MillenniumFalcon\Core\Orm\PageCategory;
 use MillenniumFalcon\Core\Nestable\AssetNode;
@@ -382,8 +384,8 @@ trait CmsRestFileTrait
         if (!$orm) {
             throw new NotFoundHttpException();
         }
-        if (file_exists($this->container->getParameter('kernel.project_dir') . '/uploads/' . $orm->getFileLocation())) {
-            unlink($this->container->getParameter('kernel.project_dir') . '/uploads/' . $orm->getFileLocation());
+        if (file_exists($this->getUploadedPath() . $orm->getFileLocation())) {
+            unlink($this->getUploadedPath() . $orm->getFileLocation());
         }
         $orm->delete();
         return new Response('OK');
@@ -412,6 +414,41 @@ trait CmsRestFileTrait
                 'code' => 'Oops'
             ),
         ));
+    }
+
+    /**
+     * @route("/manage/rest/asset/file/crop")
+     * @return Response
+     */
+    public function assetAjaxImageCrop()
+    {
+        $connection = $this->container->get('doctrine.dbal.default_connection');
+        /** @var \PDO $pdo */
+        $pdo = $connection->getWrappedConnection();
+
+        $request = Request::createFromGlobals();
+        $x = $request->get('x');
+        $y = $request->get('y');
+        $width = $request->get('width');
+        $height = $request->get('height');
+        $assetId = $request->get('assetId');
+        $assetSizeId = $request->get('assetSizeId');
+
+        $asset = Asset::getById($pdo, $assetId);
+        $assetSize = AssetSize::getById($pdo, $assetSizeId);
+
+        /** @var AssetCrop $orm */
+        $orm = new AssetCrop($pdo);
+        $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . ($assetSize ? $assetSize->getTitle() : 'All'));
+        $orm->setX($x);
+        $orm->setY($x);
+        $orm->setWidth($x);
+        $orm->setHeight($x);
+        $orm->setAssetId($assetId);
+        $orm->setAssetSizeId($assetSizeId);
+        $orm->save();
+        return new Response('OK');
+
     }
 
     /**
@@ -450,14 +487,23 @@ trait CmsRestFileTrait
         $orm->setFileExtension($file->getClientOriginalExtension());
         $orm->save();
 
-        $file->move($this->container->getParameter('kernel.project_dir') . '/uploads/');
+        $file->move($this->getUploadedPath());
+        if (file_exists($this->getUploadedPath() . $file->getFilename())) {
+            rename($this->getUploadedPath() . $file->getFilename(), $this->getUploadedPath() . $orm->getId() . '.' . $ext);
+        }
+
+        $info = getimagesize($this->getUploadedPath() . $orm->getId() . '.' . $ext);
+        if ($info === false) {
+            $orm->setIsImage(0);
+        } else {
+            list($x, $y) = $info;
+            $orm->setIsImage(1);
+            $orm->setWidth($x);
+            $orm->setHeight($y);
+        }
 
         $orm->setFileLocation($orm->getId() . '.' . $ext);
         $orm->save();
-
-        if (file_exists($this->container->getParameter('kernel.project_dir') . '/uploads/' . $file->getFilename())) {
-            rename($this->container->getParameter('kernel.project_dir') . '/uploads/' . $file->getFilename(), dirname($_SERVER['SCRIPT_FILENAME']) . '/../uploads/' . $orm->getId() . '.' . $ext);
-        }
 
         return new JsonResponse(array(
             'status' => 1,
@@ -480,8 +526,8 @@ trait CmsRestFileTrait
             $this->deleteFolder($pdo, $itm);
         }
         if (!$orm->getIsFolder()) {
-            if (file_exists($this->container->getParameter('kernel.project_dir') . '/uploads/' . $orm->getFileLocation())) {
-                unlink($this->container->getParameter('kernel.project_dir') . '/uploads/' . $orm->getFileLocation());
+            if (file_exists($this->getUploadedPath() . $orm->getFileLocation())) {
+                unlink($this->getUploadedPath() . $orm->getFileLocation());
             }
         }
         $orm->delete();
@@ -524,5 +570,12 @@ trait CmsRestFileTrait
         $root = $tree->getRootFromNode(new AssetNode("0", null, 0, 1, 'Home', $baseurl . 0, array('opened' => true, 'selected' => $currentFolderId == "0" ? true : false)));
 
         return $root;
+    }
+
+    /**
+     * @return string
+     */
+    private function getUploadedPath() {
+        return $this->container->getParameter('kernel.project_dir') . '/uploads/';
     }
 }

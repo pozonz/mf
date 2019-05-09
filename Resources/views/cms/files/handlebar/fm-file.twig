@@ -1,7 +1,7 @@
 {% verbatim %}
-    <li class="tableContent js-tableContent js-orm-info" data-id="{{file.id}}" id="{{file.id}}" data-code="{{file.code}}" data-callback="callbackAfterDeleteFile">
+    <li class="tableContent js-tableContent js-orm-info" id="{{file.id}}" data-id="{{file.id}}" data-code="{{file.code}}" data-width="{{file.width}}" data-height="{{file.height}}" data-callback="callbackAfterDeleteFile">
         <div class="asset-img">
-            <a class="js-cropping-options cropping-options" href="#" title="Crop this image ›">Cropping Options</a>
+            {{#compare 1 file.isImage operator="=="}}<a class="js-cropping-options cropping-options" href="#" title="Crop this image ›">Cropping Options</a>{{/compare}}
             <a href="" title="{{file.title}}"><img src="/images/assets/{{file.code}}/asset_small" alt="{{file.title}}" class="mceImage" border="0"></a>
         </div>
         <div class="details">

@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-05-05 09:37:27
+//Last updated: 2019-05-09 20:10:55
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -64,6 +64,21 @@ class Asset extends Orm implements NodeInterface
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $parentId;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $isImage;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $width;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $height;
     
     /**
      * @return mixed
@@ -223,6 +238,54 @@ class Asset extends Orm implements NodeInterface
     public function setParentId($parentId)
     {
         $this->parentId = $parentId;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getIsImage()
+    {
+        return $this->isImage;
+    }
+    
+    /**
+     * @param mixed isImage
+     */
+    public function setIsImage($isImage)
+    {
+        $this->isImage = $isImage;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+    
+    /**
+     * @param mixed width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+    
+    /**
+     * @param mixed height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
     }
     
 }
