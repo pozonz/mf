@@ -4,6 +4,7 @@ namespace MillenniumFalcon\Controller;
 
 
 use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\Asset\AssetController;
 use MillenniumFalcon\Core\Orm\Asset;
 use MillenniumFalcon\Core\Orm\AssetCrop;
 use MillenniumFalcon\Core\Orm\AssetOrm;
@@ -434,21 +435,56 @@ trait CmsRestFileTrait
         $assetId = $request->get('assetId');
         $assetSizeId = $request->get('assetSizeId');
 
+        /** @var Asset $asset */
         $asset = Asset::getById($pdo, $assetId);
+        if (!$asset) {
+            throw new NotFoundHttpException();
+        }
         $assetSize = AssetSize::getById($pdo, $assetSizeId);
+        if (!$assetSize) {
+            throw new NotFoundHttpException();
+        }
 
         /** @var AssetCrop $orm */
-        $orm = new AssetCrop($pdo);
-        $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . ($assetSize ? $assetSize->getTitle() : 'All'));
+        $orm = AssetCrop::data($pdo, array(
+            'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
+            'params' => array($assetId, $assetSizeId),
+            'limit' => 1,
+            'oneOrNull' => 1,
+        ));
+        if (!$orm) {
+            $orm = new AssetCrop($pdo);
+            $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . $assetSize->getTitle());
+        }
+
+        $this->removeCache($asset, $assetSize);
+
         $orm->setX($x);
-        $orm->setY($x);
-        $orm->setWidth($x);
-        $orm->setHeight($x);
+        $orm->setY($y);
+        $orm->setWidth($width);
+        $orm->setHeight($height);
         $orm->setAssetId($assetId);
         $orm->setAssetSizeId($assetSizeId);
         $orm->save();
         return new Response('OK');
 
+    }
+
+    /**
+     * @param Asset $asset
+     * @param AssetSize $assetSize
+     */
+    private function removeCache(Asset $asset, AssetSize $assetSize) {
+        $cachedFolder = AssetController::getImageCachePath();
+        $cachedKey = AssetController::getCacheKey($asset, $assetSize);
+        $cachedFile =  "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
+        if (file_exists($cachedFile)) {
+            unlink($cachedFile);
+        }
+        $cachedFile = "{$cachedFolder}webp-{$cachedKey}.webp";
+        if (file_exists($cachedFile)) {
+            unlink($cachedFile);
+        }
     }
 
     /**
@@ -487,12 +523,12 @@ trait CmsRestFileTrait
         $orm->setFileExtension($file->getClientOriginalExtension());
         $orm->save();
 
-        $file->move($this->getUploadedPath());
-        if (file_exists($this->getUploadedPath() . $file->getFilename())) {
-            rename($this->getUploadedPath() . $file->getFilename(), $this->getUploadedPath() . $orm->getId() . '.' . $ext);
+        $file->move(AssetController::getUploadPath());
+        if (file_exists(AssetController::getUploadPath() . $file->getFilename())) {
+            rename(AssetController::getUploadPath() . $file->getFilename(), AssetController::getUploadPath() . $orm->getId() . '.' . $ext);
         }
 
-        $info = getimagesize($this->getUploadedPath() . $orm->getId() . '.' . $ext);
+        $info = getimagesize(AssetController::getUploadPath() . $orm->getId() . '.' . $ext);
         if ($info === false) {
             $orm->setIsImage(0);
         } else {
@@ -526,8 +562,8 @@ trait CmsRestFileTrait
             $this->deleteFolder($pdo, $itm);
         }
         if (!$orm->getIsFolder()) {
-            if (file_exists($this->getUploadedPath() . $orm->getFileLocation())) {
-                unlink($this->getUploadedPath() . $orm->getFileLocation());
+            if (file_exists(AssetController::getUploadPath() . $orm->getFileLocation())) {
+                unlink(AssetController::getUploadPath() . $orm->getFileLocation());
             }
         }
         $orm->delete();
@@ -570,12 +606,5 @@ trait CmsRestFileTrait
         $root = $tree->getRootFromNode(new AssetNode("0", null, 0, 1, 'Home', $baseurl . 0, array('opened' => true, 'selected' => $currentFolderId == "0" ? true : false)));
 
         return $root;
-    }
-
-    /**
-     * @return string
-     */
-    private function getUploadedPath() {
-        return $this->container->getParameter('kernel.project_dir') . '/uploads/';
     }
 }
