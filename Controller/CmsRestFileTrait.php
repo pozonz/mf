@@ -2,19 +2,12 @@
 
 namespace MillenniumFalcon\Controller;
 
-
-use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Asset\AssetController;
-use MillenniumFalcon\Core\Orm\Asset;
-use MillenniumFalcon\Core\Orm\AssetCrop;
-use MillenniumFalcon\Core\Orm\AssetOrm;
-use MillenniumFalcon\Core\Orm\AssetSize;
-use MillenniumFalcon\Core\Orm\Page;
-use MillenniumFalcon\Core\Orm\PageCategory;
 use MillenniumFalcon\Core\Nestable\AssetNode;
 use MillenniumFalcon\Core\Nestable\Tree;
+use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
-use MillenniumFalcon\Core\Twig\Extension;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,15 +29,14 @@ trait CmsRestFileTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
+        $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
         $request = Request::createFromGlobals();
         $modelName = $request->get('modelName');
         $attributeName = $request->get('attributeName');
         $ormId = $request->get('ormId');
         $ids = json_decode($request->get('ids'));
         foreach ($ids as $idx => $id) {
-
-            /** @var AssetOrm $orm */
-            $orm = AssetOrm::data($pdo, array(
+            $orm = $fullClass::data($pdo, array(
                 'whereSql' => 'm.title = ? AND m.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($id, $modelName, $attributeName, $ormId),
                 'oneOrNull' => 1,
@@ -70,14 +62,14 @@ trait CmsRestFileTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
+        $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
         $request = Request::createFromGlobals();
         $modelName = $request->get('modelName');
         $attributeName = $request->get('attributeName');
         $ormId = $request->get('ormId');
         if ($modelName && $attributeName && $ormId) {
 
-            /** @var AssetOrm[] $result */
-            $result = AssetOrm::data($pdo, array(
+            $result = $fullClass::data($pdo, array(
                 'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($modelName, $attributeName, $ormId),
                 'sort' => 'm.myRank',
@@ -107,25 +99,26 @@ trait CmsRestFileTrait
         $currentFolderId = $request->get('currentFolderId') ?: 0;
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
 
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
         if ($keyword) {
-            $data = Asset::data($pdo, array(
+            $data = $fullClass::data($pdo, array(
                 'whereSql' => 'm.isFolder = 0 AND m.title LIKE ?',
                 'params' => array("%$keyword%"),
             ));
         } else {
-            $data = Asset::data($pdo, array(
+            $data = $fullClass::data($pdo, array(
                 'whereSql' => 'm.isFolder = 0 AND m.parentId = ?',
                 'params' => array($currentFolderId),
             ));
         }
 
+        $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
         $modelName = $request->get('modelName');
         $attributeName = $request->get('attributeName');
         $ormId = $request->get('ormId');
         if ($modelName && $attributeName && $ormId) {
             $assetOrmMap = array();
-            /** @var AssetOrm[] $result */
-            $result = AssetOrm::data($pdo, array(
+            $result = $fullClass::data($pdo, array(
                 'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($modelName, $attributeName, $ormId),
             ));
@@ -180,9 +173,10 @@ trait CmsRestFileTrait
         $ormId = $request->get('ormId');
         $attributeName = $request->get('attributeName');
 
+        $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
         if ($addOrDelete == 0) {
             foreach ($ids as $id) {
-                $assetOrms = AssetOrm::data($pdo, array(
+                $assetOrms = $fullClass::data($pdo, array(
                     'whereSql' => 'm.title = ? AND m.modelName = ? AND m.attributeName = ? AND ormId = ?',
                     'params' => array($id, $modelName, $attributeName, $ormId),
                 ));
@@ -193,13 +187,13 @@ trait CmsRestFileTrait
         } elseif ($addOrDelete == 1) {
 
             foreach ($ids as $id) {
-                $assetOrm = AssetOrm::data($pdo, array(
+                $assetOrm = $fullClass::data($pdo, array(
                     'whereSql' => 'm.title = ? AND m.modelName = ? AND m.attributeName = ? AND ormId = ?',
                     'params' => array($id, $modelName, $attributeName, $ormId),
                     'oneOrNull' => 1,
                 ));
                 if (!$assetOrm) {
-                    $assetOrm = new AssetOrm($pdo);
+                    $assetOrm = new $fullClass($pdo);
                     $assetOrm->setTitle($id);
                     $assetOrm->setModelName($modelName);
                     $assetOrm->setAttributeName($attributeName);
@@ -210,7 +204,7 @@ trait CmsRestFileTrait
             }
         } elseif ($addOrDelete == 2) {
 
-            $assetOrms = AssetOrm::data($pdo, array(
+            $assetOrms = $fullClass::data($pdo, array(
                 'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($modelName, $attributeName, $ormId),
 //                'debug' => 1,
@@ -257,7 +251,8 @@ trait CmsRestFileTrait
         $title = $request->get('title');
         $parentId = $request->get('parentId');
 
-        $rank = Asset::data($pdo, array(
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $rank = $fullClass::data($pdo, array(
             'select' => 'MAX(m.rank) AS max',
             'orm' => 0,
             'whereSql' => 'm.parentId = ?',
@@ -266,11 +261,7 @@ trait CmsRestFileTrait
         ));
         $max = ($rank['max'] ?: 0) + 1;
 
-        $orm = new Asset($pdo);
-        $orm->setCode(UtilsService::generateUniqueHex(4, UtilsService::flattenArray(Asset::data($pdo, array(
-            'select' => 'm.code',
-            'orm' => 0,
-        )))));
+        $orm = new $fullClass($pdo);
         $orm->setTitle($title);
         $orm->setParentId($parentId);
         $orm->setRank($max);
@@ -291,8 +282,8 @@ trait CmsRestFileTrait
 
         $request = Request::createFromGlobals();
 
-        /** @var Asset $orm */
-        $orm = Asset::getById($pdo, $request->get('id'));
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $orm = $fullClass::getById($pdo, $request->get('id'));
         if (!$orm) {
             throw new NotFoundHttpException();
         }
@@ -313,11 +304,11 @@ trait CmsRestFileTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
         $request = Request::createFromGlobals();
         $data = json_decode($request->get('data'));
         foreach ($data as $itm) {
-            /** @var Asset $orm */
-            $orm = Asset::getById($pdo, $itm->id);
+            $orm = $fullClass::getById($pdo, $itm->id);
             $orm->setParentId($itm->parentId);
             $orm->setRank($itm->rank);
             $orm->save();
@@ -338,8 +329,8 @@ trait CmsRestFileTrait
         $request = Request::createFromGlobals();
         $data = json_decode($request->get('data'));
 
-        /** @var Asset $orm */
-        $orm = Asset::getById($pdo, $request->get('id'));
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $orm = $fullClass::getById($pdo, $request->get('id'));
         $orm->setParentId($request->get('parentId'));
         $orm->save();
         return new Response('OK');
@@ -359,7 +350,8 @@ trait CmsRestFileTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        $orm = Asset::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $orm = $fullClass::getById($pdo, $id);
         if ($orm) {
             $this->deleteFolder($pdo, $orm);
         }
@@ -380,8 +372,8 @@ trait CmsRestFileTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        /** @var Asset $orm */
-        $orm = Asset::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $orm = $fullClass::getById($pdo, $id);
         if (!$orm) {
             throw new NotFoundHttpException();
         }
@@ -435,25 +427,27 @@ trait CmsRestFileTrait
         $assetId = $request->get('assetId');
         $assetSizeId = $request->get('assetSizeId');
 
-        /** @var Asset $asset */
-        $asset = Asset::getById($pdo, $assetId);
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $asset = $fullClass::getById($pdo, $assetId);
         if (!$asset) {
             throw new NotFoundHttpException();
         }
-        $assetSize = AssetSize::getById($pdo, $assetSizeId);
+
+        $fullClass = ModelService::fullClass($pdo, 'AssetSize');
+        $assetSize = $fullClass::getById($pdo, $assetSizeId);
         if (!$assetSize) {
             throw new NotFoundHttpException();
         }
 
-        /** @var AssetCrop $orm */
-        $orm = AssetCrop::data($pdo, array(
+        $fullClass = ModelService::fullClass($pdo, 'AssetCrop');
+        $orm = $fullClass::data($pdo, array(
             'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
             'params' => array($assetId, $assetSizeId),
             'limit' => 1,
             'oneOrNull' => 1,
         ));
         if (!$orm) {
-            $orm = new AssetCrop($pdo);
+            $orm = new $fullClass($pdo);
             $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . $assetSize->getTitle());
         }
 
@@ -471,10 +465,10 @@ trait CmsRestFileTrait
     }
 
     /**
-     * @param Asset $asset
-     * @param AssetSize $assetSize
+     * @param $asset
+     * @param $assetSize
      */
-    private function removeCache(Asset $asset, AssetSize $assetSize) {
+    private function removeCache($asset, $assetSize) {
         $cachedFolder = AssetController::getImageCachePath();
         $cachedKey = AssetController::getCacheKey($asset, $assetSize);
         $cachedFile =  "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
@@ -499,7 +493,8 @@ trait CmsRestFileTrait
         $originalName = $file->getClientOriginalName();
         $ext = pathinfo($originalName, PATHINFO_EXTENSION);
 
-        $rank = Asset::data($pdo, array(
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $rank = $fullClass::data($pdo, array(
             'select' => 'MIN(m.rank) AS min',
             'orm' => 0,
             'whereSql' => 'm.parentId = ?',
@@ -508,11 +503,7 @@ trait CmsRestFileTrait
         ));
         $min = $rank['min'] - 1;
 
-        $orm = new Asset($pdo);
-        $orm->setCode(UtilsService::generateUniqueHex(4, UtilsService::flattenArray(Asset::data($pdo, array(
-            'select' => 'm.code',
-            'orm' => 0,
-        )))));
+        $orm = new $fullClass($pdo);
         $orm->setIsFolder(0);
         $orm->setParentId($request->request->get('parentId'));
         $orm->setRank($min);
@@ -549,12 +540,12 @@ trait CmsRestFileTrait
 
     /**
      * @param \PDO $pdo
-     * @param Asset $orm
+     * @param $orm
      */
-    private function deleteFolder(\PDO $pdo, Asset $orm)
+    private function deleteFolder(\PDO $pdo, $orm)
     {
-        /** @var Asset[] $children */
-        $children = Asset::data($pdo, array(
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $children = $fullClass::data($pdo, array(
             'whereSql' => 'm.parentId = ?',
             'params' => array($orm->getId())
         ));
@@ -585,8 +576,8 @@ trait CmsRestFileTrait
         $childrenCount = array();
         $nodes = array();
 
-        /** @var Asset[] $data */
-        $data = Asset::data($pdo, array('whereSql' => 'm.isFolder = 1'));
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $data = $fullClass::data($pdo, array('whereSql' => 'm.isFolder = 1'));
         foreach ($data as $itm) {
             if (!isset($childrenCount[$itm->getParentId()])) {
                 $childrenCount[$itm->getParentId()] = 0;

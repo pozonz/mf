@@ -4,7 +4,7 @@ namespace MillenniumFalcon\Core;
 
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Orm\AssetOrm;
+use MillenniumFalcon\Core\Service\ModelService;
 
 abstract class Orm implements \JsonSerializable
 {
@@ -205,7 +205,8 @@ abstract class Orm implements \JsonSerializable
     public function delete()
     {
         $rc = static::getReflectionClass();
-        $result = AssetOrm::data($this->getPdo(), array(
+        $fullClass = ModelService::fullClass($this->getPdo(), 'AssetOrm');
+        $result = $fullClass::data($this->getPdo(), array(
             'whereSql' => 'm.modelName = ? AND m.ormId = ?',
             'params' => array($rc->getShortName(), $this->getUniqid()),
         ));

@@ -1,7 +1,6 @@
 <?php
 namespace MillenniumFalcon\Core\Form\Type;
 
-use Pz\Common\Utils;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;

@@ -6,16 +6,11 @@ use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
 use MillenniumFalcon\Core\Nestable\Node;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Orm extends AbstractType
+class OrmForm extends AbstractType
 {
 
     public function getBlockPrefix()

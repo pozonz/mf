@@ -9,22 +9,13 @@ use MillenniumFalcon\Core\Form\Builder\Orm;
 use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Orm\AssetSize;
-use MillenniumFalcon\Core\Orm\DataGroup;
-use MillenniumFalcon\Core\Orm\Page;
-use MillenniumFalcon\Core\Orm\PageCategory;
-use MillenniumFalcon\Core\Orm\PageTemplate;
-use MillenniumFalcon\Core\Orm\User;
-use MillenniumFalcon\Core\Redirect\RedirectException;
-use MillenniumFalcon\Core\Router;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Twig\Extension;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait CmsRestTrait
 {
@@ -42,9 +33,9 @@ trait CmsRestTrait
         $data = json_decode($request->get('data'));
         $className = $request->get('className');
 
-        $fullClassName = ModelService::fullClassName($className);
+        $fullClass = ModelService::fullClass($pdo, $className);
         foreach ($data as $idx => $itm) {
-            $orm = $fullClassName::getById($pdo, $itm);
+            $orm = $fullClass::getById($pdo, $itm);
             if ($orm) {
                 $orm->setRank($idx);
                 $orm->save();
@@ -67,9 +58,9 @@ trait CmsRestTrait
         $data = json_decode($request->get('data'));
         $className = $request->get('model');
 
-        $fullClassName = ModelService::fullClassName($className);
+        $fullClass = ModelService::fullClass($pdo, $className);
         foreach ($data as $idx => $itm) {
-            $orm = $fullClassName::getById($pdo, $itm->id);
+            $orm = $fullClass::getById($pdo, $itm->id);
             if ($orm) {
                 $orm->setRank($itm->rank);
                 $orm->setParentId($itm->parentId);
@@ -94,8 +85,8 @@ trait CmsRestTrait
         $closed = $request->get('closed') ?: 0;
         $className = $request->get('model');
 
-        $fullClassName = ModelService::fullClassName($className);
-        $orm = $fullClassName::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($pdo, $className);
+        $orm = $fullClass::getById($pdo, $id);
         if (!$orm) {
             throw new NotFoundHttpException();
         }
@@ -121,8 +112,8 @@ trait CmsRestTrait
         $id = $request->get('id');
         $className = $request->get('className');
 
-        $fullClassName = ModelService::fullClassName($className);
-        $orm = $fullClassName::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($pdo, $className);
+        $orm = $fullClass::getById($pdo, $id);
         if ($orm) {
             $orm->setStatus($status);
             $orm->save();
@@ -145,8 +136,8 @@ trait CmsRestTrait
         $id = $request->get('id');
         $className = $request->get('className');
 
-        $fullClassName = ModelService::fullClassName($className);
-        $orm = $fullClassName::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($pdo, $className);
+        $orm = $fullClass::getById($pdo, $id);
         if ($orm) {
             $orm->delete();
         }
@@ -163,14 +154,17 @@ trait CmsRestTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        $pageCategories = PageCategory::active($pdo);
-        $pages = Page::data($pdo);
+        $fullClass = ModelService::fullClass($pdo, 'PageCategory');
+        $pageCategories = $fullClass::active($pdo);
+
+        $fullClass = ModelService::fullClass($pdo, 'Page');
+        $pages = $fullClass::data($pdo);
 
         $result = array();
         foreach ($pageCategories as $pageCategory) {
             $result["cat{$pageCategory->getId()}"] = 0;
             foreach ($pages as $page) {
-                $category = json_decode($page->getCategory());
+                $category = (array)json_decode($page->getCategory());
                 if (!$category) {
                     $category = array();
                 }
@@ -182,7 +176,7 @@ trait CmsRestTrait
 
         $result["cat0"] = 0;
         foreach ($pages as $page) {
-            $category = json_decode($page->getCategory());
+            $category = (array)json_decode($page->getCategory());
             if (gettype($category) == 'array' && (in_array(0, $category) || !count($category))) {
                 $result["cat0"]++;
             } elseif (!$category) {
@@ -206,9 +200,9 @@ trait CmsRestTrait
         $cat = $request->get('cat');
         $data = (array)json_decode($request->get('data'));
 
+        $fullClass = ModelService::fullClass($pdo, 'Page');
         foreach ($data as $itm) {
-            /** @var Page $orm */
-            $orm = Page::getById($pdo, $itm->id);
+            $orm = $fullClass::getById($pdo, $itm->id);
 
             $category = $orm->getCategory() ? (array)json_decode($orm->getCategory()) : array();
             if (!in_array($cat, $category)) {
@@ -245,10 +239,10 @@ trait CmsRestTrait
         $oldCat = $request->get('oldCat');
         $newCat = $request->get('newCat') ?: 0;
 
-        $root = Extension::nestablePges(Page::data($pdo), $oldCat);
+        $fullClass = ModelService::fullClass($pdo, 'Page');
+        $root = Extension::nestablePges($fullClass::data($pdo), $oldCat);
         $nodes = Tree::getChildrenAndSelfAsArray($root, $id);
         foreach ($nodes as $node) {
-            /** @var Page $orm */
             $orm = $node;
 
             $category = $orm->getCategory() ? (array)json_decode($orm->getCategory()) : array();
@@ -292,8 +286,8 @@ trait CmsRestTrait
         $cat = $request->get('cat');
         $closed = $request->get('closed') ?: 0;
 
-        /** @var Page $orm */
-        $orm = Page::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($pdo, 'Page');
+        $orm = $fullClass::getById($pdo, $id);
         if (!$orm) {
             throw new NotFoundHttpException();
         }

@@ -2,6 +2,8 @@
 
 namespace MillenniumFalcon\Core\Service;
 
+use MillenniumFalcon\Core\Orm\_Model;
+
 class ModelService
 {
     /**
@@ -23,8 +25,8 @@ class ModelService
             $uniqId = uniqid();
         }
 
-        $fullClassName = static::fullClassName($className);
         $pdo = $this->connection->getWrappedConnection();
+        $fullClassName = static::fullClass($pdo, $className);
         $orm = new $fullClassName($pdo);
         $orm->setUniqid($uniqId);
         return $orm;
@@ -87,8 +89,8 @@ class ModelService
      */
     public function data($className, $options = array())
     {
-        $fullClassName = static::fullClassName($className);
         $pdo = $this->connection->getWrappedConnection();
+        $fullClassName = static::fullClass($pdo, $className);
         return $fullClassName::data($pdo, $options);
     }
 
@@ -96,12 +98,17 @@ class ModelService
      * @param $className
      * @return string
      */
-    static public function fullClassName($className)
+    static public function fullClass($pdo, $className)
     {
-        $fullClassName = "Web\\Orm\\$className";
-        if (!class_exists($fullClassName)) {
-            $fullClassName = "MillenniumFalcon\\Core\\Orm\\$className";
+        if ($className == '_Model') {
+            return "\\MillenniumFalcon\\Core\\Orm\\_Model";
         }
-        return $fullClassName;
+
+        /** @var _Model $model */
+        $model = _Model::getByField($pdo, 'className', $className);
+        if (!$model) {
+            throw new \Exception("Class $className Not Found");
+        }
+        return $model->getNamespace() . '\\' . $model->getClassName();
     }
 }

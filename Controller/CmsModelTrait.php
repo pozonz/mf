@@ -3,22 +3,12 @@
 namespace MillenniumFalcon\Controller;
 
 use Cocur\Slugify\Slugify;
-use MillenniumFalcon\Core\Db;
-use MillenniumFalcon\Core\Form\Builder\Model;
-use MillenniumFalcon\Core\Form\Builder\Orm;
-use MillenniumFalcon\Core\Nestable\PageNode;
+use MillenniumFalcon\Core\Form\Builder\ModelForm;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Orm\AssetSize;
-use MillenniumFalcon\Core\Orm\DataGroup;
-use MillenniumFalcon\Core\Orm\PageCategory;
-use MillenniumFalcon\Core\Orm\PageTemplate;
-use MillenniumFalcon\Core\Orm\User;
 use MillenniumFalcon\Core\Redirect\RedirectException;
-use MillenniumFalcon\Core\Router;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
+use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait CmsModelTrait
 {
@@ -68,14 +58,15 @@ trait CmsModelTrait
     private function _model($pdo, $model) {
         $params = $this->prepareParams();
         $dataGroups = array();
-        /** @var DataGroup[] $result */
-        $result = DataGroup::active($pdo);
+
+        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
+        $result = $fullClass::active($pdo);
         foreach ($result as $itm) {
             $dataGroups[$itm->getTitle()] = $itm->getId();
         }
 
         $columns = array_keys(_Model::getFields());
-        $form = $this->container->get('form.factory')->create(Model::class, $model, array(
+        $form = $this->container->get('form.factory')->create(ModelForm::class, $model, array(
             'defaultSortByOptions' => array_combine($columns, $columns),
             'dataGroups' => $dataGroups,
         ));

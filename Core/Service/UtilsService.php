@@ -3,8 +3,6 @@
 namespace MillenniumFalcon\Core\Service;
 
 use Cocur\Slugify\Slugify;
-use MillenniumFalcon\Core\Orm\FragmentBlock;
-
 
 class UtilsService
 {
@@ -34,8 +32,8 @@ class UtilsService
         /** @var \PDO $pdo */
         $pdo = $this->connection->getWrappedConnection();
 
-        /** @var FragmentBlock[] $blocks */
-        $blocks = FragmentBlock::active($pdo);
+        $fullClass = ModelService::fullClass($pdo, 'FragmentBlock');
+        $blocks = $fullClass::active($pdo);
         foreach ($blocks as $block) {
             $items = json_decode($block->getItems());
             foreach ($items as &$item) {

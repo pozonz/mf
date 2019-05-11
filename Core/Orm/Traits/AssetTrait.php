@@ -3,9 +3,28 @@
 namespace MillenniumFalcon\Core\Orm\Traits;
 
 use MillenniumFalcon\Core\Orm\AssetOrm;
+use MillenniumFalcon\Core\Service\UtilsService;
 
 trait AssetTrait
 {
+    /**
+     * @param bool $doubleCheckExistence
+     * @return mixed
+     */
+    public function save($doubleCheckExistence = false) {
+        if (!$this->getId()) {
+            do {
+                $code = UtilsService::generateHex(4);
+                $orm = static::getByField($this->getPdo(), 'code', $code);
+            } while($orm);
+            $this->setCode($code);
+        }
+        return parent::save($doubleCheckExistence);
+    }
+
+    /**
+     * @return mixed
+     */
     public function delete()
     {
         $result = AssetOrm::data($this->getPdo(), array(
@@ -32,5 +51,19 @@ trait AssetTrait
         }
 
         return parent::delete();
+    }
+
+    /**
+     * @return mixed
+     */
+    static public function getCmsOrmsTwig() {
+        return 'cms/files/files.html.twig';
+    }
+
+    /**
+     * @return mixed
+     */
+    static public function getCmsOrmTwig() {
+        return 'cms/files/file.html.twig';
     }
 }

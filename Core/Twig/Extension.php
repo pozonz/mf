@@ -3,7 +3,6 @@
 namespace MillenniumFalcon\Core\Twig;
 
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Orm\Page;
 use MillenniumFalcon\Core\Redirect\RedirectException;
 use MillenniumFalcon\Core\Nestable\Tree;
 
@@ -113,7 +112,7 @@ class Extension extends AbstractExtension
     {
         $nodes = array();
         foreach ($pages as $page) {
-            $category = $page->getCategory() ? json_decode($page->getCategory()) : [];
+            $category = $page->getCategory() ? (array)json_decode($page->getCategory()) : [];
             if (!in_array($cat, $category) && !($cat == 0 && count($category) == 0)) {
                 continue;
             }

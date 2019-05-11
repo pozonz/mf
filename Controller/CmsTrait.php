@@ -8,12 +8,6 @@ use MillenniumFalcon\Core\Form\Builder\Model;
 use MillenniumFalcon\Core\Form\Builder\Orm;
 use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Orm\Asset;
-use MillenniumFalcon\Core\Orm\AssetSize;
-use MillenniumFalcon\Core\Orm\DataGroup;
-use MillenniumFalcon\Core\Orm\PageCategory;
-use MillenniumFalcon\Core\Orm\PageTemplate;
-use MillenniumFalcon\Core\Orm\User;
 use MillenniumFalcon\Core\Redirect\RedirectException;
 use MillenniumFalcon\Core\Router;
 use MillenniumFalcon\Core\Service\ModelService;
@@ -61,7 +55,8 @@ trait CmsTrait
         $nodes[] = new PageNode(uniqid(), null, 0, 1, 'Pages', '/manage/pages', 'cms/pages.html.twig', 'cms_viewmode_cms');
 
         //Set up custom partitions
-        $orms = DataGroup::active($pdo);
+        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
+        $orms = $fullClass::active($pdo);
         foreach ($orms as $idx => $itm) {
             /** @var _Model[] $models */
             $models = _Model::active($pdo, array(
@@ -84,8 +79,9 @@ trait CmsTrait
         }
 
         //Set up assets
-        $nodes[] = new PageNode(998, null, 998, 1, 'Assets', '/manage/files', 'cms/files/files.html.twig', 'cms_viewmode_asset');
-        $nodes[] = new PageNode(9981, 998, 1, 2, 'Assets', '/manage/orms/Asset/', 'cms/orms/orm.html.twig', null, 1, 1);
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $nodes[] = new PageNode(998, null, 998, 1, 'Assets', '/manage/files', $fullClass::getCmsOrmsTwig(), 'cms_viewmode_asset');
+        $nodes[] = new PageNode(9981, 998, 1, 2, 'Assets', '/manage/orms/Asset/', $fullClass::getCmsOrmTwig(), null, 1, 1);
 
         //Set up admin
         $nodes[] = new PageNode(999, null, 999, 1, 'Admin', '/manage/admin', 'cms/admin.html.twig', 'cms_viewmode_admin');
@@ -144,6 +140,14 @@ trait CmsTrait
         return $nodes;
     }
 
+    /**
+     * @param $pdo
+     * @param $parentId
+     * @param array $data
+     * @param $baseUrl
+     * @param int $start
+     * @return array
+     */
     static public function appendModelsToParent($pdo, $parentId, $data = array(), $baseUrl, $start = 1)
     {
         $ormsListTwig = array(
@@ -163,10 +167,8 @@ trait CmsTrait
                 $className = $itm['class'];
                 $children = $itm['children'];
 
-                /** @var _Model $model */
+                $fullClass = ModelService::fullClass($pdo, $className);
                 $model = _Model::getByField($pdo, 'className', $className);
-                $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
-
                 $ormsTwig = $fullClass::getCmsOrmsTwig();
                 if (!$ormsTwig) {
                     $ormsTwig = $ormsListTwig[$model->getListType()];

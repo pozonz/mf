@@ -3,27 +3,33 @@
 namespace MillenniumFalcon\Controller;
 
 use Cocur\Slugify\Slugify;
-use MillenniumFalcon\Core\Db;
-use MillenniumFalcon\Core\Form\Builder\Model;
-use MillenniumFalcon\Core\Form\Builder\Orm;
-use MillenniumFalcon\Core\Nestable\PageNode;
-use MillenniumFalcon\Core\Nestable\Tree;
+use MillenniumFalcon\Core\Form\Builder\OrmForm;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Orm\AssetSize;
-use MillenniumFalcon\Core\Orm\DataGroup;
-use MillenniumFalcon\Core\Orm\Page;
-use MillenniumFalcon\Core\Orm\PageCategory;
-use MillenniumFalcon\Core\Orm\PageTemplate;
-use MillenniumFalcon\Core\Orm\User;
 use MillenniumFalcon\Core\Redirect\RedirectException;
-use MillenniumFalcon\Core\Router;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
+use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait CmsOrmTrait
 {
+
+    /**
+     * @route("/manage/orms/Asset/{ormId}")
+     * @route("/manage/admin/orms/Asset/{ormId}")
+     * @return Response
+     */
+    public function asset($ormId)
+    {
+        $className = 'Asset';
+
+        $connection = $this->container->get('doctrine.dbal.default_connection');
+        /** @var \PDO $pdo */
+        $pdo = $connection->getWrappedConnection();
+
+        $orm = $this->_orm($pdo, $className, $ormId);
+        return $this->_ormPageWithForm($pdo, $className, $orm);
+    }
+
     /**
      * @route("/manage/orms/Page")
      * @route("/manage/admin/orms/Page")
@@ -31,7 +37,6 @@ trait CmsOrmTrait
      */
     public function pages()
     {
-
         $connection = $this->container->get('doctrine.dbal.default_connection');
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
@@ -41,7 +46,8 @@ trait CmsOrmTrait
         /** @var _Model $model */
         $model = _Model::getByField($pdo, 'className', 'Page');
 
-        $categories = PageCategory::active($pdo);
+        $fullClass = ModelService::fullClass($pdo, 'PageCategory');
+        $categories = $fullClass::active($pdo);
         $cat = $request->get('cat') || $request->get('cat') === '0' ? $request->get('cat') : $categories[0]->getId();
 
         $params = $this->prepareParams();
@@ -112,15 +118,8 @@ trait CmsOrmTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        /** @var _Model $model */
-        $model = _Model::getByField($pdo, 'className', $className);
-        $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
-        $orm = $fullClass::getById($pdo, $ormId);
-        if (!$orm) {
-            $orm = new $fullClass($pdo);
-        }
-
-        return $this->_orm($pdo, $model, $orm);
+        $orm = $this->_orm($pdo, $className, $ormId);
+        return $this->_ormPageWithForm($pdo, $className, $orm);
     }
 
     /**
@@ -134,32 +133,47 @@ trait CmsOrmTrait
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        /** @var _Model $model */
-        $model = _Model::getByField($pdo, 'className', $className);
-        $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
+        $orm = $this->_orm($pdo, $className, $ormId);
+        $orm->setId(null);
+        return $this->_ormPageWithForm($pdo, $className, $orm);
+    }
+
+    /**
+     * @param $pdo
+     * @param $className
+     * @param $orm
+     * @param string $formClass
+     * @return mixed
+     * @throws RedirectException
+     */
+    private function _orm($pdo, $className, $ormId)
+    {
+        $fullClass = ModelService::fullClass($pdo, $className);
         $orm = $fullClass::getById($pdo, $ormId);
         if (!$orm) {
             $orm = new $fullClass($pdo);
         }
-
-        $orm->setId(null);
-        return $this->_orm($pdo, $model, $orm);
+        return $orm;
     }
 
     /**
-     * @param $model
+     * @param $pdo
+     * @param $className
      * @param $orm
+     * @param string $formClass
      * @return mixed
      * @throws RedirectException
      */
-    private function _orm($pdo, $model, $orm)
+    private function _ormPageWithForm($pdo, $className, $orm, $formClass = 'OrmForm')
     {
+        $model = _Model::getByField($pdo, 'className', $className);
         $params = $this->prepareParams();
 
         $request = Request::createFromGlobals();
         $returnUrl = $request->get('returnUrl') ?: '/manage/orms/' . $model->getClassName();
 
-        $form = $this->container->get('form.factory')->create(Orm::class, $orm, array(
+        $fullFormClass = "MillenniumFalcon\\Core\\Form\\Builder\\{$formClass}";
+        $form = $this->container->get('form.factory')->create($fullFormClass, $orm, array(
             'model' => $model,
             'orm' => $orm,
             'pdo' => $pdo,

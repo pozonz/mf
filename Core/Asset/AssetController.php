@@ -2,9 +2,8 @@
 
 namespace MillenniumFalcon\Core\Asset;
 
-use MillenniumFalcon\Core\Orm\Asset;
-use MillenniumFalcon\Core\Orm\AssetCrop;
-use MillenniumFalcon\Core\Orm\AssetSize;
+use MillenniumFalcon\Core\Service\ModelService;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,8 +24,8 @@ class AssetController extends Controller
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        /** @var Asset $asset */
-        $asset = Asset::getByField($pdo, 'code', $assetCode);
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $asset = $fullClass::getByField($pdo, 'code', $assetCode);
         if (!$asset) {
             throw new NotFoundHttpException();
         }
@@ -50,8 +49,8 @@ class AssetController extends Controller
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        /** @var Asset $asset */
-        $asset = Asset::getByField($pdo, 'code', $assetCode);
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $asset = $fullClass::getByField($pdo, 'code', $assetCode);
         if (!$asset) {
             throw new NotFoundHttpException();
         }
@@ -65,8 +64,8 @@ class AssetController extends Controller
 
         if ($asset->getIsImage()) {
             if ($assetSizeCode) {
-                /** @var AssetSize $assetSize */
-                $assetSize = AssetSize::getByField($pdo, 'code', $assetSizeCode);
+                $fullClass = ModelService::fullClass($pdo, 'AssetSize');
+                $assetSize = $fullClass::getByField($pdo, 'code', $assetSizeCode);
                 if (!$assetSize) {
                     throw new NotFoundHttpException();
                 }
@@ -77,8 +76,8 @@ class AssetController extends Controller
                     mkdir($cachedFolder, 0777, true);
                 }
 
-                /** @var AssetCrop $assetCrop */
-                $assetCrop = AssetCrop::data($pdo, array(
+                $fullClass = ModelService::fullClass($pdo, 'AssetCrop');
+                $assetCrop = $fullClass::data($pdo, array(
                     'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
                     'params' => array($asset->getId(), $assetSize->getId()),
                     'limit' => 1,
@@ -167,11 +166,11 @@ class AssetController extends Controller
     }
 
     /**
-     * @param Asset $asset
-     * @param AssetSize $assetSize
+     * @param $asset
+     * @param $assetSize
      * @return string
      */
-    static public function getCacheKey(Asset $asset, AssetSize $assetSize) {
+    static public function getCacheKey($asset, $assetSize) {
         return "{$asset->getCode()}-{$assetSize->getCode()}-{$asset->getId()}-{$assetSize->getId()}";
     }
 
