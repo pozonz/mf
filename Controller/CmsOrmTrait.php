@@ -27,7 +27,7 @@ trait CmsOrmTrait
         $pdo = $connection->getWrappedConnection();
 
         $orm = $this->_orm($pdo, $className, $ormId);
-        return $this->_ormPageWithForm($pdo, $className, $orm);
+        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmAssetForm');
     }
 
     /**
@@ -92,7 +92,7 @@ trait CmsOrmTrait
             $total = $fullClass::data($pdo, array(
                 "count" => 1,
             ));
-            $params['totalPages'] = ceil($total['count'] /  $model->getNumberPerPage());
+            $params['totalPages'] = ceil($total['count'] / $model->getNumberPerPage());
             $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order";
             $params['pageNum'] = $pageNum;
             $params['sort'] = $sort;
@@ -164,7 +164,7 @@ trait CmsOrmTrait
      * @return mixed
      * @throws RedirectException
      */
-    private function _ormPageWithForm($pdo, $className, $orm, $formClass = 'OrmForm')
+    private function _ormPageWithForm($pdo, $className, $orm, $formClass = 'OrmForm', $callback = null)
     {
         $model = _Model::getByField($pdo, 'className', $className);
         $params = $this->prepareParams();

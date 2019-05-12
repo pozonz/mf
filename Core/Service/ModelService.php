@@ -15,22 +15,22 @@ class ModelService
         $this->connection = $connection;
     }
 
-    /**
-     * @param $className
-     * @return mixed
-     */
-    public function create($className, $uniqId = null)
-    {
-        if (!$uniqId) {
-            $uniqId = uniqid();
-        }
-
-        $pdo = $this->connection->getWrappedConnection();
-        $fullClassName = static::fullClass($pdo, $className);
-        $orm = new $fullClassName($pdo);
-        $orm->setUniqid($uniqId);
-        return $orm;
-    }
+//    /**
+//     * @param $className
+//     * @return mixed
+//     */
+//    public function create($className, $uniqId = null)
+//    {
+//        if (!$uniqId) {
+//            $uniqId = uniqid();
+//        }
+//
+//        $pdo = $this->connection->getWrappedConnection();
+//        $fullClassName = static::fullClass($pdo, $className);
+//        $orm = new $fullClassName($pdo);
+//        $orm->setUniqid($uniqId);
+//        return $orm;
+//    }
 
     /**
      * @param $className

@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Controller;
 use MillenniumFalcon\Core\Asset\AssetController;
 use MillenniumFalcon\Core\Nestable\AssetNode;
 use MillenniumFalcon\Core\Nestable\Tree;
+use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
 
@@ -353,7 +354,7 @@ trait CmsRestFileTrait
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $orm = $fullClass::getById($pdo, $id);
         if ($orm) {
-            $this->deleteFolder($pdo, $orm);
+            $orm->delete();
         }
 
         return new Response('OK');
@@ -374,13 +375,9 @@ trait CmsRestFileTrait
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $orm = $fullClass::getById($pdo, $id);
-        if (!$orm) {
-            throw new NotFoundHttpException();
+        if ($orm) {
+            $orm->delete();
         }
-        if (file_exists($this->getUploadedPath() . $orm->getFileLocation())) {
-            unlink($this->getUploadedPath() . $orm->getFileLocation());
-        }
-        $orm->delete();
         return new Response('OK');
     }
 
@@ -451,7 +448,7 @@ trait CmsRestFileTrait
             $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . $assetSize->getTitle());
         }
 
-        $this->removeCache($asset, $assetSize);
+        AssetService::removeCache($asset, $assetSize);
 
         $orm->setX($x);
         $orm->setY($y);
@@ -462,23 +459,6 @@ trait CmsRestFileTrait
         $orm->save();
         return new Response('OK');
 
-    }
-
-    /**
-     * @param $asset
-     * @param $assetSize
-     */
-    private function removeCache($asset, $assetSize) {
-        $cachedFolder = AssetController::getImageCachePath();
-        $cachedKey = AssetController::getCacheKey($asset, $assetSize);
-        $cachedFile =  "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
-        if (file_exists($cachedFile)) {
-            unlink($cachedFile);
-        }
-        $cachedFile = "{$cachedFolder}webp-{$cachedKey}.webp";
-        if (file_exists($cachedFile)) {
-            unlink($cachedFile);
-        }
     }
 
     /**
@@ -514,12 +494,12 @@ trait CmsRestFileTrait
         $orm->setFileExtension($file->getClientOriginalExtension());
         $orm->save();
 
-        $file->move(AssetController::getUploadPath());
-        if (file_exists(AssetController::getUploadPath() . $file->getFilename())) {
-            rename(AssetController::getUploadPath() . $file->getFilename(), AssetController::getUploadPath() . $orm->getId() . '.' . $ext);
+        $file->move(AssetService::getUploadPath());
+        if (file_exists(AssetService::getUploadPath() . $file->getFilename())) {
+            rename(AssetService::getUploadPath() . $file->getFilename(), AssetService::getUploadPath() . $orm->getId() . '.' . $ext);
         }
 
-        $info = getimagesize(AssetController::getUploadPath() . $orm->getId() . '.' . $ext);
+        $info = getimagesize(AssetService::getUploadPath() . $orm->getId() . '.' . $ext);
         if ($info === false) {
             $orm->setIsImage(0);
         } else {
@@ -536,28 +516,6 @@ trait CmsRestFileTrait
             'status' => 1,
             'orm' => $orm,
         ));
-    }
-
-    /**
-     * @param \PDO $pdo
-     * @param $orm
-     */
-    private function deleteFolder(\PDO $pdo, $orm)
-    {
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $children = $fullClass::data($pdo, array(
-            'whereSql' => 'm.parentId = ?',
-            'params' => array($orm->getId())
-        ));
-        foreach ($children as $itm) {
-            $this->deleteFolder($pdo, $itm);
-        }
-        if (!$orm->getIsFolder()) {
-            if (file_exists(AssetController::getUploadPath() . $orm->getFileLocation())) {
-                unlink(AssetController::getUploadPath() . $orm->getFileLocation());
-            }
-        }
-        $orm->delete();
     }
 
     /**

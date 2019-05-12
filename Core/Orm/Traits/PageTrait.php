@@ -3,7 +3,7 @@
 namespace MillenniumFalcon\Core\Orm\Traits;
 
 use MillenniumFalcon\Core\Nestable\NodeInterface;
-use MillenniumFalcon\Core\Orm\PageTemplate;
+use MillenniumFalcon\Core\Service\ModelService;
 
 trait PageTrait
 {
@@ -53,12 +53,13 @@ trait PageTrait
     }
 
     /**
-     * @return PageTemplate|null
+     * @return mixed
+     * @throws \Exception
      */
     public function objPageTempalte()
     {
-        /** @var PageTemplate $pageTemplate */
-        $pageTemplate = PageTemplate::getById($this->getPdo(), $this->getTemplateFile());
+        $fullClass = ModelService::fullClass($this->getPdo(), 'PateTemplate');
+        $pageTemplate = $fullClass::getById($this->getPdo(), $this->getTemplateFile());
         return $pageTemplate;
     }
 

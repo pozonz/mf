@@ -2,7 +2,7 @@
     <li class="tableContent js-tableContent js-orm-info" id="{{file.id}}" data-id="{{file.id}}" data-code="{{file.code}}" data-width="{{file.width}}" data-height="{{file.height}}" data-callback="callbackAfterDeleteFile">
         <div class="asset-img">
             {{#compare 1 file.isImage operator="=="}}<a class="js-cropping-options cropping-options" href="#" title="Crop this image ›">Cropping Options</a>{{/compare}}
-            <a href="" title="{{file.title}}"><img src="/images/assets/{{file.code}}/asset_small" alt="{{file.title}}" class="mceImage" border="0"></a>
+            <a href="/manage/orms/Asset/{{file.id}}?returnUrl=%2Fmanage%2Ffiles" title="{{file.title}}"><img src="/images/assets/{{file.code}}/asset_small" alt="{{file.title}}" class="mceImage" border="0"></a>
         </div>
         <div class="details">
             <a href="" title="{{file.title}}">{{file.title}}</a>

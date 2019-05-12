@@ -1,21 +1,58 @@
 {% extends 'cms/orms/orm.html.twig' %}
-
+{% block extraBody %}class="page-orm mode-asset"{% endblock %}
 
 {% block formWidgets %}
-	{{ form_row(form.title) }}
-	{{ form_row(form.code) }}
-	{{ form_row(form.description) }}
+	<div class="asset-edit-single">
+		<div class="asset-record-fields">
+			{{ form_row(form.title) }}
+			{{ form_row(form.code) }}
+			{{ form_row(form.description) }}
 
-	<div style="display: none;">
-		{{ form_row(form.fileName) }}
-		{{ form_row(form.fileSize) }}
-		{{ form_row(form.fileExtension) }}
-		{{ form_row(form.fileType) }}
-		{{ form_row(form.fileLocation) }}
-		{{ form_row(form.isImage) }}
-		{{ form_row(form.width) }}
-		{{ form_row(form.height) }}
+		</div>
+
+		<div class="asset-image-area">
+			<div id="preview" class="img-wrap">
+				<img src="/images/assets/{{ orm.code }}/asset_small/" class="asset-detail	">
+			</div>
+
+			<div class="buttons">
+				{#<input style="display: none;" type="file" class="cms_form_file" id="cms_form_content" name="content" onchange="handleFiles(this.files);">#}
+				<button class="button" onclick="$('#orm_file').click(); return false;">Replace file ›</button>
+			</div>
+
+			<div class="visuallyhidden">
+				{{ form_widget(form.file) }}
+			</div>
+
+			<ul class="nav asset-image-meta">
+				<li>Download URL: <a target="_blank" href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}">{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}</a></li>
+				<li>&nbsp;</li>
+				<li>Original file: <a href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}" target="_blank" id="file-name" class="file-name" title=" ↓ Download original file">{{ orm.fileName }}<i class="icon"></i></a></li>
+				<li>Size: <span id="file-size">{{ orm.formattedSize }}</span>{{ orm.formattedSizeUnit }}</li>
+				<li>Mime Type: <span id="file-type">{{ orm.fileType }}</span></li>
+			</ul>
+
+		</div>
+
+
+
+		<div style="display: none;">
+			{{ form_row(form.fileName) }}
+			{{ form_row(form.fileSize) }}
+			{{ form_row(form.fileExtension) }}
+			{{ form_row(form.fileType) }}
+			{{ form_row(form.fileLocation) }}
+			{{ form_row(form.isImage) }}
+			{{ form_row(form.width) }}
+			{{ form_row(form.height) }}
+		</div>
+
+		{{ form_rest(form) }}
 	</div>
 
-	{{ form_rest(form) }}
+{% endblock %}
+
+{% block externalFooter %}
+	{{ parent() }}
+	<script src="/cms/js/asset.js"></script>
 {% endblock %}

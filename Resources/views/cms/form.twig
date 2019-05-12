@@ -147,5 +147,8 @@
     </div>
 {%- endblock assetfolderpicker_widget -%}
 
+{% block _orm_file_widget -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} onchange="handleFiles(this.files);" />
+{%- endblock _orm_file_widget -%}
 
 {% use 'cms/form-content-block.twig' %}

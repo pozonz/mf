@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Asset;
 
+use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -55,7 +56,7 @@ class AssetController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $uploadPath = static::getUploadPath();
+        $uploadPath = AssetService::getUploadPath();
         $fileType = $asset->getFileType();
         $fileName = $asset->getFileName();
         $fileSize = $asset->getFileSize();
@@ -70,8 +71,8 @@ class AssetController extends Controller
                     throw new NotFoundHttpException();
                 }
 
-                $cachedKey = static::getCacheKey($asset, $assetSize);
-                $cachedFolder = static::getImageCachePath();
+                $cachedKey = AssetService::getCacheKey($asset, $assetSize);
+                $cachedFolder = AssetService::getImageCachePath();
                 if (!file_exists($cachedFolder)) {
                     mkdir($cachedFolder, 0777, true);
                 }
@@ -138,7 +139,7 @@ class AssetController extends Controller
      */
     protected function generateOutput($command, &$in = '', &$out = null)
     {
-        $logFolder = static::getImageCachePath();
+        $logFolder = AssetService::getImageCachePath();
         $descriptorspec = array(
             0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
             1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
@@ -163,28 +164,5 @@ class AssetController extends Controller
         }
 
         return $returnValue;
-    }
-
-    /**
-     * @param $asset
-     * @param $assetSize
-     * @return string
-     */
-    static public function getCacheKey($asset, $assetSize) {
-        return "{$asset->getCode()}-{$assetSize->getCode()}-{$asset->getId()}-{$assetSize->getId()}";
-    }
-
-    /**
-     * @return string
-     */
-    static public function getUploadPath() {
-        return __DIR__ . '/../../../../../uploads/';
-    }
-
-    /**
-     * @return string
-     */
-    static public function getImageCachePath() {
-        return __DIR__ . '/../../../../../cache/image/';
     }
 }
