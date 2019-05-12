@@ -85,9 +85,7 @@ class AssetController extends Controller
                     'oneOrNull' => 1,
                 ));
 
-                if ('application/pdf' == $fileType) {
-
-                } elseif ($useWebp) {
+                if ($useWebp) {
                     $thumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
 
                     $resizeCmd = "-resize {$assetSize->getWidth()} 0";
@@ -108,16 +106,27 @@ class AssetController extends Controller
                     $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} $thumbnail";
                 }
 
-                if (!file_exists($thumbnail)) {
-                    $returnValue = $this->generateOutput($command);
-                }
             } else {
                 $thumbnail = $fileLocation;
             }
         } else {
-            $thumbnail = __DIR__ . '/no-preview-big1.jpg';
-            $fileSize = 11042;
-            $fileType = 'image/jpeg';
+            if ('application/pdf' == $fileType) {
+                //TODO: implement pdf thumbnail
+
+                $thumbnail = __DIR__ . '/no-preview-big1.jpg';
+                $fileSize = 11042;
+                $fileType = 'image/jpeg';
+
+            } else {
+
+                $thumbnail = __DIR__ . '/no-preview-big1.jpg';
+                $fileSize = 11042;
+                $fileType = 'image/jpeg';
+            }
+        }
+
+        if (!file_exists($thumbnail)) {
+            $returnValue = $this->generateOutput($command);
         }
 
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));

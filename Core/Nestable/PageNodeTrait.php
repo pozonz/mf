@@ -2,7 +2,7 @@
 
 namespace MillenniumFalcon\Core\Nestable;
 
-trait PageTrait
+trait PageNodeTrait
 {
     /**
      * @return null|string

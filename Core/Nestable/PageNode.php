@@ -2,9 +2,9 @@
 
 namespace MillenniumFalcon\Core\Nestable;
 
-class PageNode extends Node implements PageInterface
+class PageNode extends Node implements PageNodeInterface
 {
-    use PageTrait;
+    use PageNodeTrait;
 
     /**
      * @var string|null

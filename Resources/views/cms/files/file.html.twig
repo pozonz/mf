@@ -1,18 +1,36 @@
 {% extends 'cms/orms/orm.html.twig' %}
 {% block extraBody %}class="page-orm mode-asset"{% endblock %}
 
+{% set path = orm.parentFolder().path(asset.root) %}
+
+{% block heading %}
+	<div class="asset-edit-single">
+		<div id="h1">
+			<h1>
+				Assets - {{ orm.title }}
+				<span class="formStyle id type14 doccode">URL Code: <strong name="documentcode" class="cms_form_textlabel">{{ orm.code }}</strong></span>
+				<div class="asset-path">
+					Path:
+					{% for itm in path %}
+						<a href="/manage/files?currentFolderId={{ itm.id }}">{{ itm.title }}</a>{% if not loop.last %} / {% endif %}
+					{% endfor %}
+				</div>
+			</h1>
+		</div>
+	</div>
+{% endblock %}
+
 {% block formWidgets %}
 	<div class="asset-edit-single">
 		<div class="asset-record-fields">
 			{{ form_row(form.title) }}
 			{{ form_row(form.code) }}
 			{{ form_row(form.description) }}
-
 		</div>
 
 		<div class="asset-image-area">
 			<div id="preview" class="img-wrap">
-				<img src="/images/assets/{{ orm.code }}/asset_small/" class="asset-detail	">
+				<img src="/images/assets/{{ orm.code }}/asset_small/?v={{ random() }}" class="asset-detail	">
 			</div>
 
 			<div class="buttons">
@@ -25,10 +43,10 @@
 			</div>
 
 			<ul class="nav asset-image-meta">
-				<li>Download URL: <a target="_blank" href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}">{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}</a></li>
+				<li id="file-download">Download URL: <a target="_blank" href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}">{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}</a></li>
 				<li>&nbsp;</li>
-				<li>Original file: <a href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}" target="_blank" id="file-name" class="file-name" title=" ↓ Download original file">{{ orm.fileName }}<i class="icon"></i></a></li>
-				<li>Size: <span id="file-size">{{ orm.formattedSize }}</span>{{ orm.formattedSizeUnit }}</li>
+				<li id="file-name" >Original file: <a href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}" target="_blank" class="file-name" title=" ↓ Download original file">{{ orm.fileName }}<i class="icon"></i></a></li>
+				<li>Size: <span id="file-size">{{ orm.formattedSize }}</span><span id="file-size-unit">{{ orm.formattedSizeUnit }}</span></li>
 				<li>Mime Type: <span id="file-type">{{ orm.fileType }}</span></li>
 			</ul>
 

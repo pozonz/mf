@@ -2,7 +2,7 @@
 
 namespace MillenniumFalcon\Core\Nestable;
 
-interface PageInterface extends NodeInterface
+interface PageNodeInterface extends NodeInterface
 {
     /**
      * @return string

@@ -6,7 +6,9 @@ use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Builder\OrmForm;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Redirect\RedirectException;
+use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,7 +29,12 @@ trait CmsOrmTrait
         $pdo = $connection->getWrappedConnection();
 
         $orm = $this->_orm($pdo, $className, $ormId);
-        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmAssetForm');
+        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmAssetForm', function(Form $form, $orm) use ($pdo) {
+            $uploadedFile = $form['file']->getData();
+            if ($uploadedFile) {
+                AssetService::processUploadedFileWithAsset($pdo, $uploadedFile, $orm);
+            }
+        });
     }
 
     /**
@@ -97,8 +104,9 @@ trait CmsOrmTrait
             $params['pageNum'] = $pageNum;
             $params['sort'] = $sort;
             $params['order'] = $order;
-        } elseif ($model->getListType() == 2) {
 
+        } elseif ($model->getListType() == 2) {
+            //TODO: implement tree
 
         }
 
@@ -183,6 +191,10 @@ trait CmsOrmTrait
         if ($form->isSubmitted() && $form->isValid()) {
             $isNew = $orm->getId() ? 0 : 1;
             $orm->save();
+
+            if ($callback) {
+               call_user_func($callback, $form, $orm);
+            }
 
             $baseUrl = str_replace('copy/', '', $params['node']->getUrl());
             if ($request->get('submit') == 'Apply') {

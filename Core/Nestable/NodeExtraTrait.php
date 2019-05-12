@@ -75,9 +75,9 @@ trait NodeExtraTrait
      * @param $needleId
      * @return array|bool
      */
-    public function path($needleId)
+    public function path($root)
     {
-        return static::_path($this, $needleId);
+        return static::_path($this, $root);
     }
 
     /**
@@ -85,21 +85,21 @@ trait NodeExtraTrait
      * @param $needleId
      * @return array|bool
      */
-    private static function _path(NodeInterface $node, $needleId)
+    private static function _path($curr, NodeInterface $node)
     {
-        $n = clone $node;
-        $n->setChildren(array());
-        $result = array($n);
+        $result = array($node);
 
-        if ($node->getId() == $needleId) {
-            return $result;
+        if ($node->getId() == $curr->getId()) {
+            return array($curr);
         }
+
         foreach ($node->getChildren() as $itm) {
-            $r = static::_path($itm, $needleId);
+            $r = static::_path($curr, $itm);
             if ($r !== false) {
                 return array_merge($result, $r);
             }
         }
+
         return false;
     }
 

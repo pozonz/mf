@@ -11,17 +11,19 @@
 {% endblock %}
 
 {% block container %}
-	<div id="h1">
-		{% if orm.id %}
-			<h1>Editing #{{ orm.id }}</h1>
-		{% else %}
-			<h1>Creating new record...</h1>
-        {% endif %}
-	</div>
+	{% block heading %}
+		<div id="h1">
+			{% if orm.id %}
+				<h1>Editing #{{ orm.id }}</h1>
+			{% else %}
+				<h1>Creating new record...</h1>
+			{% endif %}
+		</div>
+	{% endblock %}
 
 
     {% block form %}
-		<form method="POST" novalidate autocomplete="off" class="edit">
+		<form method="POST" novalidate autocomplete="off" class="edit" enctype="multipart/form-data">
             {% block formWidgets %}
                 {{ form_widget(form) }}
             {% endblock %}

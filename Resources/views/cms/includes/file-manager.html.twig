@@ -1,4 +1,4 @@
-<input type="hidden" id="currentFolderId" value="{{ app.request.session.get('currentFolderId') ?: 0 }}"/>
+<input type="hidden" id="currentFolderId" value="{{ app.request.get('currentFolderId') != null ? app.request.get('currentFolderId') : (app.request.session.get('currentFolderId') ?: 0) }}"/>
 <div id="popup-container" style="height: 100%">
     <div class="row">
         <div class="col-lg-12" style="padding: 0">
