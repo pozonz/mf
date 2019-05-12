@@ -22,7 +22,7 @@
                 <div>Search results for <span class="label label-warning pz-label">{{keyword}}</span></div>
             {{/compare}}
         </h1>
-        <div class="addForm js-orm-info" id="{{currentFolder.id}}" data-id="{{currentFolder.id}}" data-title="{{currentFolder.title}}" data-callback="callbackAfterDeleteFolder" data-parent="{{currentFolder.parentId}}">
+        <div class="addForm js-orm-info" id="{{currentFolder.id}}" data-class="Asset" data-id="{{currentFolder.id}}" data-title="{{currentFolder.title}}" data-callback="callbackAfterDeleteFolder" data-parent="{{currentFolder.parentId}}">
             {{#compare '' keyword operator="=="}}
                 {{#ifMoreThan1 path}}
                     <button class="js-change-folder-name">

@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/css/jquery.Jcrop.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/themes/default/style.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     {#<link href="/cms/css/cms.css" rel="stylesheet" type="text/css" media="screen"/>#}
     <link href="/cms/css/dropzone.css" rel="stylesheet" type="text/css"/>
@@ -134,7 +136,20 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 <script src="/cms/js/handlebar-helpers.js"></script>
+
+<script id="loading" type="text/x-handlebars-template">{% include 'cms/files/handlebar/loading.twig' %}</script>
+<script id="folder" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-folders.twig' %}</script>
+<script id="file" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-file.twig' %}</script>
+<script id="files" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-files.twig' %}</script>
+<script id="nav" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-nav.twig' %}</script>
+<script id="file-progress" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-file-progress.twig' %}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/jstree.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.30.0/js/jquery.fileupload.min.js"></script>
 <script src="/cms/js/fc.js"></script>
+<script src="/cms/js/fm.js"></script>
 <script src="/cms/js/main.js"></script>
 
 <script id="crop-image" type="text/x-handlebars-template">{% include 'cms/handlebar/base.crop-image.twig' %}</script>
@@ -152,6 +167,23 @@
             })
         {% endfor %}
     });
+
+    function callbackAfterDeleteFolder() {
+        fm.selectFolder($(this).data('parent'));
+        fm.getFolders();
+        fm.getNav();
+        fm.getFiles();
+    };
+
+    function callbackAfterDeleteFile() {
+        for (var idx in fm.files) {
+            var itm = fm.files[idx];
+            if (itm.id == $(this).data('id')) {
+                fm.files.splice(idx, 1)
+            }
+        }
+        fm.renderFiles();
+    };
 </script>
 <div id="crop-image-modal" style="display: none;"></div>
 

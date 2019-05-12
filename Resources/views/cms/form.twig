@@ -69,7 +69,8 @@
 {%- endblock wysiwyg_widget -%}
 
 {% block assetpicker_widget -%}
-    <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
+    {#
+        <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
     <div class="row">
         <div class="col-lg-6 text-center">
             <a class="js-fancybox" id="{{ id }}-preview" href="/assets/image/{{ value ?: 0 }}/large">
@@ -80,6 +81,18 @@
             <button type="button" class="btn btn-primary btn-sm btn-block js-asset-change" data-id="#{{ id }}"><i class="fa fa-file-image-o"></i> Choose</button>
             <button type="button" class="btn btn-danger btn-outline btn-sm btn-block js-asset-delete" data-id="#{{ id }}"><i class="fa fa-times"></i> Delete</button>
         </div>
+    </div>
+    #}
+
+    {% set orm = model.getById('Asset', value) %}
+    <div class="filePickWrap js-filePickWrap js-orm-info" data-id="{{ orm ? orm.id : '' }}" data-code="{{ orm ? orm.code : '' }}" data-width="{{ orm ? orm.width : '' }}" data-height="{{ orm ? orm.height : '' }}">
+        <input type="hidden" {{ block('widget_attributes') }} class="js-fileId">
+        <div class="filePickPreviewWrap">
+            <img src="{% if orm %}/images/assets/{{ orm.code }}/asset_small{% else %}/cms/images/spacer.gif{% endif %}" class="js-filePickFile filePickFile">
+            <a class="js-asset-delete"><img src="/cms/images/binIcon.gif" {% if not orm %}style="display: none"{% endif %}></a>
+        </div>
+        <a class="filePickButton js-asset-change">Pick file ›</a>
+        <a class="cropImagePickButton js-cropping-options" {% if not orm %}style="display: none;"{% endif %}>Crop ›</a>
     </div>
 {%- endblock assetpicker_widget -%}
 
