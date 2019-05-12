@@ -10,11 +10,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class ChoiceMultiJson extends AbstractType
 {
 
+    /**
+     * @return string
+     */
     public function getBlockPrefix()
     {
         return 'choice_multi_json';
     }
 
+    /**
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $options
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['choices'] = array();
@@ -26,6 +34,9 @@ class ChoiceMultiJson extends AbstractType
         }
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'compound' => false,

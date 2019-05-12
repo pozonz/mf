@@ -9,12 +9,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ChoiceTree extends AbstractType
 {
-
+    /**
+     * @return string
+     */
     public function getBlockPrefix()
     {
         return 'choice_tree';
     }
 
+    /**
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $options
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['choices'] = array();
@@ -26,6 +33,9 @@ class ChoiceTree extends AbstractType
         }
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'compound' => false,

@@ -7,12 +7,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class Robot extends AbstractType
 {
-
+    /**
+     * @return string
+     */
     public function getBlockPrefix()
     {
         return 'robot';
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'compound' => false,
