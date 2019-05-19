@@ -1,18 +1,21 @@
 {% verbatim %}
-    <div class="gallery-file-box" data-id="{{id}}" data-title="{{title}}" id="{{id}}">
-        <button class="pz-file-delete btn btn-danger btn-circle js-file-delete"><i class="fa fa-times"></i></button>
-        <div class="file ui-state-default">
-            <a class="js-fancybox-gallery" href="/assets/image/{{id}}/large">
-                <span class="corner"></span>
-                <div class="icon">
-                    <img src="/assets/image/{{id}}/small" />
-                </div>
-                <div class="file-name">
-                    {{title}}
-                    <br/>
-                    <small>{{ added }}</small>
-                </div>
-            </a>
+    <li class="tableContent js-tableContent js-orm-info file-box gallery-file-box" id="{{id}}" data-id="{{id}}" data-code="{{code}}" data-width="{{width}}" data-height="{{height}}" data-callback="callbackAfterDeleteFile" data-class="Asset">
+        <div class="asset-img">
+            <a class="js-cropping-options cropping-options" href="#" title="Crop this image ›">Cropping Options</a>
+            <img src="/images/assets/{{code}}/asset_small?v={{#random}}{{/random}}" alt="{{title}}" class="mceImage" border="0">
         </div>
-    </div>
+        <div class="details">
+            <div style="line-height: 1.2;">{{title}}</div>
+
+            <div class="asset-controls">
+                <!--<a href="#" class="icon approve js-orm-status" data-status="{{ status }}"><img src="/cms/images/dot{{#compare 1 status operator="=="}}Green{{/compare}}{{#compare 0 status operator="=="}}Red{{/compare}}.gif" alt="" border="0"></a>-->
+                <a class="icon pz-file-delete js-file-delete" href="#"><img src="/cms/images/unlink.png" alt="" border="0"></a>
+                <div class="doc-code-meta">
+                    <label>
+                        {{code}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </li>
 {% endverbatim %}

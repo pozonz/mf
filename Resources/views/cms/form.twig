@@ -69,30 +69,15 @@
 {%- endblock wysiwyg_widget -%}
 
 {% block assetpicker_widget -%}
-    {#
-        <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
-    <div class="row">
-        <div class="col-lg-6 text-center">
-            <a class="js-fancybox" id="{{ id }}-preview" href="/assets/image/{{ value ?: 0 }}/large">
-                <div class="image-holder" style="background: url('/assets/image/{{ value ?: 0 }}/small') no-repeat center center; height: 100px;"></div>
-            </a>
-        </div>
-        <div class="col-lg-6">
-            <button type="button" class="btn btn-primary btn-sm btn-block js-asset-change" data-id="#{{ id }}"><i class="fa fa-file-image-o"></i> Choose</button>
-            <button type="button" class="btn btn-danger btn-outline btn-sm btn-block js-asset-delete" data-id="#{{ id }}"><i class="fa fa-times"></i> Delete</button>
-        </div>
-    </div>
-    #}
-
     {% set orm = model.getById('Asset', value) %}
-    <div class="filePickWrap js-filePickWrap js-orm-info" data-id="{{ orm ? orm.id : '' }}" data-code="{{ orm ? orm.code : '' }}" data-width="{{ orm ? orm.width : '' }}" data-height="{{ orm ? orm.height : '' }}">
+    <div class="filePickWrap js-filePickWrap js-orm-info" data-id="{{ value }}">
         <input type="hidden" {{ block('widget_attributes') }} class="js-fileId">
         <div class="filePickPreviewWrap">
-            <img src="{% if orm %}/images/assets/{{ orm.code }}/asset_small{% else %}/cms/images/spacer.gif{% endif %}" class="js-filePickFile filePickFile">
-            <a class="js-asset-delete"><img src="/cms/images/binIcon.gif" {% if not orm %}style="display: none"{% endif %}></a>
+            <img src="/cms/images/file-loading.gif" class="js-filePickFile filePickFile">
+            <a class="js-asset-delete" style="display: none"><img src="/cms/images/binIcon.gif"></a>
         </div>
         <a class="filePickButton js-asset-change">Pick file ›</a>
-        <a class="cropImagePickButton js-cropping-options" {% if not orm %}style="display: none;"{% endif %}>Crop ›</a>
+        <a class="cropImagePickButton js-cropping-options" style="display: none;">Crop ›</a>
     </div>
 {%- endblock assetpicker_widget -%}
 
@@ -119,8 +104,8 @@
         {% if label is empty -%}
             {%- if label_format is not empty -%}
                 {% set label = label_format|replace({
-                '%name%': name,
-                '%id%': id,
+                    '%name%': name,
+                    '%id%': id,
                 }) %}
             {%- else -%}
                 {% set label = name|humanize %}
@@ -135,8 +120,8 @@
         </{{ element|default('label') }}>
 
         <div style="display: inline-block; margin-left: 10px;">
-            <button type="button" class="btn btn-success btn-outline btn-sm change" style="margin-right: .2em;" data-id="#{{ id }}"><i class="fa fa-pencil-square-o"></i> Manage</button>
-            <button type="button" class="btn btn-danger btn-outline btn-sm delete" data-id="#{{ id }}"><i class="fa fa-times"></i> Empty</button>
+            <button type="button" class="change" style="background: white; color: black; margin-right: .2em;" data-id="#{{ id }}">Manage</button>
+            <button type="button" class="delete" style="background: white; color: red; margin-right: .2em;" data-id="#{{ id }}"> Empty</button>
         </div>
     {%- endif -%}
 {%- endblock assetfolderpicker_label -%}
@@ -149,13 +134,16 @@
                 <div class="sk-double-bounce1"></div>
                 <div class="sk-double-bounce2"></div>
             </div>
-            <div class="alert alert-info js-loading">
+            <div class="alert alert-info js-loading" style="display: none;">
                 Loading images, please wait...
             </div>
             <div class="alert gray-bg js-no-results" style="display: none;">
                 No images selected
             </div>
-            <div class="js-gallery-container"></div>
+            <div id="fileModuleBrowser" class="gallery-widget">
+                <ul id="filesImageList" class="contentListTable assets-images ui-sortable js-gallery-container">
+                </ul>
+            </div>
         </div>
     </div>
 {%- endblock assetfolderpicker_widget -%}

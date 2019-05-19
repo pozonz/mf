@@ -1,11 +1,15 @@
 <?php
-
+//Last updated: 2019-05-15 21:12:59
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
+use MillenniumFalcon\Core\Nestable\NodeInterface;
+use MillenniumFalcon\Core\Nestable\NodeExtraTrait;
 
-class Page extends Orm
+class Page extends Orm implements NodeInterface
 {
+    use NodeExtraTrait;
+
     /**
      * @var array
      */
@@ -40,6 +44,16 @@ class Page extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $url;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $image;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $gallery;
     
     /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -185,6 +199,38 @@ class Page extends Orm
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+    
+    /**
+     * @param mixed image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getGallery()
+    {
+        return $this->gallery;
+    }
+    
+    /**
+     * @param mixed gallery
+     */
+    public function setGallery($gallery)
+    {
+        $this->gallery = $gallery;
     }
     
     /**

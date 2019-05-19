@@ -319,6 +319,23 @@ trait CmsRestFileTrait
     }
 
     /**
+     * @route("/manage/rest/asset/files/get/file")
+     * @return Response
+     */
+    public function assetAjaxGetFile()
+    {
+        $request = Request::createFromGlobals();
+        $id = $request->get('id');
+
+        /** @var \PDO $pdo */
+        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $orm = $fullClass::getById($pdo, $id);
+        return new JsonResponse($orm);
+    }
+
+    /**
      * @route("/manage/rest/asset/files/upload")
      * @return Response
      */

@@ -1,5 +1,5 @@
 {% verbatim %}
-    <li class="tableContent js-tableContent js-orm-info" id="{{file.id}}" data-id="{{file.id}}" data-code="{{file.code}}" data-width="{{file.width}}" data-height="{{file.height}}" data-callback="callbackAfterDeleteFile" data-class="Asset">
+    <li class="tableContent js-tableContent js-orm-info file-box" id="{{file.id}}" data-id="{{file.id}}" data-code="{{file.code}}" data-width="{{file.width}}" data-height="{{file.height}}" data-callback="callbackAfterDeleteFile" data-class="Asset">
         <div class="asset-img">
             {{#compare 0 mode operator="=="}}
                 {{#compare 1 file.isImage operator="=="}}
@@ -16,7 +16,12 @@
                 {{#compare 0 mode operator="=="}}<a class="icon" href="/manage/orms/Asset/{{file.id}}?returnUrl=%2Fmanage%2Ffiles" title="{{file.title}}"><img src="/cms/images/editIcon.gif" alt="Edit record" title="Edit record" border="0"></a>{{/compare}}
                 <a class="icon js-orm-delete" href="#"><img src="/cms/images/binIcon.gif" alt="" border="0"></a>
 
-                <div class="doc-code-meta">{{file.code}}</div>
+                <div class="doc-code-meta {{#compare 2 mode operator="=="}}doc-code-meta-files{{/compare}}">
+                    <label>
+                        <input type="checkbox" class="js-select" {{#compare 1 file._selected operator="=="}}checked{{/compare}}>
+                        {{file.code}}
+                    </label>
+                </div>
             </div>
         </div>
     </li>

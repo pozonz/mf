@@ -27,28 +27,24 @@
                 {{#compare widget 2 operator='==' }}
                     <div class="formStyle content-block-asset assetpicker">
                         <label>{{title}}</label>
-                        <div class="row">
-                            <div class="col-lg-6 text-center">
-                                <a class="js-fancybox" id="{{ id }}-preview" href="/assets/image/{{#getByKey0 ../block.values id}}{{/getByKey0}}/large">
-                                    <div class="image-holder" style="background: url('/assets/image/{{#getByKey0 ../block.values id}}{{/getByKey0}}/small') no-repeat center center; height: 100px;"></div>
-                                </a>
+                        <div class="filePickWrap js-filePickWrap js-orm-info" data-id="{{#getByKey0 ../block.values id}}{{/getByKey0}}">
+                            <div class="filePickPreviewWrap">
+                                <img src="/cms/images/file-loading.gif" class="js-filePickFile filePickFile">
+                                <a class="js-asset-delete" style="display: none;"><img src="/cms/images/binIcon.gif"></a>
                             </div>
-                            <div class="col-lg-6">
-                                <button type="button" class="btn btn-primary btn-sm btn-block js-asset-change" data-id="#{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}"><i class="fa fa-file-image-o"></i> Choose</button>
-                                <button type="button" class="btn btn-danger btn-outline btn-sm btn-block js-asset-delete" data-id="#{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}"><i class="fa fa-times"></i> Delete</button>
-                            </div>
+                            <a class="filePickButton js-asset-change">Pick file ›</a>
+                            <a class="cropImagePickButton js-cropping-options" style="display: none;">Crop ›</a>
+                            <input type="hidden" class="js-elem js-fileId" id="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}" value="{{#getByKey ../block.values id}}{{/getByKey}}">
                         </div>
-                        <input type="hidden" class="js-elem" id="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}" value="{{#getByKey ../block.values id}}{{/getByKey}}">
                     </div>
                 {{/compare}}
 
                 {{#compare widget 3 operator='==' }}
                     <div class="formStyle block-item-textarea assetfolderpicker">
-                        <hr />
-                        <label for="form_gallery" class="required" style="display: inline-block;">Gallery:</label>
+                        <label for="form_gallery" class="required" style="display: inline-block;">{{title}}</label>
                         <div style="display: inline-block; margin-left: 10px;">
-                            <button type="button" class="btn btn-success btn-sm change" style="margin-right: .2em;" data-id="#{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}"><i class="fa fa-files-o"></i> Manage</button>
-                            <button type="button" class="btn btn-danger btn-sm delete" data-id="#{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}"><i class="fa fa-times"></i> Empty</button>
+                            <button type="button" class="btn btn-success btn-sm change" style="background: #eee; color: black; margin-right: .2em;" data-id="#{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}"><i class="fa fa-files-o"></i> Manage</button>
+                            <button type="button" class="btn btn-danger btn-sm delete" style="background: #eee; color: red; margin-right: .2em;" data-id="#{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}"><i class="fa fa-times"></i> Empty</button>
                         </div>
                         <div class="widget style1 js-gallery-widget" style="padding: 0; margin: 0;">
                             <input type="hidden" id="form_gallery" required="required" value="" data-attributename="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}">
@@ -57,13 +53,16 @@
                                     <div class="sk-double-bounce1"></div>
                                     <div class="sk-double-bounce2"></div>
                                 </div>
-                                <div class="alert alert-info js-loading">
+                                <div class="alert alert-info js-loading" style="display: none;">
                                     Loading images, please wait...
                                 </div>
                                 <div class="alert gray-bg js-no-results" style="display: none;">
                                     No images selected
                                 </div>
-                                <div class="js-gallery-container"></div>
+                                <div id="fileModuleBrowser" class="gallery-widget">
+                                    <ul id="filesImageList" class="contentListTable assets-images ui-sortable js-gallery-container">
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <hr />
