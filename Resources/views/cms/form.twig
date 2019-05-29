@@ -28,6 +28,14 @@
     {%- endif -%}
 {%- endblock form_errors -%}
 
+{% block spliter_row -%}
+    <hr />
+{%- endblock spliter_row %}
+
+{% block label_widget -%}
+    <div>{{ value }}</div>
+{%- endblock label_widget %}
+
 {% block datepicker_widget -%}
     <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('Y-m-d') : '' }}"/>
 {%- endblock datepicker_widget %}
@@ -120,8 +128,8 @@
         </{{ element|default('label') }}>
 
         <div style="display: inline-block; margin-left: 10px;">
-            <button type="button" class="change" style="background: white; color: black; margin-right: .2em;" data-id="#{{ id }}">Manage</button>
-            <button type="button" class="delete" style="background: white; color: red; margin-right: .2em;" data-id="#{{ id }}"> Empty</button>
+            <a class="button-galery change" data-id="#{{ id }}"><i class="fas fa-images"></i> Manage</a>
+            <a class="button-galery delete" data-id="#{{ id }}"><i class="far fa-trash-alt"></i> Empty</a>
         </div>
     {%- endif -%}
 {%- endblock assetfolderpicker_label -%}
@@ -151,5 +159,16 @@
 {% block _orm_file_widget -%}
     <input type="{{ type }}" {{ block('widget_attributes') }} onchange="handleFiles(this.files);" />
 {%- endblock _orm_file_widget -%}
+
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            <div>
+                {{- form_widget(child) -}}
+                {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+            </div>
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
 
 {% use 'cms/form-content-block.twig' %}

@@ -26,21 +26,21 @@
             {{#compare '' keyword operator="=="}}
                 {{#ifMoreThan1 path}}
                     <button class="js-change-folder-name">
-                       Change Folder Name
+                       Change folder name
                     </button>
                 {{/ifMoreThan1}}
             {{/compare}}
 
             {{#compare '' keyword operator="=="}}
                 <button class="js-add-subfolder">
-                    Add Subfolder
+                    Add subfolder
                 </button>
             {{/compare}}
 
             {{#compare '' keyword operator="=="}}
                 {{#ifMoreThan1 path}}
                     <button class="js-orm-delete" data-id="{{currentFolder.id}}" data-parent="{{currentFolder.parentId}}">
-                        Delete Folder
+                        Delete folder
                     </button>
                 {{/ifMoreThan1}}
             {{/compare}}

@@ -3,9 +3,14 @@
 namespace MillenniumFalcon\Core\Form\Builder;
 
 use Cocur\Slugify\Slugify;
+use MillenniumFalcon\Core\Form\Constraints\ConstraintUnique;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
+use MillenniumFalcon\Core\Form\Type\Label;
+use MillenniumFalcon\Core\Form\Type\Spliter;
 use MillenniumFalcon\Core\Nestable\Node;
+use MillenniumFalcon\Core\Orm\_Model;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,8 +41,41 @@ class OrmForm extends AbstractType
             }
 
             $widget = $itm->widget;
-            $options = $this->getOptoins($pdo, $itm);
+            $options = $this->getOptoins($pdo, $itm, $orm);
             $builder->add($itm->field, $widget, $options);
+        }
+
+        $presetData = $model->getMetadata() ? json_decode($model->getPresetData()) : array();
+        foreach ($presetData as $presetDataItem) {
+            $presetDataMap = _Model::presetDataMap;
+            if ($presetDataMap[$presetDataItem]) {
+                $builder->add(uniqid(), Spliter::class, array(
+                    'mapped' => false,
+                ));
+                $presetDataMapItem = $presetDataMap[$presetDataItem];
+                foreach ($presetDataMapItem as $idx => $itm) {
+                    $builder->add($idx, $itm, array());
+                }
+            }
+
+
+            switch ($itm) {
+                case 'publish':
+
+                    $builder->add('publishFrom', DateTimePicker::class, array());
+                    $builder->add('publishTo', DateTimePicker::class, array());
+                    break;
+            }
+        }
+
+        $metadata = $model->getMetadata() ? json_decode($model->getMetadata()) : array();
+        if (count($metadata)) {
+            $builder->add(uniqid(), Spliter::class, array(
+                'mapped' => false,
+            ));
+        }
+        foreach ($metadata as $itm) {
+            $builder->add($itm, Label::class, array());
         }
     }
 
@@ -45,7 +83,7 @@ class OrmForm extends AbstractType
      * @param $column
      * @return array
      */
-    private function getOptoins($pdo, $column) {
+    private function getOptoins($pdo, $column, $orm) {
         $options = array(
             'label' => $column->label,
         );
@@ -114,10 +152,19 @@ class OrmForm extends AbstractType
                 break;
         }
 
+        if (!isset($options['constraints']) || gettype($options['constraints']) != 'array') {
+            $options['constraints'] = array();
+        }
+
         if ($column->required == 1) {
-            $options['constraints'] = array(
-                new Assert\NotBlank(),
-            );
+            $options['constraints'][] = new Assert\NotBlank();
+        }
+
+        if ($column->unique == 1) {
+            $options['constraints'][] = new ConstraintUnique(array(
+                'orm' => $orm,
+                'field' => $column->field,
+            ));
         }
 
         return $options;

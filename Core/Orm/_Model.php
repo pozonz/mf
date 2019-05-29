@@ -2,12 +2,55 @@
 
 namespace MillenniumFalcon\Core\Orm;
 
+use MillenniumFalcon\Core\Orm;
+use function ZendTest\Code\Reflection\TestAsset\function1;
+
 /**
  * Class _Model
  * @package Web\Orm
  */
 class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
 {
+
+
+    const metaExludes = array(
+        'publishFrom',
+        'publishTo',
+        'metaTitle',
+        'metaDescirption',
+        'ogTitle',
+        'ogDescirption',
+        'ogImage',
+        'rank',
+        'status',
+    );
+
+    const presetData = array(
+        'Publish date range' => 'publish',
+        'Meta tags' => 'meta',
+        'OG tags' => 'og',
+        'Rank' => 'rank',
+    );
+
+    const presetDataMap = array(
+        'publish' => array(
+            'publishFrom' => 'MillenniumFalcon\\Core\\Form\\Type\\DateTimePicker',
+            'publishTo' => 'MillenniumFalcon\\Core\\Form\\Type\\DateTimePicker'
+        ),
+        'meta' => array(
+            'metaTitle' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'metaDescirption' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+        ),
+        'og' => array(
+            'ogTitle' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'ogDescirption' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'ogImage' => 'MillenniumFalcon\\Core\\Form\\Type\\AssetPicker'
+        ),
+        'rank' => array(
+            'rank' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+        ),
+    );
+
     /**
      * _Model constructor.
      * @param \PDO $pdo
@@ -27,11 +70,47 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
     }
 
     /**
+     * @param mixed $metadata
+     */
+    public function setMetadata($metadata): void
+    {
+        if (gettype($metadata) == 'array') {
+            $metadata = json_encode($metadata);
+        }
+        parent::setMetadata($metadata);
+    }
+
+    /**
+     * @param mixed $presetData
+     */
+    public function setPresetData($presetData): void
+    {
+        if (gettype($presetData) == 'array') {
+            $presetData = json_encode($presetData);
+        }
+        parent::setPresetData($presetData);
+    }
+
+    /**
      * @return array
      */
-    public static function getFieldChoices()
+    static public function getMetadataChoices()
     {
-        return array(
+        $fields = Orm::getFields();
+        $values = array_diff(array_keys($fields), static::metaExludes);
+        $keys = array_map(function ($itm) {
+            return ucfirst($itm);
+        }, $values);
+        $result = array_combine($keys, $values);
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    static public function getFieldChoices()
+    {
+        $result = array(
             'startdate' => "datetime DEFAULT NULL",
             'enddate' => "datetime DEFAULT NULL",
             'firstdate' => "datetime DEFAULT NULL",
@@ -111,14 +190,16 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
             'extra14' => "text COLLATE utf8mb4_unicode_ci DEFAULT NULL",
             'extra15' => "text COLLATE utf8mb4_unicode_ci DEFAULT NULL",
         );
+        ksort($result);
+        return $result;
     }
 
     /**
      * @return array
      */
-    public static function getWidgetChoices()
+    static public function getWidgetChoices()
     {
-        return array(
+        $result = array(
             'Asset picker' => '\\MillenniumFalcon\\Core\\Form\\Type\\AssetPicker',
             'Asset folder picker' => '\\MillenniumFalcon\\Core\\Form\\Type\\AssetFolderPicker',
             'Choice tree' => '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceTree',
@@ -136,5 +217,7 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
             'Textarea' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType',
             'Hidden' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\HiddenType',
         );
+        ksort($result);
+        return $result;
     }
 }

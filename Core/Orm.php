@@ -34,17 +34,57 @@ abstract class Orm implements \JsonSerializable
     private $rank;
 
     /**
-     * #pz datetime NOT NULL
+     * #pz datetime NULL
      */
     private $added;
 
     /**
-     * #pz datetime NOT NULL
+     * #pz datetime NULL
      */
     private $modified;
 
     /**
-     * #pz tinyint(1) NOT NULL DEFAULT 0
+     * #pz datetime NULL
+     */
+    private $publishFrom;
+
+    /**
+     * #pz datetime NULL
+     */
+    private $publishTo;
+
+    /**
+     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     */
+    private $metaTitle;
+
+    /**
+     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     */
+    private $metaDescirption;
+
+    /**
+     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     */
+    private $ogTitle;
+
+    /**
+     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     */
+    private $ogDescirption;
+
+    /**
+     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     */
+    private $ogImage;
+
+    /**
+     * #pz int(11) NULL DEFAULT 0
+     */
+    private $lastEditedBy;
+
+    /**
+     * #pz tinyint(1) NULL DEFAULT 0
      */
     private $status;
 
@@ -589,5 +629,133 @@ abstract class Orm implements \JsonSerializable
     {
         $rc = static::getReflectionClass();
         return file_get_contents(dirname($rc->getFileName()) . '/CmsConfig/' . $rc->getShortName() . '.json');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublishFrom()
+    {
+        return $this->publishFrom;
+    }
+
+    /**
+     * @param mixed $publishFrom
+     */
+    public function setPublishFrom($publishFrom): void
+    {
+        $this->publishFrom = $publishFrom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublishTo()
+    {
+        return $this->publishTo;
+    }
+
+    /**
+     * @param mixed $publishTo
+     */
+    public function setPublishTo($publishTo): void
+    {
+        $this->publishTo = $publishTo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetaTitle()
+    {
+        return $this->metaTitle;
+    }
+
+    /**
+     * @param mixed $metaTitle
+     */
+    public function setMetaTitle($metaTitle): void
+    {
+        $this->metaTitle = $metaTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetaDescirption()
+    {
+        return $this->metaDescirption;
+    }
+
+    /**
+     * @param mixed $metaDescirption
+     */
+    public function setMetaDescirption($metaDescirption): void
+    {
+        $this->metaDescirption = $metaDescirption;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOgTitle()
+    {
+        return $this->ogTitle;
+    }
+
+    /**
+     * @param mixed $ogTitle
+     */
+    public function setOgTitle($ogTitle): void
+    {
+        $this->ogTitle = $ogTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOgDescirption()
+    {
+        return $this->ogDescirption;
+    }
+
+    /**
+     * @param mixed $ogDescirption
+     */
+    public function setOgDescirption($ogDescirption): void
+    {
+        $this->ogDescirption = $ogDescirption;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOgImage()
+    {
+        return $this->ogImage;
+    }
+
+    /**
+     * @param mixed $ogImage
+     */
+    public function setOgImage($ogImage): void
+    {
+        $this->ogImage = $ogImage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastEditedBy()
+    {
+        return $this->lastEditedBy;
+    }
+
+    /**
+     * @param mixed $lastEditedBy
+     */
+    public function setLastEditedBy($lastEditedBy): void
+    {
+        $this->lastEditedBy = $lastEditedBy;
     }
 }

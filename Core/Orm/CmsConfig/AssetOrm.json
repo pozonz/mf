@@ -4,7 +4,15 @@
     "slug": "asset-orm",
     "rank": "10",
     "added": "2018-11-04 10:14:43",
-    "modified": "2019-04-18 11:45:24",
+    "modified": "2019-05-29 21:16:37",
+    "publishFrom": null,
+    "publishTo": null,
+    "metaTitle": null,
+    "metaDescirption": null,
+    "ogTitle": null,
+    "ogDescirption": null,
+    "ogImage": null,
+    "lastEditedBy": null,
     "status": "1",
     "title": "Asset ORM",
     "className": "AssetOrm",
@@ -16,5 +24,7 @@
     "numberPerPage": "50",
     "defaultSortBy": "id",
     "defaultOrder": 1,
-    "columnsJson": "[{\"id\":\"z1541278663456\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Asset ID:\",\"field\":\"title\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1541278695888\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Model name:\",\"field\":\"modelName\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1541278698887\",\"column\":\"extra3\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Attribute name:\",\"field\":\"attributeName\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1541278752784\",\"column\":\"extra4\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"ORM ID:\",\"field\":\"ormId\",\"required\":0,\"sql\":\"\"},{\"id\":\"z1541800261188\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"My rank:\",\"field\":\"myRank\",\"required\":0,\"sql\":\"\"}]"
+    "columnsJson": "[{\"id\":\"z1541278663456\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Asset ID:\",\"field\":\"title\",\"required\":1,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1541278695888\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Model name:\",\"field\":\"modelName\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1541278698887\",\"column\":\"extra3\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Attribute name:\",\"field\":\"attributeName\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1541278752784\",\"column\":\"extra4\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"ORM ID:\",\"field\":\"ormId\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1541800261188\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"My rank:\",\"field\":\"myRank\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
+    "metadata": "[]",
+    "presetData": "[]"
 }

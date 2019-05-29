@@ -79,11 +79,12 @@
                 <table id="columns" class="edit">
                     <tbody>
                         <tr>
-                            <td class="tableHead" width="20%">Widget</td>
-                            <td class="tableHead" width="30%">Label</td>
-                            <td class="tableHead" width="25%">Field</td>
+                            <td class="tableHead" width="18%">Widget</td>
+                            <td class="tableHead" width="25%">Label</td>
+                            <td class="tableHead" width="22%">Field</td>
                             <td class="tableHead" width="10%">Column</td>
                             <td class="tableHead" width="10%">Required</td>
+                            <td class="tableHead" width="10%">Unique</td>
                             <td class="tableHead" width="5%"></td>
                         </tr>
                     </tbody>
@@ -95,6 +96,18 @@
             {{ form_label(form.columnsJson) }}
             {{ form_widget(form.columnsJson, {attr: {class: 'form-control'}}) }}
             {{ form_errors(form.columnsJson) }}
+        </div>
+
+        <div class="formStyle">
+            {{ form_label(form.presetData) }}
+            {{ form_widget(form.presetData) }}
+            {{ form_errors(form.presetData) }}
+        </div>
+
+        <div class="formStyle">
+            {{ form_label(form.metadata) }}
+            {{ form_widget(form.metadata) }}
+            {{ form_errors(form.metadata) }}
         </div>
 
         <div class="submit-area">

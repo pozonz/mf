@@ -5,7 +5,9 @@ namespace MillenniumFalcon\Core\Form\Builder;
 //use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
 
+use MillenniumFalcon\Core\Orm\_Model;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -82,7 +84,42 @@ class ModelForm extends AbstractType
                 'label' => 'Choose Partitions:',
                 'choices' => $dataGroups,
             ))
+            ->add('presetData', ChoiceType::class, array(
+                'label' => 'Preset-data:',
+                'expanded' => true,
+                'multiple' => true,
+                'choices' => _Model::presetData,
+            ))
+            ->add('metadata', ChoiceType::class, array(
+                'label' => 'Metadata:',
+                'expanded' => true,
+                'multiple' => true,
+                'choices' => _Model::getMetadataChoices(),
+            ))
             ->add('columnsJson', TextareaType::class);
+
+
+        $builder->get('presetData')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($data) {
+                    return gettype($data) == 'string' ? json_decode($data) : array();
+                },
+                function ($data) {
+                    return gettype($data) == 'array' ? json_encode($data) : '[]';
+                }
+            ))
+        ;
+
+        $builder->get('metadata')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($data) {
+                    return gettype($data) == 'string' ? json_decode($data) : array();
+                },
+                function ($data) {
+                    return gettype($data) == 'array' ? json_encode($data) : '[]';
+                }
+            ))
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

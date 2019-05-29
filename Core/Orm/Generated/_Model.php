@@ -66,6 +66,16 @@ class _Model extends Orm
     private $columnsJson;
 
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $metadata;
+
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $presetData;
+
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -247,5 +257,37 @@ class _Model extends Orm
     public static function getEncodedModel()
     {
         return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param mixed $metadata
+     */
+    public function setMetadata($metadata): void
+    {
+        $this->metadata = $metadata;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPresetData()
+    {
+        return $this->presetData;
+    }
+
+    /**
+     * @param mixed $presetData
+     */
+    public function setPresetData($presetData): void
+    {
+        $this->presetData = $presetData;
     }
 }

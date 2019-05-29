@@ -173,7 +173,11 @@ trait CmsRestFileTrait
             $path = array(AssetService::getAssetRoot($pdo, $currentFolderId));
         } else {
             $root = AssetService::getFolderRoot($pdo, $currentFolderId);
-            $path = $orm->path($root);
+            if ($orm) {
+                $path = $orm->path($root);
+            } else {
+                $path = array();
+            }
         }
 
         return new JsonResponse(array(

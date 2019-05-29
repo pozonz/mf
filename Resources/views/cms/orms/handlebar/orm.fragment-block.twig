@@ -43,8 +43,8 @@
                     <div class="formStyle block-item-textarea assetfolderpicker">
                         <label for="form_gallery" class="required" style="display: inline-block;">{{title}}</label>
                         <div style="display: inline-block; margin-left: 10px;">
-                            <button type="button" class="btn btn-success btn-sm change" style="background: #eee; color: black; margin-right: .2em;" data-id="#{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}"><i class="fa fa-files-o"></i> Manage</button>
-                            <button type="button" class="btn btn-danger btn-sm delete" style="background: #eee; color: red; margin-right: .2em;" data-id="#{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}"><i class="fa fa-times"></i> Empty</button>
+                            <a class="button-galery change" data-id="#{{../id}}@{{../block.id}}@{{id}}"><i class="fas fa-images"></i> Manage</a>
+                            <a class="button-galery delete" data-id="#{{../id}}@{{../block.id}}@{{id}}"><i class="far fa-trash-alt"></i> Empty</a>
                         </div>
                         <div class="widget style1 js-gallery-widget" style="padding: 0; margin: 0;">
                             <input type="hidden" id="form_gallery" required="required" value="" data-attributename="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}">

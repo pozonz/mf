@@ -6,14 +6,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class FormBuilder extends AbstractType
+class SpliterType extends AbstractType
 {
     /**
      * @return string
      */
     public function getBlockPrefix()
     {
-        return 'formbuilder';
+        return 'spliter';
     }
 
     /**

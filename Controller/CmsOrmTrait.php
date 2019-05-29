@@ -55,7 +55,7 @@ trait CmsOrmTrait
 
         $fullClass = ModelService::fullClass($pdo, 'PageCategory');
         $categories = $fullClass::active($pdo);
-        $cat = $request->get('cat') || $request->get('cat') === '0' ? $request->get('cat') : $categories[0]->getId();
+        $cat = $request->get('cat') || $request->get('cat') === '0' ? $request->get('cat') : (count($categories) == 0 ? 0 : $categories[0]->getId());
 
         $params = $this->prepareParams();
         $params['categories'] = $categories;
