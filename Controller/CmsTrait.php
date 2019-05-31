@@ -15,9 +15,27 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 trait CmsTrait
 {
+    /**
+     * @route("/manage/login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils)
+    {
+        $request = Request::createFromGlobals();
+        $requestUri = rtrim($request->getPathInfo(), '/');
+        $params = $this->getParams($requestUri);
+
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+        return $this->render('cms/login.twig', array_merge($params, array(
+            'last_username' => $lastUsername,
+            'error' => $error,
+        )));
+    }
+
     /**
      * @route("/manage/{page}", requirements={"page" = ".*"})
      * @return Response
