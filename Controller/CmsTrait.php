@@ -24,13 +24,11 @@ trait CmsTrait
      */
     public function login(AuthenticationUtils $authenticationUtils)
     {
-        $request = Request::createFromGlobals();
-        $requestUri = rtrim($request->getPathInfo(), '/');
-        $params = $this->getParams($requestUri);
+        $params = $this->prepareParams();
 
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-        return $this->render('cms/login.twig', array_merge($params, array(
+        return $this->render($params['node']->getTemplate(), array_merge($params, array(
             'last_username' => $lastUsername,
             'error' => $error,
         )));
@@ -69,6 +67,8 @@ trait CmsTrait
         $pdo = $this->connection->getWrappedConnection();
 
         $nodes = [];
+        $nodes[] = new PageNode(uniqid(), null, 0, 2, 'Login', '/manage/login', 'cms/login.html.twig');
+
         //Set up major nav
         $nodes[] = new PageNode(uniqid(), null, 0, 1, 'Pages', '/manage/pages', 'cms/pages.html.twig', 'cms_viewmode_cms');
 
