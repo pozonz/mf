@@ -89,6 +89,21 @@ class InstallController extends Controller
      * @param $pdo
      * @param $fullClass
      */
+    static public function addDefaultUser($pdo, $fullClass)
+    {
+        /** @var \MillenniumFalcon\Core\Orm\User $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('weida');
+        $orm->setPasswordInput(uniqid());
+        $orm->setName('Weida Xue');
+        $orm->setEmail('luckyweida@gmail.com');
+        $orm->save();
+    }
+
+    /**
+     * @param $pdo
+     * @param $fullClass
+     */
     static public function addDefaultPageCategory($pdo, $fullClass)
     {
         /** @var \MillenniumFalcon\Core\Orm\PageCategory $orm */
