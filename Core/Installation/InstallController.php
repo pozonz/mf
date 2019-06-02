@@ -79,7 +79,7 @@ class InstallController extends Controller
                 $fullClass = ModelService::fullClass($pdo, str_replace($prefix, '', $method));
                 $data = $fullClass::data($pdo);
                 if (!count($data)) {
-                    static::$method($pdo, $fullClass);
+                    static::$method($pdo, $obj, $fullClass);
                 }
             }
         }
@@ -89,22 +89,35 @@ class InstallController extends Controller
      * @param $pdo
      * @param $fullClass
      */
-    static public function addDefaultUser($pdo, $fullClass)
+    static public function addDefaultUser($pdo, $obj, $fullClass)
     {
+        $password = uniqid();
         /** @var \MillenniumFalcon\Core\Orm\User $orm */
         $orm = new $fullClass($pdo);
         $orm->setTitle('weida');
-        $orm->setPasswordInput(uniqid());
+        $orm->setPasswordInput($password);
         $orm->setName('Weida Xue');
         $orm->setEmail('luckyweida@gmail.com');
         $orm->save();
+
+//        $messageBody = $obj->container->get('twig')->render("cms/install/invoice.twig", array(
+//            'orm' => $orm,
+//        ));
+
+        $message = (new \Swift_Message())
+            ->setSubject('CMS is ready')
+            ->setFrom(array(getenv('EMAIL_FROM')))
+            ->setTo($orm->getEmail())
+            ->setBcc(array(getenv('EMAIL_BCC')))
+            ->setBody($password, 'text/html');
+        $obj->container->get('mailer')->send($message);
     }
 
     /**
      * @param $pdo
      * @param $fullClass
      */
-    static public function addDefaultPageCategory($pdo, $fullClass)
+    static public function addDefaultPageCategory($pdo, $obj, $fullClass)
     {
         /** @var \MillenniumFalcon\Core\Orm\PageCategory $orm */
         $orm = new $fullClass($pdo);
@@ -123,7 +136,7 @@ class InstallController extends Controller
      * @param $pdo
      * @param $fullClass
      */
-    static public function addDefaultAssetSize($pdo, $fullClass)
+    static public function addDefaultAssetSize($pdo, $obj, $fullClass)
     {
         /** @var \MillenniumFalcon\Core\Orm\AssetSize $orm */
         $orm = new $fullClass($pdo);
