@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-05-29 21:16:08
+//Last updated: 2019-06-02 19:04:16
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;

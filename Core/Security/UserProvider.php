@@ -23,46 +23,47 @@ class UserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        $fullClass = ModelService::fullClass($this->conn->getDatabase(), 'User');
-        var_dump($fullClass);exit;
-        if (!$user instanceof \Pz\Orm\User) {
-            throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', get_class($user))
-            );
-        }
-
-        $username = $user->getUsername();
-
-        return $this->fetchUser($username);
+        return $this->fetchUser($user->getUsername());
     }
 
     public function supportsClass($class)
     {
-//        return User::class === $class;
+        $pdo = $this->conn->getWrappedConnection();
+        $fullClass = ModelService::fullClass($pdo, 'User');
+        return $fullClass === $class;
     }
 
     private function fetchUser($username)
     {
 
-//        $pdo = $this->conn->getWrappedConnection();
-//
-//        /** @var User $user */
-//        $user = User::getByField($pdo, 'title', $username);
-//
-//        if (!$user) {
-//            throw new UsernameNotFoundException(
-//                sprintf('Username "%s" does not exist.', $username)
-//            );
-//        }
-//
-//        if ($user->getStatus() != 1) {
-//            throw new UsernameNotFoundException(
-//                sprintf('User "%s" is disabled.', $username)
-//            );
-//        }
-//
-//        return $user;
+        if ($username == 'NONE_PROVIDED') {
+            throw new UsernameNotFoundException(
+                sprintf('Please enter a username')
+            );
+        }
 
-        return null;
+        $pdo = $this->conn->getWrappedConnection();
+        $fullClass = ModelService::fullClass($pdo, 'User');
+        $user = $fullClass::getByField($pdo, 'title', $username);
+
+        if (!$user) {
+            throw new UsernameNotFoundException(
+                sprintf('Username "%s" does not exist.', $username)
+            );
+        }
+
+        if ($user->getStatus() != 1) {
+            throw new UsernameNotFoundException(
+                sprintf('User "%s" is disabled.', $username)
+            );
+        }
+
+        if (!$this->supportsClass($fullClass)) {
+            throw new UnsupportedUserException(
+                sprintf('Instances of "%s" are not supported.', get_class($user))
+            );
+        }
+
+        return $user;
     }
 }

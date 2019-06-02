@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Installation;
 
+use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,10 +17,12 @@ class InstallController extends Controller
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
-        static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
         if (file_exists($this->container->getParameter('kernel.project_dir') . '/src/Orm/')) {
             static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/src/Orm/', "App\\Orm\\");
         }
+        static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
+
+        static::addDefaults($this, $pdo);
 
         return $this->json([
             'message' => 'Welcome to your new controller!',
@@ -32,7 +35,8 @@ class InstallController extends Controller
      * @param $dir
      * @param $namespace
      */
-    static public function populateDb($pdo, $dir, $namespace) {
+    static public function populateDb($pdo, $dir, $namespace)
+    {
         $folders = [
             '.',
             '..',
@@ -59,6 +63,83 @@ class InstallController extends Controller
             $className::updateModel($pdo);
         }
         $pdo->commit();
+    }
+
+    /**
+     * @param $obj
+     * @param $pdo
+     * @throws \Exception
+     */
+    static public function addDefaults($obj, $pdo)
+    {
+        $prefix = 'addDefault';
+        $methods = get_class_methods($obj);
+        foreach ($methods as $method) {
+            if (strpos($method, $prefix) === 0 && $method !== __FUNCTION__) {
+                $fullClass = ModelService::fullClass($pdo, str_replace($prefix, '', $method));
+                $data = $fullClass::data($pdo);
+                if (!count($data)) {
+                    static::$method($pdo, $fullClass);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $pdo
+     * @param $fullClass
+     */
+    static public function addDefaultPageCategory($pdo, $fullClass)
+    {
+        /** @var \MillenniumFalcon\Core\Orm\PageCategory $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Main nav');
+        $orm->setCode('main');
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\PageCategory $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Footer nav');
+        $orm->setCode('footer');
+        $orm->save();
+    }
+
+    /**
+     * @param $pdo
+     * @param $fullClass
+     */
+    static public function addDefaultAssetSize($pdo, $fullClass)
+    {
+        /** @var \MillenniumFalcon\Core\Orm\AssetSize $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('CMS small');
+        $orm->setCode('cms_small');
+        $orm->setWidth(300);
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\AssetSize $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Small');
+        $orm->setCode('small');
+        $orm->setWidth(400);
+        $orm->setShowInCrop(1);
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\AssetSize $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Medium');
+        $orm->setCode('medium');
+        $orm->setWidth(1000);
+        $orm->setShowInCrop(1);
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\AssetSize $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Large');
+        $orm->setCode('large');
+        $orm->setWidth(1800);
+        $orm->setShowInCrop(1);
+        $orm->save();
     }
 
     /**

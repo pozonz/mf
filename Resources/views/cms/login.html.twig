@@ -1,76 +1,59 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta name="author" content="Gravitate - www.gravitate.co.nz">
-    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE"/>
-    <meta http-equiv="EXPIRES" content="Mon, 22 Jul 2002 11:12:01 GMT"/>
-    <meta http-equiv="PRAGMA" content="NO-CACHE"/>
-    <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+{% extends 'cms/base.html.twig' %}
+{% block extraBody %}class="page-login"{% endblock %}
 
-    <title>Originate</title>
-    <link href="/cms/css/styles.css" rel="stylesheet" type="text/css"/>
-</head>
+{% block bodyContainer %}
+    <div class="header" id="headContainer">
+        <div id="head">
+            <a class="logo" href="/cms/html/index.php?viewModeSent=0&amp;fileNo=13#_tab_home"></a>
+        </div>
+    </div><!-- .header -->
 
-
-<body class="page-login">
-
-
-<div class="header" id="headContainer">
-    <div id="head">
-        <a class="logo" href="/cms/html/index.php?viewModeSent=0&amp;fileNo=13#_tab_home"></a>
+    <div id="menuContainer">
+        <div id="menuTop">
+            <ul class="menuTop"></ul>
+        </div>
     </div>
-</div><!-- .header -->
 
-<div id="menuContainer">
-    <div id="menuTop">
-        <ul class="menuTop"></ul>
+
+    <div id="contentContainer">
+        <div id="maincontent">
+            <div id="bodyContent">
+
+
+                <p>Welcome to the Content Management System. Please enter your username and password to enter.</p>
+
+                <form class="form-login" method="post" action="/manage/login_check" novalidate autocomplete="off">
+                    <ul>
+                        <li>
+                            <label for="">Username:</label>
+                            <input type="text" name="_username" id="username" class="loginTextfield" value="{{ last_username }}">
+                        </li>
+                        <li>
+                            <label for="">Password:</label>
+                            <input type="password" name="_password" class="loginTextfield" value=""/>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="remember" class="checkbox" name="_remember_me" checked />
+                            <label for="remember">Remember me?</label>
+                        </li>
+                        {% if error %}
+                            <li>
+                                <div class="alert alert-danger">{{ error.message }}</div>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <input type="submit" class="button submit" name="" value="Sign in &rsaquo;"/>
+                        </li>
+                    </ul>
+                </form>
+            </div><!-- #bodyContent -->
+        </div><!-- #maincontent -->
+    </div> <!-- #contentContainer -->
+
+
+    <div id="footContainer" class="footer">
+        <div id="foot">
+            &copy; 2006 - {{ 'now'|date('Y') }} All rights reserved
+        </div>
     </div>
-</div>
-
-
-<div id="contentContainer">
-    <div id="maincontent">
-        <div id="bodyContent">
-
-
-            <p>Welcome to the Originate Content Management System. Please enter your username and password to enter.</p>
-
-            <form id="authform" class="form-login" name="authform" method="post">
-                <ul>
-                    <li>
-                        <label for="">Username:</label>
-                        <input type="text" name="username" id="username" class="loginTextfield" value="">
-                    </li>
-                    <li>
-                        <label for="">Password:</label>
-                        <input onkeypress="subForm(event, document.getElementById('authform'));" type="password" name="password" class="loginTextfield" value=""/>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="remember" class="checkbox" name="rememberme" value="1"/>
-                        <label for="remember">Remember me?</label>
-                    </li>
-                    <li>
-                        <input type="submit" class="button submit" name="" value="Sign in &rsaquo;"/>
-                    </li>
-
-
-            </form>
-
-        </div><!-- #bodyContent -->
-    </div><!-- #maincontent -->
-</div> <!-- #contentContainer -->
-
-
-<div id="footContainer" class="footer">
-    <div id="foot">
-        &copy; 2006 - 2019 Gravitate Ltd | <a href="mailto:info@gravitate.co.nz" class="foot">info@gravitate.co.nz</a>
-    </div>
-</div>
-
-
-</body>
-</html>
-
-
+{% endblock %}
