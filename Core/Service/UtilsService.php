@@ -19,7 +19,8 @@ class UtilsService
      * @param $string
      * @return string
      */
-    public function slugify($string) {
+    public function slugify($string)
+    {
         $slugify = new Slugify(['trim' => false]);
         return $slugify->slugify($string);
     }
@@ -57,7 +58,7 @@ class UtilsService
      */
     public function getBlockWidgets()
     {
-        return array(
+        $widgets = array(
             0 => 'Text',
             1 => 'Textarea',
             2 => 'Asset picker',
@@ -72,12 +73,15 @@ class UtilsService
             11 => 'Placeholder',
             12 => 'Read only text',
         );
+        asort($widgets);
+        return array_flip($widgets);
     }
 
     /**
      * @return array
      */
-    public function getFormWidgets() {
+    public function getFormWidgets()
+    {
         return array(
             '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType' => 'Choice',
             '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType' => 'Checkbox',
@@ -96,21 +100,9 @@ class UtilsService
     /**
      * @return string
      */
-    public function getUniqId() {
+    public function getUniqId()
+    {
         return uniqid();
-    }
-
-    /**
-     * @param $value
-     * @return string
-     */
-    public function getFormData($value) {
-        if ($value[2] == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType') {
-            return nl2br($value[1]);
-        } else if ($value[2] == '\\MillenniumFalcon\\Core\\Form\\Type\\Wysiwyg') {
-            return $value[1];
-        }
-        return strip_tags($value[1]);
     }
 
     /**
@@ -148,7 +140,8 @@ class UtilsService
      * @param  array $array The multi-dimensional array.
      * @return array
      */
-    static public function flattenArray($array) {
+    static public function flattenArray($array)
+    {
         if (!is_array($array)) {
             return false;
         }

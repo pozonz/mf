@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-05-29 21:17:39
+//Last updated: 2019-06-02 23:06:52
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -28,12 +28,12 @@ class Page extends Orm implements NodeInterface
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $redirectTo;
+    private $url;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $templateFile;
+    private $redirectTo;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -43,7 +43,7 @@ class Page extends Orm implements NodeInterface
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $url;
+    private $templateFile;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -140,6 +140,22 @@ class Page extends Orm implements NodeInterface
     /**
      * @return mixed
      */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+    
+    /**
+     * @param mixed url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getRedirectTo()
     {
         return $this->redirectTo;
@@ -151,22 +167,6 @@ class Page extends Orm implements NodeInterface
     public function setRedirectTo($redirectTo)
     {
         $this->redirectTo = $redirectTo;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getTemplateFile()
-    {
-        return $this->templateFile;
-    }
-    
-    /**
-     * @param mixed templateFile
-     */
-    public function setTemplateFile($templateFile)
-    {
-        $this->templateFile = $templateFile;
     }
     
     /**
@@ -188,17 +188,17 @@ class Page extends Orm implements NodeInterface
     /**
      * @return mixed
      */
-    public function getUrl()
+    public function getTemplateFile()
     {
-        return $this->url;
+        return $this->templateFile;
     }
     
     /**
-     * @param mixed url
+     * @param mixed templateFile
      */
-    public function setUrl($url)
+    public function setTemplateFile($templateFile)
     {
-        $this->url = $url;
+        $this->templateFile = $templateFile;
     }
     
     /**

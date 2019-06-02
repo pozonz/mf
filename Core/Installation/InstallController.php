@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Installation;
 
+use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,11 +18,13 @@ class InstallController extends Controller
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
 
+        //Create tables
         if (file_exists($this->container->getParameter('kernel.project_dir') . '/src/Orm/')) {
             static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/src/Orm/', "App\\Orm\\");
         }
         static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
 
+        //Add default data
         static::addDefaults($this, $pdo);
 
         return $this->json([
@@ -98,19 +101,25 @@ class InstallController extends Controller
         $orm->setPasswordInput($password);
         $orm->setName('Weida Xue');
         $orm->setEmail('luckyweida@gmail.com');
-        $orm->save();
 
-//        $messageBody = $obj->container->get('twig')->render("cms/install/invoice.twig", array(
-//            'orm' => $orm,
-//        ));
+        $dir = $obj->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/views';
+        $loader = $obj->container->get('twig')->getLoader();
+        $loader->addPath($dir);
+
+        $messageBody = $obj->container->get('twig')->render("cms/emails/install/email-welcome.html.twig", array(
+            'orm' => $orm,
+        ));
 
         $message = (new \Swift_Message())
-            ->setSubject('CMS is ready')
+            ->setSubject('CMS is ready - ' . date('d M Y@H:i'))
             ->setFrom(array(getenv('EMAIL_FROM')))
             ->setTo($orm->getEmail())
             ->setBcc(array(getenv('EMAIL_BCC')))
-            ->setBody($password, 'text/html');
+            ->setBody($messageBody, 'text/html');
         $obj->container->get('mailer')->send($message);
+
+        $orm->save();
+
     }
 
     /**
@@ -167,6 +176,87 @@ class InstallController extends Controller
         $orm->setCode('large');
         $orm->setWidth(1800);
         $orm->setShowInCrop(1);
+        $orm->save();
+    }
+
+    /**
+     * @param $pdo
+     * @param $fullClass
+     */
+    static public function addDefaultFragmentTag($pdo, $obj, $fullClass)
+    {
+        /** @var \MillenniumFalcon\Core\Orm\FragmentTag $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Page');
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\FragmentTag $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('CMS');
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\FragmentTag $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Shipping');
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\FragmentTag $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Product');
+        $orm->save();
+    }
+
+    /**
+     * @param $pdo
+     * @param $fullClass
+     */
+    static public function addDefaultFragmentBlock($pdo, $obj, $fullClass)
+    {
+        $tagFullClass = ModelService::fullClass($pdo, 'FragmentTag');
+        $tagOrm = $tagFullClass::getByField($pdo, 'title', 'Page');
+
+        /** @var \MillenniumFalcon\Core\Orm\FragmentBlock $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Heading & Content');
+        $orm->setTwig('heading-content.twig');
+        $orm->setTags(json_encode(array($tagOrm->getId())));
+        $orm->setItems(json_encode(array(
+            array(
+                "widget" => "0",
+                "id" => "heading",
+                "title" => "Heading:",
+                "sql" => "",
+            ),
+            array(
+                "widget" => "5",
+                "id" => "content",
+                "title" => "Content:",
+                "sql" => "",
+            ),
+        )));
+        $orm->save();
+    }
+
+    /**
+     * @param $pdo
+     * @param $fullClass
+     */
+    static public function addDefaultFragmentDefault($pdo, $obj, $fullClass)
+    {
+        $tagFullClass = ModelService::fullClass($pdo, 'FragmentTag');
+        $tagOrm = $tagFullClass::getByField($pdo, 'title', 'Page');
+
+        /** @var \MillenniumFalcon\Core\Orm\FragmentDefault $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Page');
+        $orm->setAttr('content');
+        $orm->setContent(json_encode(array(
+            array(
+                "id" => "content",
+                "title" => "Content:",
+                "tags" => array($tagOrm->getId()),
+            ),
+        )));
         $orm->save();
     }
 

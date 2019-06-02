@@ -1,0 +1,12 @@
+{% extends 'cms/emails/email-base.html.twig' %}
+
+
+{% block content %}
+    <div>Hello {{ orm.name }},</div><br /><br />
+    <div>Your CMS is now ready. Please use the information below to access:</div>
+    <div><strong>URL:</strong> &nbsp;<a href="{{ app.request.schemeAndHttpHost }}/manage/pages">{{ app.request.schemeAndHttpHost }}/manage/pages</a></div>
+    <div><strong>Username:</strong> &nbsp;{{ orm.title }}</div>
+    <div><strong>Password:</strong> &nbsp;{{ orm.passwordInput }}</div><br /><br />
+    <div>Regards,</div>
+    <div>Weida Xue</div>
+{% endblock %}

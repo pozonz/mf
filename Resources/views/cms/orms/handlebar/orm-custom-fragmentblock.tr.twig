@@ -4,7 +4,7 @@
             <td class="col-md-3">
                 <select class="form-control no-chosen js-cbi-item js-cbi-widget">
                     {{#each widgets}}
-                        <option value="{{@key}}" {{#compare ../data.widget @key operator="=="}}selected{{/compare}}>{{this}}</option>
+                        <option value="{{this}}" {{#compare ../data.widget this operator="=="}}selected{{/compare}}>{{@key}}</option>
                     {{/each}}
                 </select>
             </td>
