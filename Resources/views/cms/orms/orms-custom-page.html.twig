@@ -6,7 +6,7 @@
 {% block container %}
     <div id="h1">
         <h1>Webpage Builder</h1>
-        <a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
+        <a class="addForm button" href="{{ node.url }}/new?category={{ (cat == 0 ? [] : [cat])|json_encode|url_encode }}&returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
     </div>
 
     <div class="page-category">

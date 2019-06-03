@@ -71,7 +71,6 @@ class UtilsService
             9 => 'Choice',
             10 => 'Choice multi json',
             11 => 'Placeholder',
-            12 => 'Read only text',
         );
         asort($widgets);
         return array_flip($widgets);

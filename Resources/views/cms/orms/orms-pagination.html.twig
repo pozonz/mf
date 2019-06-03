@@ -10,8 +10,8 @@
         {% block tableHead %}
             <tbody>
                 <tr>
-                    <td class="tableHead" width="40px"><a href="{{ url }}?sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
-                    <td class="tableHead"><a href="{{ url }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Title</a></td>
+                    <td class="tableHead" width="40px"><a href="{{ app.request.pathInfo }}?sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
+                    <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Title</a></td>
                     <td class="tableHead" width="180px" align="right">Action</td>
                 </tr>
             </tbody>

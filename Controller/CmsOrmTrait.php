@@ -14,29 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 trait CmsOrmTrait
 {
-
-    /**
-     * @route("/manage/orms/Asset/{ormId}")
-     * @route("/manage/admin/orms/Asset/{ormId}")
-     * @return Response
-     */
-    public function asset($ormId)
-    {
-        $className = 'Asset';
-
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
-
-        $orm = $this->_orm($pdo, $className, $ormId);
-        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmAssetForm', function(Form $form, $orm) use ($pdo) {
-            $uploadedFile = $form['file']->getData();
-            if ($uploadedFile) {
-                AssetService::processUploadedFileWithAsset($pdo, $uploadedFile, $orm);
-            }
-        });
-    }
-
     /**
      * @route("/manage/orms/Page")
      * @route("/manage/admin/orms/Page")
@@ -116,6 +93,28 @@ trait CmsOrmTrait
     }
 
     /**
+     * @route("/manage/orms/Asset/{ormId}")
+     * @route("/manage/admin/orms/Asset/{ormId}")
+     * @return Response
+     */
+    public function asset($ormId)
+    {
+        $className = 'Asset';
+
+        $connection = $this->container->get('doctrine.dbal.default_connection');
+        /** @var \PDO $pdo */
+        $pdo = $connection->getWrappedConnection();
+
+        $orm = $this->_orm($pdo, $className, $ormId);
+        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmAssetForm', function(Form $form, $orm) use ($pdo) {
+            $uploadedFile = $form['file']->getData();
+            if ($uploadedFile) {
+                AssetService::processUploadedFileWithAsset($pdo, $uploadedFile, $orm);
+            }
+        });
+    }
+
+    /**
      * @route("/manage/orms/{className}/{ormId}")
      * @route("/manage/admin/orms/{className}/{ormId}")
      * @return Response
@@ -156,10 +155,21 @@ trait CmsOrmTrait
      */
     private function _orm($pdo, $className, $ormId)
     {
+        $request = Request::createFromGlobals();
+
         $fullClass = ModelService::fullClass($pdo, $className);
         $orm = $fullClass::getById($pdo, $ormId);
         if (!$orm) {
             $orm = new $fullClass($pdo);
+
+            $fields = array_keys($fullClass::getFields());
+            foreach ($fields as $field) {
+                $value = $request->get($field);
+                if ($value) {
+                    $method = 'set' . ucfirst($field);
+                    $orm->$method($value);
+                }
+            }
         }
         return $orm;
     }

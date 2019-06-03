@@ -11,8 +11,6 @@ use function ZendTest\Code\Reflection\TestAsset\function1;
  */
 class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
 {
-
-
     const metaExludes = array(
         'publishFrom',
         'publishTo',

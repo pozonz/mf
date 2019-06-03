@@ -1,0 +1,9 @@
+<div>
+    {% set = model.active('Asset', {
+        whereSql: 'm.parentId = ?',
+        params: [[value]],
+    }) %}
+    {% for itm in data %}
+        <img src="/images/assets/{{itm.id}}/medium" alt="{{itm.title}}" />
+    {% endfor %}
+</div>

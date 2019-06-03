@@ -10,6 +10,7 @@ use MillenniumFalcon\Core\Form\Type\Spliter;
 use MillenniumFalcon\Core\Nestable\Node;
 use MillenniumFalcon\Core\Orm\_Model;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,13 +27,13 @@ class OrmForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+        $builder->add('uniqid', HiddenType::class);
 
         $model = isset($options['model']) ? $options['model'] : null;
         $orm = isset($options['orm']) ? $options['orm'] : null;
         $pdo = isset($options['pdo']) ? $options['pdo'] : null;
 
         $columnsJson = json_decode($model->getColumnsJson());
-//        var_dump($columnsJson);exit;
         foreach ($columnsJson as $itm) {
             if ($itm->widget == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType') {
                 $getMethod = 'get' . ucfirst($itm->field);
@@ -56,15 +57,6 @@ class OrmForm extends AbstractType
                 foreach ($presetDataMapItem as $idx => $itm) {
                     $builder->add($idx, $itm, array());
                 }
-            }
-
-
-            switch ($itm) {
-                case 'publish':
-
-                    $builder->add('publishFrom', DateTimePicker::class, array());
-                    $builder->add('publishTo', DateTimePicker::class, array());
-                    break;
             }
         }
 

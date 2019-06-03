@@ -79,7 +79,7 @@
 {% block assetpicker_widget -%}
     {% set orm = model.getById('Asset', value) %}
     <div class="filePickWrap js-filePickWrap js-orm-info" data-id="{{ value }}">
-        <input type="hidden" {{ block('widget_attributes') }} class="js-fileId">
+        <input type="hidden" {{ block('widget_attributes') }} class="js-fileId" value="{{ value }}">
         <div class="filePickPreviewWrap">
             <img src="/cms/develop/images/file-loading.gif" class="js-filePickFile filePickFile">
             <a class="js-asset-delete" style="display: none"><img src="/cms/images/binIcon.gif"></a>
@@ -98,7 +98,6 @@
             {{ form_errors(form) }}
         </div>
     {% endspaceless %}
-    {#<hr />#}
 {%- endblock assetfolderpicker_row -%}
 
 {%- block assetfolderpicker_label -%}
@@ -156,10 +155,6 @@
     </div>
 {%- endblock assetfolderpicker_widget -%}
 
-{% block _orm_file_widget -%}
-    <input type="{{ type }}" {{ block('widget_attributes') }} onchange="handleFiles(this.files);" />
-{%- endblock _orm_file_widget -%}
-
 {%- block choice_widget_expanded -%}
     <div {{ block('widget_container_attributes') }}>
         {%- for child in form %}
@@ -170,5 +165,39 @@
         {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded -%}
+
+{% block _orm_templateFile_widget -%}
+    <div class="page-template-widget js-page-template-widget">
+        {% set values = null %}
+        {% if not (value matches '/^\\d+$/') %}
+            {% set values = value|json_decode %}
+        {% endif %}
+        <input type="hidden" {{ block('widget_attributes') }} class="js-template-id" value="{{ value }}"/>
+
+        {% set data = model.active('PageTemplate', {
+            sort: 'm.title'
+        }) %}
+        <select>
+            <option value="">Create a new template...</option>
+            {% for itm in data %}
+                <option value="{{ itm.id }}" {% if itm.id == value %}selected{% endif %}>{{ itm.title }}</option>
+            {% endfor %}
+        </select>
+        <div class="template-new js-template-new" {% if not values %}style="display: none"{% endif %}>
+            <div>
+                <label>Template name</label>
+                <input class="js-template-name" type="text" value="{{ values ? values.name : '' }}"/>
+            </div>
+            <div>
+                <label>Template file</label>
+                <input class="js-template-file" type="text" value="{{ values ? values.file : '' }}"/>
+            </div>
+        </div>
+    </div>
+{%- endblock _orm_templateFile_widget -%}
+
+{% block _orm_file_widget -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} onchange="handleFiles(this.files);" />
+{%- endblock _orm_file_widget -%}
 
 {% use 'cms/form-content-block.twig' %}
