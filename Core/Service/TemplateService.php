@@ -29,6 +29,9 @@ class TemplateService
             $str = '<div>' . "\n";
             $objItems = $fragmentBlock->objItems();
             foreach ($objItems as $objItem) {
+                if ($objItem->widget == 11) {
+                    continue;
+                }
                 $lines = explode("\n", str_replace('[value]', $objItem->id, file_get_contents(static::getResourceFilesPath() . 'fragments/' . static::blockMap[$objItem->widget])));
                 foreach ($lines as $line) {
                     $str .= "\t" . $line . "\n";

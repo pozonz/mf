@@ -1,1 +1,5 @@
-<div>{{[value]}}</div>
+<div>
+    {% for itm in [value] %}
+        <div>{{itm}}</div>
+    {% endfor %}
+</div>
