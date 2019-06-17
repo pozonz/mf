@@ -87,7 +87,7 @@ trait CmsTrait
             $pageRoot = Extension::nestablePges($pages, $catItm->getId());
             foreach ($pageRoot->getChildren() as $pageIdx => $pageItm) {
                 $pageId = uniqid();
-                $nodes[] = new PageNode($pageId, 1, $pageIdx + 2, 1, $pageItm->getTitle(), '/fdaf');
+                $nodes[] = new PageNode($pageId, 1, $pageIdx + 2, 1, $pageItm->getTitle(), '/manage/orms/Page/' . $pageItm->getId(), 'cms/orms/orm-custom-page.html.twig');
                 $count++;
             }
         }
