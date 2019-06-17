@@ -92,6 +92,19 @@ class InstallController extends Controller
      * @param $pdo
      * @param $fullClass
      */
+    static public function addDefaultDataGroup($pdo, $obj, $fullClass)
+    {
+        /** @var \MillenniumFalcon\Core\Orm\DataGroup $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Modules');
+        $orm->setIcon('cms_viewmode_sitecodetables');
+        $orm->save();
+    }
+
+    /**
+     * @param $pdo
+     * @param $fullClass
+     */
     static public function addDefaultUser($pdo, $obj, $fullClass)
     {
         $password = uniqid();
@@ -295,6 +308,76 @@ class InstallController extends Controller
         $orm->setTitle('contact.html.twig');
         $orm->setFilename('contact.html.twig');
         $orm->save();
+    }
+
+    /**
+     * @param $pdo
+     * @param $fullClass
+     */
+    static public function addDefaultPage($pdo, $obj, $fullClass)
+    {
+        $templateFullClass = ModelService::fullClass($pdo, 'PageTemplate');
+
+        $navFullClass = ModelService::fullClass($pdo, 'PageCategory');
+        /** @var \MillenniumFalcon\Core\Orm\PageCategory $mainNav */
+        $mainNav = $navFullClass::getByField($pdo, 'code', 'main');
+
+        /** @var \MillenniumFalcon\Core\Orm\Page $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Homepage');
+        $orm->setType(1);
+        $orm->setUrl('/');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'home.html.twig')->getId());
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\Page $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('About');
+        $orm->setType(1);
+        $orm->setUrl('/about');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'about.html.twig')->getId());
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\Page $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('News');
+        $orm->setType(1);
+        $orm->setUrl('/news');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'posts.html.twig')->getId());
+        $orm->save();
+        $newsPageId = $orm->getId();
+
+        /** @var \MillenniumFalcon\Core\Orm\Page $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('News detail');
+        $orm->setType(1);
+        $orm->setUrl('/news/detail');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'post.html.twig')->getId());
+        $orm->setCategoryParent(json_encode((object)[
+            'cat' . $mainNav->getId() => $newsPageId,
+        ]));
+        $orm->setCategoryRank(json_encode((object)[
+            'cat' . $mainNav->getId() => 0,
+        ]));
+        $orm->setHideFromWebNav(1);
+        $orm->setHideFromCmsNav(1);
+        $orm->setAllowExtra(1);
+        $orm->setMaxParams(1);
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\Page $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Contact');
+        $orm->setType(1);
+        $orm->setUrl('/contact');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'contact.html.twig')->getId());
+        $orm->save();
+        $newsPageId = $orm->getId();
     }
 
     /**

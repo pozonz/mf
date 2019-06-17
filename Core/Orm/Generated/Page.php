@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-06-03 11:26:40
+//Last updated: 2019-06-17 12:54:38
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -44,6 +44,16 @@ class Page extends Orm implements NodeInterface
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $templateFile;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $hideFromWebNav;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $hideFromCMSNav;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -199,6 +209,38 @@ class Page extends Orm implements NodeInterface
     public function setTemplateFile($templateFile)
     {
         $this->templateFile = $templateFile;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getHideFromWebNav()
+    {
+        return $this->hideFromWebNav;
+    }
+    
+    /**
+     * @param mixed hideFromWebNav
+     */
+    public function setHideFromWebNav($hideFromWebNav)
+    {
+        $this->hideFromWebNav = $hideFromWebNav;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getHideFromCMSNav()
+    {
+        return $this->hideFromCMSNav;
+    }
+    
+    /**
+     * @param mixed hideFromCMSNav
+     */
+    public function setHideFromCMSNav($hideFromCMSNav)
+    {
+        $this->hideFromCMSNav = $hideFromCMSNav;
     }
     
     /**

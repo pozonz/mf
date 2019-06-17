@@ -7,10 +7,12 @@ use MillenniumFalcon\Core\Db;
 use MillenniumFalcon\Core\Form\Builder\Model;
 use MillenniumFalcon\Core\Form\Builder\Orm;
 use MillenniumFalcon\Core\Nestable\PageNode;
+use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Redirect\RedirectException;
 use MillenniumFalcon\Core\Router;
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\Twig\Extension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -70,7 +72,53 @@ trait CmsTrait
         $nodes[] = new PageNode(uniqid(), null, 0, 2, 'Login', '/manage/login', 'cms/login.html.twig');
 
         //Set up major nav
-        $nodes[] = new PageNode(uniqid(), null, 0, 1, 'Pages', '/manage/pages', 'cms/pages.html.twig', 'cms_viewmode_cms');
+        $nodes[] = new PageNode(1, null, 0, 1, 'Pages', '/manage/pages', 'cms/pages.html.twig', 'cms_viewmode_cms');
+
+        $fullClass = ModelService::fullClass($pdo, 'PageCategory');
+        $categories = $fullClass::active($pdo);
+
+        $count = 0;
+        $fullClass = ModelService::fullClass($pdo, 'Page');
+        $pages = $fullClass::active($pdo);
+        foreach ($categories as $catIdx => $catItm) {
+            $catId = uniqid();
+            $nodes[] = new PageNode($catId, 1, $count + $catIdx + 1, 1, $catItm->getTitle());
+
+            $pageRoot = Extension::nestablePges($pages, $catItm->getId());
+            foreach ($pageRoot->getChildren() as $pageIdx => $pageItm) {
+                $pageId = uniqid();
+                $nodes[] = new PageNode($pageId, 1, $pageIdx + 2, 1, $pageItm->getTitle(), '/fdaf');
+                $count++;
+            }
+        }
+
+//        $nodes[] = new PageNode(uniqid(), 1, 0, 1, 'Pages');
+
+//        $fullClass = ModelService::fullClass($pdo, 'Page');
+//        $orms = $fullClass::active($pdo);
+//        $tree = new Tree($orms);
+//        $root = $tree->getRoot();
+//        var_dump($root);exit;
+//        foreach ($root->getChildren() as $idx => $itm) {
+//            /** @var _Model[] $models */
+//            $models = _Model::active($pdo, array(
+//                'whereSql' => 'm.dataGroups LIKE ? AND m.dataType = 0',
+//                'params' => array('%"' . $itm->getId() . '"%'),
+//            ));
+//
+//            $id = uniqid();
+//            $nodes[] = new PageNode($id, 1, $idx + 1, 1, $itm->getTitle(), '/manage/orms/Page/' . $itm->getId(), 'cms/orms/orm-custom-page.html.twig');
+//
+////            $data = array();
+////            $data['Data'] = null;
+////            foreach ($models as $model) {
+////                $data[$model->getTitle()] = array(
+////                    'class' => $model->getClassName(),
+////                    'children' => array(),
+////                );
+////            }
+////            $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $id, $data, '/manage/orms/'));
+//        }
 
         //Set up custom partitions
         $fullClass = ModelService::fullClass($pdo, 'DataGroup');
