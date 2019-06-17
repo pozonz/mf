@@ -89,6 +89,13 @@ trait CmsTrait
                 $pageId = uniqid();
                 $nodes[] = new PageNode($pageId, 1, $pageIdx + 2, 1, $pageItm->getTitle(), '/manage/orms/Page/' . $pageItm->getId(), 'cms/orms/orm-custom-page.html.twig');
                 $count++;
+
+                foreach ($pageItm->getChildren() as $subpageIdx => $subpageItm) {
+                    $subpageId = uniqid();
+                    $nodes[] = new PageNode($subpageId, $pageId, $subpageIdx + 1, 1, $subpageItm->getTitle(), '/manage/orms/Page/' . $subpageItm->getId(), 'cms/orms/orm-custom-page.html.twig');
+                    $nodes[] = new PageNode(uniqid(), $subpageId, $subpageIdx + 2, 1, $subpageItm->getTitle(), '/manage/orms/Page/' . $subpageItm->getId(), 'cms/orms/orm-custom-page.html.twig');
+                    $count++;
+                }
             }
         }
 

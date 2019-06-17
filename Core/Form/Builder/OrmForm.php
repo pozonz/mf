@@ -7,6 +7,7 @@ use MillenniumFalcon\Core\Form\Constraints\ConstraintUnique;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
 use MillenniumFalcon\Core\Form\Type\Label;
 use MillenniumFalcon\Core\Form\Type\Spliter;
+use MillenniumFalcon\Core\Form\Type\SpliterType;
 use MillenniumFalcon\Core\Nestable\Node;
 use MillenniumFalcon\Core\Orm\_Model;
 use Symfony\Component\Form\AbstractType;
@@ -50,7 +51,7 @@ class OrmForm extends AbstractType
         foreach ($presetData as $presetDataItem) {
             $presetDataMap = _Model::presetDataMap;
             if ($presetDataMap[$presetDataItem]) {
-                $builder->add(uniqid(), Spliter::class, array(
+                $builder->add(uniqid(), SpliterType::class, array(
                     'mapped' => false,
                 ));
                 $presetDataMapItem = $presetDataMap[$presetDataItem];
