@@ -17,6 +17,7 @@ trait CmsOrmTrait
     /**
      * @route("/manage/orms/Page")
      * @route("/manage/admin/orms/Page")
+     * @route("/manage/pages/orms/Page")
      * @return Response
      */
     public function pages()
@@ -44,6 +45,7 @@ trait CmsOrmTrait
     /**
      * @route("/manage/orms/{className}")
      * @route("/manage/admin/orms/{className}")
+     * @route("/manage/pages/orms/{className}")
      * @return Response
      */
     public function orms($className)
@@ -95,6 +97,7 @@ trait CmsOrmTrait
     /**
      * @route("/manage/orms/Asset/{ormId}")
      * @route("/manage/admin/orms/Asset/{ormId}")
+     * @route("/manage/pages/orms/Asset/{ormId}")
      * @return Response
      */
     public function asset($ormId)
@@ -117,6 +120,7 @@ trait CmsOrmTrait
     /**
      * @route("/manage/orms/{className}/{ormId}")
      * @route("/manage/admin/orms/{className}/{ormId}")
+     * @route("/manage/pages/orms/{className}/{ormId}")
      * @return Response
      */
     public function orm($className, $ormId)
@@ -132,6 +136,7 @@ trait CmsOrmTrait
     /**
      * @route("/manage/orms/{className}/copy/{ormId}")
      * @route("/manage/admin/orms/{className}/copy/{ormId}")
+     * @route("/manage/pages/orms/{className}/copy/{ormId}")
      * @return Response
      */
     public function copyOrm($className, $ormId)

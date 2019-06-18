@@ -104,6 +104,7 @@ class InstallController extends Controller
         $orm->setIcon('cms_viewmode_cms');
         $orm->setBuiltInSection(1);
         $orm->setBuiltInSectionCode('pages');
+        $orm->setBuiltInSectionTemplate('cms/pages.html.twig');
         $orm->save();
 
         /** @var \MillenniumFalcon\Core\Orm\DataGroup $orm */
@@ -118,6 +119,7 @@ class InstallController extends Controller
         $orm->setIcon('cms_viewmode_asset');
         $orm->setBuiltInSection(1);
         $orm->setBuiltInSectionCode('files');
+        $orm->setBuiltInSectionTemplate('cms/files/files.html.twig');
         $orm->save();
 
         /** @var \MillenniumFalcon\Core\Orm\DataGroup $orm */
@@ -126,6 +128,7 @@ class InstallController extends Controller
         $orm->setIcon('cms_viewmode_admin');
         $orm->setBuiltInSection(1);
         $orm->setBuiltInSectionCode('admin');
+        $orm->setBuiltInSectionTemplate('cms/admin.html.twig');
         $orm->save();
     }
 
@@ -336,6 +339,12 @@ class InstallController extends Controller
         $orm->setTitle('contact.html.twig');
         $orm->setFilename('contact.html.twig');
         $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\PageTemplate $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('common.html.twig');
+        $orm->setFilename('common.html.twig');
+        $orm->save();
     }
 
     /**
@@ -349,10 +358,11 @@ class InstallController extends Controller
         $navFullClass = ModelService::fullClass($pdo, 'PageCategory');
         /** @var \MillenniumFalcon\Core\Orm\PageCategory $mainNav */
         $mainNav = $navFullClass::getByField($pdo, 'code', 'main');
+        $footerNav = $navFullClass::getByField($pdo, 'code', 'footer');
 
         /** @var \MillenniumFalcon\Core\Orm\Page $orm */
         $orm = new $fullClass($pdo);
-        $orm->setTitle('Homepage');
+        $orm->setTitle('Home');
         $orm->setType(1);
         $orm->setUrl('/');
         $orm->setCategory(json_encode([$mainNav->getId()]));
@@ -375,6 +385,7 @@ class InstallController extends Controller
         $orm->setUrl('/news');
         $orm->setCategory(json_encode([$mainNav->getId()]));
         $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'posts.html.twig')->getId());
+        $orm->setAttachedModels(json_encode(array(_Model::getByField($pdo, 'className', 'News')->getId())));
         $orm->save();
         $newsPageId = $orm->getId();
 
@@ -405,7 +416,24 @@ class InstallController extends Controller
         $orm->setCategory(json_encode([$mainNav->getId()]));
         $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'contact.html.twig')->getId());
         $orm->save();
-        $newsPageId = $orm->getId();
+
+        /** @var \MillenniumFalcon\Core\Orm\Page $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Terms & Conditions');
+        $orm->setType(1);
+        $orm->setUrl('/terms-and-conditions');
+        $orm->setCategory(json_encode([$footerNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.html.twig')->getId());
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\Page $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Privacy');
+        $orm->setType(1);
+        $orm->setUrl('/privacy');
+        $orm->setCategory(json_encode([$footerNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.html.twig')->getId());
+        $orm->save();
     }
 
     /**

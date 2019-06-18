@@ -95,7 +95,9 @@
                                                                 <div>
                                                                     <a href="{{ itm2.url }}">
                                                                         {{ itm2.title }}
-                                                                        <button class="toggle-icon {% if itm2.contains(node) %}selected{% endif %}" data-target="{{ itm2.id }}">&nbsp;</button>
+                                                                        {% if itm2.hasActiveChildren() %}
+                                                                            <button class="toggle-icon {% if itm2.contains(node) %}selected{% endif %}" data-target="{{ itm2.id }}">&nbsp;</button>
+                                                                        {% endif %}
                                                                     </a>
                                                                     {% if itm2.hasActiveChildren() %}
                                                                         <ul data-source="{{ itm2.id }}" class="subcategory sub-2" {% if itm2.contains(node) %}style="display: block;"{% endif %}>

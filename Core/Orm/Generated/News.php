@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-06-17 20:39:55
+//Last updated: 2019-06-18 21:41:04
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -15,6 +15,11 @@ class News extends Orm
      * #pz datetime DEFAULT NULL
      */
     private $date;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $image;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -56,6 +61,22 @@ class News extends Orm
     public function setDate($date)
     {
         $this->date = $date;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+    
+    /**
+     * @param mixed image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
     }
     
     /**

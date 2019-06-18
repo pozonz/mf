@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-06-17 12:54:38
+//Last updated: 2019-06-18 21:52:09
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -48,6 +48,16 @@ class Page extends Orm implements NodeInterface
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $image;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $attachedModels;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $hideFromWebNav;
     
     /**
@@ -58,27 +68,12 @@ class Page extends Orm implements NodeInterface
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $image;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
     private $gallery;
     
     /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $content;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $pageTitle;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $description;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -214,6 +209,38 @@ class Page extends Orm implements NodeInterface
     /**
      * @return mixed
      */
+    public function getImage()
+    {
+        return $this->image;
+    }
+    
+    /**
+     * @param mixed image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getAttachedModels()
+    {
+        return $this->attachedModels;
+    }
+    
+    /**
+     * @param mixed attachedModels
+     */
+    public function setAttachedModels($attachedModels)
+    {
+        $this->attachedModels = $attachedModels;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getHideFromWebNav()
     {
         return $this->hideFromWebNav;
@@ -246,22 +273,6 @@ class Page extends Orm implements NodeInterface
     /**
      * @return mixed
      */
-    public function getImage()
-    {
-        return $this->image;
-    }
-    
-    /**
-     * @param mixed image
-     */
-    public function setImage($image)
-    {
-        $this->image = $image;
-    }
-    
-    /**
-     * @return mixed
-     */
     public function getGallery()
     {
         return $this->gallery;
@@ -289,38 +300,6 @@ class Page extends Orm implements NodeInterface
     public function setContent($content)
     {
         $this->content = $content;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getPageTitle()
-    {
-        return $this->pageTitle;
-    }
-    
-    /**
-     * @param mixed pageTitle
-     */
-    public function setPageTitle($pageTitle)
-    {
-        $this->pageTitle = $pageTitle;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-    
-    /**
-     * @param mixed description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
     }
     
     /**
