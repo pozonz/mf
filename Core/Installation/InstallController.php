@@ -19,10 +19,10 @@ class InstallController extends Controller
         $pdo = $connection->getWrappedConnection();
 
         //Create tables
+        static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
         if (file_exists($this->container->getParameter('kernel.project_dir') . '/src/Orm/')) {
             static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/src/Orm/', "App\\Orm\\");
         }
-        static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
 
         //Add default data
         static::addDefaults($this, $pdo);
@@ -60,7 +60,11 @@ class InstallController extends Controller
                 $className::sync($pdo);
             }
         }
+        $pdo->commit();
 
+        sleep(5);
+
+        $pdo->beginTransaction();
         foreach ($files as $file) {
             $className = $namespace . substr($file, 0, strrpos($file, '.'));
             $className::updateModel($pdo);
@@ -96,8 +100,32 @@ class InstallController extends Controller
     {
         /** @var \MillenniumFalcon\Core\Orm\DataGroup $orm */
         $orm = new $fullClass($pdo);
+        $orm->setTitle('Pages');
+        $orm->setIcon('cms_viewmode_cms');
+        $orm->setBuiltInSection(1);
+        $orm->setBuiltInSectionCode('pages');
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\DataGroup $orm */
+        $orm = new $fullClass($pdo);
         $orm->setTitle('Modules');
         $orm->setIcon('cms_viewmode_sitecodetables');
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\DataGroup $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Files');
+        $orm->setIcon('cms_viewmode_asset');
+        $orm->setBuiltInSection(1);
+        $orm->setBuiltInSectionCode('files');
+        $orm->save();
+
+        /** @var \MillenniumFalcon\Core\Orm\DataGroup $orm */
+        $orm = new $fullClass($pdo);
+        $orm->setTitle('Admin');
+        $orm->setIcon('cms_viewmode_admin');
+        $orm->setBuiltInSection(1);
+        $orm->setBuiltInSectionCode('admin');
         $orm->save();
     }
 

@@ -69,7 +69,7 @@ class ModelForm extends AbstractType
                 'label' => 'Display In:',
                 'choices' => array(
                     'Admin' => 1,
-                    'Custom Partitions' => 0,
+                    'Custom Sections' => 0,
                     'Hidden' => 2,
                 )
             ))

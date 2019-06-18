@@ -9,6 +9,7 @@ use MillenniumFalcon\Core\Form\Builder\Orm;
 use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\Orm\DataGroup;
 use MillenniumFalcon\Core\Redirect\RedirectException;
 use MillenniumFalcon\Core\Router;
 use MillenniumFalcon\Core\Service\ModelService;
@@ -65,6 +66,29 @@ trait CmsTrait
      */
     protected function getNodes()
     {
+//        /** @var \PDO $pdo */
+//        $pdo = $this->connection->getWrappedConnection();
+//
+//        $nodes = [];
+//        $nodes[] = new PageNode(uniqid(), null, 0, 2, 'Login', '/manage/login', 'cms/login.html.twig');
+//
+//        /** @var DataGroup[] $dataGroups */
+//        $dataGroups = DataGroup::active($pdo);
+//        foreach ($dataGroups as $dataGroupIdx => $dataGroup) {
+//            $nodes[] = new PageNode(
+//                uniqid(),
+//                null,
+//                $dataGroupIdx,
+//                1,
+//                $dataGroup->getTitle(),
+//                $dataGroup->getBuiltInSection() == 1 ? '/manage/' . $dataGroup->getBuiltInSectionCode() : '/manage/section/' . $dataGroup->getId(),
+//                $dataGroup->getBuiltInSection() == 1 ? '/manage/' . $dataGroup->getBuiltInSectionCode() : '/manage/section/' . $dataGroup->getId(),
+//                $dataGroup->getIcon()
+//            );
+//        }
+//
+//        return $nodes;
+
         /** @var \PDO $pdo */
         $pdo = $this->connection->getWrappedConnection();
 
@@ -205,7 +229,7 @@ trait CmsTrait
                 'class' => 'User',
                 'children' => array(),
             ),
-            'Partitions' => array(
+            'Sections' => array(
                 'class' => 'DataGroup',
                 'children' => array(),
             ),

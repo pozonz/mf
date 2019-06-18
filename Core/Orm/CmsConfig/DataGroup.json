@@ -1,10 +1,10 @@
 {
     "id": "10",
     "uniqid": "5bd0339a14f22",
-    "slug": "partitions",
+    "slug": "sections",
     "rank": "9",
     "added": "2018-10-24 21:55:54",
-    "modified": "2019-05-29 21:43:40",
+    "modified": "2019-06-18 13:54:11",
     "publishFrom": null,
     "publishTo": null,
     "metaTitle": null,
@@ -14,7 +14,7 @@
     "ogImage": null,
     "lastEditedBy": null,
     "status": "1",
-    "title": "Partitions",
+    "title": "Sections",
     "className": "DataGroup",
     "namespace": "MillenniumFalcon\\Core\\Orm",
     "modelType": 1,
@@ -24,7 +24,7 @@
     "numberPerPage": "50",
     "defaultSortBy": "id",
     "defaultOrder": 1,
-    "columnsJson": "[{\"id\":\"z1540371319213\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1540371341482\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Icon:\",\"field\":\"icon\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
+    "columnsJson": "[{\"id\":\"z1540371319213\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1540371341482\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Icon:\",\"field\":\"icon\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1560815403200\",\"column\":\"extra11\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Built-in section code:\",\"field\":\"builtInSectionCode\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1560822730373\",\"column\":\"extra12\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Built-in section template:\",\"field\":\"builtInSectionTemplate\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1560815401284\",\"column\":\"extra10\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\CheckboxType\",\"label\":\"Built-in section:\",\"field\":\"builtInSection\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
     "metadata": "[]",
     "presetData": "[]"
 }
