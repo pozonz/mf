@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-06-18 20:43:25
+//Last updated: 2019-06-19 10:47:39
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -30,6 +30,11 @@ class User extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $email;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $accessibleSections;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -124,6 +129,22 @@ class User extends Orm
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getAccessibleSections()
+    {
+        return $this->accessibleSections;
+    }
+    
+    /**
+     * @param mixed accessibleSections
+     */
+    public function setAccessibleSections($accessibleSections)
+    {
+        $this->accessibleSections = $accessibleSections;
     }
     
     /**
