@@ -10,6 +10,7 @@ use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Orm\DataGroup;
+use MillenniumFalcon\Core\Orm\User;
 use MillenniumFalcon\Core\Redirect\RedirectException;
 use MillenniumFalcon\Core\Router;
 use MillenniumFalcon\Core\Service\ModelService;
@@ -58,7 +59,15 @@ trait CmsTrait
 
         $request = Request::createFromGlobals();
         $requestUri = rtrim($request->getPathInfo(), '/');
-        return $this->getParams($requestUri);
+        $params = $this->getParams($requestUri);
+
+        //Check permission
+        $params['verticalMenuRoot'] = $params['node']->getTopAncestor($params['root']);
+        if (!$params['verticalMenuRoot']) {
+            throw new NotFoundHttpException();
+        }
+        $params['verticalMenuItems'] = $params['verticalMenuRoot']->getChildren();
+        return $params;
     }
 
     /**
@@ -66,8 +75,13 @@ trait CmsTrait
      */
     protected function getNodes()
     {
+        /** @var User $cmsUser */
+        $cmsUser = $this->container->get('security.token_storage')->getToken()->getUser();
+        $accessibleSections = $cmsUser->objAccessibleSections();
+
+        $connection = $this->container->get('doctrine.dbal.default_connection');
         /** @var \PDO $pdo */
-        $pdo = $this->connection->getWrappedConnection();
+        $pdo = $connection->getWrappedConnection();
 
         $nodes = [];
         $nodes[] = new PageNode(uniqid(), null, 0, 2, 'Login', '/manage/login', 'cms/login.html.twig');
@@ -75,6 +89,10 @@ trait CmsTrait
         /** @var DataGroup[] $dataGroups */
         $dataGroups = DataGroup::active($pdo);
         foreach ($dataGroups as $dataGroupIdx => $dataGroup) {
+            if (!in_array($dataGroup->getId(), $accessibleSections)) {
+                continue;
+            }
+
             $dataGroupNodeId = uniqid();
             $nodes[] = new PageNode(
                 $dataGroup->getBuiltInSectionCode() ?: $dataGroupNodeId,
@@ -176,8 +194,6 @@ trait CmsTrait
             ),
         ), '/manage/admin/orms/', 20));
 
-//        var_dump($nodes);exit;
-
         /** @var _Model[] $models */
         $models = _Model::active($pdo, array(
             'whereSql' => 'm.dataType = 1',
@@ -234,6 +250,13 @@ trait CmsTrait
 
     }
 
+    /**
+     * @param $pdo
+     * @param $pageNode
+     * @param $parentId
+     * @param $nodes
+     * @param int $count
+     */
     static public function appendPagesToParent($pdo, $pageNode, $parentId, &$nodes, $count = 0) {
         if (method_exists($pageNode, 'getHideFromCMSNav')) {
             if ($pageNode->getHideFromCMSNav() == 1) {

@@ -16,34 +16,22 @@ abstract class RouterController extends Controller
     protected $tree;
 
     /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
-     * Router constructor.
-     */
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-        $this->tree = new Tree($this->getNodes());
-    }
-
-    /**
      * @param $requestUri
      * @return array
      */
     function getParams($requestUri)
     {
+        $tree = new Tree($this->getNodes());
+
         $fragments = explode('/', trim($requestUri, '/'));
         $args = array();
-        $node = $this->tree->getNodeByUrl($requestUri);
+        $node = $tree->getNodeByUrl($requestUri);
         if (!$node) {
             for ($i = count($fragments), $il = 0; $i > $il; $i--) {
                 $parts = array_slice($fragments, 0, $i);
-                $node = $this->tree->getNodeByUrl('/' . implode('/', $parts) . '/');
+                $node = $tree->getNodeByUrl('/' . implode('/', $parts) . '/');
                 if (!$node) {
-                    $node = $this->tree->getNodeByUrl('/' . implode('/', $parts));
+                    $node = $tree->getNodeByUrl('/' . implode('/', $parts));
                 }
                 if ($node) {
                     if ((!$node->getAllowExtra() && (count($fragments) - count($parts) == 0)) ||
@@ -63,7 +51,7 @@ abstract class RouterController extends Controller
             'args' => $args,
             'fragments' => $fragments,
             'node' => $node,
-            'root' => $this->tree->getRoot(),
+            'root' => $tree->getRoot(),
             'returnUrl' => '',
         );
     }

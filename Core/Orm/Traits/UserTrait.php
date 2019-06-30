@@ -9,6 +9,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 trait UserTrait
 {
+    /**
+     * @return array|mixed
+     */
+    public function objAccessibleSections()
+    {
+        return $this->getAccessibleSections() ? json_decode($this->getAccessibleSections()) : [];
+
+    }
+
+    /**
+     * @param bool $doubleCheck
+     */
     public function save($doubleCheck = false)
     {
         if ($this->getPasswordInput()) {

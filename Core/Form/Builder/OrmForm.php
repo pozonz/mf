@@ -88,7 +88,7 @@ class OrmForm extends AbstractType
                 preg_match('/\bfrom\b\s*(\w+)/i', $column->sql, $matches);
                 if (count($matches) == 2) {
                     if (substr($matches[1], 0, 1) == '_') {
-                        $tablename = $matches[1];
+                        $tablename = strtolower($matches[1]);
                     } else {
                         $tablename = $slugify->slugify($matches[1]);
                     }
