@@ -17,6 +17,7 @@ use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Twig\Extension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -77,7 +78,11 @@ trait CmsTrait
     {
         /** @var User $cmsUser */
         $cmsUser = $this->container->get('security.token_storage')->getToken()->getUser();
-        $accessibleSections = $cmsUser->objAccessibleSections();
+        if (!$cmsUser || gettype($cmsUser) == 'string') {
+            $accessibleSections = [];
+        } else {
+            $accessibleSections = $cmsUser->objAccessibleSections();
+        }
 
         $connection = $this->container->get('doctrine.dbal.default_connection');
         /** @var \PDO $pdo */
@@ -213,41 +218,6 @@ trait CmsTrait
         }
 
         return $nodes;
-
-        /** @var \PDO $pdo */
-        $pdo = $this->connection->getWrappedConnection();
-
-        $nodes = [];
-        $nodes[] = new PageNode(uniqid(), null, 0, 2, 'Login', '/manage/login', 'cms/login.html.twig');
-
-        //Set up major nav
-        $nodes[] = new PageNode(1, null, 0, 1, 'Pages', '/manage/pages', 'cms/pages.html.twig', 'cms_viewmode_cms');
-
-        $fullClass = ModelService::fullClass($pdo, 'PageCategory');
-        $categories = $fullClass::active($pdo);
-
-        $count = 0;
-        $fullClass = ModelService::fullClass($pdo, 'Page');
-        $pages = $fullClass::active($pdo);
-        foreach ($categories as $catIdx => $catItm) {
-            $catId = uniqid();
-            $nodes[] = new PageNode($catId, 1, $count + $catIdx + 1, 1, $catItm->getTitle());
-
-            $pageRoot = Extension::nestablePges($pages, $catItm->getId());
-            foreach ($pageRoot->getChildren() as $pageIdx => $pageItm) {
-                $pageId = uniqid();
-                $nodes[] = new PageNode($pageId, 1, $pageIdx + 2, 1, $pageItm->getTitle(), '/manage/orms/Page/' . $pageItm->getId(), 'cms/orms/orm-custom-page.html.twig');
-                $count++;
-
-                foreach ($pageItm->getChildren() as $subpageIdx => $subpageItm) {
-                    $subpageId = uniqid();
-                    $nodes[] = new PageNode($subpageId, $pageId, $subpageIdx + 1, 1, $subpageItm->getTitle(), '/manage/orms/Page/' . $subpageItm->getId(), 'cms/orms/orm-custom-page.html.twig');
-                    $nodes[] = new PageNode(uniqid(), $subpageId, $subpageIdx + 2, 1, $subpageItm->getTitle(), '/manage/orms/Page/' . $subpageItm->getId(), 'cms/orms/orm-custom-page.html.twig');
-                    $count++;
-                }
-            }
-        }
-
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core\Installation;
 
 use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\Orm\DataGroup;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -138,6 +139,11 @@ class InstallController extends Controller
      */
     static public function addDefaultUser($pdo, $obj, $fullClass)
     {
+        $result = DataGroup::data($pdo);
+        $dataGroup = array_map(function ($itm) {
+            return $itm->getId();
+        }, $result);
+
         $password = uniqid();
         /** @var \MillenniumFalcon\Core\Orm\User $orm */
         $orm = new $fullClass($pdo);
@@ -145,6 +151,7 @@ class InstallController extends Controller
         $orm->setPasswordInput($password);
         $orm->setName('Weida Xue');
         $orm->setEmail('luckyweida@gmail.com');
+        $orm->setAccessibleSections(json_encode($dataGroup));
 
         $dir = $obj->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/views';
         $loader = $obj->container->get('twig')->getLoader();
