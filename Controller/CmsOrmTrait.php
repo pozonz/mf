@@ -189,6 +189,7 @@ trait CmsOrmTrait
      */
     private function _ormPageWithForm($pdo, $className, $orm, $formClass = 'OrmForm', $callback = null)
     {
+        /** @var _Model $model */
         $model = _Model::getByField($pdo, 'className', $className);
         $params = $this->prepareParams();
 
@@ -205,6 +206,7 @@ trait CmsOrmTrait
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $isNew = $orm->getId() ? 0 : 1;
+            $this->convertDateValue($orm, $model);
             $orm->save();
 
             if ($callback) {
@@ -224,5 +226,43 @@ trait CmsOrmTrait
         $params['ormModel'] = $model;
         $params['orm'] = $orm;
         return $this->render($params['node']->getTemplate(), $params);
+    }
+
+    /**
+     * @param $orm
+     * @param $model
+     */
+    private function convertDateValue($orm, $model, $formats = [
+        '\\MillenniumFalcon\\Core\Form\\Type\\DatePicker' => 'Y-m-d H:i:s',
+        '\\MillenniumFalcon\\Core\Form\\Type\\DateTimePicker' => 'Y-m-d H:i:s',
+    ])
+    {
+        $objColumnJson = json_decode($model->getColumnsJson());
+        foreach ($objColumnJson as $columnJson) {
+            if (isset($formats[$columnJson->widget])) {
+                $getMethod = 'get' . ucfirst($columnJson->field);
+                $dateStr = $orm->$getMethod();
+                if ($dateStr) {
+                    $format = $formats[$columnJson->widget];
+                    $setMethod = 'set' . ucfirst($columnJson->field);
+                    $orm->$setMethod(date($format, strtotime($dateStr)));
+                }
+            }
+        }
+
+        $objPresetDataMap = _Model::presetDataMap;
+        foreach ($objPresetDataMap as $presetDataMap) {
+            foreach ($presetDataMap as $idx => $val) {
+                if (isset($formats[$val])) {
+                    $getMethod = 'get' . ucfirst($idx);
+                    $dateStr = $orm->$getMethod();
+                    if ($dateStr) {
+                        $format = $formats[$val];
+                        $setMethod = 'set' . ucfirst($idx);
+                        $orm->$setMethod(date($format, strtotime($dateStr)));
+                    }
+                }
+            }
+        }
     }
 }

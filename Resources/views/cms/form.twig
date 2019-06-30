@@ -37,11 +37,11 @@
 {%- endblock label_widget %}
 
 {% block datepicker_widget -%}
-    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('Y-m-d') : '' }}"/>
+    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d M Y') : '' }}"/>
 {%- endblock datepicker_widget %}
 
 {% block datetimepicker_widget -%}
-    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('Y-m-d H:i:s') : '' }}"/>
+    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d M Y H:i:s') : '' }}"/>
 {%- endblock datetimepicker_widget %}
 
 {% block choice_multi_json_widget -%}

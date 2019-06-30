@@ -32,20 +32,20 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
 
     const presetDataMap = array(
         'publish' => array(
-            'publishFrom' => 'MillenniumFalcon\\Core\\Form\\Type\\DateTimePicker',
-            'publishTo' => 'MillenniumFalcon\\Core\\Form\\Type\\DateTimePicker'
+            'publishFrom' => '\\MillenniumFalcon\\Core\\Form\\Type\\DateTimePicker',
+            'publishTo' => '\\MillenniumFalcon\\Core\\Form\\Type\\DateTimePicker'
         ),
         'meta' => array(
-            'metaTitle' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
-            'metaDescirption' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'metaTitle' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'metaDescirption' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
         ),
         'og' => array(
-            'ogTitle' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
-            'ogDescirption' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
-            'ogImage' => 'MillenniumFalcon\\Core\\Form\\Type\\AssetPicker'
+            'ogTitle' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'ogDescirption' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'ogImage' => '\\MillenniumFalcon\\Core\\Form\\Type\\AssetPicker'
         ),
         'rank' => array(
-            'rank' => 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'rank' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
         ),
     );
 
