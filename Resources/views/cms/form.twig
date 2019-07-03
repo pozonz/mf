@@ -34,14 +34,15 @@
 
 {% block label_widget -%}
     <div>{{ value }}</div>
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
 {%- endblock label_widget %}
 
 {% block datepicker_widget -%}
-    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d M Y') : '' }}"/>
+    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d F Y') : '' }}"/>
 {%- endblock datepicker_widget %}
 
 {% block datetimepicker_widget -%}
-    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d M Y H:i:s') : '' }}"/>
+    <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d F Y H:i:s') : '' }}"/>
 {%- endblock datetimepicker_widget %}
 
 {% block choice_multi_json_widget -%}
@@ -201,3 +202,23 @@
 {%- endblock _orm_file_widget -%}
 
 {% use 'cms/form-content-block.twig' %}
+
+
+{% block _orm_added_widget -%}
+    <div>{{ value ? value|date('d F Y H:i') : '' }}</div>
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
+{%- endblock _orm_added_widget %}
+
+
+{% block _orm_modified_widget -%}
+    <div>{{ value ? value|date('d F Y H:i') : '' }}</div>
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
+{%- endblock _orm_modified_widget %}
+
+{% block _orm_lastEditedBy_widget -%}
+    {% set user = model.byId('User', value) %}
+    {% if user %}
+        <div>{{ user.name }}</div>
+    {% endif %}
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
+{%- endblock _orm_lastEditedBy_widget %}

@@ -209,6 +209,9 @@ trait CmsOrmTrait
         if ($form->isSubmitted() && $form->isValid()) {
             $isNew = $orm->getId() ? 0 : 1;
             $this->convertDateValue($orm, $model);
+
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $orm->setLastEditedBy($user->getId());
             $orm->save();
 
             if ($callback) {

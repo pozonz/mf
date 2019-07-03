@@ -5,8 +5,7 @@ namespace MillenniumFalcon\Core\Form\Builder;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Constraints\ConstraintUnique;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
-use MillenniumFalcon\Core\Form\Type\Label;
-use MillenniumFalcon\Core\Form\Type\Spliter;
+use MillenniumFalcon\Core\Form\Type\LabelType;
 use MillenniumFalcon\Core\Form\Type\SpliterType;
 use MillenniumFalcon\Core\Nestable\Node;
 use MillenniumFalcon\Core\Orm\_Model;
@@ -56,19 +55,25 @@ class OrmForm extends AbstractType
                 ));
                 $presetDataMapItem = $presetDataMap[$presetDataItem];
                 foreach ($presetDataMapItem as $idx => $itm) {
-                    $builder->add($idx, $itm, array());
+                    $label = preg_replace('/(?<!^)([A-Z])/', ' \\1', $idx);
+                    $builder->add($idx, $itm, [
+                        'label' => ucfirst(strtolower($label)) . ':'
+                    ]);
                 }
             }
         }
 
         $metadata = $model->getMetadata() ? json_decode($model->getMetadata()) : array();
         if (count($metadata)) {
-            $builder->add(uniqid(), Spliter::class, array(
+            $builder->add(uniqid(), SpliterType::class, array(
                 'mapped' => false,
             ));
         }
         foreach ($metadata as $itm) {
-            $builder->add($itm, Label::class, array());
+            $label = preg_replace('/(?<!^)([A-Z])/', ' \\1', $itm);
+            $builder->add($itm, LabelType::class, [
+                'label' => ucfirst(strtolower($label)) . ':'
+            ]);
         }
     }
 
