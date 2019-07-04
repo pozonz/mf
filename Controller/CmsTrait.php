@@ -188,6 +188,10 @@ trait CmsTrait
                 'class' => 'AssetSize',
                 'children' => array(),
             ),
+            'Form Builder' => array(
+                'class' => 'FormDescriptor',
+                'children' => array(),
+            ),
             'Admin' => null,
             'Users' => array(
                 'class' => 'User',

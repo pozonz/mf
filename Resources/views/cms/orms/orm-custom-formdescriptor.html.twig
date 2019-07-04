@@ -1,0 +1,77 @@
+{% extends 'cms/orms/orm.html.twig' %}
+
+{% block asset %}
+    {#<link rel="stylesheet" href="{{ asset('build/cms-orm-formbuilder.css') }}" as="style" rel="preload">#}
+    {#<script src="{{ asset('build/cms-orm-formbuilder.js') }}" async defer></script>#}
+{% endblock %}
+
+{% block extraHead %}
+    <style>
+        .sidebarform_variants {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block formWidgets %}
+    <div class="formStyle">
+        {{ form_label(form.title) }}
+        {{ form_widget(form.title) }}
+        {{ form_errors(form.title) }}
+    </div>
+    <div class="formStyle">
+        {{ form_label(form.code) }}
+        {{ form_widget(form.code) }}
+        {{ form_errors(form.code) }}
+    </div>
+    <div class="formStyle">
+        {{ form_label(form.fromAddress) }}
+        {{ form_widget(form.fromAddress) }}
+        {{ form_errors(form.fromAddress) }}
+    </div>
+    <div class="formStyle type6">
+        {{ form_label(form.recipients) }}
+        {{ form_widget(form.recipients) }}
+        {{ form_errors(form.recipients) }}
+    </div>
+    <div class="formStyle type6">
+        {#{{ form_label(form.formFields) }}#}
+        {{ form_widget(form.formFields,{attr:{style:'display:none;'}}) }}
+
+        <div class="section-toolbar">
+            <select id="{{ form.formFields.vars.id }}_add" type="button" style="width: 16em;" data-placeholder="Add a field...">
+                <option value=""></option>
+                {% for key, val in utils.formWidgets() %}
+                    <option value="{{ key }}">{{ val }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <table id="{{ form.formFields.vars.id }}_formbuilder" class="table table-striped table-bordered table-hover" style="margin-top: .2em">
+            <thead>
+                <tr>
+                    <th class="tableHead" width="25%">Widget</th>
+                    <th class="tableHead" width="25%">Title</th>
+                    <th class="tableHead" width="25%">ID</th>
+                    <th class="tableHead" width="10%">Required</th>
+                    <th class="tableHead" width="15%"></th>
+                </tr>
+            </thead>
+        </table>
+        <div>&nbsp;</div>
+        {{ form_errors(form.formFields) }}
+    </div>
+
+    {{ form_rest(form) }}
+{% endblock %}
+
+
+{% block externalFooter %}
+    {{ parent() }}
+    <script id="formbuilder-source" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm-custom-formdescriptor.tr.twig' %}</script>
+    <script>
+        window._formWidgets = {{ utils.formWidgets()|json_encode|raw }};
+    </script>
+    <script src="/cms/develop/js/orm-formdescriptor.js"></script>
+{% endblock %}
+

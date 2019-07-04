@@ -1,0 +1,27 @@
+{% verbatim %}
+    <tbody class="js-row" data-idx="{{idx}}">
+        <tr>
+            <td>
+                <select class="wgt form-control" data-idx="{{ idx }}">
+                    {{# each widgets }}
+                    <option {{#compare @key ../itm.widget operator="=="}}selected{{/compare}} value="{{@key}}">{{ this }}</option>
+                    {{/each}}
+                </select>
+            </td>
+            <td><input class="lbl form-control" type="text" value="{{ itm.label }}"/></td>
+            <td><input class="id form-control" type="text" value="{{ itm.id }}"/></td>
+            <td>
+                <input type="checkbox" class="req form-control" {{#compare itm.required 1 operator="=="}}checked{{/compare}}/>
+            </td>
+            <td>
+                <a href="#" class="js-formbuilderfield-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+            </td>
+        </tr>
+        <tr style="display: none;"></tr>
+        <tr id="sql{{ idx }}" {{#compare '\Symfony\Component\Form\Extension\Core\Type\ChoiceType' itm.widget operator="!="}}style="display: none;"{{/compare}}>
+            <td></td>
+            <td colspan="3"><textarea class="sql form-control" placeholder="SQL statement">{{ itm.sql }}</textarea></td>
+            <td></td>
+        </tr>
+    </tbody>
+{% endverbatim %}
