@@ -3,6 +3,10 @@
 namespace MillenniumFalcon\Core\Service;
 
 use Cocur\Slugify\Slugify;
+use MillenniumFalcon\Core\Nestable\PageNode;
+use MillenniumFalcon\Core\Nestable\Tree;
+use MillenniumFalcon\Core\Orm\Page;
+use MillenniumFalcon\Core\Orm\PageCategory;
 
 class UtilsService
 {
@@ -152,6 +156,47 @@ class UtilsService
                 $result[] = $value;
             }
         }
+        return $result;
+    }
+
+    /**
+     * @param $categoryCode
+     * @return null
+     */
+    public function nav($categoryCode)
+    {
+        /** @var \PDO $pdo */
+        $pdo = $this->connection->getWrappedConnection();
+
+        $result = null;
+        /** @var PageCategory $category */
+        $category = PageCategory::getByField($pdo, 'code', $categoryCode);
+        if ($category) {
+            /** @var Page[] $pages */
+            $pages = Page::data($pdo, array(
+                'whereSql' => 'm.category LIKE ? ',
+                'params' => array('%"' . $category->getId() . '"%'),
+            ));
+
+            $nodes = array();
+            foreach ($pages as $itm) {
+                if ($itm->getHideFromWebNav()) {
+                    continue;
+                }
+                $categoryParent = !$itm->getCategoryParent() ? array() : (array)json_decode($itm->getCategoryParent());
+                $categoryRank = !$itm->getCategoryRank() ? array() : (array)json_decode($itm->getCategoryRank());
+                $parent = isset($categoryParent['cat' . $category->getId()]) ? $categoryParent['cat' . $category->getId()] : 0;
+                $rank = isset($categoryRank['cat' . $category->getId()]) ? $categoryRank['cat' . $category->getId()] : 0;
+
+                $node = new PageNode($itm->getId(), $parent, $rank, $itm->getStatus(), $itm->getTitle(), $itm->getUrl(), $itm->objPageTempalte()->getFilename(), '', $itm->getAllowExtra(), $itm->getMaxParams());
+//                $node->objContent = $itm->objContent();
+                $nodes[] = $node;
+            }
+
+            $tree = new Tree($nodes);
+            $result = $tree->getRoot();
+        }
+
         return $result;
     }
 }
