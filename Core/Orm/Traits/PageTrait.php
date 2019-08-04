@@ -105,7 +105,12 @@ trait PageTrait
      */
     public function objContent()
     {
-        return json_decode($this->getContent());
+        $result = [];
+        $objContent = json_decode($this->getContent());
+        foreach ($objContent as $itm) {
+            $result[$itm->attr] = $itm;
+        }
+        return $result;
     }
 
     /**
