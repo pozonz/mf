@@ -1,7 +1,10 @@
 {% extends 'cms/orms/orm.html.twig' %}
 {% block extraBody %}class="page-orm mode-asset"{% endblock %}
 
-{% set path = orm.parentFolder().path(asset.root) %}
+{% set path = orm.parentFolder() ? orm.parentFolder().path(asset.root) : [{
+	id: '',
+	title: 'Home',
+}] %}
 
 {% block heading %}
 	<div class="asset-edit-single">
@@ -43,9 +46,9 @@
 			</div>
 
 			<ul class="nav asset-image-meta">
-				<li id="file-download">Download URL: <a target="_blank" href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}">{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}</a></li>
+				<li id="file-download">Download URL: <a target="_blank" href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}">{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}</a></li>
 				<li>&nbsp;</li>
-				<li id="file-name" >Original file: <a href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.fileName }}" target="_blank" class="file-name" title=" ↓ Download original file">{{ orm.fileName }}<i class="icon"></i></a></li>
+				<li id="file-name" >Original file: <a href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}" target="_blank" class="file-name" title=" ↓ Download original file">{{ orm.fileName }}<i class="icon"></i></a></li>
 				<li>Size: <span id="file-size">{{ orm.formattedSize }}</span><span id="file-size-unit">{{ orm.formattedSizeUnit }}</span></li>
 				<li>Mime Type: <span id="file-type">{{ orm.fileType }}</span></li>
 			</ul>

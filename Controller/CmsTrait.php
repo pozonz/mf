@@ -110,7 +110,9 @@ trait CmsTrait
                 $dataGroup->getIcon()
             );
 
-            if ($dataGroup->getBuiltInSection() != 1) {
+            if ($dataGroup->getTitle() == 'Files') {
+                $nodes[] = new PageNode(uniqid(), $dataGroup->getBuiltInSectionCode(), 0, 2, 'Asset', '/manage/orms/Asset/', 'cms/files/file.html.twig', null, 1, 1);
+            } else if ($dataGroup->getBuiltInSection() != 1) {
                 /** @var _Model[] $models */
                 $models = _Model::active($pdo, array(
                     'whereSql' => 'm.dataGroups LIKE ? AND m.dataType = 0',

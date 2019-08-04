@@ -17,6 +17,24 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsOrmTrait
 {
     /**
+     * @route("/manage/pages/orms/Page/{ormId}")
+     * @return Response
+     */
+    public function page($ormId)
+    {
+        $className = 'Page';
+        $connection = $this->container->get('doctrine.dbal.default_connection');
+        /** @var \PDO $pdo */
+        $pdo = $connection->getWrappedConnection();
+
+        $orm = $this->_orm($pdo, $className, $ormId);
+        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmForm', function () {
+            $request = Request::createFromGlobals();
+            throw new RedirectException($request->getUri());
+        });
+    }
+
+    /**
      * @route("/manage/orms/Page")
      * @route("/manage/admin/orms/Page")
      * @route("/manage/pages/orms/Page")
@@ -148,6 +166,7 @@ trait CmsOrmTrait
         $pdo = $connection->getWrappedConnection();
 
         $orm = $this->_orm($pdo, $className, $ormId);
+        $orm->setUniqid(uniqid());
         $orm->setId(null);
         return $this->_ormPageWithForm($pdo, $className, $orm);
     }
@@ -215,7 +234,7 @@ trait CmsOrmTrait
             $orm->save();
 
             if ($callback) {
-               call_user_func($callback, $form, $orm);
+                call_user_func($callback, $form, $orm);
             }
 
             $baseUrl = str_replace('copy/', '', $params['node']->getUrl());
