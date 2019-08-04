@@ -30,7 +30,6 @@ class AssetController extends Controller
         if (!$asset) {
             throw new NotFoundHttpException();
         }
-
         $response = $this->assetImage($assetCode);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $asset->getFileName());
         return $response;
@@ -52,6 +51,9 @@ class AssetController extends Controller
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $asset = $fullClass::getByField($pdo, 'code', $assetCode);
+        if (!$asset) {
+            $asset = $fullClass::getById($pdo, $assetCode);
+        }
         if (!$asset) {
             throw new NotFoundHttpException();
         }
