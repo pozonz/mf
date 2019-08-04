@@ -5,6 +5,8 @@ namespace MillenniumFalcon\FormDescriptor;
 use Doctrine\DBAL\Connection;
 //use Pz\Form\Type\Robot;
 //use Pz\Orm\FormDescriptor;
+use MillenniumFalcon\Core\Form\Constraints\ConstraintRobot;
+use MillenniumFalcon\Core\Form\Type\RobotType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,13 +42,13 @@ class FormDescriptorBuilder extends AbstractType
 //        var_dump($builder);exit;
 
         if ($formDescriptor->getAntispam()) {
-//            $builder->add('robot', Robot::class, array(
-//                "mapped" => false,
-//                'label' => '',
-//                'constraints' => array(
-//                    new \Pz\Form\Constraints\ConstraintRobot(),
-//                )
-//            ));
+            $builder->add('robot', RobotType::class, array(
+                "mapped" => false,
+                'label' => '',
+                'constraints' => array(
+                    new ConstraintRobot(),
+                )
+            ));
         }
 
         $this->formDescriptor = $formDescriptor;

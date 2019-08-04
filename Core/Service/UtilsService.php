@@ -199,4 +199,17 @@ class UtilsService
 
         return $result;
     }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getFormData($value) {
+        if ($value[2] == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType') {
+            return nl2br($value[1]);
+        } else if ($value[2] == '\\MillenniumFalcon\\Core\\Form\\Type\\Wysiwyg') {
+            return $value[1];
+        }
+        return strip_tags($value[1]);
+    }
 }
