@@ -48,7 +48,12 @@ abstract class RouterController extends Controller
         if (!$node) {
             throw new NotFoundHttpException();
         }
-        if (method_exists($node, 'getType') && method_exists($node, 'getRedirectTo') && $node->getType() == 2) {
+        if (
+            method_exists($node, 'getType')
+            && method_exists($node, 'getRedirectTo')
+            && $node->getType() == 2
+            && $node->getRedirectTo()
+        ) {
             throw new RedirectException($node->getRedirectTo());
         }
         return array(
