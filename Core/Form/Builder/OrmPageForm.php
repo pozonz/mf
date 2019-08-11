@@ -1,0 +1,36 @@
+<?php
+
+namespace MillenniumFalcon\Core\Form\Builder;
+
+use Cocur\Slugify\Slugify;
+use MillenniumFalcon\Core\Form\Constraints\ConstraintUnique;
+use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
+use MillenniumFalcon\Core\Form\Type\LabelType;
+use MillenniumFalcon\Core\Form\Type\SpliterType;
+use MillenniumFalcon\Core\Nestable\Node;
+use MillenniumFalcon\Core\Orm\_Model;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class OrmPageForm extends OrmForm
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        parent::buildForm($builder, $options);
+
+//        $builder->remove('type');
+//        $builder->remove('redirectTo');
+
+        $builder->remove('templateFile');
+        $builder->remove('attachedModels');
+        $builder->remove('hideFromCMSNav');
+        $builder->remove('hideFromWebNav');
+        $builder->remove('allowExtra');
+        $builder->remove('maxParams');
+
+    }
+}

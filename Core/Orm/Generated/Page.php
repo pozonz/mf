@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-07-03 20:41:15
+//Last updated: 2019-08-11 20:22:59
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -64,11 +64,6 @@ class Page extends Orm implements NodeInterface
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $hideFromCMSNav;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $gallery;
     
     /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -268,22 +263,6 @@ class Page extends Orm implements NodeInterface
     public function setHideFromCMSNav($hideFromCMSNav)
     {
         $this->hideFromCMSNav = $hideFromCMSNav;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getGallery()
-    {
-        return $this->gallery;
-    }
-    
-    /**
-     * @param mixed gallery
-     */
-    public function setGallery($gallery)
-    {
-        $this->gallery = $gallery;
     }
     
     /**

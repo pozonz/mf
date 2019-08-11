@@ -16,28 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 trait CmsOrmTrait
 {
-    /**
-     * @route("/manage/pages/orms/Page/{ormId}")
-     * @return Response
-     */
-    public function page($ormId)
-    {
-        $className = 'Page';
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
-
-        $orm = $this->_orm($pdo, $className, $ormId);
-        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmForm', function () {
-            $request = Request::createFromGlobals();
-            throw new RedirectException($request->getUri());
-        });
-    }
 
     /**
-     * @route("/manage/orms/Page")
      * @route("/manage/admin/orms/Page")
-     * @route("/manage/pages/orms/Page")
      * @return Response
      */
     public function pages()
@@ -112,6 +93,24 @@ trait CmsOrmTrait
         $params['ormModel'] = $model;
         $params['orms'] = $orms;
         return $this->render($params['node']->getTemplate(), $params);
+    }
+
+    /**
+     * @route("/manage/pages/orms/Page/{ormId}")
+     * @return Response
+     */
+    public function page($ormId)
+    {
+        $className = 'Page';
+        $connection = $this->container->get('doctrine.dbal.default_connection');
+        /** @var \PDO $pdo */
+        $pdo = $connection->getWrappedConnection();
+
+        $orm = $this->_orm($pdo, $className, $ormId);
+        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmPageForm', function () {
+            $request = Request::createFromGlobals();
+            throw new RedirectException($request->getUri());
+        });
     }
 
     /**

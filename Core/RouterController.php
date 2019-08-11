@@ -4,6 +4,7 @@ namespace MillenniumFalcon\Core;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Nestable\Tree;
+use MillenniumFalcon\Core\Redirect\RedirectException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -46,6 +47,9 @@ abstract class RouterController extends Controller
         }
         if (!$node) {
             throw new NotFoundHttpException();
+        }
+        if (method_exists($node, 'getType') && method_exists($node, 'getRedirectTo') && $node->getType() == 2) {
+            throw new RedirectException($node->getRedirectTo());
         }
         return array(
             'args' => $args,
