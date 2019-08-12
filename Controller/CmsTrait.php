@@ -143,7 +143,7 @@ trait CmsTrait
             $nodes[] = new PageNode($catId, 'pages', $count + $catIdx, 1, $catItm->getTitle());
 
             $pageRoot = Extension::nestablePges($pages, $catItm->getId());
-            static::appendPagesToParent($pdo, $pageRoot, 'pages', $nodes, $count);
+            static::appendPagesToParent($pdo, $pageRoot, 'pages', $nodes, $count + $catIdx);
             $count += count($pageRoot->getChildren());
         }
 
