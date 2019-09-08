@@ -15,6 +15,9 @@ class InstallController extends Controller
      */
     public function index()
     {
+        ini_set('max_execution_time', 9999);
+        ini_set('memory_limit', '9999M');
+        
         $connection = $this->container->get('doctrine.dbal.default_connection');
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();

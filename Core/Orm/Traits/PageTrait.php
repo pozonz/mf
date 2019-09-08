@@ -107,6 +107,10 @@ trait PageTrait
     {
         $result = [];
         $objContent = json_decode($this->getContent());
+        if ($objContent === null && json_last_error() !== JSON_ERROR_NONE) {
+            $objContent = [];
+        }
+
         foreach ($objContent as $itm) {
             $result[$itm->attr] = $itm;
         }
