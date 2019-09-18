@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-08-11 20:22:59
+//Last updated: 2019-09-18 21:36:49
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -94,16 +94,6 @@ class Page extends Orm implements NodeInterface
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $categoryClosed;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $parentId;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $closed;
     
     /**
      * @return mixed
@@ -359,38 +349,6 @@ class Page extends Orm implements NodeInterface
     public function setCategoryClosed($categoryClosed)
     {
         $this->categoryClosed = $categoryClosed;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getParentId()
-    {
-        return $this->parentId;
-    }
-    
-    /**
-     * @param mixed parentId
-     */
-    public function setParentId($parentId)
-    {
-        $this->parentId = $parentId;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getClosed()
-    {
-        return $this->closed;
-    }
-    
-    /**
-     * @param mixed closed
-     */
-    public function setClosed($closed)
-    {
-        $this->closed = $closed;
     }
     
 }

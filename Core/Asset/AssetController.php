@@ -89,23 +89,8 @@ class AssetController extends Controller
 
                 if ($useWebp) {
                     $thumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
-
-                    $resizeCmd = "-resize {$assetSize->getWidth()} 0";
-                    $cropCmd = '';
-                    if ($assetCrop) {
-                        $cropCmd = "-crop {$assetCrop->getX()} {$assetCrop->getY()} {$assetCrop->getWidth()} {$assetCrop->getHeight()}";
-                    }
-                    $command = getenv('CWEBP_CMD') . " $fileLocation {$cropCmd} {$resizeCmd} -o $thumbnail";
-
                 } else {
                     $thumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
-                    $resizeCmd = "-resize {$assetSize->getWidth()}";
-                    $qualityCmd = "-quality 95";
-                    $cropCmd = '';
-                    if ($assetCrop) {
-                        $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
-                    }
-                    $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} $thumbnail";
                 }
 
             } else {
@@ -128,7 +113,20 @@ class AssetController extends Controller
         }
 
         if (!file_exists($thumbnail)) {
-            $returnValue = $this->generateOutput($command);
+            $orgThumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
+            $resizeCmd = "-resize {$assetSize->getWidth()}";
+            $qualityCmd = "-quality 95";
+            $cropCmd = '';
+            if ($assetCrop) {
+                $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
+            }
+            $orgCommand = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} -auto-orient $orgThumbnail";
+            $returnValue = $this->generateOutput($orgCommand);
+
+            if ($useWebp) {
+                $command = getenv('CWEBP_CMD') . " $orgThumbnail -o $thumbnail";
+                $returnValue = $this->generateOutput($command);
+            }
         }
 
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));

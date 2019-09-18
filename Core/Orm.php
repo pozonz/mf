@@ -89,6 +89,16 @@ abstract class Orm implements \JsonSerializable
     private $status;
 
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $parentId;
+
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $closed;
+
+    /**
      * Walle constructor.
      * @param \PDO $pdo
      */
@@ -642,7 +652,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * @param mixed $publishFrom
      */
-    public function setPublishFrom($publishFrom): void
+    public function setPublishFrom($publishFrom)
     {
         $this->publishFrom = $publishFrom;
     }
@@ -658,7 +668,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * @param mixed $publishTo
      */
-    public function setPublishTo($publishTo): void
+    public function setPublishTo($publishTo)
     {
         $this->publishTo = $publishTo;
     }
@@ -674,7 +684,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * @param mixed $metaTitle
      */
-    public function setMetaTitle($metaTitle): void
+    public function setMetaTitle($metaTitle)
     {
         $this->metaTitle = $metaTitle;
     }
@@ -690,7 +700,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * @param mixed $metaDescirption
      */
-    public function setMetaDescirption($metaDescirption): void
+    public function setMetaDescirption($metaDescirption)
     {
         $this->metaDescirption = $metaDescirption;
     }
@@ -706,7 +716,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * @param mixed $ogTitle
      */
-    public function setOgTitle($ogTitle): void
+    public function setOgTitle($ogTitle)
     {
         $this->ogTitle = $ogTitle;
     }
@@ -722,7 +732,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * @param mixed $ogDescirption
      */
-    public function setOgDescirption($ogDescirption): void
+    public function setOgDescirption($ogDescirption)
     {
         $this->ogDescirption = $ogDescirption;
     }
@@ -738,7 +748,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * @param mixed $ogImage
      */
-    public function setOgImage($ogImage): void
+    public function setOgImage($ogImage)
     {
         $this->ogImage = $ogImage;
     }
@@ -754,8 +764,40 @@ abstract class Orm implements \JsonSerializable
     /**
      * @param mixed $lastEditedBy
      */
-    public function setLastEditedBy($lastEditedBy): void
+    public function setLastEditedBy($lastEditedBy)
     {
         $this->lastEditedBy = $lastEditedBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * @param mixed $parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClosed()
+    {
+        return $this->closed;
+    }
+
+    /**
+     * @param mixed $closed
+     */
+    public function setClosed($closed)
+    {
+        $this->closed = $closed;
     }
 }

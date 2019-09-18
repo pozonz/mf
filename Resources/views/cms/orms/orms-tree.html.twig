@@ -1,0 +1,28 @@
+{% extends 'cms/orms/orms.html.twig' %}
+{% from "cms/includes/nestable.twig" import nest as nest %}
+
+{% block container %}
+    <div id="h1">
+        <h1>{{ ormModel.title }}</h1>
+        <a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
+    </div>
+
+
+    <div class="nestable-lists js-model-wrapper" data-modelname="{{ ormModel.className }}">
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+                {% for itm in orms.children %}
+                    {{ nest(itm, ormModel, 1) }}
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block externalFooter %}
+    {{ parent() }}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Nestable/2012-10-15/jquery.nestable.min.js"></script>
+    <script src="/cms/develop/js/orms-tree.js"></script>
+{% endblock %}

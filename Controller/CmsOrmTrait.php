@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Controller;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Builder\OrmForm;
 use MillenniumFalcon\Core\Nestable\Node;
+use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Redirect\RedirectException;
 use MillenniumFalcon\Core\Service\AssetService;
@@ -86,8 +87,11 @@ trait CmsOrmTrait
             $params['order'] = $order;
 
         } elseif ($model->getListType() == 2) {
-            //TODO: implement tree
-
+            $tree = new Tree($fullClass::data($pdo, array(
+                "sort" => 'm.rank',
+                "order" => 'ASC',
+            )));
+            $orms = $tree->getRoot();
         }
 
         $params['ormModel'] = $model;
