@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-19 21:21:44
+//Last updated: 2019-09-19 22:08:08
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -27,14 +27,19 @@ class Product extends Orm
     private $pageRank;
     
     /**
-     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $content;
+    private $gallery;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $gallery;
+    private $description;
+    
+    /**
+     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $content;
     
     /**
      * @return mixed
@@ -103,22 +108,6 @@ class Product extends Orm
     /**
      * @return mixed
      */
-    public function getContent()
-    {
-        return $this->content;
-    }
-    
-    /**
-     * @param mixed content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-    
-    /**
-     * @return mixed
-     */
     public function getGallery()
     {
         return $this->gallery;
@@ -130,6 +119,38 @@ class Product extends Orm
     public function setGallery($gallery)
     {
         $this->gallery = $gallery;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
+    /**
+     * @param mixed description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+    
+    /**
+     * @param mixed content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
     
 }

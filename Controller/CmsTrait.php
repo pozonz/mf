@@ -199,7 +199,7 @@ trait CmsTrait
                 'class' => 'User',
                 'children' => array(),
             ),
-            'Sections' => array(
+            'Custom Sections' => array(
                 'class' => 'DataGroup',
                 'children' => array(),
             ),
