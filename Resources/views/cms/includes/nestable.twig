@@ -4,7 +4,7 @@
         <div class="dd-handle dd3-handle"></div>
         <div class="dd-handle dd3-handle"></div>
         <div class="dd3-content">
-            <span>{{ node.title }}</span>
+            <span>{{ node.title }} {% if node.extraInfo is defined %}<span style="color: darkgray; margin-left: 1em; font-size: 90%; font-weight: 400">{{ node.extraInfo }}</span>{% endif %}</span>
             <a style="right: 5.9em;" class="state change-state js-orm-status" href="#" data-status="{{ node.status }}"><img src="/cms/images/dot{{ node.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
             <a style="right: 4.1em;" class="edit" href="/manage/{{ ormModel.dataType == 2 ? 'admin/' : '' }}orms/{{ ormModel.className }}/{{ node.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
             <a style="right: 2.3em;" class="state copy" href="/manage/{{ ormModel.dataType == 2 ? 'admin/' : '' }}orms/{{ ormModel.className }}/copy/{{ node.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>

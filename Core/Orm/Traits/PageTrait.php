@@ -24,10 +24,19 @@ trait PageTrait
     }
 
     /**
+     * @return mixed
+     */
+    public function getExtraInfo()
+    {
+        return $this->getUrl();
+    }
+
+    /**
      * @param bool $doubleCheckExistence
      * @throws \Exception
      */
-    public function save($doubleCheckExistence = false) {
+    public function save($doubleCheckExistence = false)
+    {
         if (!is_numeric($this->getTemplateFile())) {
             $json = json_decode($this->getTemplateFile());
 

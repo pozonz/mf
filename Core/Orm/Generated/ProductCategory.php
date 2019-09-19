@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-18 21:35:14
+//Last updated: 2019-09-19 21:40:14
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -21,6 +21,11 @@ class ProductCategory extends Orm implements NodeInterface
     private $title;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $count;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -34,6 +39,22 @@ class ProductCategory extends Orm implements NodeInterface
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+    
+    /**
+     * @param mixed count
+     */
+    public function setCount($count)
+    {
+        $this->count = $count;
     }
     
 }

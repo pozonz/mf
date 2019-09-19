@@ -8,6 +8,7 @@ use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
 use MillenniumFalcon\Core\Form\Type\LabelType;
 use MillenniumFalcon\Core\Form\Type\SpliterType;
 use MillenniumFalcon\Core\Nestable\Node;
+use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -109,7 +110,7 @@ class OrmForm extends AbstractType
                 foreach ($result as $key => $val) {
                     $options['choices'][$val->value] = $val->key;
                 }
-                $options['required'] = false;
+//                $options['required'] = false;
                 break;
 
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceMultiJsonTree':
@@ -136,17 +137,8 @@ class OrmForm extends AbstractType
                 }
                 $tree = new Tree($nodes);
                 $root = $tree->getRoot();
-
-                $result = static::tree2Array($root, 1);
-                $options['choices'] = array(
-                    '@1@0' => ''
-                );
-                $count = 1;
-                foreach ($result as $key => $val) {
-                    $options['choices'][$val->value . "@$count"] = $val->key;
-                    $count++;
-                }
-                $options['required'] = false;
+                $options['choices'] = $root;
+//                $options['required'] = false;
                 break;
         }
 

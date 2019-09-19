@@ -1,10 +1,10 @@
 {
-    "id": null,
+    "id": "18",
     "uniqid": "5d7f59247451b",
-    "slug": "product-categories",
-    "rank": "19",
+    "slug": "products",
+    "rank": "20",
     "added": "2019-09-16 21:43:00",
-    "modified": "2019-09-18 21:35:14",
+    "modified": "2019-09-19 21:18:42",
     "publishFrom": null,
     "publishTo": null,
     "metaTitle": null,
@@ -26,7 +26,7 @@
     "numberPerPage": "50",
     "defaultSortBy": "id",
     "defaultOrder": 1,
-    "columnsJson": "[{\"id\":\"z1568626956378\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"}]",
+    "columnsJson": "[{\"id\":\"z1568626956378\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1568875338747\",\"column\":\"category\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\ChoiceMultiJsonTree\",\"label\":\"Categories:\",\"field\":\"categories\",\"required\":0,\"unique\":0,\"sql\":\"SELECT t1.id AS `key`, t1.title AS value, t1.parentId AS parentId FROM ProductCategory AS t1 ORDER BY t1.rank\"},{\"id\":\"z1568875381434\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"SKU:\",\"field\":\"sku\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1568875401661\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Ranking number (bigger = higher rank on page):\",\"field\":\"pageRank\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1568875499878\",\"column\":\"content\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\Wysiwyg\",\"label\":\"Content:\",\"field\":\"content\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1568875498414\",\"column\":\"gallery\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\AssetFolderPicker\",\"label\":\"Gallery:\",\"field\":\"gallery\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
     "metadata": "[]",
     "presetData": "[]"
 }

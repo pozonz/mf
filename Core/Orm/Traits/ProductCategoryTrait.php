@@ -4,4 +4,11 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 
 trait ProductCategoryTrait
 {
+    /**
+     * @return mixed
+     */
+    public function getExtraInfo()
+    {
+        return '(' . ($this->getCount() ?: 0) . ')';
+    }
 }
