@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -26,12 +27,34 @@ class AssetController extends Controller
         $pdo = $connection->getWrappedConnection();
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $asset = $fullClass::getByField($pdo, 'code', $assetCode);
-        if (!$asset) {
+        $orm = $fullClass::getByField($pdo, 'code', $assetCode);
+        if (!$orm) {
             throw new NotFoundHttpException();
         }
-        $response = $this->assetImage($assetCode);
-        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $asset->getFileName());
+
+        if ($orm->getIsImage() == 1) {
+
+            $response = $this->assetImage($assetCode);
+            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $orm->getFileName());
+
+        } else {
+
+            $fileType = $orm->getFileType();
+            $fileName = $orm->getFileName();
+            $fnlFile = AssetService::getUploadPath() . $orm->getFileLocation();
+            if (!file_exists($fnlFile)) {
+                throw new NotFoundHttpException();
+            }
+            $stream = function () use ($fnlFile) {
+                readfile($fnlFile);
+            };
+            return new StreamedResponse($stream, 200, array(
+                'Content-Type' => $fileType,
+                'Content-length' => filesize($fnlFile),
+                'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
+            ));
+        }
+
         return $response;
     }
 
@@ -48,7 +71,6 @@ class AssetController extends Controller
         $connection = $this->container->get('doctrine.dbal.default_connection');
         /** @var \PDO $pdo */
         $pdo = $connection->getWrappedConnection();
-
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $asset = $fullClass::getByField($pdo, 'code', $assetCode);
         if (!$asset) {
@@ -89,8 +111,23 @@ class AssetController extends Controller
 
                 if ($useWebp) {
                     $thumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
+
+                    $resizeCmd = "-resize {$assetSize->getWidth()} 0";
+                    $cropCmd = '';
+                    if ($assetCrop) {
+                        $cropCmd = "-crop {$assetCrop->getX()} {$assetCrop->getY()} {$assetCrop->getWidth()} {$assetCrop->getHeight()}";
+                    }
+                    $command = getenv('CWEBP_CMD') . " $fileLocation {$cropCmd} {$resizeCmd} -o $thumbnail";
+
                 } else {
                     $thumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
+                    $resizeCmd = "-resize {$assetSize->getWidth()}";
+                    $qualityCmd = "-quality 95";
+                    $cropCmd = '';
+                    if ($assetCrop) {
+                        $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
+                    }
+                    $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} $thumbnail";
                 }
 
             } else {
@@ -113,20 +150,7 @@ class AssetController extends Controller
         }
 
         if (!file_exists($thumbnail)) {
-            $orgThumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
-            $resizeCmd = "-resize {$assetSize->getWidth()}";
-            $qualityCmd = "-quality 95";
-            $cropCmd = '';
-            if ($assetCrop) {
-                $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
-            }
-            $orgCommand = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} -auto-orient $orgThumbnail";
-            $returnValue = $this->generateOutput($orgCommand);
-
-            if ($useWebp) {
-                $command = getenv('CWEBP_CMD') . " $orgThumbnail -o $thumbnail";
-                $returnValue = $this->generateOutput($command);
-            }
+            $returnValue = AssetService::generateOutput($command);
         }
 
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));
@@ -138,40 +162,5 @@ class AssetController extends Controller
             "etag" => '"' . sprintf("%x-%x", $date->getTimestamp(), $fileSize) . '"',
         ], true, null, false, true);
         return $response;
-    }
-
-    /**
-     * @param $command
-     * @param string $in
-     * @param null $out
-     * @return int
-     */
-    protected function generateOutput($command, &$in = '', &$out = null)
-    {
-        $logFolder = AssetService::getImageCachePath();
-        $descriptorspec = array(
-            0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-            1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-            2 => array("file", $logFolder . 'error-output.txt', 'a') // stderr is a file to write to
-        );
-
-        $returnValue = -999;
-
-        $process = proc_open($command, $descriptorspec, $pipes);
-        if (is_resource($process)) {
-
-            fwrite($pipes[0], $in);
-            fclose($pipes[0]);
-
-            $out = "";
-            //read the output
-            while (!feof($pipes[1])) {
-                $out .= fgets($pipes[1], 4096);
-            }
-            fclose($pipes[1]);
-            $returnValue = proc_close($process);
-        }
-
-        return $returnValue;
     }
 }

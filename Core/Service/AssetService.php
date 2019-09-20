@@ -129,22 +129,30 @@ class AssetService
         $orm->setFileType($file->getMimeType());
         $orm->setFileSize($file->getSize());
         $orm->setFileExtension($file->getClientOriginalExtension());
+        $orm->setIsImage(0);
+        $orm->setWidth(null);
+        $orm->setHeight(null);
 
-        $file->move(AssetService::getUploadPath());
-        if (file_exists(AssetService::getUploadPath() . $file->getFilename())) {
-            rename(AssetService::getUploadPath() . $file->getFilename(), AssetService::getUploadPath() . $orm->getId() . '.' . $ext);
-        }
+        $file->move(AssetService::getImageCachePath());
+        $tmpFile = AssetService::getImageCachePath() . $file->getFilename();
+        $chkFile = $tmpFile . '.' . $ext;
 
-        $info = getimagesize(AssetService::getUploadPath() . $orm->getId() . '.' . $ext);
-        if ($info === false) {
-            $orm->setIsImage(0);
-            $orm->setWidth(null);
-            $orm->setHeight(null);
-        } else {
+        rename($tmpFile, $chkFile);
+        $info = getimagesize($chkFile);
+        if ($info !== false) {
             list($x, $y) = $info;
             $orm->setIsImage(1);
             $orm->setWidth($x);
             $orm->setHeight($y);
+        }
+
+        $fnlFile = AssetService::getUploadPath() . $orm->getId() . '.' . $ext;
+        if ($orm->getIsImage() == 1) {
+            $command = getenv('CONVERT_CMD') . ' ' . $chkFile . ' -auto-orient ' . $fnlFile;
+            static::generateOutput($command);
+            unlink($chkFile);
+        } else {
+            rename($chkFile, $fnlFile);
         }
 
         $orm->setFileLocation($orm->getId() . '.' . $ext);
@@ -154,6 +162,41 @@ class AssetService
             'status' => 1,
             'orm' => $orm,
         ));
+    }
+
+    /**
+     * @param $command
+     * @param string $in
+     * @param null $out
+     * @return int
+     */
+    static public function generateOutput($command, &$in = '', &$out = null)
+    {
+        $logFolder = AssetService::getImageCachePath();
+        $descriptorspec = array(
+            0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+            1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+            2 => array("file", $logFolder . 'error-output.txt', 'a') // stderr is a file to write to
+        );
+
+        $returnValue = -999;
+
+        $process = proc_open($command, $descriptorspec, $pipes);
+        if (is_resource($process)) {
+
+            fwrite($pipes[0], $in);
+            fclose($pipes[0]);
+
+            $out = "";
+            //read the output
+            while (!feof($pipes[1])) {
+                $out .= fgets($pipes[1], 4096);
+            }
+            fclose($pipes[1]);
+            $returnValue = proc_close($process);
+        }
+
+        return $returnValue;
     }
 
     /**
