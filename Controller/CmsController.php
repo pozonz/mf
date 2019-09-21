@@ -9,6 +9,7 @@ class CmsController extends RouterController
     use CmsOrmTrait,
         CmsModelTrait,
         CmsRestFileTrait,
+        CmsRestProductTrait,
         CmsRestTrait,
         CmsTrait;
 }

@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-21 10:12:35
+//Last updated: 2019-09-21 21:28:54
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -14,7 +14,7 @@ class ProductVariant extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $category;
+    private $productUniqid;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -30,6 +30,11 @@ class ProductVariant extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $weight;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $stock;
     
     /**
      * @return mixed
@@ -50,17 +55,17 @@ class ProductVariant extends Orm
     /**
      * @return mixed
      */
-    public function getCategory()
+    public function getProductUniqid()
     {
-        return $this->category;
+        return $this->productUniqid;
     }
     
     /**
-     * @param mixed category
+     * @param mixed productUniqid
      */
-    public function setCategory($category)
+    public function setProductUniqid($productUniqid)
     {
-        $this->category = $category;
+        $this->productUniqid = $productUniqid;
     }
     
     /**
@@ -109,6 +114,22 @@ class ProductVariant extends Orm
     public function setWeight($weight)
     {
         $this->weight = $weight;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getStock()
+    {
+        return $this->stock;
+    }
+    
+    /**
+     * @param mixed stock
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
     }
     
 }

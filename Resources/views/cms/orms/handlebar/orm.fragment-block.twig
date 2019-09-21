@@ -43,10 +43,10 @@
                     <div class="formStyle block-item-textarea assetfolderpicker">
                         <label for="form_gallery" class="required" style="display: inline-block;">{{title}}</label>
                         <div style="display: inline-block; margin-left: 10px;">
-                            <a class="button-galery change" data-id="#{{../id}}@{{../block.id}}@{{id}}"><i class="fas fa-images"></i> Manage</a>
-                            <a class="button-galery delete" data-id="#{{../id}}@{{../block.id}}@{{id}}"><i class="far fa-trash-alt"></i> Empty</a>
+                            <a class="button-normal button-galery change" data-id="#{{../id}}@{{../block.id}}@{{id}}"><i class="fas fa-images"></i> Manage</a>
+                            <a class="button-red button-galery delete" data-id="#{{../id}}@{{../block.id}}@{{id}}"><i class="far fa-trash-alt"></i> Empty</a>
                         </div>
-                        <div class="widget style1 js-gallery-widget" style="padding: 0; margin: 0;">
+                        <div class="widget style1 js-gallery-widget" style="padding: 0; margin: 1em 0 0 0;">
                             <input type="hidden" id="{{id}}" class="js-elem js-fileId" required="required" value="{{../id}}@{{../block.id}}@{{id}}" data-attributename="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}">
                             <div class="ibox-content">
                                 <div class="sk-spinner sk-spinner-double-bounce">

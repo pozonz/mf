@@ -1,0 +1,10 @@
+{% form_theme form 'cms/form.twig' %}
+<div class="js-pjax-form-container">
+	{% if submitted %}
+		<div class="js-submitted"></div>
+	{% else %}
+		<form action="{{ url }}" method="POST" novalidate autocomplete="off" class="edit" enctype="multipart/form-data">
+			{{ form_widget(form) }}
+		</form>
+	{% endif %}
+</div>

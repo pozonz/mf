@@ -4,4 +4,11 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 
 trait ProductTrait
 {
+    /**
+     * @return string
+     */
+    static public function getCmsOrmTwig()
+    {
+        return 'cms/orms/orm-custom-product.html.twig';
+    }
 }

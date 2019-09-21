@@ -102,7 +102,7 @@ class ModelForm extends AbstractType
         $builder->get('presetData')
             ->addModelTransformer(new CallbackTransformer(
                 function ($data) {
-                    return gettype($data) == 'string' ? json_decode($data) : array();
+                    return gettype($data) == 'string' ? (array)json_decode($data) : array();
                 },
                 function ($data) {
                     return gettype($data) == 'array' ? json_encode($data) : '[]';

@@ -127,14 +127,14 @@
         </{{ element|default('label') }}>
 
         <div style="display: inline-block; margin-left: 10px;">
-            <a class="button-galery change" data-id="#{{ id }}"><i class="fas fa-images"></i> Manage</a>
-            <a class="button-galery delete" data-id="#{{ id }}"><i class="far fa-trash-alt"></i> Empty</a>
+            <a class="button-normal button-galery change" data-id="#{{ id }}"><i class="fas fa-images"></i> Manage</a>
+            <a class="button-red button-galery delete" data-id="#{{ id }}"><i class="far fa-trash-alt"></i> Empty</a>
         </div>
     {%- endif -%}
 {%- endblock assetfolderpicker_label -%}
 
 {% block assetfolderpicker_widget -%}
-    <div class="widget style1 js-gallery-widget ibox" style="padding: 0; margin: 0;">
+    <div class="widget style1 js-gallery-widget ibox" style="padding: 0; margin: 1em 0 0 0;">
         <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" data-attributename="{{ id }}"/>
         <div class="ibox-content" style="border: none">
             <div class="sk-spinner sk-spinner-double-bounce">

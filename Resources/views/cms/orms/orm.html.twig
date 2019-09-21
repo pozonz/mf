@@ -28,7 +28,7 @@
 
 			<div class="submit-area">
                 {#{{ form_widget(form._token) }}#}
-				<a class="back-button button" href="{{ returnUrl }}">‹ Back</a>
+				<a class="back-button button js-returnUrl" href="{{ returnUrl }}">‹ Back</a>
 				<button class="submit button save-content" style="background: #2281cf;" name='submit' value='Apply'>Apply</button>
 				<button class="submit button" name='submit' value='Save'>Save & Exit ›</button>
 			</div>
