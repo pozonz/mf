@@ -1,5 +1,13 @@
 {% verbatim %}
-    <tbody class="js-orm-info" data-class="ProductVariant" id="{{itm.id}}" data-callback="getVariants">
+    <tbody
+    class="js-orm-info
+    {{#compare itm.status 1 operator="!="}}disabled{{/compare}}
+    {{#compare itm.status 1 operator="=="}}{{#isLessIfSet itm.stock itm.alarmIfLessThan}}low-stock{{/isLessIfSet}}{{/compare}}"
+
+    data-class="ProductVariant"
+    id="{{itm.id}}"
+    data-callback="getVariants">
+
         <tr class="column">
             <td>{{itm.id}}</td>
             <td>{{itm.title}}</td>
@@ -7,6 +15,7 @@
             <td>${{#formatMoney itm.price}}{{/formatMoney}}</td>
             <td>{{itm.weight}}</td>
             <td>{{itm.stock}}</td>
+            <td>{{itm.alarmIfLessThan}}</td>
             <td>
                 <a href="#" class="js-orm-status" data-status="{{itm.status}}"><img src="/cms/images/dot{{#compare itm.status 1}}Green{{/compare}}{{#compare itm.status 0}}Red{{/compare}}.gif" alt="" border="0"></a>
                 <a href="#" class="js-edit-variant"><img alt="Edit Record" title="Edit Record" src="/cms/images/editIcon.gif" border="0"></a>

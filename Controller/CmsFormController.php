@@ -40,10 +40,13 @@ class CmsFormController extends AbstractController
 
         $submitted = false;
         if ($form->isSubmitted() && $form->isValid()) {
+            $isNewOrm = $orm->getId() ? 0 : 1;
             $orm->save();
 
-            $orm->setRank($orm->getId());
-            $orm->save();
+            if ($isNewOrm) {
+                $orm->setRank($orm->getId());
+                $orm->save();
+            }
 
             $submitted = true;
         }

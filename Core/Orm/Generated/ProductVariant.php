@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-21 21:28:54
+//Last updated: 2019-09-25 17:18:30
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -35,6 +35,11 @@ class ProductVariant extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $stock;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $alarmIfLessThan;
     
     /**
      * @return mixed
@@ -130,6 +135,22 @@ class ProductVariant extends Orm
     public function setStock($stock)
     {
         $this->stock = $stock;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getAlarmIfLessThan()
+    {
+        return $this->alarmIfLessThan;
+    }
+    
+    /**
+     * @param mixed alarmIfLessThan
+     */
+    public function setAlarmIfLessThan($alarmIfLessThan)
+    {
+        $this->alarmIfLessThan = $alarmIfLessThan;
     }
     
 }

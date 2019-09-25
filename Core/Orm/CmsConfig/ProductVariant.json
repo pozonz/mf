@@ -4,7 +4,7 @@
     "slug": "product-variants",
     "rank": "18",
     "added": "2019-09-21 10:12:07",
-    "modified": "2019-09-21 21:28:27",
+    "modified": "2019-09-25 17:14:34",
     "publishFrom": null,
     "publishTo": null,
     "metaTitle": null,
@@ -26,7 +26,7 @@
     "numberPerPage": "50",
     "defaultSortBy": "id",
     "defaultOrder": 1,
-    "columnsJson": "[{\"id\":\"z1569017300976\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1569017471346\",\"column\":\"category\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\ChoiceType\",\"label\":\"Product:\",\"field\":\"productUniqid\",\"required\":0,\"unique\":0,\"sql\":\"SELECT t1.uniqid AS `key`, t1.title AS value FROM Product AS t1 ORDER BY t1.rank\"},{\"id\":\"z1569017429418\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"SKU:\",\"field\":\"sku\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1569017449309\",\"column\":\"price\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Price:\",\"field\":\"price\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1569017459359\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Weight:\",\"field\":\"weight\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1569046209396\",\"column\":\"extra3\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Stock:\",\"field\":\"stock\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
+    "columnsJson": "[{\"id\":\"z1569017300976\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1569017471346\",\"column\":\"category\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\ChoiceType\",\"label\":\"Product:\",\"field\":\"productUniqid\",\"required\":0,\"unique\":0,\"sql\":\"SELECT t1.uniqid AS `key`, t1.title AS value FROM Product AS t1 ORDER BY t1.rank\"},{\"id\":\"z1569017429418\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"SKU:\",\"field\":\"sku\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1569017449309\",\"column\":\"price\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Price:\",\"field\":\"price\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1569017459359\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Weight:\",\"field\":\"weight\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1569046209396\",\"column\":\"extra3\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Stock:\",\"field\":\"stock\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1569388329573\",\"column\":\"extra4\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Alarm if less than:\",\"field\":\"alarmIfLessThan\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
     "metadata": "[]",
     "presetData": "[]"
 }

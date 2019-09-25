@@ -60,6 +60,12 @@ class OrmProductVariantForm extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
+            ->add('alarmIfLessThan', NumberType::class, [
+                'label' => 'Alarm if stock less than:',
+//                'constraints' => [
+//                    new Assert\NotBlank(),
+//                ],
+            ])
         ;
     }
 
