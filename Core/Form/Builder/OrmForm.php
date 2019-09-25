@@ -43,8 +43,8 @@ class OrmForm extends AbstractType
             }
 
             $widget = $itm->widget;
-            $options = $this->getOptoins($pdo, $itm, $orm);
-            $builder->add($itm->field, $widget, $options);
+            $opts = $this->getOpts($pdo, $itm, $orm);
+            $builder->add($itm->field, $widget, $opts);
         }
 
         $presetData = $model->getMetadata() ? json_decode($model->getPresetData()) : array();
@@ -82,12 +82,16 @@ class OrmForm extends AbstractType
      * @param $column
      * @return array
      */
-    private function getOptoins($pdo, $column, $orm) {
-        $options = array(
+    private function getOpts($pdo, $column, $orm) {
+        $opts = array(
             'label' => $column->label,
         );
 
         switch ($column->widget) {
+            case '\\MillenniumFalcon\\Core\\Form\\Type\\ContentBlock':
+                $opts['ormModel'] = $orm->getModel();
+                break;
+
             case '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType':
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceMultiJson':
                 $slugify = new Slugify(['trim' => false]);
@@ -106,11 +110,11 @@ class OrmForm extends AbstractType
                 $stmt->execute();
                 $result = $stmt->fetchAll(\PDO::FETCH_OBJ);
 
-                $options['choices'] = array();
+                $opts['choices'] = array();
                 foreach ($result as $key => $val) {
-                    $options['choices'][$val->value] = $val->key;
+                    $opts['choices'][$val->value] = $val->key;
                 }
-//                $options['required'] = false;
+//                $opts['required'] = false;
                 break;
 
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceMultiJsonTree':
@@ -137,27 +141,27 @@ class OrmForm extends AbstractType
                 }
                 $tree = new Tree($nodes);
                 $root = $tree->getRoot();
-                $options['choices'] = $root;
-//                $options['required'] = false;
+                $opts['choices'] = $root;
+//                $opts['required'] = false;
                 break;
         }
 
-        if (!isset($options['constraints']) || gettype($options['constraints']) != 'array') {
-            $options['constraints'] = array();
+        if (!isset($opts['constraints']) || gettype($opts['constraints']) != 'array') {
+            $opts['constraints'] = array();
         }
 
         if ($column->required == 1) {
-            $options['constraints'][] = new Assert\NotBlank();
+            $opts['constraints'][] = new Assert\NotBlank();
         }
 
         if ($column->unique == 1) {
-            $options['constraints'][] = new ConstraintUnique(array(
+            $opts['constraints'][] = new ConstraintUnique(array(
                 'orm' => $orm,
                 'field' => $column->field,
             ));
         }
 
-        return $options;
+        return $opts;
     }
 
     public function configureOptions(OptionsResolver $resolver)

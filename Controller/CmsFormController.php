@@ -2,10 +2,13 @@
 
 namespace MillenniumFalcon\Controller;
 
+use MillenniumFalcon\Core\Form\Builder\OrmForm;
 use MillenniumFalcon\Core\Form\Builder\OrmProductVariantForm;
+use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Orm\ProductVariant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 class CmsFormController extends AbstractController
@@ -14,7 +17,7 @@ class CmsFormController extends AbstractController
      * @return Response
      * @throws RedirectException
      */
-    function productVariant($url, $productUniqid, $variantId = null)
+    function productVariant($productUniqid, $variantId = null)
     {
         $pdo = $this->container->get('doctrine')->getConnection()->getWrappedConnection();
 
@@ -27,11 +30,15 @@ class CmsFormController extends AbstractController
             $orm->setProductUniqid($productUniqid);
         }
 
+        $model = $orm->getModel();
+
         /** @var FormFactory $formFactory */
         $formFactory = $this->container->get('form.factory');
         /** @var FormBuilder $formBuiler */
-        $formBuiler = $formFactory->createBuilder(OrmProductVariantForm::class, $orm, [
+        $formBuiler = $formFactory->createBuilder(OrmForm::class, $orm, [
+            'model' => $model,
             'orm' => $orm,
+            'pdo' => $pdo,
         ]);
 
         /** @var Form $form */
@@ -52,10 +59,11 @@ class CmsFormController extends AbstractController
         }
 
         $templateOptions = [
+            'url' => $request->getRequestUri(),
             'form' => $form->createView(),
-            'url' => $url,
             'orm' => $orm,
             'submitted' => $submitted,
+            'ormModel' => $model,
         ];
         return $this->render('cms/orms/forms/form-product-variant.html.twig', $templateOptions);
     }

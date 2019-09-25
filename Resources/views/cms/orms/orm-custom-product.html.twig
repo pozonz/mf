@@ -7,7 +7,6 @@
     {{ form_row(form.pageRank) }}
     {{ form_row(form.gallery) }}
     {{ form_row(form.description) }}
-    {{ form_row(form.content) }}
 
     <div class="variant-container">
         <hr/>
@@ -17,7 +16,6 @@
         <table class="table table-striped table-bordered table-hover table-middle js-product-variants-table" style="margin-top: .2em">
             <thead>
                 <tr>
-                    <th class="tableHead" width="5%">ID</th>
                     <th class="tableHead">Title</th>
                     <th class="tableHead" width="10%">SKU</th>
                     <th class="tableHead" width="10%">Price</th>
@@ -40,7 +38,6 @@
 
     <div id="product-vairant" class="modal fade" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">
         {{ render(controller('MillenniumFalcon\\Controller\\CmsFormController::productVariant', {
-            url: app.request.requestUri,
             productUniqid: orm.uniqid,
             variantId: app.request.get('variantId')
         })) }}

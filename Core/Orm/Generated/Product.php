@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-21 11:58:00
+//Last updated: 2019-09-25 21:12:10
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -35,11 +35,6 @@ class Product extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $description;
-    
-    /**
-     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $content;
     
     /**
      * @return mixed
@@ -135,22 +130,6 @@ class Product extends Orm
     public function setDescription($description)
     {
         $this->description = $description;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-    
-    /**
-     * @param mixed content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
     }
     
 }
