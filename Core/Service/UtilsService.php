@@ -32,6 +32,7 @@ class UtilsService
      */
     public function getBlockDropdownOptions()
     {
+        $slugify = new Slugify(['trim' => false]);
         $pdo = $this->connection;
 
         $fullClass = ModelService::fullClass($pdo, 'FragmentBlock');
@@ -41,6 +42,16 @@ class UtilsService
             foreach ($items as &$item) {
                 $choices = array();
                 if ($item->widget == 9 || $item->widget == 10) {
+                    preg_match('/\bfrom\b\s*(\w+)/i', $item->sql, $matches);
+                    if (count($matches) == 2) {
+                        if (substr($matches[1], 0, 1) == '_') {
+                            $tablename = strtolower($matches[1]);
+                        } else {
+                            $tablename = $slugify->slugify($matches[1]);
+                        }
+
+                        $item->sql = str_replace($matches[0], "FROM $tablename", $item->sql);
+                    }
                     $stmt = $pdo->prepare($item->sql);
                     $stmt->execute();
                     foreach ($stmt->fetchAll() as $key => $val) {

@@ -20,8 +20,11 @@
     "symfony/translation": "^4.2",
     "symfony/security-bundle": "^4.2",
     "symfony/swiftmailer-bundle": "^3.2",
-    "campaignmonitor/createsend-php": "^6.0"
- },
+    "campaignmonitor/createsend-php": "^6.0",
+    "facebook/graph-sdk": "^5.7",
+    "google/apiclient": "^2.2",
+    "phpoffice/phpspreadsheet": "^1.2"
+  },
   "autoload": {
     "psr-4": {
       "MillenniumFalcon\\": ""

@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-26 20:32:26
+//Last updated: 2019-09-27 10:32:12
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -35,6 +35,16 @@ class Product extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $sku;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $noMemberDiscount;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $noPromoDiscount;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -165,6 +175,38 @@ class Product extends Orm
     public function setSku($sku)
     {
         $this->sku = $sku;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getNoMemberDiscount()
+    {
+        return $this->noMemberDiscount;
+    }
+    
+    /**
+     * @param mixed noMemberDiscount
+     */
+    public function setNoMemberDiscount($noMemberDiscount)
+    {
+        $this->noMemberDiscount = $noMemberDiscount;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getNoPromoDiscount()
+    {
+        return $this->noPromoDiscount;
+    }
+    
+    /**
+     * @param mixed noPromoDiscount
+     */
+    public function setNoPromoDiscount($noPromoDiscount)
+    {
+        $this->noPromoDiscount = $noPromoDiscount;
     }
     
     /**
