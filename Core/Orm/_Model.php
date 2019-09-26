@@ -189,7 +189,7 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
             'extra14' => "text COLLATE utf8mb4_unicode_ci DEFAULT NULL",
             'extra15' => "text COLLATE utf8mb4_unicode_ci DEFAULT NULL",
         );
-        ksort($result);
+        ksort($result,  SORT_NATURAL );
         return $result;
     }
 

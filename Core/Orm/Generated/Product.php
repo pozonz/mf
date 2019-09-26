@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-25 21:12:10
+//Last updated: 2019-09-26 20:32:26
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -10,6 +10,21 @@ class Product extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $title;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $subtitle;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $brand;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $type;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -37,6 +52,26 @@ class Product extends Orm
     private $description;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $price;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $compareAtPrice;
+    
+    /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $promoStart;
+    
+    /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $promoEnd;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -50,6 +85,54 @@ class Product extends Orm
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getSubtitle()
+    {
+        return $this->subtitle;
+    }
+    
+    /**
+     * @param mixed subtitle
+     */
+    public function setSubtitle($subtitle)
+    {
+        $this->subtitle = $subtitle;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getBrand()
+    {
+        return $this->brand;
+    }
+    
+    /**
+     * @param mixed brand
+     */
+    public function setBrand($brand)
+    {
+        $this->brand = $brand;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+    
+    /**
+     * @param mixed type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
     
     /**
@@ -130,6 +213,70 @@ class Product extends Orm
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+    
+    /**
+     * @param mixed price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCompareAtPrice()
+    {
+        return $this->compareAtPrice;
+    }
+    
+    /**
+     * @param mixed compareAtPrice
+     */
+    public function setCompareAtPrice($compareAtPrice)
+    {
+        $this->compareAtPrice = $compareAtPrice;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPromoStart()
+    {
+        return $this->promoStart;
+    }
+    
+    /**
+     * @param mixed promoStart
+     */
+    public function setPromoStart($promoStart)
+    {
+        $this->promoStart = $promoStart;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPromoEnd()
+    {
+        return $this->promoEnd;
+    }
+    
+    /**
+     * @param mixed promoEnd
+     */
+    public function setPromoEnd($promoEnd)
+    {
+        $this->promoEnd = $promoEnd;
     }
     
 }

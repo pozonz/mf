@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-26 14:38:30
+//Last updated: 2019-09-26 20:17:59
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -29,7 +29,17 @@ class ProductVariant extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $weight;
+    private $compareAtPrice;
+    
+    /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $promoStart;
+    
+    /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $promoEnd;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -40,6 +50,11 @@ class ProductVariant extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $alertIfLessThan;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $weight;
     
     /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -113,17 +128,49 @@ class ProductVariant extends Orm
     /**
      * @return mixed
      */
-    public function getWeight()
+    public function getCompareAtPrice()
     {
-        return $this->weight;
+        return $this->compareAtPrice;
     }
     
     /**
-     * @param mixed weight
+     * @param mixed compareAtPrice
      */
-    public function setWeight($weight)
+    public function setCompareAtPrice($compareAtPrice)
     {
-        $this->weight = $weight;
+        $this->compareAtPrice = $compareAtPrice;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPromoStart()
+    {
+        return $this->promoStart;
+    }
+    
+    /**
+     * @param mixed promoStart
+     */
+    public function setPromoStart($promoStart)
+    {
+        $this->promoStart = $promoStart;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPromoEnd()
+    {
+        return $this->promoEnd;
+    }
+    
+    /**
+     * @param mixed promoEnd
+     */
+    public function setPromoEnd($promoEnd)
+    {
+        $this->promoEnd = $promoEnd;
     }
     
     /**
@@ -156,6 +203,22 @@ class ProductVariant extends Orm
     public function setAlertIfLessThan($alertIfLessThan)
     {
         $this->alertIfLessThan = $alertIfLessThan;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+    
+    /**
+     * @param mixed weight
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
     }
     
     /**

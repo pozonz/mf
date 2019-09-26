@@ -38,7 +38,7 @@
 </head>
 
 
-<body {% block extraBody %}{% endblock %} class="{% block extraBodyClass %}{% endblock %}">
+<body {% block extraBody %}{% endblock %} class="{% if isFragment %}fragment-base{% endif %} {% block extraBodyClass %}{% endblock %}">
     <div class="">
         {% block bodyContainer %}
             <!--[if lt IE 10]>
