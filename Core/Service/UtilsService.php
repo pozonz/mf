@@ -184,7 +184,7 @@ class UtilsService
                 $parent = isset($categoryParent['cat' . $category->getId()]) ? $categoryParent['cat' . $category->getId()] : 0;
                 $rank = isset($categoryRank['cat' . $category->getId()]) ? $categoryRank['cat' . $category->getId()] : 0;
 
-                $node = new PageNode($itm->getId(), $parent, $rank, $itm->getHideFromWebNav() ? 0 : 1, $itm->getTitle(), $itm->getUrl(), $itm->objPageTempalte()->getFilename(), '', $itm->getAllowExtra(), $itm->getMaxParams());
+                $node = new PageNode($itm->getId(), $parent, $rank, $itm->getHideFromWebNav() ? 0 : 1, $itm->getTitle(), $itm->getUrl(), null/** $itm->objPageTempalte()->getFilename() */, '', $itm->getAllowExtra(), $itm->getMaxParams());
 //                $node->objContent = $itm->objContent();
                 $nodes[] = $node;
             }

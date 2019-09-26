@@ -88,10 +88,6 @@ class OrmForm extends AbstractType
         );
 
         switch ($column->widget) {
-            case '\\MillenniumFalcon\\Core\\Form\\Type\\ContentBlock':
-                $opts['ormModel'] = $orm->getModel();
-                break;
-
             case '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType':
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceMultiJson':
                 $slugify = new Slugify(['trim' => false]);

@@ -1,5 +1,5 @@
 {% extends 'cms/orms/orm.html.twig' %}
-{% block extraBody %}class="page-orm mode-asset"{% endblock %}
+{% block extraBodyClass %}page-orm mode-asset{% endblock %}
 
 {% set path = orm.parentFolder() ? orm.parentFolder().path(asset.root) : [{
 	id: '',

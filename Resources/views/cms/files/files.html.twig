@@ -1,5 +1,6 @@
 {% extends 'cms/base.html.twig' %}
-{% block extraBody %}class="page-files" data-class="Asset"{% endblock %}
+{% block extraBody %}data-class="Asset"{% endblock %}
+{% block extraBodyClass %}page-files{% endblock %}
 
 {% block externalHead %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.30.0/css/jquery.fileupload.min.css" />

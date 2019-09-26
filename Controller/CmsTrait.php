@@ -83,6 +83,14 @@ trait CmsTrait
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
+        /** @var _Model[] $result */
+        $result = _Model::active($pdo);
+        /** @var _Model[] $modelMapData */
+        $modelMapData = [];
+        foreach ($result as $itm) {
+            $modelMapData[$itm->getClassName()] = $itm;
+        }
+
         $nodes = [];
         $nodes[] = new PageNode(uniqid(), null, 0, 2, 'Login', '/manage/login', 'cms/login.html.twig');
 
@@ -109,16 +117,15 @@ trait CmsTrait
                 $nodes[] = new PageNode(uniqid(), $dataGroup->getBuiltInSectionCode(), 0, 2, 'Asset', '/manage/orms/Asset/', 'cms/files/file.html.twig', null, 1, 1);
             } else if ($dataGroup->getBuiltInSection() != 1) {
                 /** @var _Model[] $models */
-                $models = _Model::active($pdo, array(
-                    'whereSql' => 'm.dataGroups LIKE ? AND m.dataType = 0',
-                    'params' => array('%"' . $dataGroup->getId() . '"%'),
-                ));
+                $models = array_filter($modelMapData, function ($itm) use ($dataGroup) {
+                    return (strpos($itm->getDataGroups(), '"' . $dataGroup->getId() . '"') !== false && $itm->getDataType() == 0) ? 1 : 0;
+                });
                 if (count($models)) {
                     $data = array();
                     $data['Data'] = null;
                     foreach ($models as $model) {
                         $data[$model->getTitle()] = array(
-                            'class' => $model->getClassName(),
+                            'model' => $model,
                             'children' => array(),
                         );
                     }
@@ -146,14 +153,14 @@ trait CmsTrait
         $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 'admin', array(
             'TOOLS' => null,
             'Webpage Builder' => array(
-                'class' => 'Page',
+                'model' => $modelMapData['Page'],
                 'children' => array(
                     'Manage Templates' => array(
-                        'class' => 'PageTemplate',
+                        'model' => $modelMapData['PageTemplate'],
                         'children' => array(),
                     ),
                     'Manage Categories' => array(
-                        'class' => 'PageCategory',
+                        'model' => $modelMapData['PageCategory'],
                         'children' => array(),
                     ),
                 ),
@@ -166,15 +173,15 @@ trait CmsTrait
         $nodes[] = new PageNode(99922, 9992, 2, 2, 'Model', '/manage/admin/model-builder/copy/', 'cms/models/model.html.twig', null, 1, 1);
         $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 9992, array(
             'Content Blocks' => array(
-                'class' => 'FragmentBlock',
+                'model' => $modelMapData['FragmentBlock'],
                 'children' => array(),
             ),
             'Content Block Tags' => array(
-                'class' => 'FragmentTag',
+                'model' => $modelMapData['FragmentTag'],
                 'children' => array(),
             ),
             'Content Block Defaults' => array(
-                'class' => 'FragmentDefault',
+                'model' => $modelMapData['FragmentDefault'],
                 'children' => array(),
             ),
         ), '/manage/admin/orms/', 10));
@@ -182,36 +189,35 @@ trait CmsTrait
         //Admin: set up the rest
         $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 'admin', array(
             'Image Sizes' => array(
-                'class' => 'AssetSize',
+                'model' => $modelMapData['AssetSize'],
                 'children' => array(),
             ),
             'Form Builder' => array(
-                'class' => 'FormDescriptor',
+                'model' => $modelMapData['FormDescriptor'],
                 'children' => array(),
             ),
             'Admin' => null,
             'Users' => array(
-                'class' => 'User',
+                'model' => $modelMapData['User'],
                 'children' => array(),
             ),
             'Custom Sections' => array(
-                'class' => 'DataGroup',
+                'model' => $modelMapData['DataGroup'],
                 'children' => array(),
             ),
         ), '/manage/admin/orms/', 20));
 
         /** @var _Model[] $models */
-        $models = _Model::active($pdo, array(
-            'whereSql' => 'm.dataType = 1',
-            'params' => array(),
-        ));
+        $models = array_filter($modelMapData, function ($itm) use ($dataGroup) {
+            return ($itm->getDataType() == 1) ? 1 : 0;
+        });
 
         if (count($models)) {
             $data = array();
             $data['Data'] = null;
             foreach ($models as $model) {
                 $data[$model->getTitle()] = array(
-                    'class' => $model->getClassName(),
+                    'model' => $model,
                     'children' => array(),
                 );
             }
@@ -253,7 +259,7 @@ trait CmsTrait
                     $data = array();
                     foreach ($models as $model) {
                         $data[$model->getTitle()] = array(
-                            'class' => $model->getClassName(),
+                            'model' => $model,
                             'children' => array(),
                         );
                     }
@@ -288,11 +294,11 @@ trait CmsTrait
             if ($itm === null) {
                 $nodes[] = new PageNode(uniqid(), $parentId, $count, 1, $idx);
             } else {
-                $className = $itm['class'];
+                $model = $itm['model'];
+                $className = $model->getClassName();
                 $children = $itm['children'];
 
                 $fullClass = ModelService::fullClass($pdo, $className);
-                $model = _Model::getByField($pdo, 'className', $className);
                 $ormsTwig = $fullClass::getCmsOrmsTwig();
                 if (!$ormsTwig) {
                     $ormsTwig = $ormsListTwig[$model->getListType()];

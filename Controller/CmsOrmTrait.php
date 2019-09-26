@@ -140,6 +140,11 @@ trait CmsOrmTrait
      */
     public function orm($className, $ormId)
     {
+        $request = Request::createFromGlobals();
+        if ($request->get('fragment') == 1) {
+            $this->container->get('profiler')->disable();
+        }
+
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $orm = $this->_orm($pdo, $className, $ormId);
@@ -215,6 +220,7 @@ trait CmsOrmTrait
             'pdo' => $pdo,
         ));
 
+        $params['fragmentSubmitted'] = 0;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $isNew = $orm->getId() ? 0 : 1;
@@ -223,6 +229,11 @@ trait CmsOrmTrait
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $orm->setLastEditedBy($user->getId());
             $orm->save();
+
+            if ($isNew) {
+                $orm->setRank($orm->getId());
+                $orm->save();
+            }
 
             if ($callback) {
                 call_user_func($callback, $form, $orm);
@@ -233,6 +244,8 @@ trait CmsOrmTrait
                 throw new RedirectException($baseUrl . $orm->getId() . '?returnUrl=' . urlencode($returnUrl));
             } else if ($request->get('submit') == 'Save') {
                 throw new RedirectException($returnUrl);
+            } else if ($request->get('submit') == 'Save changes') {
+                $params['fragmentSubmitted'] = 1;
             }
         }
 

@@ -37,10 +37,10 @@
     <script id="product-variant-list-item" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm-custom-productvariant.tr.twig' %}</script>
 
     <div id="product-vairant" class="modal fade" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">
-        {{ render(controller('MillenniumFalcon\\Controller\\CmsFormController::productVariant', {
-            productUniqid: orm.uniqid,
-            variantId: app.request.get('variantId')
-        })) }}
+        {#{{ render(controller('MillenniumFalcon\\Controller\\CmsFormController::productVariant', {#}
+            {#productUniqid: orm.uniqid,#}
+            {#variantId: app.request.get('variantId')#}
+        {#})) }}#}
     </div>
 
     {{ parent() }}
