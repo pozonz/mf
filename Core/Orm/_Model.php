@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Orm;
 
+use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Orm;
 use function ZendTest\Code\Reflection\TestAsset\function1;
 
@@ -51,9 +52,9 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
 
     /**
      * _Model constructor.
-     * @param \PDO $pdo
+     * @param Connection $pdo
      */
-    public function __construct(\PDO $pdo)
+    public function __construct(Connection $pdo)
     {
         $this->setTitle('New models');
         $this->setClassName('NewModel');

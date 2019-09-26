@@ -2,10 +2,12 @@
 
 namespace MillenniumFalcon\Core;
 
+use Doctrine\DBAL\Connection;
+
 class Db
 {
     /**
-     * @var \PDO
+     * @var Connection
      */
     private $pdo;
 
@@ -16,10 +18,10 @@ class Db
 
     /**
      * Db constructor.
-     * @param \PDO $pdo
+     * @param Connection $pdo
      * @param $table
      */
-    public function __construct(\PDO $pdo, $table)
+    public function __construct(Connection $pdo, $table)
     {
         $this->pdo = $pdo;
         $this->table = $table;

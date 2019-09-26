@@ -2,7 +2,6 @@
 //Last updated: 2019-04-30 11:33:32
 namespace MillenniumFalcon\Core\Orm\Traits;
 
-use MillenniumFalcon\Core\Orm\AssetOrm;
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\UtilsService;
 

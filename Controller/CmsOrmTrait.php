@@ -24,9 +24,7 @@ trait CmsOrmTrait
      */
     public function pages()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
 
@@ -52,9 +50,7 @@ trait CmsOrmTrait
      */
     public function orms($className)
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         /** @var _Model $model */
         $model = _Model::getByField($pdo, 'className', $className);
@@ -106,9 +102,7 @@ trait CmsOrmTrait
     public function page($ormId)
     {
         $className = 'Page';
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $orm = $this->_orm($pdo, $className, $ormId);
         return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmPageForm', function () {
@@ -127,9 +121,7 @@ trait CmsOrmTrait
     {
         $className = 'Asset';
 
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $orm = $this->_orm($pdo, $className, $ormId);
         return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmAssetForm', function(Form $form, $orm) use ($pdo) {
@@ -148,9 +140,7 @@ trait CmsOrmTrait
      */
     public function orm($className, $ormId)
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $orm = $this->_orm($pdo, $className, $ormId);
         return $this->_ormPageWithForm($pdo, $className, $orm);
@@ -164,9 +154,7 @@ trait CmsOrmTrait
      */
     public function copyOrm($className, $ormId)
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $orm = $this->_orm($pdo, $className, $ormId);
         $orm->setUniqid(uniqid());

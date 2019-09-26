@@ -5,8 +5,6 @@ namespace MillenniumFalcon\Core\Service;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Nestable\Tree;
-use MillenniumFalcon\Core\Orm\Page;
-use MillenniumFalcon\Core\Orm\PageCategory;
 
 class UtilsService
 {
@@ -34,8 +32,7 @@ class UtilsService
      */
     public function getBlockDropdownOptions()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->connection->getWrappedConnection();
+        $pdo = $this->connection;
 
         $fullClass = ModelService::fullClass($pdo, 'FragmentBlock');
         $blocks = $fullClass::active($pdo);
@@ -165,15 +162,14 @@ class UtilsService
      */
     public function nav($categoryCode)
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->connection->getWrappedConnection();
+        $pdo = $this->connection;
 
         $result = null;
-        /** @var PageCategory $category */
-        $category = PageCategory::getByField($pdo, 'code', $categoryCode);
+        $fullClass = ModelService::fullClass($pdo, 'PageCategory');
+        $category = $fullClass::getByField($pdo, 'code', $categoryCode);
         if ($category) {
-            /** @var Page[] $pages */
-            $pages = Page::data($pdo, array(
+            $fullClass = ModelService::fullClass($pdo, 'Page');
+            $pages = $fullClass::data($pdo, array(
                 'whereSql' => 'm.category LIKE ? ',
                 'params' => array('%"' . $category->getId() . '"%'),
             ));

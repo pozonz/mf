@@ -25,9 +25,7 @@ trait CmsRestTrait
      */
     public function cmsRestColumnSort()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $data = json_decode($request->get('data'));
@@ -50,9 +48,7 @@ trait CmsRestTrait
      */
     public function cmsRestNestableSort()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $data = json_decode($request->get('data'));
@@ -76,9 +72,7 @@ trait CmsRestTrait
      */
     public function cmsRestNestableClosed()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $id = $request->get('id');
@@ -103,9 +97,7 @@ trait CmsRestTrait
      */
     public function cmsRestStatus()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $status = $request->get('status');
@@ -127,9 +119,7 @@ trait CmsRestTrait
      */
     public function cmsRestDelete()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $status = $request->get('status');
@@ -150,9 +140,7 @@ trait CmsRestTrait
      */
     public function cmsRestCatCount()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'PageCategory');
         $pageCategories = $fullClass::active($pdo);
@@ -192,9 +180,7 @@ trait CmsRestTrait
      */
     public function cmsRestPagesSort()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $cat = $request->get('cat');
@@ -230,9 +216,7 @@ trait CmsRestTrait
      */
     public function cmsRestPageChange()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $id = $request->get('id');
@@ -277,9 +261,7 @@ trait CmsRestTrait
      */
     public function cmsRestPageClosed()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $id = $request->get('id');

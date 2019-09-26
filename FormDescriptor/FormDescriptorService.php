@@ -1,11 +1,6 @@
 <?php
 namespace MillenniumFalcon\FormDescriptor;
 
-//use Pz\Common\Utils;
-//use Pz\Form\Builder\FormBuilder;
-//use Pz\Orm\FormDescriptor;
-//use Pz\Orm\FormSubmission;
-use MillenniumFalcon\Core\Orm\FormSubmission;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormBuilder;
@@ -34,9 +29,7 @@ class FormDescriptorService
     {
         $orm = isset($options['orm']) && $options['orm'] ? $options['orm'] : null;
 
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'FormDescriptor');
         $formDescriptor = $fullClass::getByField($pdo, 'code', $code);
@@ -80,7 +73,8 @@ class FormDescriptorService
 
                 if ($formDescriptor->getRecipients()) {
                     $code = uniqid();
-                    $submission = new FormSubmission($pdo);
+                    $fullClass = ModelService::fullClass($pdo, 'FormSubmission');
+                    $submission = new $fullClass($pdo);
                     $submission->setTitle("{$formDescriptor->getTitle()} #{$code} " .  (isset($data['email']) ? $data['email'] : ''));
                     $submission->setUniqueId($code);
                     $submission->setDate(date('Y-m-d H:i:s'));

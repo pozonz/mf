@@ -25,9 +25,7 @@ trait WebTrait
      */
     public function getNodes()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'Page');
         return $fullClass::data($pdo);

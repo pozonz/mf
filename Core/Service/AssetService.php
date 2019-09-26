@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Service;
 
+use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -25,7 +26,7 @@ class AssetService
      * @return \Pz\Router\InterfaceNode
      */
     public function getRoot() {
-        return static::getFolderRoot($this->connection->getWrappedConnection(), 0);
+        return static::getFolderRoot($this->connection, 0);
     }
 
     /**
@@ -79,12 +80,12 @@ class AssetService
     }
 
     /**
-     * @param \PDO $pdo
+     * @param Connection $pdo
      * @param UploadedFile $file
      * @return JsonResponse
      * @throws \Exception
      */
-    static public function processUploadedFile(\PDO $pdo, UploadedFile $file)
+    static public function processUploadedFile(Connection $pdo, UploadedFile $file)
     {
         $request = Request::createFromGlobals();
         $parentId = $request->request->get('parentId') ?: 0;
@@ -112,12 +113,12 @@ class AssetService
     }
 
     /**
-     * @param \PDO $pdo
+     * @param Connection $pdo
      * @param UploadedFile $file
      * @param $orm
      * @return JsonResponse
      */
-    static public function processUploadedFileWithAsset(\PDO $pdo, UploadedFile $file, $orm)
+    static public function processUploadedFileWithAsset(Connection $pdo, UploadedFile $file, $orm)
     {
         static::removeFile($orm);
         static::removeCaches($pdo, $orm);

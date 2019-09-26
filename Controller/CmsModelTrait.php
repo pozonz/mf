@@ -18,9 +18,7 @@ trait CmsModelTrait
      */
     public function model($modelId)
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $model = _Model::getById($pdo, $modelId);
         if (!$model) {
@@ -36,9 +34,7 @@ trait CmsModelTrait
      */
     public function copyModel($modelId)
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $model = _Model::getById($pdo, $modelId);
         if (!$model) {
@@ -109,8 +105,7 @@ trait CmsModelTrait
      */
     private function setGenereatedFile(_Model $orm)
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $myClass = get_class($orm);
         $fieldChoices = $myClass::getFieldChoices();

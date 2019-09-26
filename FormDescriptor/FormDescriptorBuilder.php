@@ -98,8 +98,7 @@ class FormDescriptorBuilder extends AbstractType
     public function getChoicesForField($field)
     {
         if (isset($field->sql)) {
-            /** @var \PDO $pdo */
-            $pdo = $this->connection->getWrappedConnection();
+            $pdo = $this->connection;
             $stmt = $pdo->executeQuery($field->sql);
             $stmt->execute();
             $choices = array();

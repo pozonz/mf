@@ -25,9 +25,7 @@ trait CmsRestProductTrait
      */
     public function cmsProductVariants()
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $productUniqid = $request->get('productUniqid');

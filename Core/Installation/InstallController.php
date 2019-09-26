@@ -3,7 +3,6 @@
 namespace MillenniumFalcon\Core\Installation;
 
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Orm\DataGroup;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,10 +16,8 @@ class InstallController extends Controller
     {
         ini_set('max_execution_time', 9999);
         ini_set('memory_limit', '9999M');
-        
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         //Create tables
         static::populateDb($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
@@ -142,7 +139,8 @@ class InstallController extends Controller
      */
     static public function addDefaultUser($pdo, $obj, $fullClass)
     {
-        $result = DataGroup::data($pdo);
+        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
+        $result = $fullClass::data($pdo);
         $dataGroup = array_map(function ($itm) {
             return $itm->getId();
         }, $result);

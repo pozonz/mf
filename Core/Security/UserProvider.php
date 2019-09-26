@@ -28,7 +28,7 @@ class UserProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        $pdo = $this->conn->getWrappedConnection();
+        $pdo = $this->conn;
         $fullClass = ModelService::fullClass($pdo, 'User');
         return $fullClass === $class;
     }
@@ -42,7 +42,7 @@ class UserProvider implements UserProviderInterface
             );
         }
 
-        $pdo = $this->conn->getWrappedConnection();
+        $pdo = $this->conn;
         $fullClass = ModelService::fullClass($pdo, 'User');
         $user = $fullClass::getByField($pdo, 'title', $username);
 

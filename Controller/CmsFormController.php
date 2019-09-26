@@ -19,7 +19,7 @@ class CmsFormController extends AbstractController
      */
     function productVariant($productUniqid, $variantId = null)
     {
-        $pdo = $this->container->get('doctrine')->getConnection()->getWrappedConnection();
+        $pdo = $this->container->get('doctrine')->getConnection();
 
         $request = Request::createFromGlobals();
 

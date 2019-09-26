@@ -9,8 +9,6 @@ use MillenniumFalcon\Core\Form\Builder\Orm;
 use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Orm\DataGroup;
-use MillenniumFalcon\Core\Orm\User;
 use MillenniumFalcon\Core\Redirect\RedirectException;
 use MillenniumFalcon\Core\Router;
 use MillenniumFalcon\Core\Service\ModelService;
@@ -76,7 +74,6 @@ trait CmsTrait
      */
     protected function getNodes()
     {
-        /** @var User $cmsUser */
         $cmsUser = $this->container->get('security.token_storage')->getToken()->getUser();
         if (!$cmsUser || gettype($cmsUser) == 'string') {
             $accessibleSections = [];
@@ -84,15 +81,13 @@ trait CmsTrait
             $accessibleSections = $cmsUser->objAccessibleSections();
         }
 
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $nodes = [];
         $nodes[] = new PageNode(uniqid(), null, 0, 2, 'Login', '/manage/login', 'cms/login.html.twig');
 
-        /** @var DataGroup[] $dataGroups */
-        $dataGroups = DataGroup::active($pdo);
+        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
+        $dataGroups = $fullClass::active($pdo);
         foreach ($dataGroups as $dataGroupIdx => $dataGroup) {
             if (!in_array($dataGroup->getId(), $accessibleSections)) {
                 continue;

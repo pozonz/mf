@@ -3,13 +3,14 @@
 namespace MillenniumFalcon\Core;
 
 use Cocur\Slugify\Slugify;
+use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 
 abstract class Orm implements \JsonSerializable
 {
     /**
-     * @var \PDO
+     * @var Connection
      */
     private $pdo;
 
@@ -99,10 +100,10 @@ abstract class Orm implements \JsonSerializable
     private $closed;
 
     /**
-     * Walle constructor.
-     * @param \PDO $pdo
+     * Orm constructor.
+     * @param Connection $pdo
      */
-    public function __construct(\PDO $pdo)
+    public function __construct(Connection $pdo)
     {
         $this->pdo = $pdo;
 
@@ -114,17 +115,17 @@ abstract class Orm implements \JsonSerializable
     }
 
     /**
-     * @return \PDO
+     * @return Connection
      */
-    public function getPdo(): \PDO
+    public function getPdo(): Connection
     {
         return $this->pdo;
     }
 
     /**
-     * @param \PDO $pdo
+     * @param Connection $pdo
      */
-    public function setPdo(\PDO $pdo = null)
+    public function setPdo(Connection $pdo): void
     {
         $this->pdo = $pdo;
     }
@@ -445,11 +446,11 @@ abstract class Orm implements \JsonSerializable
     }
 
     /**
-     * @param \PDO $pdo
+     * @param Connection $pdo
      * @param $id
      * @return array|null
      */
-    static public function getByField(\PDO $pdo, $field, $value)
+    static public function getByField(Connection $pdo, $field, $value)
     {
         return static::data($pdo, array(
             'whereSql' => "m.$field = ?",
@@ -459,21 +460,21 @@ abstract class Orm implements \JsonSerializable
     }
 
     /**
-     * @param \PDO $pdo
+     * @param Connection $pdo
      * @param $id
      * @return array|null
      */
-    static public function getById(\PDO $pdo, $id)
+    static public function getById(Connection $pdo, $id)
     {
         return static::getByField($pdo, 'id', $id);
     }
 
     /**
-     * @param \PDO $pdo
+     * @param Connection $pdo
      * @param $slug
      * @return array|null
      */
-    static public function getBySlug(\PDO $pdo, $slug)
+    static public function getBySlug(Connection $pdo, $slug)
     {
         return static::getByField($pdo, 'slug', $slug);
     }
@@ -494,11 +495,11 @@ abstract class Orm implements \JsonSerializable
     }
 
     /**
-     * @param \PDO $pdo
+     * @param Connection $pdo
      * @param array $options
      * @return array|null
      */
-    static public function data(\PDO $pdo, $options = array())
+    static public function data(Connection $pdo, $options = array())
     {
         $options['select'] = isset($options['select']) && !empty($options['select']) ? $options['select'] : 'm.*';
         $options['joins'] = isset($options['joins']) && !empty($options['joins']) ? $options['joins'] : null;

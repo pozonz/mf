@@ -156,6 +156,6 @@ trait UserTrait
         $conn = \Doctrine\DBAL\DriverManager::getConnection(array(
             'url' => getenv('DATABASE_URL'),
         ), new \Doctrine\DBAL\Configuration());
-        $this->setPdo($conn->getWrappedConnection());
+        $this->setPdo($conn);
     }
 }

@@ -15,23 +15,6 @@ class ModelService
         $this->connection = $connection;
     }
 
-//    /**
-//     * @param $className
-//     * @return mixed
-//     */
-//    public function create($className, $uniqId = null)
-//    {
-//        if (!$uniqId) {
-//            $uniqId = uniqid();
-//        }
-//
-//        $pdo = $this->connection->getWrappedConnection();
-//        $fullClassName = static::fullClass($pdo, $className);
-//        $orm = new $fullClassName($pdo);
-//        $orm->setUniqid($uniqId);
-//        return $orm;
-//    }
-
     /**
      * @param $className
      * @param $field
@@ -89,7 +72,7 @@ class ModelService
      */
     public function data($className, $options = array())
     {
-        $pdo = $this->connection->getWrappedConnection();
+        $pdo = $this->connection;
         $fullClassName = static::fullClass($pdo, $className);
         return $fullClassName::data($pdo, $options);
     }
@@ -104,10 +87,19 @@ class ModelService
             return "\\MillenniumFalcon\\Core\\Orm\\_Model";
         }
 
+        //temporary solution
+        $appClass = "\\App\\Orm\\{$className}";
+        $cmsClass = "\\MillenniumFalcon\\Core\\Orm\\{$className}";
+        if (class_exists($appClass)) {
+            return $appClass;
+        } elseif (class_exists($cmsClass)) {
+            return $cmsClass;
+        }
+
         /** @var _Model $model */
         $model = _Model::getByField($pdo, 'className', $className);
         if (!$model) {
-            throw new \Exception("Class $className Not Found");
+            throw new \Exception("Class \"{$className}\" Not Found");
         }
         return $model->getNamespace() . '\\' . $model->getClassName();
     }

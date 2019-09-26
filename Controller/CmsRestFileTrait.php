@@ -25,8 +25,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxFilesChosenRank()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
         $request = Request::createFromGlobals();
@@ -57,8 +56,7 @@ trait CmsRestFileTrait
     {
         $data = array();
 
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
         $request = Request::createFromGlobals();
@@ -87,8 +85,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxFiles()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
 
@@ -141,8 +138,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxFolders()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $currentFolderId = $request->get('currentFolderId') ?: 0;
@@ -159,8 +155,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxNav()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $currentFolderId = $request->get('currentFolderId') ?: 0;
@@ -192,8 +187,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxAddFolder()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $title = $request->get('title');
@@ -224,8 +218,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxEditFolder()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
 
@@ -246,8 +239,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxFoldersUpdate()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $request = Request::createFromGlobals();
@@ -267,8 +259,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxFileMove()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $data = json_decode($request->get('data'));
@@ -290,8 +281,7 @@ trait CmsRestFileTrait
         $request = Request::createFromGlobals();
         $id = $request->get('id');
 
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $orm = $fullClass::getById($pdo, $id);
@@ -311,8 +301,7 @@ trait CmsRestFileTrait
         $request = Request::createFromGlobals();
         $id = $request->get('id');
 
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $orm = $fullClass::getById($pdo, $id);
@@ -331,8 +320,7 @@ trait CmsRestFileTrait
         $request = Request::createFromGlobals();
         $id = $request->get('id');
 
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $orm = $fullClass::getById($pdo, $id);
@@ -345,8 +333,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxUpload()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $file = $files = $request->files->get('file');
@@ -369,8 +356,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxImageCrop()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $x = $request->get('x');
@@ -423,8 +409,7 @@ trait CmsRestFileTrait
      */
     public function assetAjaxFoldersFileSelect()
     {
-        /** @var \PDO $pdo */
-        $pdo = $this->container->get('doctrine.dbal.default_connection')->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $request = Request::createFromGlobals();
         $addOrDelete = $request->get('addOrDelete') ?: 0;

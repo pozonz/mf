@@ -22,9 +22,7 @@ class AssetController extends Controller
      */
     public function assetDownload($assetCode, $fileName = null)
     {
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $orm = $fullClass::getByField($pdo, 'code', $assetCode);
@@ -68,9 +66,7 @@ class AssetController extends Controller
         $request = Request::createFromGlobals();
         $useWebp = in_array('image/webp', $request->getAcceptableContentTypes());
 
-        $connection = $this->container->get('doctrine.dbal.default_connection');
-        /** @var \PDO $pdo */
-        $pdo = $connection->getWrappedConnection();
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $asset = $fullClass::getByField($pdo, 'code', $assetCode);
         if (!$asset) {
