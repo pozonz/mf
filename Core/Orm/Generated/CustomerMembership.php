@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-27 10:28:47
+//Last updated: 2019-09-27 11:18:15
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -15,6 +15,11 @@ class CustomerMembership extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $discount;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $default;
     
     /**
      * @return mixed
@@ -46,6 +51,22 @@ class CustomerMembership extends Orm
     public function setDiscount($discount)
     {
         $this->discount = $discount;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getDefault()
+    {
+        return $this->default;
+    }
+    
+    /**
+     * @param mixed default
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
     }
     
 }

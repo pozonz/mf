@@ -3,7 +3,9 @@
 namespace MillenniumFalcon\Core\Installation;
 
 use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\Reader\Xlsx;
 use MillenniumFalcon\Core\Service\ModelService;
+use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -496,6 +498,28 @@ class InstallController extends Controller
         $orm->setCategory(json_encode([$footerNav->getId()]));
         $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.html.twig')->getId());
         $orm->save();
+    }
+
+    /**
+     * @param $pdo
+     */
+    public function addDefaultShippingCountry($pdo, $obj, $fullClass)
+    {
+        $total = $fullClass::data($pdo, array(
+            'count' => 1,
+        ));
+        if ($total['count'] == 0) {
+            $csv = new Xlsx($obj->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/countries.xlsx');
+            $row = $csv->getNextRow();
+            while ($row = $csv->getNextRow()) {
+                if ($row[2]) {
+                    $orm = new $fullClass($pdo);
+                    $orm->setTitle($row[1]);
+                    $orm->setCode($row[2]);
+                    $orm->save();
+                }
+            }
+        }
     }
 
     /**
