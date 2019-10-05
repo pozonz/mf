@@ -11,4 +11,5 @@ class ConstraintUnique extends Constraint
 	public $message = '"%string%" has been used';
 	public $orm = null;
     public $field = null;
+    public $extraSql = null;
 }

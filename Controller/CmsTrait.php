@@ -52,10 +52,6 @@ trait CmsTrait
      */
     private function prepareParams()
     {
-        $dir = $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/views';
-        $loader = $this->container->get('twig')->getLoader();
-        $loader->addPath($dir);
-
         $request = Request::createFromGlobals();
         $requestUri = rtrim($request->getPathInfo(), '/');
         $params = $this->getParams($requestUri);

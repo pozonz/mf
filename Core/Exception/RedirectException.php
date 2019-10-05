@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Redirect;
+namespace MillenniumFalcon\Core\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 

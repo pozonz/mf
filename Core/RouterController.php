@@ -17,16 +17,16 @@ abstract class RouterController extends Controller
     protected $tree;
 
     /**
-     * @param $requestUri
+     * @param $path
      * @return array
      */
-    function getParams($requestUri)
+    function getParams($path)
     {
         $tree = new Tree($this->getNodes());
 
-        $fragments = explode('/', trim($requestUri, '/'));
+        $fragments = explode('/', trim($path, '/'));
         $args = array();
-        $node = $tree->getNodeByUrl($requestUri);
+        $node = $tree->getNodeByUrl($path);
         if (!$node) {
             for ($i = count($fragments), $il = 0; $i > $il; $i--) {
                 $parts = array_slice($fragments, 0, $i);

@@ -1,0 +1,294 @@
+{% extends 'base.html.twig' %}
+{% block bodyClass %}page-cart{% endblock %}
+
+{% block container %}
+    <div class="section section-white" style="padding-top: 100px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="title">My Shopping Cart</h1>
+                </div>
+                <div class="col-md-10 ml-auto mr-auto">
+                    <div class="table-responsive">
+                        <table class="table table-shopping">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th></th>
+                                    <th class="text-right">Price</th>
+                                    <th class="text-right">Quantity</th>
+                                    <th class="text-right" style="width: 10em;">Total</th>
+                                    <th class="text-right">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in 1..3 %}
+                                    <tr>
+                                        <td>
+                                            <img src="/images/product1.jpg" alt="" style="height: 150px;">
+                                        </td>
+                                        <td class="td-product">
+                                            <p>Product name</p>
+                                        </td>
+                                        <td class="td-price">
+                                            <small>$</small>
+                                            499
+                                        </td>
+                                        <td class="td-number td-quantity">
+                                            <input class="form-control qty" type="text" value="1">
+                                        </td>
+                                        <td class="td-number">
+                                            <small>$</small>
+                                            998
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-danger btn-sm btn-just-icon"><i class="nc-icon nc-simple-remove" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tbody class="js-cart-total">
+                                <tr class="calc-row">
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                    <td class="td-total">
+
+                                    </td>
+                                    <td class="td-total" colspan="2">
+                                        <p>Promo Code</p>
+                                        <input class="form-control js-cart-promo-code" placeholder="Promo Code" type="text" value="">
+                                        <button type="submit" class="btn btn-primary btn-sm mt-1 js-cart-promo-apply">Apply</button>
+                                    </td>
+                                </tr>
+                                <tr class="calc-row">
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                    <td class="td-total">
+                                        Subtotal
+                                    </td>
+                                    <td class="td-total" colspan="2">
+                                        <small>$</small>
+                                        $999.00
+                                    </td>
+                                </tr>
+                                <tr class="calc-row">
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                    <td class="td-total">
+                                        Discount
+                                    </td>
+                                    <td class="td-total" colspan="2">
+                                        -
+                                        <small>$</small>
+                                        $66.00
+                                    </td>
+                                </tr>
+                                <tr class="calc-row">
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                    <td class="td-total">
+                                        After discount
+                                    </td>
+                                    <td class="td-total" colspan="2">
+                                        <small>$</small>
+                                        $800.00
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="order-info" class="container mb-5">
+        <form method="post" class="settings-form" action="#order-info" novalidate autocomplete="off">
+            <div class="row">
+                <div class="col-md-6 js-billing">
+                    <h3 class="mb-3">Send invoice to</h3>
+                    <div class="form-group pb-3">
+                        <label>Email address:</label>
+                        <input type="text" class="form-control border-input">
+                    </div>
+                    <h3 class="mb-3">Billing Address</h3>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>First name:</label>
+                                <input type="text" class="form-control border-input">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>Last name:</label>
+                                <input type="text" class="form-control border-input">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>Phone number:</label>
+                                <input type="text" class="form-control border-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Address:</label>
+                        <input type="text" class="form-control border-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Address 2:</label>
+                        <input type="text" class="form-control border-input">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>City:</label>
+                                <input type="text" class="form-control border-input">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>Postcode:</label>
+                                <input type="text" class="form-control border-input">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>Region:</label>
+                                <input type="text" class="form-control border-input">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>Country:</label>
+                                <input type="text" class="form-control border-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input">
+                            <span class="form-check-sign"></span>
+                            Save this address
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Note:</label>
+                        <textarea id="cart_note" name="cart[note]" required="required" class="form-control border-input"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6 js-shipping">
+                    <h3 class="mb-3">Shipping Address</h3>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input">
+                            <span class="form-check-sign"></span>
+                            Same as billing address
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-4 pt-2 ml-auto">
+                    <div class="title">
+                        <h3>Choose a delivery option</h3>
+                    </div>
+                    <div class="form-check-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" data-com.agilebits.onepassword.user-edited="yes"> Standard Delivery (5-7 days) <strong>$10.00</strong></a>
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
+                    <div class="form-check-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" checked="" data-com.agilebits.onepassword.user-edited="yes"> Fast Delivery (3-5 days) <strong>$20.00</strong></a>
+                            <span class="form-check-sign"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center cart-total-summary">
+                    <div class="row">
+                        <div class="col-md-10 ml-auto mr-auto">
+                            <div class="table-responsive">
+                                <table class="table table-shopping">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center"></th>
+                                            <th></th>
+                                            <th class="text-right">Price</th>
+                                            <th class="text-right">Quantity</th>
+                                            <th class="text-right" style="width: 10em;">Total</th>
+                                            <th class="text-right">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="js-cart-total-full">
+                                        <tr class="calc-row">
+                                            <td colspan="2"></td>
+                                            <td></td>
+                                            <td class="td-total">
+                                                Subtotal
+                                            </td>
+                                            <td class="td-total" colspan="2">
+                                                <small>$</small>
+                                                900.00
+                                            </td>
+                                        </tr>
+                                        <tr class="calc-row">
+                                            <td colspan="2"></td>
+                                            <td></td>
+                                            <td class="td-total">
+                                                Discount
+                                            </td>
+                                            <td class="td-total" colspan="2">
+                                                -
+                                                <small>$</small>
+                                                100.00
+                                            </td>
+                                        </tr>
+
+                                        <tr class="calc-row">
+                                            <td colspan="2"></td>
+                                            <td></td>
+                                            <td class="td-total">
+                                                GST
+                                            </td>
+                                            <td class="td-total" colspan="2">
+                                                <small>$</small>
+                                                200.00
+                                            </td>
+                                        </tr>
+                                        <tr class="calc-row">
+                                            <td colspan="2"></td>
+                                            <td></td>
+                                            <td class="td-total">
+                                                Delivery fee
+                                            </td>
+                                            <td class="td-total" colspan="2">
+                                                <small>$</small>
+                                                50.00
+                                            </td>
+                                        </tr>
+                                        <tr class="calc-row">
+                                            <td colspan="2"></td>
+                                            <td></td>
+                                            <td class="td-total">
+                                                Total
+                                            </td>
+                                            <td class="td-total" colspan="2">
+                                                <small>$</small>
+                                                800.00
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center mt-5">
+                    <a href="/wine" class="btn btn-info btn-round">&#10096; Continue Shopping</a>
+                    <button type="submit" class="btn btn-danger btn-round">Check out &#10097;</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

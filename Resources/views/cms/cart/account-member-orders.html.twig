@@ -1,0 +1,68 @@
+{% extends 'cms/cart/account-member.html.twig' %}
+
+{% block memberContentWraper %}
+    <div class="row">
+        <div class="col-10 mx-auto">
+            <h2 class="mb-5">Previous Orders</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th class="text-right">Total</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in 1..5 %}
+                            <tr>
+                                <td>#20181245</td>
+                                <td>15 Oct 2013</td>
+                                <td>Andrew Mike</td>
+                                <td class="text-right">$500</td>
+                                <td class="td-actions text-right">
+                                    <a href="/account/order" class="btn btn-success btn-sm">
+                                        <i class="fa fa-cart-plus"></i>
+                                    </a>
+                                    <a href="/account/order" class="btn btn-info btn-sm">
+                                        <i class="fa fa-info"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-12 mt-5">
+            <div class="pagination-area">
+                <ul class="pagination pagination-primary pagination-no-border justify-content-center">
+                    <li class="page-item">
+                        <a href="#paper-kit" class="page-link"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+                    </li>
+                    <li class="page-item active">
+                        <a href="#paper-kit" class="page-link">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a href="#paper-kit" class="page-link">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a href="#paper-kit" class="page-link">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a href="#paper-kit" class="page-link">4</a>
+                    </li>
+                    <li class="page-item">
+                        <a href="#paper-kit" class="page-link">5</a>
+                    </li>
+                    <li class="page-item">
+                        <a href="#paper-kit" class="page-link"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block bodyClass %}register-page full-screen page-login{% endblock %}
+
+{% block container %}
+    <div class="wrapper">
+        <div class="page-header" style="background-image: url('/images/home.jpg');">
+            <div class="filter"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-6 ml-auto mr-auto">
+                        <div class="card card-register">
+                            <h3 class="card-title">Forget Your Password?</h3>
+                            <div class="my-3">
+                                <hr />
+                            </div>
+                            <form class="register-form">
+                                <label>Email:</label>
+                                <input class="form-control" placeholder="Email" type="email">
+                                <button class="btn btn-default btn-block btn-round">Submit</button>
+                            </form>
+                            <div class="forgot">
+                                <a href="/login" class="btn btn-link btn-primary">&#10096; Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

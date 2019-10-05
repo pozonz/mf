@@ -15,8 +15,8 @@ trait WebTrait
     public function web()
     {
         $request = Request::createFromGlobals();
-        $requestUri = rtrim($request->getPathInfo(), '/');
-        $params = $this->getParams($requestUri);
+        $path = rtrim($request->getPathInfo(), '/');
+        $params = $this->getParams($path);
         return $this->render($params['node']->getTemplate(), $params);
     }
 

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block bodyClass %}page-member{% endblock %}
+
+{% block container %}
+    {% set url = app.request.uri %}
+    <div class="section section-gray" style="padding-top: 100px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card card-refine">
+                        <div class="panel-group">
+                            <div class="card-header card-collapse {% if 'dashboard' in url %}bg-danger{% endif %}">
+                                <h5 class="mb-0 panel-title">
+                                    <a href="/account/dashboard" class="{% if 'dashboard' in url %}text-white{% endif %}">
+                                        Dashboard
+                                    </a>
+                                </h5>
+                            </div>
+
+                            <div class="card-header card-collapse {% if 'order' in url %}bg-danger{% endif %}">
+                                <h5 class="mb-0 panel-title">
+                                    <a href="/account/orders" class="{% if 'order' in url %}text-white{% endif %}">
+                                        Previous Orders
+                                    </a>
+                                </h5>
+                            </div>
+
+                            <div class="card-header card-collapse {% if 'address' in url %}bg-danger{% endif %}">
+                                <h5 class="mb-0 panel-title">
+                                    <a href="/account/addresses" class="{% if 'address' in url %}text-white{% endif %}">
+                                        Saved Addresses
+                                    </a>
+                                </h5>
+                            </div>
+
+                            <div class="card-header card-collapse {% if 'profile' in url %}bg-danger{% endif %}">
+                                <h5 class="mb-0 panel-title">
+                                    <a href="/account/profile" class="{% if 'profile' in url %}text-white{% endif %}">
+                                        Personal Information
+                                    </a>
+                                </h5>
+                            </div>
+
+                            <div class="card-header card-collapse {% if 'password' in url %}bg-danger{% endif %}">
+                                <h5 class="mb-0 panel-title">
+                                    <a href="/account/password" class="{% if 'password' in url %}text-white{% endif %}">
+                                        Change Password
+                                    </a>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card -->
+                </div>
+                <div class="col-md-9">
+                    <div class="pricing-1 section bg-white pt-2">
+                        <div class="container">
+                            {% block memberContentWraper%}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

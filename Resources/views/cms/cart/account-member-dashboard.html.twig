@@ -1,0 +1,97 @@
+{% extends 'cms/cart/account-member.html.twig' %}
+
+{% block memberContentWraper %}
+    <div class="col-10 mx-auto">
+        <h2 class="title text-center">Welcome back, Jason!</h2>
+
+        <div class="space-top"></div>
+        <div class="row">
+            <div class="col-md-4 p-1">
+                <div class="card card-pricing" data-color="orange">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <span class="icon-simple"><i class="nc-icon nc-basket"></i></span>
+                        </div>
+                        <p class="card-description">
+                            Total spent
+                        </p>
+                        <h3 class="card-title">$199</h3>
+                        <br />
+                        <div class="card-footer">
+                            <a href="#pablo" class="btn btn-neutral btn-round">View orders &#10097;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 p-1">
+                <div class="card card-pricing" data-color="purple">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <span class="icon-simple"><i class="nc-icon nc-bus-front-12"></i></span>
+                        </div>
+                        <p class="card-description">
+                            Saved addresses
+                        </p>
+                        <h3 class="card-title">3</h3>
+                        <br />
+                        <div class="card-footer">
+                            <a href="#pablo" class="btn btn-neutral btn-round">Manage addresses &#10097;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 p-1">
+                <div class="card card-pricing" data-color="green">
+                    <div class="card-body">
+                        <div class="card-icon">
+                            <span class="icon-simple"><i class="nc-icon nc-settings"></i></span>
+                        </div>
+                        <p class="card-description">
+                            Personal info
+                        </p>
+                        <h3 class="card-title"><i class="nc-icon nc-check-2"></i></h3>
+                        <br />
+                        <div class="card-footer">
+                            <a href="#pablo" class="btn btn-neutral btn-round">Edit Profile &#10097;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h4 class="mb-3">
+            Recent Orders
+            <small class="pl-2"><a href="/account/orders">view all previous orders <i class="fa fa-angle-right"></i></a></small>
+        </h4>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th class="text-right">Total</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in 0..5 %}
+                    <tr>
+                        <td>#20181245</td>
+                        <td>15 Oct 2013</td>
+                        <td>Andrew Mike</td>
+                        <td class="text-right">$500</td>
+                        <td class="td-actions text-right">
+                            <a href="/account/order" class="btn btn-success btn-sm">
+                                <i class="fa fa-cart-plus"></i>
+                            </a>
+                            <a href="/account/order" class="btn btn-info btn-sm">
+                                <i class="fa fa-info"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

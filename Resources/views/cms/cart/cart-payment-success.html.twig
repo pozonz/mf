@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block bodyClass %}page-cart{% endblock %}
+
+{% block container %}
+    <div class="features-1">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto text-center">
+                    <h2 class="title">Your order has been completed successfully!</h2>
+                    <h5 class="description"> Thank you for your purchase. Your order identifier is <strong>#f879das78f</strong>.
+                        An email confirmation of your purchase has been sent to your email address.</h5>
+                </div>
+            </div>
+            <div class="row pt-5">
+                <div class="col-md-6 mx-auto">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Subtotal:</td>
+                                    <td class="text-right">$999.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Discount:</td>
+                                    <td class="text-right">-$100.00</td>
+                                </tr>
+                                <tr>
+                                    <td>GST:</td>
+                                    <td class="text-right">$200.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Total:</td>
+                                    <td class="text-right">$800.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

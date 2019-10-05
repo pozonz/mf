@@ -1,0 +1,13 @@
+{% extends 'cms/cart/email/email-base.twig' %}
+
+{% block content %}
+    <p>
+        Dear {{ customer.firstName }}, <br /><br />
+
+        Thank you for registering with us! Please click the link below to activate your account. If the below link is not clickable, try copying and pasting it into the address bar of your web browser.<br />
+
+        <p style="text-align: center;">
+            <a href="{{ app.request.schemeAndHttpHost  }}/activate/{{ customer.resetToken }}">{{ app.request.schemeAndHttpHost  }}/activate/{{ customer.resetToken }}</a>
+        </p>
+    </p>
+{% endblock %}
