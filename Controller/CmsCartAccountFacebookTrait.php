@@ -1,6 +1,5 @@
 <?php
-namespace Pz\Controller;
-
+namespace MillenniumFalcon\Controller;
 
 use Pz\Orm\Customer;
 use Pz\Service\CartService;
@@ -17,7 +16,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Facebook\Facebook;
 
-trait TraitCartFacebookLogin
+trait CmsCartAccountFacebookTrait
 {
     /**
      * @route("/facebook/verify")
