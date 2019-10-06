@@ -4,7 +4,7 @@ namespace MillenniumFalcon\Core;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Nestable\Tree;
-use MillenniumFalcon\Core\Redirect\RedirectException;
+use MillenniumFalcon\Core\Exception\RedirectException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

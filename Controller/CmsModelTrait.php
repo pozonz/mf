@@ -5,7 +5,7 @@ namespace MillenniumFalcon\Controller;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Builder\ModelForm;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Redirect\RedirectException;
+use MillenniumFalcon\Core\Exception\RedirectException;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

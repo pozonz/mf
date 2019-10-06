@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block bodyClass %}register-page full-screen page-login{% endblock %}
+{% form_theme formView 'form.twig' %}
 
 {% block container %}
     <div class="wrapper">
@@ -10,12 +11,16 @@
                     <div class="col-lg-4 col-md-6 col-sm-6 ml-auto mr-auto">
                         <div class="card card-register">
                             <h3 class="card-title">Forget Your Password?</h3>
-                            <div class="my-3">
+                            <div class="">
                                 <hr />
                             </div>
-                            <form class="register-form">
-                                <label>Email:</label>
-                                <input class="form-control" placeholder="Email" type="email">
+                            <form method="post" class="register-form" novalidate autocomplete="off">
+                                <div class="mb-3">
+                                    {{ form_label(formView.title) }}
+                                    {{ form_widget(formView.title, {attr: {class: 'form-control mb-0', placeholder:'Email'}}) }}
+                                    {{ form_errors(formView.title) }}
+                                </div>
+                                {{ form_rest(formView) }}
                                 <button class="btn btn-default btn-block btn-round">Submit</button>
                             </form>
                             <div class="forgot">

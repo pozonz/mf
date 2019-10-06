@@ -2,7 +2,7 @@ MillenniumFalcon\:
     resource: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/*'
     exclude: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
-MillenniumFalcon\Core\Redirect\RedirectExceptionListener:
+MillenniumFalcon\Core\Exception\RedirectExceptionListener:
     tags:
         - { name: 'kernel.event_listener', event: 'kernel.exception', priority: 11}
 

@@ -1,34 +1,36 @@
 {% extends 'cms/cart/account-member.html.twig' %}
+{% form_theme formView 'form.twig' %}
 
 {% block memberContentWraper %}
-    <div class="row pt-2">
+    <div class="row">
         <div class="col-md-10 ml-auto mr-auto">
             <h2 class="mb-5">Personal Information</h2>
-            <form class="settings-form">
+            <form method="post" class="settings-form" novalidate autocomplete="off">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
-                        <div class="form-group">
-                            <label>First Name:</label>
-                            <input class="form-control border-input" placeholder="First Name" type="text">
-                        </div>
+                        {{ form_row(formView.firstName) }}
                     </div>
                     <div class="col-md-6 col-sm-6">
-                        <div class="form-group">
-                            <label>Last Name:</label>
-                            <input class="form-control border-input" placeholder="Last Name" type="text">
-                        </div>
+                        {{ form_row(formView.lastName) }}
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input class="form-control border-input" placeholder="Email" type="text">
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea class="form-control textarea-limited" placeholder="This is a textarea limited to 150 characters." rows="3" maxlength="150"></textarea>
-                </div>
-                <div class="text-center pt-2">
-                    <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
+
+                {{ form_row(formView.description) }}
+
+                {% if submitted == 1 %}
+                    <div class="alert alert-success">
+                        <div class="container">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <i class="nc-icon nc-simple-remove"></i>
+                            </button>
+                            <span>Your data has been updated</span>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {{ form_rest(formView) }}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-wd btn-info btn-round">Save</button>
                 </div>
             </form>
         </div>

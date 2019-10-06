@@ -7,7 +7,7 @@ use MillenniumFalcon\Core\Form\Builder\OrmForm;
 use MillenniumFalcon\Core\Nestable\Node;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Redirect\RedirectException;
+use MillenniumFalcon\Core\Exception\RedirectException;
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\Form\Form;

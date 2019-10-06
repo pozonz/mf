@@ -42,7 +42,7 @@
                             <div class="text-center">
                                 <h3 class="text-center mt-0 text-dark">Register</h3>
                             </div>
-                            <div class="my-3">
+                            <div class="mb-3">
                                 <hr/>
                             </div>
                             <form method="post" class="register-form" novalidate autocomplete="off">
@@ -64,7 +64,7 @@
 
                                 {% for passwordField in formView.passwordInput %}
                                     <div class="mb-3">
-                                        {{ form_widget(passwordField,{attr:{class:'form-control mb-0', placeholder: loop.index == 1 ? 'Password' : 'Repeat Password'}}) }}
+                                        {{ form_widget(passwordField,{attr:{class:'form-control mb-0', placeholder: loop.index == 1 ? 'Password' : 'Repeat password'}}) }}
                                         {{ form_errors(passwordField) }}
                                     </div>
                                 {% endfor %}
@@ -73,7 +73,7 @@
 
                                     <label style="color: black">
                                         {{ form_widget(formView.agree, {attr: {}}) }}
-                                        <span class="pl-2">I have read and agree with <a target="_blank" class="text-primary" href="/terms-and-conditions"><b>terms and conditions</b></a></span>
+                                        <span class="pl-2">I have read and agree with the <a target="_blank" class="text-primary" href="/terms-and-conditions"><b>Terms and Conditions</b></a></span>
                                     </label>
                                     {{ form_errors(formView.agree) }}
                                 </div>

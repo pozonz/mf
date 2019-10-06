@@ -3,7 +3,7 @@
 namespace MillenniumFalcon\Core\Twig;
 
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Redirect\RedirectException;
+use MillenniumFalcon\Core\Exception\RedirectException;
 use MillenniumFalcon\Core\Nestable\Tree;
 
 use Symfony\Component\DependencyInjection\Container;

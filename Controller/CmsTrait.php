@@ -9,7 +9,7 @@ use MillenniumFalcon\Core\Form\Builder\Orm;
 use MillenniumFalcon\Core\Nestable\PageNode;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
-use MillenniumFalcon\Core\Redirect\RedirectException;
+use MillenniumFalcon\Core\Exception\RedirectException;
 use MillenniumFalcon\Core\Router;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Twig\Extension;

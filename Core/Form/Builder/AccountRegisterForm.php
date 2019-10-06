@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CustomerRegisterForm extends AbstractType
+class AccountRegisterForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -55,7 +55,7 @@ class CustomerRegisterForm extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'required' => true,
                 'first_options' => array('label' => 'Password'),
-                'second_options' => array('label' => 'Repeat Password')
+                'second_options' => array('label' => 'Repeat password')
             ))
             ->add('agree', CheckboxType::class, array(
                 'label' => 'Agree:',

@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-10-05 10:52:45
+//Last updated: 2019-10-06 10:59:38
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -60,6 +60,11 @@ class Customer extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $membership;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $description;
     
     /**
      * @return mixed
@@ -235,6 +240,22 @@ class Customer extends Orm
     public function setMembership($membership)
     {
         $this->membership = $membership;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
+    /**
+     * @param mixed description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
     
 }
