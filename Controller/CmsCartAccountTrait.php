@@ -295,6 +295,11 @@ trait CmsCartAccountTrait
         if ($form->isSubmitted() && $form->isValid()) {
             $submitted = 1;
             $orm->save();
+
+            $returnUrl = $request->get('returnUrl');
+            if ($returnUrl) {
+                return new RedirectResponse($returnUrl);
+            }
         }
 
         $formView = $form->createView();
@@ -435,7 +440,7 @@ trait CmsCartAccountTrait
     }
 
     /**
-     * @route("/account/after_login")
+     * @route("/account/after-login")
      * @return Response
      */
     public function accountAfterLogin()

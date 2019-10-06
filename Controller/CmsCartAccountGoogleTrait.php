@@ -1,8 +1,8 @@
 <?php
 namespace MillenniumFalcon\Controller;
 
-use Pz\Orm\Customer;
-use Pz\Service\CartService;
+use MillenniumFalcon\Core\Service\CartService;
+use MillenniumFalcon\Core\Service\ModelService;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,38 +48,30 @@ trait CmsCartAccountGoogleTrait
             $oauth = new \Google_Service_Oauth2($client);
             $userInfo = $oauth->userinfo->get();
 
-            $connection = $this->container->get('doctrine.dbal.default_connection');
-            /** @var \PDO $pdo */
-            $pdo = $connection->getWrappedConnection();
+            $pdo = $this->container->get('doctrine.dbal.default_connection');
 
-            $customer = Customer::data($pdo, array(
-                'whereSql' => 'm.title = ? AND m.status = 1',
+            $fullClass = ModelService::fullClass($pdo, 'Customer');
+            $orm = $fullClass::data($pdo, array(
+                'whereSql' => 'm.title = ?',
                 'params' => array($userInfo->email),
                 'oneOrNull' => 1,
             ));
 
-            $redirectUrl = '/account/dashboard';
-            if (!$customer) {
-                $customer = new Customer($pdo);
-                $customer->setTitle($userInfo->email);
-                $customer->setFirstname($userInfo->givenName);
-                $customer->setLastname($userInfo->familyName);
-                $customer->setSource(CartService::CUSTOMER_GOOGLE);
-                $customer->setSourceId($userInfo->id);
-                $customer->setIsActivated(1);
-                $customer->save();
-                $redirectUrl = '/account/password?returnUrl=' . urlencode('/cart');
-            } else {
-                $orderContainer = $this->cartService->getOrderContainer();
-                if (count($orderContainer->getPendingItems())) {
-                    $redirectUrl = '/account/after_login';
-                }
+            $redirectUrl = '/account/after-login';
+            if (!$orm) {
+                $orm = new $fullClass($pdo);
+                $orm->setTitle($userInfo->email);
+                $orm->setFirstname($userInfo->givenName);
+                $orm->setLastname($userInfo->familyName);
+                $orm->setSource(CartService::CUSTOMER_GOOGLE);
+                $orm->setSourceId($userInfo->id);
+                $orm->setIsActivated(1);
+                $orm->save();
+                $redirectUrl = '/account/password?returnUrl=' . urlencode($redirectUrl);
             }
 
-
-
             $tokenStorage = $this->container->get('security.token_storage');
-            $token = new UsernamePasswordToken($customer, $customer->getPassword(), "public", $customer->getRoles());
+            $token = new UsernamePasswordToken($orm, $orm->getPassword(), "public", $orm->getRoles());
             $tokenStorage->setToken($token);
             $this->get('session')->set('_security_member', serialize($token));
             return new RedirectResponse($redirectUrl);

@@ -14,6 +14,7 @@ class CmsController extends RouterController
         CmsRestTrait,
         CmsCartAccountTrait,
         CmsCartAccountGoogleTrait,
+        CmsCartAccountFacebookTrait,
         CmsTrait;
 
     public function setContainer(ContainerInterface $container = null)

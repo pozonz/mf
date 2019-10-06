@@ -1,8 +1,8 @@
 <?php
 namespace MillenniumFalcon\Controller;
 
-use Pz\Orm\Customer;
-use Pz\Service\CartService;
+use MillenniumFalcon\Core\Service\CartService;
+use MillenniumFalcon\Core\Service\ModelService;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -95,37 +95,30 @@ trait CmsCartAccountFacebookTrait
                 $lastName = '';
             }
 
-            $connection = $this->container->get('doctrine.dbal.default_connection');
-            /** @var \PDO $pdo */
-            $pdo = $connection->getWrappedConnection();
+            $pdo = $this->container->get('doctrine.dbal.default_connection');
 
-            $customer = Customer::data($pdo, array(
+            $fullClass = ModelService::fullClass($pdo, 'Customer');
+            $orm = $fullClass::data($pdo, array(
                 'whereSql' => 'm.title = ? AND m.status = 1',
                 'params' => array($fbUser->getEmail()),
                 'oneOrNull' => 1,
             ));
 
-            $redirectUrl = '/account/dashboard';
-            if (!$customer) {
-                $customer = new Customer($pdo);
-                $customer->setTitle($fbUser->getEmail());
-                $customer->setFirstname($firstName);
-                $customer->setLastname($lastName);
-                $customer->setSource(CartService::CUSTOMER_FACEBOOK);
-                $customer->setSourceId($fbUser->getId());
-                $customer->setIsActivated(1);
-                $customer->save();
-                $redirectUrl = '/account/password?returnUrl=' . urlencode('/cart');
-            } else {
-                $orderContainer = $this->cartService->getOrderContainer();
-                if (count($orderContainer->getPendingItems())) {
-                    $redirectUrl = '/account/after_login';
-                }
+            $redirectUrl = '/account/after-login';
+            if (!$orm) {
+                $orm = new $fullClass($pdo);
+                $orm->setTitle($fbUser->getEmail());
+                $orm->setFirstname($firstName);
+                $orm->setLastname($lastName);
+                $orm->setSource(CartService::CUSTOMER_FACEBOOK);
+                $orm->setSourceId($fbUser->getId());
+                $orm->setIsActivated(1);
+                $orm->save();
+                $redirectUrl = '/account/password?returnUrl=' . urlencode($redirectUrl);
             }
 
-
             $tokenStorage = $this->container->get('security.token_storage');
-            $token = new UsernamePasswordToken($customer, $customer->getPassword(), "public", $customer->getRoles());
+            $token = new UsernamePasswordToken($orm, $orm->getPassword(), "public", $orm->getRoles());
             $tokenStorage->setToken($token);
             $this->get('session')->set('_security_member', serialize($token));
             return new RedirectResponse($redirectUrl);
