@@ -23,7 +23,8 @@
     "campaignmonitor/createsend-php": "^6.0",
     "facebook/graph-sdk": "^5.7",
     "google/apiclient": "^2.2",
-    "phpoffice/phpspreadsheet": "^1.2"
+    "phpoffice/phpspreadsheet": "^1.2",
+    "bluem/tree": "^3.1"
   },
   "autoload": {
     "psr-4": {

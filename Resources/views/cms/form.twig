@@ -58,7 +58,7 @@
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
     <select id="{{ id }}_select" class="js-choice_multi_json" multiple>
         {% for choice in choices %}
-            <option style="padding-left: {{ choice.level * 20 }}px" value="{{ choice.value }}" {% if choice.value == value %}selected{% endif %}>{{ choice.label }}</option>
+            <option style="padding-left: {{ choice.level * 20 }}px" value="{{ choice.value }}" {% if '"' ~ choice.value ~ '"' in value %}selected{% endif %}>{{ choice.label }}</option>
         {% endfor %}
     </select>
 {%- endblock choice_multi_json_tree_widget %}

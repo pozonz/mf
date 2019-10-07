@@ -2,10 +2,6 @@ install:
   resource: "../../Core/Installation"
   type: annotation
 
-asset:
-  resource: "../../Core/Asset"
-  type: annotation
-
 cms:
   resource: "../../Controller"
   type: annotation

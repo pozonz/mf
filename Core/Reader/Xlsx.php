@@ -47,6 +47,22 @@ class Xlsx
         $this->heighest = $this->sheet->getHighestRow();
     }
 
+    /**
+     * @return array|bool
+     */
+    public function getAllRows()
+    {
+        $rows = [];
+        while ($row = $this->getNextRow()) {
+            $rows[] = $row;
+        }
+        return $rows;
+    }
+
+    /**
+     * @return array|bool
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function getNextRow()
     {
         if ($this->count > $this->heighest) {
@@ -64,6 +80,10 @@ class Xlsx
         return $row;
     }
 
+    /**
+     * @return array|bool
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function getNextCalculatedRow()
     {
         if ($this->count > $this->heighest) {

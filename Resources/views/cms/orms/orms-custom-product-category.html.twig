@@ -7,6 +7,8 @@
         <a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
     </div>
 
+    <button class="js-update-category">Update product categories</button>
+    <div>&nbsp;</div>
 
     <div class="nestable-lists js-model-wrapper" data-modelname="{{ ormModel.className }}">
         <div class="dd" id="nestable">
@@ -25,4 +27,5 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Nestable/2012-10-15/jquery.nestable.min.js"></script>
     <script src="/cms/develop/js/orms-tree.js"></script>
+    <script src="/cms/develop/js/orms-product-category.js"></script>
 {% endblock %}

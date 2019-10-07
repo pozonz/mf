@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-26 20:17:59
+//Last updated: 2019-10-07 18:42:54
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -29,17 +29,7 @@ class ProductVariant extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $compareAtPrice;
-    
-    /**
-     * #pz datetime DEFAULT NULL
-     */
-    private $promoStart;
-    
-    /**
-     * #pz datetime DEFAULT NULL
-     */
-    private $promoEnd;
+    private $salePrice;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -128,49 +118,17 @@ class ProductVariant extends Orm
     /**
      * @return mixed
      */
-    public function getCompareAtPrice()
+    public function getSalePrice()
     {
-        return $this->compareAtPrice;
+        return $this->salePrice;
     }
     
     /**
-     * @param mixed compareAtPrice
+     * @param mixed salePrice
      */
-    public function setCompareAtPrice($compareAtPrice)
+    public function setSalePrice($salePrice)
     {
-        $this->compareAtPrice = $compareAtPrice;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getPromoStart()
-    {
-        return $this->promoStart;
-    }
-    
-    /**
-     * @param mixed promoStart
-     */
-    public function setPromoStart($promoStart)
-    {
-        $this->promoStart = $promoStart;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getPromoEnd()
-    {
-        return $this->promoEnd;
-    }
-    
-    /**
-     * @param mixed promoEnd
-     */
-    public function setPromoEnd($promoEnd)
-    {
-        $this->promoEnd = $promoEnd;
+        $this->salePrice = $salePrice;
     }
     
     /**

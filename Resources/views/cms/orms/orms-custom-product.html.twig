@@ -1,0 +1,74 @@
+{% extends 'cms/orms/orms.html.twig' %}
+
+{% form_theme formView 'cms/form.twig' %}
+
+{% block container %}
+    <div id="h1">
+        <h1>{{ ormModel.title }}</h1>
+        <a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
+    </div>
+
+    <div style="text-align: center;">
+        <form action="{{ app.request.pathInfo }}" autocomplete="off" class="edit" style="text-align: left" novalidate method="GET">
+            <div class="formStyle">
+                {{ form_label(formView.category) }}
+                {{ form_widget(formView.category) }}
+                {{ form_errors(formView.category) }}
+            </div>
+
+            <div class="formStyle">
+                {{ form_label(formView.keywords) }}
+                {{ form_widget(formView.keywords) }}
+                {{ form_errors(formView.keywords) }}
+            </div>
+
+            <div>
+                <input onclick="search();" type="submit" value="Search" class="submit button save-content">
+            </div>
+            <div>&nbsp;</div>
+        </form>
+    </div>
+
+    <table class="table table-striped table-bordered table-hover table-middle">
+        {% block tableHead %}
+            <tbody>
+            <tr>
+                <td class="tableHead" width="160px"><a href="{{ app.request.pathInfo }}?sort=subtitle&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Subtitle</a></td>
+                <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Title</a></td>
+                <td class="tableHead" width="100px"><a href="{{ app.request.pathInfo }}?sort=brand&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Brand</a></td>
+                <td class="tableHead" width="140px"><a href="{{ app.request.pathInfo }}?sort=type&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Type</a></td>
+                <td class="tableHead" width="140px" align="right">Action</td>
+            </tr>
+            </tbody>
+        {% endblock %}
+
+        {% block tableBody %}
+            <tbody {% block extraColumns %}{% endblock %}>
+            {% for itm in orms %}
+                <tr id="{{ itm.id }}" class="js-orm-info">
+                    <td>{{ itm.subtitle }}</td>
+                    <td>{{ itm.title|slice(0, 30) ~ (itm.title|length > 30 ? '...' : '') }}</td>
+                    <td>{{ itm.brand }}</td>
+                    <td>{{ itm.type }}</td>
+                    <td class="iconCell" align="right">
+                        <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
+                        <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
+                        <a href="{{ node.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
+                        <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endblock %}
+    </table>
+
+    {% block dataPagination %}
+        {% if totalPages > 1 %}
+            {% include 'cms/includes/pagination.twig' %}
+        {% endif %}
+    {% endblock %}
+{% endblock %}
+
+{% block externalFooter %}
+    <script src="/cms/develop/js/orms-product.js"></script>
+{% endblock %}

@@ -11,7 +11,8 @@
         <tr class="column">
             <td>{{itm.title}}</td>
             <td>{{itm.sku}}</td>
-            <td>${{#formatMoney itm.price}}{{/formatMoney}}</td>
+            <td>{{#formatMoney itm.price 2 '.' ',' '$' }}{{/formatMoney}}</td>
+            <td>{{#formatMoney itm.salePrice 2 '.' ',' '$'}}{{/formatMoney}}</td>
             <td>{{itm.weight}}</td>
             <td>{{itm.stock}}</td>
             <td>{{itm.alarmIfLessThan}}</td>

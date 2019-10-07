@@ -278,4 +278,11 @@ class AssetService
     static public function getImageCachePath() {
         return __DIR__ . '/../../../../../cache/image/';
     }
+
+    /**
+     * @return string
+     */
+    static public function getTemplateFilePath() {
+        return __DIR__ . '/../../Resources/files/';
+    }
 }

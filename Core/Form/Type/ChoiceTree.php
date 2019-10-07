@@ -29,7 +29,7 @@ class ChoiceTree extends AbstractType
         $root = $options['choices'];
 
         $view->vars['choices'] = array();
-        foreach ($root->getChildren() as $itm) {
+        foreach ($root as $itm) {
             $view->vars['choices'] = array_merge($view->vars['choices'], $this->getChoices($itm, 1));
         }
     }
@@ -39,7 +39,7 @@ class ChoiceTree extends AbstractType
      * @param $level
      * @return array
      */
-    private function getChoices(Node $node, $level) {
+    private function getChoices($node, $level) {
         $result = [];
         $result[] = [
             'level' => $level,

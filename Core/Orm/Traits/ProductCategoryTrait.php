@@ -5,10 +5,10 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 trait ProductCategoryTrait
 {
     /**
-     * @return mixed
+     * @return string
      */
-    public function getExtraInfo()
+    static public function getCmsOrmsTwig()
     {
-        return '(' . ($this->getCount() ?: 0) . ')';
+        return 'cms/orms/orms-custom-product-category.html.twig';
     }
 }

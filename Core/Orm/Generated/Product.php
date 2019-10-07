@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-27 10:32:12
+//Last updated: 2019-10-07 21:00:33
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -62,9 +62,24 @@ class Product extends Orm
     private $description;
     
     /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $saleStart;
+    
+    /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $saleEnd;
+    
+    /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $price;
+    private $onSale;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $fromPrice;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -72,14 +87,19 @@ class Product extends Orm
     private $compareAtPrice;
     
     /**
-     * #pz datetime DEFAULT NULL
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $promoStart;
+    private $onSaleActive;
     
     /**
-     * #pz datetime DEFAULT NULL
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $promoEnd;
+    private $thumbnail;
+    
+    /**
+     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $content;
     
     /**
      * @return mixed
@@ -260,17 +280,65 @@ class Product extends Orm
     /**
      * @return mixed
      */
-    public function getPrice()
+    public function getSaleStart()
     {
-        return $this->price;
+        return $this->saleStart;
     }
     
     /**
-     * @param mixed price
+     * @param mixed saleStart
      */
-    public function setPrice($price)
+    public function setSaleStart($saleStart)
     {
-        $this->price = $price;
+        $this->saleStart = $saleStart;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getSaleEnd()
+    {
+        return $this->saleEnd;
+    }
+    
+    /**
+     * @param mixed saleEnd
+     */
+    public function setSaleEnd($saleEnd)
+    {
+        $this->saleEnd = $saleEnd;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getOnSale()
+    {
+        return $this->onSale;
+    }
+    
+    /**
+     * @param mixed onSale
+     */
+    public function setOnSale($onSale)
+    {
+        $this->onSale = $onSale;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getFromPrice()
+    {
+        return $this->fromPrice;
+    }
+    
+    /**
+     * @param mixed fromPrice
+     */
+    public function setFromPrice($fromPrice)
+    {
+        $this->fromPrice = $fromPrice;
     }
     
     /**
@@ -292,33 +360,49 @@ class Product extends Orm
     /**
      * @return mixed
      */
-    public function getPromoStart()
+    public function getOnSaleActive()
     {
-        return $this->promoStart;
+        return $this->onSaleActive;
     }
     
     /**
-     * @param mixed promoStart
+     * @param mixed onSaleActive
      */
-    public function setPromoStart($promoStart)
+    public function setOnSaleActive($onSaleActive)
     {
-        $this->promoStart = $promoStart;
+        $this->onSaleActive = $onSaleActive;
     }
     
     /**
      * @return mixed
      */
-    public function getPromoEnd()
+    public function getThumbnail()
     {
-        return $this->promoEnd;
+        return $this->thumbnail;
     }
     
     /**
-     * @param mixed promoEnd
+     * @param mixed thumbnail
      */
-    public function setPromoEnd($promoEnd)
+    public function setThumbnail($thumbnail)
     {
-        $this->promoEnd = $promoEnd;
+        $this->thumbnail = $thumbnail;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+    
+    /**
+     * @param mixed content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
     
 }

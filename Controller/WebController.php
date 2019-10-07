@@ -6,5 +6,6 @@ use MillenniumFalcon\Core\RouterController;
 
 class WebController extends RouterController
 {
-    use WebTrait;
+    use WebAssetTrait,
+        WebTrait;
 }

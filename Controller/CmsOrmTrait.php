@@ -4,6 +4,9 @@ namespace MillenniumFalcon\Controller;
 
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Builder\OrmForm;
+use MillenniumFalcon\Core\Form\Builder\SearchProduct;
+use MillenniumFalcon\Core\Form\Builder\SearchProductForm;
+use MillenniumFalcon\Core\Nestable\FastTree;
 use MillenniumFalcon\Core\Nestable\Node;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
@@ -39,6 +42,112 @@ trait CmsOrmTrait
         $params['categories'] = $categories;
         $params['cat'] = $cat;
         $params['ormModel'] = $model;
+        return $this->render($params['node']->getTemplate(), $params);
+    }
+
+    /**
+     * @route("/manage/orms/Product")
+     * @return Response
+     */
+    public function products()
+    {
+        $className = 'Product';
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+        /** @var _Model $model */
+        $model = _Model::getByField($pdo, 'className', $className);
+
+        $fullClass = ModelService::fullClass($pdo, 'ProductCategory');
+        $tree = new \BlueM\Tree($fullClass::data($pdo, [
+            "whereSql" => 'm.count > 0',
+            "select" => 'm.id AS id, m.parentId AS parent, CONCAT(m.title, " (", m.count , ")") AS title',
+            "sort" => 'm.rank',
+            "order" => 'ASC',
+            "orm" => 0,
+        ]), [
+            'rootId' => null,
+        ]);
+
+        $sql = '';
+        $params = [];
+        $extraUrl = '';
+        
+        $obj = new \stdClass();
+        $obj->category = null;
+        $obj->keywords = null;
+
+        $request = Request::createFromGlobals();
+        $search = $request->get('search');
+        if ($search) {
+            $obj->category = $search['category'] ?? null;
+            $obj->keywords = $search['keywords'] ?? null;
+
+            if ($obj->category) {
+                $node = $tree->getNodeById($obj->category);
+                $result = $node->getDescendantsAndSelf();
+                $sqlComponents = array_map(function ($itm) {
+                    return 'm.categories LIKE ?';
+                }, $result);
+                $sql = implode(' OR ', $sqlComponents);
+
+                $params = array_map(function ($itm) {
+                    return '%"' . $itm->getId() . '"%';
+                }, $result);
+            }
+
+            if ($obj->keywords) {
+                $sql .= ($sql ? ' AND ' : '') . "MATCH (m.title, m.subtitle, m.brand, m.type, m.sku, m.description, m.content) AGAINST (? IN NATURAL LANGUAGE MODE)";
+                $params = array_merge($params, [
+                    '*' . $obj->keywords . '*'
+                ]);
+            }
+
+//            var_dump($sql, $params);exit;
+            $extraUrl = http_build_query([
+                'search[category]' => $obj->category,
+                'search[keywords]' => $obj->keywords,
+            ]);
+        }
+
+
+        $form = $this->container->get('form.factory')->create(SearchProductForm::class, $obj, [
+            'categories' => $tree->getRootNodes(),
+        ]);
+        $request = Request::createFromGlobals();
+        $form->handleRequest($request);
+
+
+        $pageNum = $request->get('pageNum') ?: 1;
+        $limit = $model->getNumberPerPage();
+        $sort = $request->get('sort') ?: $model->getDefaultSortBy();
+        $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
+
+        $fullClass = ModelService::fullClass($pdo, $className);
+        $orms = $fullClass::data($pdo, array(
+            "whereSql" => $sql,
+            "params" => $params,
+            "page" => $pageNum,
+            "limit" => $limit,
+            "sort" => $sort,
+            "order" => $order,
+//            "debug" => 1,
+        ));
+        $total = $fullClass::data($pdo, array(
+            "whereSql" => $sql,
+            "params" => $params,
+            "count" => 1,
+        ));
+
+        $params = $this->prepareParams();
+        $params['search'] = $search;
+        $params['formView'] = $form->createView();
+        $params['totalPages'] = ceil($total['count'] / $limit);
+        $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order" . ($extraUrl ? '&' . $extraUrl : '');
+        $params['pageNum'] = $pageNum;
+        $params['sort'] = $sort;
+        $params['order'] = $order;
+
+        $params['ormModel'] = $model;
+        $params['orms'] = $orms;
         return $this->render($params['node']->getTemplate(), $params);
     }
 
@@ -83,11 +192,15 @@ trait CmsOrmTrait
             $params['order'] = $order;
 
         } elseif ($model->getListType() == 2) {
-            $tree = new Tree($fullClass::data($pdo, array(
+            $nodes = $fullClass::data($pdo, array(
+                "select" => 'm.id AS id, m.parentId AS parent, m.title, m.closed, m.status, m.count AS extraInfo',
                 "sort" => 'm.rank',
                 "order" => 'ASC',
-            )));
-            $orms = $tree->getRoot();
+                "orm" => 0,
+            ));
+
+            $tree = new \BlueM\Tree($nodes, ['rootId' => null]);
+            $orms = $tree->getRootNodes();
         }
 
         $params['ormModel'] = $model;

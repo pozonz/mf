@@ -133,11 +133,14 @@ class OrmForm extends AbstractType
 
                 $nodes = array();
                 foreach ($result as $key => $val) {
-                    $nodes[] = new Node($val->key, $val->parentId ?: 0, $key, 1, $val->value);
+                    $nodes[] = [
+                        'id' => $val->key,
+                        'parent' => $val->parentId ?: 0, $key,
+                        'title' => $val->value,
+                    ];
                 }
-                $tree = new Tree($nodes);
-                $root = $tree->getRoot();
-                $opts['choices'] = $root;
+                $tree = new \BlueM\Tree($nodes);
+                $opts['choices'] = $tree->getRootNodes();
 //                $opts['required'] = false;
                 break;
         }
