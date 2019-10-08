@@ -95,7 +95,7 @@ trait CmsOrmTrait
             }
 
             if ($obj->keywords) {
-                $sql .= ($sql ? ' AND ' : '') . "MATCH (m.title, m.subtitle, m.brand, m.type, m.sku, m.description, m.content) AGAINST (? IN NATURAL LANGUAGE MODE)";
+                $sql = ($sql ?  "($sql) AND " : '') . "(MATCH (m.title, m.subtitle, m.brand, m.type, m.sku, m.description, m.content) AGAINST (? IN Boolean MODE))";
                 $params = array_merge($params, [
                     '*' . $obj->keywords . '*'
                 ]);
@@ -118,19 +118,34 @@ trait CmsOrmTrait
 
         $pageNum = $request->get('pageNum') ?: 1;
         $limit = $model->getNumberPerPage();
-        $sort = $request->get('sort') ?: $model->getDefaultSortBy();
-        $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
+        $sort = $request->get('sort') ?: 'pageRank';
+        $order = $request->get('order') ?: 'DESC';
 
         $fullClass = ModelService::fullClass($pdo, $className);
-        $orms = $fullClass::data($pdo, array(
-            "whereSql" => $sql,
-            "params" => $params,
-            "page" => $pageNum,
-            "limit" => $limit,
-            "sort" => $sort,
-            "order" => $order,
+
+        if ($obj->keywords) {
+            $orms = $fullClass::data($pdo, array(
+                'select' => 'm.*, MATCH (m.title, m.subtitle, m.brand, m.type, m.sku, m.description, m.content) AGAINST (? IN Boolean MODE) as relevance',
+                "whereSql" => $sql,
+                'params' => array_merge(['*' . $obj->keywords . '*'], $params),
+                "page" => $pageNum,
+                "limit" => $limit,
+                'sort' => 'relevance',
+                'order' => 'DESC',
 //            "debug" => 1,
-        ));
+            ));
+        } else {
+            $orms = $fullClass::data($pdo, array(
+                "whereSql" => $sql,
+                'params' => $params,
+                "page" => $pageNum,
+                "limit" => $limit,
+                'sort' => $sort,
+                'order' => $order,
+//            "debug" => 1,
+            ));
+        }
+
         $total = $fullClass::data($pdo, array(
             "whereSql" => $sql,
             "params" => $params,
