@@ -95,7 +95,7 @@ trait CmsOrmTrait
             }
 
             if ($obj->keywords) {
-                $sql = ($sql ?  "($sql) AND " : '') . "(MATCH (m.title, m.subtitle, m.brand, m.type, m.sku, m.description, m.content) AGAINST (? IN Boolean MODE))";
+                $sql = ($sql ?  "($sql) AND " : '') . "(MATCH (m.content) AGAINST (? IN Boolean MODE))";
                 $params = array_merge($params, [
                     '*' . $obj->keywords . '*'
                 ]);
@@ -125,7 +125,7 @@ trait CmsOrmTrait
 
         if ($obj->keywords) {
             $orms = $fullClass::data($pdo, array(
-                'select' => 'm.*, MATCH (m.title, m.subtitle, m.brand, m.type, m.sku, m.description, m.content) AGAINST (? IN Boolean MODE) as relevance',
+                'select' => 'm.*, MATCH (m.content) AGAINST (? IN Boolean MODE) as relevance',
                 "whereSql" => $sql,
                 'params' => array_merge(['*' . $obj->keywords . '*'], $params),
                 "page" => $pageNum,

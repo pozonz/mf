@@ -41,6 +41,7 @@
     {{ form_row(form.saleStart) }}
     {{ form_row(form.saleEnd) }}
     {{ form_row(form.onSale) }}
+    {{ form_row(form.relatedProducts) }}
     <div>&nbsp;</div>
 
     <div class="product-special-section" style="display: none2;">
@@ -50,6 +51,7 @@
         {{ form_row(form.onSaleActive, {attr: {disabled: 'disabled'}}) }}
         {{ form_row(form.thumbnail, {attr: {disabled: 'disabled'}}) }}
         {{ form_row(form.content, {attr: {disabled: 'disabled'}}) }}
+        {{ form_row(form.url, {attr: {disabled: 'disabled'}}) }}
     </div>
 
     {{ form_rest(form) }}

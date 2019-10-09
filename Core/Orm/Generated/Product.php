@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-10-07 21:00:33
+//Last updated: 2019-10-09 22:35:05
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -79,6 +79,11 @@ class Product extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $relatedProducts;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $fromPrice;
     
     /**
@@ -95,6 +100,11 @@ class Product extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $thumbnail;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $url;
     
     /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -328,6 +338,22 @@ class Product extends Orm
     /**
      * @return mixed
      */
+    public function getRelatedProducts()
+    {
+        return $this->relatedProducts;
+    }
+    
+    /**
+     * @param mixed relatedProducts
+     */
+    public function setRelatedProducts($relatedProducts)
+    {
+        $this->relatedProducts = $relatedProducts;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getFromPrice()
     {
         return $this->fromPrice;
@@ -387,6 +413,22 @@ class Product extends Orm
     public function setThumbnail($thumbnail)
     {
         $this->thumbnail = $thumbnail;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+    
+    /**
+     * @param mixed url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
     
     /**

@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-08-06 19:44:20
+//Last updated: 2019-10-09 22:54:17
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -20,6 +20,16 @@ class ContentSnippet extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $heading;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $icon;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $url;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -77,6 +87,38 @@ class ContentSnippet extends Orm
     public function setHeading($heading)
     {
         $this->heading = $heading;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+    
+    /**
+     * @param mixed icon
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+    
+    /**
+     * @param mixed url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
     
     /**

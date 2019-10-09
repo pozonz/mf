@@ -2,10 +2,35 @@
 //Last updated: 2019-09-16 21:43:24
 namespace MillenniumFalcon\Core\Orm\Traits;
 
+use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Service\ModelService;
 
 trait ProductTrait
 {
+    public function objRelatedProducts()
+    {
+        $relatedProducts = $this->getRelatedProducts() ? json_decode($this->getRelatedProducts()) : [];
+
+        $objRelatedProducts = [];
+        $fullClass = ModelService::fullClass($this->getPdo(), 'Product');
+        foreach ($relatedProducts as $relatedProduct) {
+            $objRelatedProducts[] = $fullClass::getById($this->getPdo(), $relatedProduct);
+        }
+        return $objRelatedProducts;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function objVariants()
+    {
+        $fullClass = ModelService::fullClass($this->getPdo(), 'ProductVariant');
+        return $fullClass::active($this->getPdo(), [
+            'whereSql' => 'm.productUniqid = ? AND m.status = 1',
+            'params' => [$this->getUniqid()],
+        ]);
+    }
 
     /**
      * @return bool
@@ -55,15 +80,54 @@ trait ProductTrait
         return $categories;
     }
 
+
+    public function objSuitableFor()
+    {
+        $pdo = $this->getPdo();
+        $fullClass = ModelService::fullClass($pdo, 'ProductCategory');
+        $tree = $tree = new \BlueM\Tree($fullClass::data($pdo, [
+            "whereSql" => 'm.count > 0',
+            "select" => 'm.id AS id, m.parentId AS parent, m.title',
+            "sort" => 'm.rank',
+            "order" => 'ASC',
+            "orm" => 0,
+        ]), [
+            'rootId' => null,
+        ]);
+
+        $suitableFor = [];
+        $objCategories = $this->objCategories();
+        foreach ($objCategories as $objCategory) {
+            $node = $tree->getNodeById($objCategory->getId());
+            $ancesters = $node->getAncestors();
+            $ancester = end($ancesters);
+
+            if (!isset($suitableFor[$ancester->title])) {
+                $suitableFor[$ancester->title] = [];
+            }
+            $suitableFor[$ancester->title][] = $objCategory->getTitle();
+        }
+        return $suitableFor;
+    }
+
     /**
      * @param bool $doubleCheckExistence
      * @throws \Exception
      */
     public function save($doubleCheckExistence = false)
     {
-        $searchContent = '';
+        $this->objSuitableFor();
+
+        $slugify = new Slugify(['trim' => false]);
+        $this->setUrl($slugify->slugify("{$this->objTitle()}-{$this->getId()}", [
+            'trim' => true,
+        ]));
+
+        $searchContent = $this->objTitle();
+        $searchContent .= ' ' . $this->getSku();
+        $searchContent .= ' ' . strip_tags($this->getDescription());
         foreach ($this->objCategories() as $itm) {
-            $searchContent .= "{$itm->getTitle()} ";
+            $searchContent .= " {$itm->getTitle()} ";
         }
 
         //Set on sale active
@@ -94,6 +158,19 @@ trait ProductTrait
         $this->setContent($searchContent);
 
         parent::save($doubleCheckExistence);
+    }
+
+    /**
+     * @return string
+     */
+    public function objTitle()
+    {
+        return rtrim(
+            ($this->getSubtitle() ? "({$this->getSubtitle()}) " : '')
+            . ($this->getBrand() ? "{$this->getBrand()} " : '')
+            . ($this->getType() ? "{$this->getType()} " : '')
+            . ($this->getTitle() ? "{$this->getTitle()} " : '')
+        );
     }
 
     /**

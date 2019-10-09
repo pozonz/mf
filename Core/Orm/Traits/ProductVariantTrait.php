@@ -29,4 +29,12 @@ trait ProductVariantTrait
         $fullClass = ModelService::fullClass($this->getPdo(), 'Product');
         return $fullClass::getByField($this->getPdo(), 'uniqid', $this->getProductUniqid());
     }
+
+    /**
+     * @return mixed
+     */
+    public function objContent()
+    {
+        return json_decode($this->getContent());
+    }
 }
