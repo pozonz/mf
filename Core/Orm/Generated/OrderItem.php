@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-27 09:55:07
+//Last updated: 2019-10-10 21:00:28
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -14,17 +14,17 @@ class OrderItem extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $subtitle;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
     private $orderId;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $productId;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $quantity;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -65,22 +65,6 @@ class OrderItem extends Orm
     /**
      * @return mixed
      */
-    public function getSubtitle()
-    {
-        return $this->subtitle;
-    }
-    
-    /**
-     * @param mixed subtitle
-     */
-    public function setSubtitle($subtitle)
-    {
-        $this->subtitle = $subtitle;
-    }
-    
-    /**
-     * @return mixed
-     */
     public function getOrderId()
     {
         return $this->orderId;
@@ -108,6 +92,22 @@ class OrderItem extends Orm
     public function setProductId($productId)
     {
         $this->productId = $productId;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+    
+    /**
+     * @param mixed quantity
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
     }
     
     /**

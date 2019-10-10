@@ -5,7 +5,7 @@ namespace MillenniumFalcon\Controller;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Builder\OrmForm;
 use MillenniumFalcon\Core\Form\Builder\SearchProduct;
-use MillenniumFalcon\Core\Form\Builder\SearchProductForm;
+use MillenniumFalcon\Core\Form\Builder\CmsSearchProductForm;
 use MillenniumFalcon\Core\Nestable\FastTree;
 use MillenniumFalcon\Core\Nestable\Node;
 use MillenniumFalcon\Core\Nestable\Tree;
@@ -109,7 +109,7 @@ trait CmsOrmTrait
         }
 
 
-        $form = $this->container->get('form.factory')->create(SearchProductForm::class, $obj, [
+        $form = $this->container->get('form.factory')->create(CmsSearchProductForm::class, $obj, [
             'categories' => $tree->getRootNodes(),
         ]);
         $request = Request::createFromGlobals();

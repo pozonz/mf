@@ -18,6 +18,7 @@ class CartService
     const CUSTOMER_GOOGLE = 2;
     const CUSTOMER_FACEBOOK = 3;
 
+    const SESSION_ID = 'order_container_id';
     protected $orderContainer;
 
     /**
@@ -29,4 +30,42 @@ class CartService
         $this->container = $container;
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getOrderContainer()
+    {
+        if (!$this->orderContainer) {
+            $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+            $fullClass = ModelService::fullClass($pdo, 'Order');
+            $id = $this->container->get('session')->get(static::SESSION_ID);
+            $orderContainer = $fullClass::getById($pdo, $id);
+            if (!$orderContainer || $orderContainer->getCategory() != static::STATUS_UNPAID) {
+                $orderContainer = new $fullClass($pdo);
+                $orderContainer->setTitle(UtilsService::generateUniqueHex(24, []));
+                $orderContainer->setCategory(static::STATUS_UNPAID);
+                $orderContainer->save();
+                $this->container->get('session')->set(static::SESSION_ID, $orderContainer->getId());
+            }
+
+            //convert 1/0 to boolean
+            $orderContainer->setBillingSame($orderContainer->getBillingSame() ? true : false);
+            $orderContainer->setBillingSave($orderContainer->getBillingSave() ? true : false);
+            $orderContainer->setShippingSave($orderContainer->getShippingSave() ? true : false);
+
+            $tokenStorage = $this->container->get('security.token_storage');
+            if ($tokenStorage->getToken()) {
+                $customer = $tokenStorage->getToken()->getUser();
+                if (!$orderContainer->getEmail() && gettype($customer) == 'object') {
+                    $orderContainer->setEmail($customer->getTitle());
+                }
+            }
+
+            $this->orderContainer = $orderContainer;
+        }
+
+        return $this->orderContainer;
+    }
 }
