@@ -53,6 +53,12 @@ trait CmsRestProductTrait
         return new JsonResponse(1);
     }
 
+    /**
+     * @param Node $node
+     * @param $categories
+     * @param $fullClassProduct
+     * @param $pdo
+     */
     public function getProductSubtotal(Node $node, $categories, $fullClassProduct, $pdo)
     {
         if (isset($categories[$node->getId()])) {

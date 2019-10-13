@@ -335,7 +335,7 @@ abstract class Orm implements \JsonSerializable
             }
             return $this->getId();
         } catch (\Exception $ex) {
-            var_dump($ex->getMessage());
+            echo ($ex->getMessage());
             exit;
         }
 

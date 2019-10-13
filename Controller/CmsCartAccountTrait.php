@@ -363,7 +363,7 @@ trait CmsCartAccountTrait
             $orm->setResetExpiry(date('Y-m-d', strtotime('+100 years')));
             $orm->save();
 
-            $messageBody = $this->container->get('twig')->render("cms/cart/email/email-activate.twig", array(
+            $messageBody = $this->container->get('twig')->render("cms/cart/emails/email-activate.twig", array(
                 'customer' => $orm,
             ));
 
@@ -482,7 +482,7 @@ trait CmsCartAccountTrait
             $orm->setResetExpiry(date('Y-m-d', strtotime('+7 days')));
             $orm->save();
 
-            $messageBody = $this->container->get('twig')->render("cms/cart/email/email-forget.twig", array(
+            $messageBody = $this->container->get('twig')->render("cms/cart/emails/email-forget.twig", array(
                 'customer' => $orm,
             ));
 
@@ -554,49 +554,5 @@ trait CmsCartAccountTrait
         $tokenStorage->setToken($token);
         $this->get('session')->set('_security_account', serialize($token));
         return new RedirectResponse('\account\password');
-    }
-
-    /**
-     * @route("/cart")
-     * @return mixed
-     */
-    public function displayCart()
-    {
-        return $this->render('cms/cart/cart-display.html.twig', array(
-            'node' => null,
-        ));
-    }
-
-    /**
-     * @route("/cart/review")
-     * @return mixed
-     */
-    public function reviewCart()
-    {
-        return $this->render('cms/cart/cart-display-review.html.twig', array(
-            'node' => null,
-        ));
-    }
-
-    /**
-     * @route("/cart/payment/success")
-     * @return mixed
-     */
-    public function showCartSuccess()
-    {
-        return $this->render('cms/cart/cart-payment-success.html.twig', array(
-            'node' => null,
-        ));
-    }
-
-    /**
-     * @route("/cart/payment/failed")
-     * @return mixed
-     */
-    public function showCartFailed()
-    {
-        return $this->render('cms/cart/cart-payment-failed.html.twig', array(
-            'node' => null,
-        ));
     }
 }

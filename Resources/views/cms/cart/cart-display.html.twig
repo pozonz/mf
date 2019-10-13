@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block bodyClass %}page-cart{% endblock %}
+{% form_theme formView 'form.twig' %}
+
+{% set savedAddresses = app.user ? app.user.objAddresses : [] %}
 
 {% block container %}
     <div class="section section-white" style="padding-top: 100px;">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="title">My Shopping Cart</h1>
+                    <h1 class="title">My shopping cart</h1>
                 </div>
                 <div class="col-md-10 ml-auto mr-auto">
                     <div class="table-responsive">
@@ -21,80 +24,8 @@
                                     <th class="text-right">&nbsp;</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for i in 1..3 %}
-                                    <tr>
-                                        <td>
-                                            <img src="/images/product1.jpg" alt="" style="height: 150px;">
-                                        </td>
-                                        <td class="td-product">
-                                            <p>Product name</p>
-                                        </td>
-                                        <td class="td-price">
-                                            <small>$</small>
-                                            499
-                                        </td>
-                                        <td class="td-number td-quantity">
-                                            <input class="form-control qty" type="text" value="1">
-                                        </td>
-                                        <td class="td-number">
-                                            <small>$</small>
-                                            998
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-outline-danger btn-sm btn-just-icon"><i class="nc-icon nc-simple-remove" aria-hidden="true"></i></button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                            <tbody class="js-cart-total">
-                                <tr class="calc-row">
-                                    <td colspan="2"></td>
-                                    <td></td>
-                                    <td class="td-total">
-
-                                    </td>
-                                    <td class="td-total" colspan="2">
-                                        <p>Promo Code</p>
-                                        <input class="form-control js-cart-promo-code" placeholder="Promo Code" type="text" value="">
-                                        <button type="submit" class="btn btn-primary btn-sm mt-1 js-cart-promo-apply">Apply</button>
-                                    </td>
-                                </tr>
-                                <tr class="calc-row">
-                                    <td colspan="2"></td>
-                                    <td></td>
-                                    <td class="td-total">
-                                        Subtotal
-                                    </td>
-                                    <td class="td-total" colspan="2">
-                                        <small>$</small>
-                                        $999.00
-                                    </td>
-                                </tr>
-                                <tr class="calc-row">
-                                    <td colspan="2"></td>
-                                    <td></td>
-                                    <td class="td-total">
-                                        Discount
-                                    </td>
-                                    <td class="td-total" colspan="2">
-                                        -
-                                        <small>$</small>
-                                        $66.00
-                                    </td>
-                                </tr>
-                                <tr class="calc-row">
-                                    <td colspan="2"></td>
-                                    <td></td>
-                                    <td class="td-total">
-                                        After discount
-                                    </td>
-                                    <td class="td-total" colspan="2">
-                                        <small>$</small>
-                                        $800.00
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody class="js-cart-order-items"></tbody>
+                            <tbody class="js-cart-order-subtotal"></tbody>
                         </table>
                     </div>
                 </div>
@@ -104,106 +35,246 @@
 
     <div id="order-info" class="container mb-5">
         <form method="post" class="settings-form" action="#order-info" novalidate autocomplete="off">
+            {% if not app.user %}
+                <div class="alert alert-info alert-with-icon" data-notify="container">
+                    <div class="container">
+                        <div class="alert-wrapper">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <i class="nc-icon nc-simple-remove"></i>
+                            </button>
+                            <div class="message"><i class="nc-icon nc-bell-55"></i> You can purchase as a guest but we highly recommend you to <a class="text-white font-weight-bold" href="/login">login</a> or <a class="text-white font-weight-bold" href="/register">register</a> to take the full advantage of membership.  </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="row">
                 <div class="col-md-6 js-billing">
                     <h3 class="mb-3">Send invoice to</h3>
                     <div class="form-group pb-3">
-                        <label>Email address:</label>
-                        <input type="text" class="form-control border-input">
+                        {{ form_label(formView.email) }}
+                        {{ form_widget(formView.email, {attr:{class:'form-control border-input'}}) }}
+                        {{ form_errors(formView.email) }}
                     </div>
+
                     <h3 class="mb-3">Billing Address</h3>
+
+                    {% if app.user and savedAddresses|length %}
+                        <div class="form-group">
+                            <label>Choose from saved addresses</label>
+                            <select class="form-control js-saved-address">
+                                <option value="">Select an option below...</option>
+                                {% for itm in savedAddresses %}
+                                    <option
+                                            data-firstname="{{ itm.firstname }}"
+                                            data-lastname="{{ itm.lastname }}"
+                                            data-phone="{{ itm.phone }}"
+                                            data-address="{{ itm.address }}"
+                                            data-suburb="{{ itm.address2 }}"
+                                            data-city="{{ itm.city }}"
+                                            data-postcode="{{ itm.postcode }}"
+                                            data-state="{{ itm.state }}"
+                                            data-country="{{ itm.country }}"
+                                    >
+                                        {{ itm.__toString }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
                     <div class="row">
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
-                                <label>First name:</label>
-                                <input type="text" class="form-control border-input">
+                                {{ form_label(formView.billingFirstName) }}
+                                {{ form_widget(formView.billingFirstName, {attr:{class:'form-control border-input js-firstname'}}) }}
+                                {{ form_errors(formView.billingFirstName) }}
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
-                                <label>Last name:</label>
-                                <input type="text" class="form-control border-input">
+                                {{ form_label(formView.billingLastName) }}
+                                {{ form_widget(formView.billingLastName, {attr:{class:'form-control border-input js-lastname'}}) }}
+                                {{ form_errors(formView.billingLastName) }}
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
-                                <label>Phone number:</label>
-                                <input type="text" class="form-control border-input">
+                                {{ form_label(formView.billingPhone) }}
+                                {{ form_widget(formView.billingPhone, {attr:{class:'form-control border-input js-phone'}}) }}
+                                {{ form_errors(formView.billingPhone) }}
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Address:</label>
-                        <input type="text" class="form-control border-input">
+                        {{ form_label(formView.billingAddress) }}
+                        {{ form_widget(formView.billingAddress, {attr:{class:'form-control border-input js-address'}}) }}
+                        {{ form_errors(formView.billingAddress) }}
                     </div>
                     <div class="form-group">
-                        <label>Address 2:</label>
-                        <input type="text" class="form-control border-input">
+                        {{ form_label(formView.billingAddress2) }}
+                        {{ form_widget(formView.billingAddress2, {attr:{class:'form-control border-input js-suburb'}}) }}
+                        {{ form_errors(formView.billingAddress2) }}
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
-                                <label>City:</label>
-                                <input type="text" class="form-control border-input">
+                                {{ form_label(formView.billingCity) }}
+                                {{ form_widget(formView.billingCity, {attr:{class:'form-control border-input js-city'}}) }}
+                                {{ form_errors(formView.billingCity) }}
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
-                                <label>Postcode:</label>
-                                <input type="text" class="form-control border-input">
+                                {{ form_label(formView.billingPostcode) }}
+                                {{ form_widget(formView.billingPostcode, {attr:{class:'form-control border-input js-postcode'}}) }}
+                                {{ form_errors(formView.billingPostcode) }}
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
-                                <label>Region:</label>
-                                <input type="text" class="form-control border-input">
+                                {{ form_label(formView.billingState) }}
+                                {{ form_widget(formView.billingState, {attr:{class:'form-control border-input js-state'}}) }}
+                                {{ form_errors(formView.billingState) }}
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
-                                <label>Country:</label>
-                                <input type="text" class="form-control border-input">
+                                {{ form_label(formView.billingCountry) }}
+                                {{ form_widget(formView.billingCountry, {attr:{class:'form-control border-input js-country'}}) }}
+                                {{ form_errors(formView.billingCountry) }}
                             </div>
                         </div>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" {% if not app.user %}style="display: none;"{% endif %}>
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input">
+                            {{ form_widget(formView.billingSave, {attr:{class:'form-check-input'}}) }}
                             <span class="form-check-sign"></span>
-                            Save this address
+                            {{ formView.billingSave.vars.label }}
                         </label>
+                        {{ form_errors(formView.billingSave) }}
                     </div>
                     <div class="form-group">
-                        <label>Note:</label>
-                        <textarea id="cart_note" name="cart[note]" required="required" class="form-control border-input"></textarea>
+                        {#{{ form_label(formView.note) }}#}
+                        <label for="cart_note" class="required">Note / Delivery instructions:</label>
+                        {{ form_widget(formView.note, {attr:{class:'form-control border-input'}}) }}
+                        {{ form_errors(formView.note) }}
                     </div>
                 </div>
                 <div class="col-md-6 js-shipping">
                     <h3 class="mb-3">Shipping Address</h3>
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input">
+                            {{ form_widget(formView.billingSame, {attr:{class:'form-check-input js-same-as-shipping-button'}}) }}
                             <span class="form-check-sign"></span>
-                            Same as billing address
+                            {{ formView.billingSame.vars.label }}
                         </label>
+                        {{ form_errors(formView.billingSame) }}
+                    </div>
+                    <div class="settings-form js-same-as-shipping-container mt-4" {% if formView.billingSame.vars.checked %}style="display: none;"{% endif %}>
+                        {% if app.user and savedAddresses|length %}
+                            <div class="form-group">
+                                <label>Choose from saved addresses</label>
+                                <select class="form-control js-saved-address">
+                                    <option value="">Select an option below...</option>
+                                    {% for itm in savedAddresses %}
+                                        <option
+                                                data-firstname="{{ itm.firstname }}"
+                                                data-lastname="{{ itm.lastname }}"
+                                                data-phone="{{ itm.phone }}"
+                                                data-address="{{ itm.address }}"
+                                                data-suburb="{{ itm.address2 }}"
+                                                data-city="{{ itm.city }}"
+                                                data-postcode="{{ itm.postcode }}"
+                                                data-state="{{ itm.state }}"
+                                                data-country="{{ itm.country }}"
+                                        >
+                                            {{ itm.__toString }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(formView.shippingFirstName) }}
+                                    {{ form_widget(formView.shippingFirstName, {attr:{class:'form-control border-input js-firstname'}}) }}
+                                    {{ form_errors(formView.shippingFirstName) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(formView.shippingLastName) }}
+                                    {{ form_widget(formView.shippingLastName, {attr:{class:'form-control border-input js-lastname'}}) }}
+                                    {{ form_errors(formView.shippingLastName) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(formView.shippingPhone) }}
+                                    {{ form_widget(formView.shippingPhone, {attr:{class:'form-control border-input js-phone'}}) }}
+                                    {{ form_errors(formView.shippingPhone) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(formView.shippingAddress) }}
+                            {{ form_widget(formView.shippingAddress, {attr:{class:'form-control border-input js-address'}}) }}
+                            {{ form_errors(formView.shippingAddress) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(formView.shippingAddress2) }}
+                            {{ form_widget(formView.shippingAddress2, {attr:{class:'form-control border-input js-suburb'}}) }}
+                            {{ form_errors(formView.shippingAddress2) }}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(formView.shippingCity) }}
+                                    {{ form_widget(formView.shippingCity, {attr:{class:'form-control border-input, js-city'}}) }}
+                                    {{ form_errors(formView.shippingCity) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(formView.shippingPostcode) }}
+                                    {{ form_widget(formView.shippingPostcode, {attr:{class:'form-control border-input js-postcode'}}) }}
+                                    {{ form_errors(formView.shippingPostcode) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(formView.shippingState) }}
+                                    {{ form_widget(formView.shippingState, {attr:{class:'form-control border-input js-state'}}) }}
+                                    {{ form_errors(formView.shippingState) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(formView.shippingCountry) }}
+                                    {{ form_widget(formView.shippingCountry, {attr:{class:'form-control border-input js-country'}}) }}
+                                    {{ form_errors(formView.shippingCountry) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check" {% if not app.user %}style="display: none;"{% endif %}>
+                            <label class="form-check-label">
+                                {{ form_widget(formView.shippingSave, {attr:{class:'form-check-input'}}) }}
+                                <span class="form-check-sign"></span>
+                                {{ formView.shippingSave.vars.label }}
+                            </label>
+                            {{ form_errors(formView.shippingSave) }}
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-sm-4 pt-2 ml-auto">
                     <div class="title">
                         <h3>Choose a delivery option</h3>
                     </div>
-                    <div class="form-check-radio">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" data-com.agilebits.onepassword.user-edited="yes"> Standard Delivery (5-7 days) <strong>$10.00</strong></a>
-                            <span class="form-check-sign"></span>
-                        </label>
-                    </div>
-                    <div class="form-check-radio">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" checked="" data-com.agilebits.onepassword.user-edited="yes"> Fast Delivery (3-5 days) <strong>$20.00</strong></a>
-                            <span class="form-check-sign"></span>
-                        </label>
-                    </div>
+                    <div class="js-cart-delivery-options"></div>
+                    {{ form_widget(formView.shippingId, {attr:{style:'display: none;'}}) }}
+                    {{ form_errors(formView.shippingId) }}
                 </div>
                 <div class="col-md-12 text-center cart-total-summary">
                     <div class="row">
@@ -220,75 +291,315 @@
                                             <th class="text-right">&nbsp;</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="js-cart-total-full">
-                                        <tr class="calc-row">
-                                            <td colspan="2"></td>
-                                            <td></td>
-                                            <td class="td-total">
-                                                Subtotal
-                                            </td>
-                                            <td class="td-total" colspan="2">
-                                                <small>$</small>
-                                                900.00
-                                            </td>
-                                        </tr>
-                                        <tr class="calc-row">
-                                            <td colspan="2"></td>
-                                            <td></td>
-                                            <td class="td-total">
-                                                Discount
-                                            </td>
-                                            <td class="td-total" colspan="2">
-                                                -
-                                                <small>$</small>
-                                                100.00
-                                            </td>
-                                        </tr>
-
-                                        <tr class="calc-row">
-                                            <td colspan="2"></td>
-                                            <td></td>
-                                            <td class="td-total">
-                                                GST
-                                            </td>
-                                            <td class="td-total" colspan="2">
-                                                <small>$</small>
-                                                200.00
-                                            </td>
-                                        </tr>
-                                        <tr class="calc-row">
-                                            <td colspan="2"></td>
-                                            <td></td>
-                                            <td class="td-total">
-                                                Delivery fee
-                                            </td>
-                                            <td class="td-total" colspan="2">
-                                                <small>$</small>
-                                                50.00
-                                            </td>
-                                        </tr>
-                                        <tr class="calc-row">
-                                            <td colspan="2"></td>
-                                            <td></td>
-                                            <td class="td-total">
-                                                Total
-                                            </td>
-                                            <td class="td-total" colspan="2">
-                                                <small>$</small>
-                                                800.00
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                    <tbody class="js-cart-order-total"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12 text-center mt-5">
-                    <a href="/wine" class="btn btn-info btn-round">&#10096; Continue Shopping</a>
+                    <div style="display: none;">
+                        {{ form_rest(formView) }}
+                    </div>
+                    <a href="/shop" class="btn btn-default btn-round">&#10096; Continue Shopping</a>
                     <button type="submit" class="btn btn-danger btn-round">Check out &#10097;</button>
                 </div>
             </div>
         </form>
     </div>
+{% endblock %}
+
+{% block extraFooter %}
+    <div class="modal fade" id="smallNoticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-notice">
+            <div class="modal-content">
+                <div class="modal-body text-center mt-3">
+                    <strong class="text-danger"></strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal" aria-hidden="true">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ getenv('GOOGLE_API_KEY') }}&libraries=places&callback=initAutocomplete" async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
+    <script src="/cms/develop/js/handlebar-helpers.js"></script>
+
+    <script id="order-item" type="text/x-handlebars-template">{% include 'cms/cart/handlebar/cart-order-item.html.twig' %}</script>
+    <script id="order-subtotal" type="text/x-handlebars-template">{% include 'cms/cart/handlebar/cart-order-subtotal.html.twig' %}</script>
+    <script id="order-total" type="text/x-handlebars-template">{% include 'cms/cart/handlebar/cart-order-total.html.twig' %}</script>
+    <script id="delivery-option" type="text/x-handlebars-template">{% include 'cms/cart/handlebar/cart-order-shipping-option.html.twig' %}</script>
+
+    <script>
+        var _loadingHtml = '<tr><td class="text-center" colspan="6"><div class="uil-reload-css" style=""><div></div></div></td></tr>';
+        var _order = null;
+        var _templateOrderItem = Handlebars.compile($('#order-item').html());
+        var _templateOrderSubtotal = Handlebars.compile($('#order-subtotal').html());
+        var _templateOrderTotal = Handlebars.compile($('#order-total').html());
+        var _templateDeliveryOption = Handlebars.compile($('#delivery-option').html());
+
+        $(function () {
+            loading();
+            $.ajax({
+                type: 'GET',
+                url: '/cart/rest/order',
+                success: function (data) {
+                    _order = data.orderContainer;
+                    render();
+                }
+            });
+
+            $(document).on('change', '.js-oi-qty', function () {
+                var id = $(this).closest('tr').data('id');
+                var qty = $(this).val();
+
+                loading();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/cart/rest/order-item/qty',
+                    data: 'id=' + id + '&qty=' + qty,
+                    success: function (data) {
+                        if (data.status == 0) {
+                            $('#smallNoticeModal .modal-body > strong').html(data.error);
+                            $('#smallNoticeModal').modal();
+                        }
+                        _order = data.orderContainer;
+                        render();
+                    }
+                });
+            });
+
+            $(document).on('click', '.js-oi-delete', function () {
+                var id = $(this).closest('tr').data('id');
+
+                loading();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/cart/rest/order-item/delete',
+                    data: 'id=' + id,
+                    success: function (data) {
+                        _order = data.orderContainer;
+                        render();
+                    }
+                });
+            });
+
+            $(document).on('click', '.js-cart-promo-apply', function () {
+                var promoCode = $('.js-cart-promo-code').val();
+
+                $('.js-cart-order-subtotal').html(_loadingHtml);
+                $('.js-cart-order-total').empty();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/cart/rest/promo/apply',
+                    data: 'code=' + promoCode,
+                    success: function (data) {
+                        if (data.status == 0) {
+                            $('#smallNoticeModal .modal-body > strong').html(data.error);
+                            $('#smallNoticeModal').modal();
+                        }
+                        _order = data.orderContainer;
+                        render();
+                    }
+                });
+            });
+
+            $(document).on('change', '.js-saved-address .js-country, .js-same-as-shipping-button', function () {
+                updateDeliveryFee();
+            });
+
+            $(document).on('click', '.js-cart-delivery-options :radio', function () {
+                var id = $(this).val();
+
+                $('.js-cart-order-total').html(_loadingHtml);
+                $.ajax({
+                    type: 'GET',
+                    url: '/cart/rest/order/delivery/update',
+                    data: 'id=' + id,
+                    success: function (data) {
+                        _order = data.orderContainer;
+                        renderOrderTotal();
+                    }
+                });
+            });
+
+            $(document).on('change', '.js-saved-address', function () {
+                var $o = $(this).find('option:selected');
+                var $p = $o.closest('.col-md-6');
+
+                $p.find('.js-firstname').val($o.data('firstname'));
+                $p.find('.js-lastname').val($o.data('lastname'));
+                $p.find('.js-phone').val($o.data('phone'));
+                $p.find('.js-address').val($o.data('address'));
+                $p.find('.js-suburb').val($o.data('suburb'));
+                $p.find('.js-city').val($o.data('city'));
+                $p.find('.js-postcode').val($o.data('postcode'));
+                $p.find('.js-state').val($o.data('state'));
+                $p.find('.js-country').val($o.data('country'));
+
+                $(this).val('');
+                updateDeliveryFee();
+            });
+        });
+
+        function loading() {
+            $('.js-cart-order-items').html(_loadingHtml);
+            $('.js-cart-order-subtotal').empty();
+            $('.js-cart-order-total').empty();
+            $('.js-cart-delivery-options').empty();
+        }
+
+        function render() {
+            renderOrderItems();
+            renderOrderSubtotal();
+            renderOrderTotal();
+            renderOrderDeliveryOptions();
+        };
+
+        function renderOrderItems() {
+            $('.js-cart-order-items').empty();
+            var orderItems = _order.objOrderItems;
+            for (var idx in orderItems) {
+                var itm = orderItems[idx];
+                $('.js-cart-order-items').append(_templateOrderItem({
+                    orderItem: itm
+                }));
+            }
+            if (!orderItems.length) {
+                $('.js-cart-order-items').html('<tr><td colspan="6" class="text-center pt-2"><h5>No results found</h5></td></tr>');
+            }
+        };
+
+        function renderOrderSubtotal() {
+            $('.js-cart-order-subtotal').empty();
+            $('.js-cart-order-subtotal').append(_templateOrderSubtotal({
+                order: _order
+            }));
+        };
+
+        function renderOrderDeliveryOptions() {
+            for (var idx in _order.objShippingOptions) {
+                var itm = _order.objShippingOptions[idx];
+
+                $('.js-cart-delivery-options').append(_templateDeliveryOption({
+                    orderContainer: _order,
+                    shippingOption: itm,
+                }));
+            }
+
+        };
+
+        function renderOrderTotal() {
+            $('.js-cart-order-total').empty();
+            $('.js-cart-order-total').append(_templateOrderTotal({
+                order: _order
+            }));
+
+            //what?
+            $('#cart_shippingId').val(_order.shippingId);
+        };
+
+        function updateDeliveryFee() {
+            var o = {
+                billingCountry: $('.js-billing').find('.js-country').val(),
+                billingSame: $('.js-shipping').find('.js-same-as-shipping-button').is(':checked') ? 1 : 0,
+                shippingCountry: $('.js-shipping').find('.js-country').val(),
+            };
+
+            if (o.billingSame == 1) {
+                $('.js-same-as-shipping-container').hide();
+            } else {
+                $('.js-same-as-shipping-container').show();
+            }
+
+            $('.js-cart-delivery-options').empty();
+            $('.js-cart-order-total').html(_loadingHtml);
+
+            $.ajax({
+                type: 'GET',
+                url: '/cart/rest/order/address/update',
+                data: 'order=' + encodeURIComponent(JSON.stringify(o)),
+                success: function (data) {
+                    _order = data.orderContainer;
+                    renderOrderDeliveryOptions();
+                    renderOrderTotal();
+                }
+            });
+        }
+
+        function initAutocomplete() {
+
+            $.each($('.js-address'), function (idx, itm) {
+                $parent = $(itm).closest('.col-md-6');
+
+                var countries = [];
+                $.each($parent.find('.js-country').find('option'), function(oi, o) {
+                    if ($(o).val()) {
+                        countries.push($(o).val())
+                    }
+                });
+
+                var autocomplete = new google.maps.places.Autocomplete(
+                    $(itm)[0],
+                    {
+                        types: ['geocode'],
+                        componentRestrictions: {
+                            country: countries,
+                        }
+                    },
+                );
+                autocomplete.input = $(itm);
+                autocomplete.addListener('place_changed', fillInAddress);
+
+                setTimeout(function () {
+                    $(itm).attr('autocomplete', 'nope');
+                }, 500)
+            })
+        };
+
+        function fillInAddress() {
+            var place = this.getPlace();
+
+            var componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                sublocality_level_1: 'short_name',
+                locality: 'long_name',
+                postal_code: 'short_name',
+                administrative_area_level_1: 'short_name',
+                country: 'short_name',
+            };
+
+            var obj = {};
+            for (var i = 0; i < place.address_components.length; i++) {
+                var addressType = place.address_components[i].types[0];
+                if (componentForm[addressType]) {
+                    var val = place.address_components[i][componentForm[addressType]];
+                    obj[addressType] = val;
+                }
+            }
+
+            $parent = $(this.input).closest('.col-md-6');
+            if (obj.street_number && obj.route) {
+                $parent.find('.js-address').val(obj.street_number + ' ' + obj.route);
+            } else if (obj.street_number) {
+                $parent.find('.js-address').val(obj.street_number);
+            } else if (obj.route) {
+                $parent.find('.js-address').val(obj.route);
+            }
+
+            $parent.find('.js-suburb').val(obj.sublocality_level_1);
+            $parent.find('.js-city').val(obj.locality);
+            $parent.find('.js-postcode').val(obj.postal_code);
+            $parent.find('.js-state').val(obj.administrative_area_level_1);
+            $parent.find('.js-country').val(obj.country);
+
+            updateDeliveryFee();
+        };
+    </script>
 {% endblock %}

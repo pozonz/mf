@@ -130,12 +130,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for itm in orderContainer.orderItems %}
+                        {% for itm in orderContainer.objOrderItems %}
+                            {% set variant = itm.objProductVariant %}
+                            {% set product = variant.objProduct %}
                             <tr>
                                 <td>{{ itm.title }}</td>
-                                <td class="text-right">${{ itm.price|number_format(2, '.', ',') }}</td>
+                                <td class="text-right">
+                                    {% if product.onSaleActive %}
+                                        <del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>
+                                        <small>$</small>
+                                        {{ itm.price|number_format(2, '.', ',') }}
+                                    {% else %}
+                                        <small>$</small>
+                                        {{ itm.price|number_format(2, '.', ',') }}
+                                    {% endif %}
+                                </td>
                                 <td class="text-right">{{ itm.quantity }}</td>
-                                <td class="text-right">${{ itm.subtotal|number_format(2, '.', ',') }}</td>
+                                <td class="text-right">
+                                    {{ itm.totalPrice|number_format(2, '.', ',') }}
+                                </td>
                             </tr>
                         {% endfor %}
 
@@ -151,9 +164,11 @@
                                 <td style="border-top: none"></td>
                                 <td colspan="2" class="text-right font-weight-bold">
                                     Discount:
-                                    <div><small>{{ orderContainer.promoCode }}</small></div>
                                 </td>
-                                <td class="text-right font-weight-bold">-${{ orderContainer.discount|number_format(2, '.', ',') }}</td>
+                                <td class="text-right font-weight-bold">
+                                    -${{ orderContainer.discount|number_format(2, '.', ',') }}
+                                    <div><small>(Promo code: {{ orderContainer.promoCode }})</small></div>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="border-top: none"></td>
@@ -162,7 +177,7 @@
                                     ${{ orderContainer.afterDiscount|number_format(2, '.', ',') }}
                                     <div>
                                         <small>
-                                            (Incl. {{ getenv('TAX_WORDING') }} ${{ orderContainer.gst|number_format(2, '.', ',') }})
+                                            (Incl.GST ${{ orderContainer.tax|number_format(2, '.', ',') }})
                                         </small>
                                     </div>
                                 </td>
@@ -175,7 +190,7 @@
                                     ${{ orderContainer.subtotal|number_format(2, '.', ',') }}
                                     <div>
                                         <small>
-                                            (Incl. {{ getenv('TAX_WORDING') }} ${{ orderContainer.gst|number_format(2, '.', ',') }})
+                                            (Incl. GST ${{ orderContainer.tax|number_format(2, '.', ',') }})
                                         </small>
                                     </div>
                                 </td>
@@ -185,11 +200,8 @@
                             <td style="border-top: none"></td>
                             <td colspan="2" class="text-right font-weight-bold">Shipping:</td>
                             <td class="text-right font-weight-bold">
-                                {% if orderContainer.deliveryFee == -1 %}
-                                    To be confirmed
-                                {% else %}
-                                    ${{ orderContainer.deliveryFee|number_format(2, '.', ',') }}
-                                {% endif %}
+                                <small>$</small>
+                                {{ orderContainer.shippingCost|number_format(2, '.', ',') }}
                             </td>
                         </tr>
                         <tr>
@@ -200,7 +212,7 @@
                         <tr>
                             <td style="border-top: none"></td>
                             <td colspan="3" class="text-right font-weight-bold">
-                                <small>{{ orderContainer.deliveryOptionDescription }}</small>
+                                <small>{{ orderContainer.shippingTitle }}</small>
                             </td>
                         </tr>
                     </tbody>

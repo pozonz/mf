@@ -7,6 +7,43 @@ use MillenniumFalcon\Core\Service\ModelService;
 
 trait ProductTrait
 {
+    /**
+     * @param $customer
+     * @return float|int
+     */
+    public function objCompareAtPrice($customer) {
+        $price = $this->getCompareAtPrice() ?: 0;
+
+        if ($this->getNoMemberDiscount() || gettype($customer) != 'object') {
+            return $price;
+        }
+        $customerMembership = $customer->objMembership();
+        if (!$customerMembership) {
+            return $price;
+        }
+        return $price * ((100 - $customerMembership->getDiscount()) / 100);
+    }
+
+    /**
+     * @param $customer
+     * @return float|int
+     */
+    public function objFromPrice($customer) {
+        $price = $this->getFromPrice() ?: 0;
+        if ($this->getNoMemberDiscount() || gettype($customer) != 'object') {
+            return $price;
+        }
+        $customerMembership = $customer->objMembership();
+        if (!$customerMembership) {
+            return $price;
+        }
+        return $price * ((100 - $customerMembership->getDiscount()) / 100);
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function objRelatedProducts()
     {
         $relatedProducts = $this->getRelatedProducts() ? json_decode($this->getRelatedProducts()) : [];
@@ -111,6 +148,33 @@ trait ProductTrait
     }
 
     /**
+     * @return string
+     */
+    public function objTitle()
+    {
+        return rtrim(
+            ($this->getSubtitle() ? "({$this->getSubtitle()}) " : '')
+            . ($this->getBrand() ? "{$this->getBrand()} " : '')
+            . ($this->getType() ? "{$this->getType()} " : '')
+            . ($this->getTitle() ? "{$this->getTitle()} " : '')
+        );
+    }
+
+    /**
+     * @return array|null
+     */
+    public function objGallery()
+    {
+        $fullClass = ModelService::fullClass($this->getPdo(), 'AssetOrm');
+        return $fullClass::active($this->getPdo(), array(
+            'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND m.ormId = ?',
+            'params' => array('Product', 'orm_gallery', $this->getUniqid()),
+            'sort' => 'm.myRank',
+//            'debug' => 1,
+        ));
+    }
+
+    /**
      * @param bool $doubleCheckExistence
      * @throws \Exception
      */
@@ -163,33 +227,6 @@ trait ProductTrait
     /**
      * @return string
      */
-    public function objTitle()
-    {
-        return rtrim(
-            ($this->getSubtitle() ? "({$this->getSubtitle()}) " : '')
-            . ($this->getBrand() ? "{$this->getBrand()} " : '')
-            . ($this->getType() ? "{$this->getType()} " : '')
-            . ($this->getTitle() ? "{$this->getTitle()} " : '')
-        );
-    }
-
-    /**
-     * @return array|null
-     */
-    public function objGallery()
-    {
-        $fullClass = ModelService::fullClass($this->getPdo(), 'AssetOrm');
-        return $fullClass::active($this->getPdo(), array(
-            'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND m.ormId = ?',
-            'params' => array('Product', 'orm_gallery', $this->getUniqid()),
-            'sort' => 'm.myRank',
-//            'debug' => 1,
-        ));
-    }
-
-    /**
-     * @return string
-     */
     static public function getCmsOrmsTwig()
     {
         return 'cms/orms/orms-custom-product.html.twig';
@@ -201,5 +238,19 @@ trait ProductTrait
     static public function getCmsOrmTwig()
     {
         return 'cms/orms/orm-custom-product.html.twig';
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        $obj = parent::jsonSerialize();
+        $obj->objThumbnail = $this->objThumbnail();
+        return $obj;
     }
 }

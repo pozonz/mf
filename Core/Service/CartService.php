@@ -46,6 +46,7 @@ class CartService
                 $orderContainer = new $fullClass($pdo);
                 $orderContainer->setTitle(UtilsService::generateUniqueHex(24, []));
                 $orderContainer->setCategory(static::STATUS_UNPAID);
+                $orderContainer->setBillingSame(1);
                 $orderContainer->save();
                 $this->container->get('session')->set(static::SESSION_ID, $orderContainer->getId());
             }
@@ -55,13 +56,17 @@ class CartService
             $orderContainer->setBillingSave($orderContainer->getBillingSave() ? true : false);
             $orderContainer->setShippingSave($orderContainer->getShippingSave() ? true : false);
 
-            $tokenStorage = $this->container->get('security.token_storage');
-            if ($tokenStorage->getToken()) {
-                $customer = $tokenStorage->getToken()->getUser();
-                if (!$orderContainer->getEmail() && gettype($customer) == 'object') {
+            $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+            if (gettype($customer) == 'object') {
+                $orderContainer->setCustomerId($customer->getId());
+                $orderContainer->setCustomerName($customer->getFirstName() . ' ' . $customer->getLastName());
+
+                if (!$orderContainer->getEmail()) {
                     $orderContainer->setEmail($customer->getTitle());
                 }
             }
+
+            $orderContainer->update($customer);
 
             $this->orderContainer = $orderContainer;
         }

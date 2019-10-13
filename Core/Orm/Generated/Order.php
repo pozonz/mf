@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-27 09:55:21
+//Last updated: 2019-10-13 18:41:53
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -169,17 +169,17 @@ class Order extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $CustomerName;
+    private $customerName;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $deliveryId;
+    private $shippingId;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $deliveryName;
+    private $shippingTitle;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -189,12 +189,17 @@ class Order extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $PromoName;
+    private $promoCode;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $beforeDiscountSubtotal;
+    private $weight;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $subtotal;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -204,7 +209,7 @@ class Order extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $afterDiscountSubtotal;
+    private $afterDiscount;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -738,47 +743,47 @@ class Order extends Orm
      */
     public function getCustomerName()
     {
-        return $this->CustomerName;
+        return $this->customerName;
     }
     
     /**
-     * @param mixed CustomerName
+     * @param mixed customerName
      */
-    public function setCustomerName($CustomerName)
+    public function setCustomerName($customerName)
     {
-        $this->CustomerName = $CustomerName;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getDeliveryId()
-    {
-        return $this->deliveryId;
-    }
-    
-    /**
-     * @param mixed deliveryId
-     */
-    public function setDeliveryId($deliveryId)
-    {
-        $this->deliveryId = $deliveryId;
+        $this->customerName = $customerName;
     }
     
     /**
      * @return mixed
      */
-    public function getDeliveryName()
+    public function getShippingId()
     {
-        return $this->deliveryName;
+        return $this->shippingId;
     }
     
     /**
-     * @param mixed deliveryName
+     * @param mixed shippingId
      */
-    public function setDeliveryName($deliveryName)
+    public function setShippingId($shippingId)
     {
-        $this->deliveryName = $deliveryName;
+        $this->shippingId = $shippingId;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getShippingTitle()
+    {
+        return $this->shippingTitle;
+    }
+    
+    /**
+     * @param mixed shippingTitle
+     */
+    public function setShippingTitle($shippingTitle)
+    {
+        $this->shippingTitle = $shippingTitle;
     }
     
     /**
@@ -800,33 +805,49 @@ class Order extends Orm
     /**
      * @return mixed
      */
-    public function getPromoName()
+    public function getPromoCode()
     {
-        return $this->PromoName;
+        return $this->promoCode;
     }
     
     /**
-     * @param mixed PromoName
+     * @param mixed promoCode
      */
-    public function setPromoName($PromoName)
+    public function setPromoCode($promoCode)
     {
-        $this->PromoName = $PromoName;
+        $this->promoCode = $promoCode;
     }
     
     /**
      * @return mixed
      */
-    public function getBeforeDiscountSubtotal()
+    public function getWeight()
     {
-        return $this->beforeDiscountSubtotal;
+        return $this->weight;
     }
     
     /**
-     * @param mixed beforeDiscountSubtotal
+     * @param mixed weight
      */
-    public function setBeforeDiscountSubtotal($beforeDiscountSubtotal)
+    public function setWeight($weight)
     {
-        $this->beforeDiscountSubtotal = $beforeDiscountSubtotal;
+        $this->weight = $weight;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getSubtotal()
+    {
+        return $this->subtotal;
+    }
+    
+    /**
+     * @param mixed subtotal
+     */
+    public function setSubtotal($subtotal)
+    {
+        $this->subtotal = $subtotal;
     }
     
     /**
@@ -848,17 +869,17 @@ class Order extends Orm
     /**
      * @return mixed
      */
-    public function getAfterDiscountSubtotal()
+    public function getAfterDiscount()
     {
-        return $this->afterDiscountSubtotal;
+        return $this->afterDiscount;
     }
     
     /**
-     * @param mixed afterDiscountSubtotal
+     * @param mixed afterDiscount
      */
-    public function setAfterDiscountSubtotal($afterDiscountSubtotal)
+    public function setAfterDiscount($afterDiscount)
     {
-        $this->afterDiscountSubtotal = $afterDiscountSubtotal;
+        $this->afterDiscount = $afterDiscount;
     }
     
     /**

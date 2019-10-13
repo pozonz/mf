@@ -1,0 +1,38 @@
+{% verbatim %}
+    <tr data-id="{{orderItem.uniqid}}">
+        <td>
+            <div class="img-container">
+                <a href="/product/{{ orderItem.objProductVariant.objProduct.url }}?option={{ orderItem.objProductVariant.slug }}">
+                    {{#compare orderItem.objProductVariant.objProduct.objThumbnail '' operator="!="}}<div class="card-back-image" style="background-image: url('/images/assets/{{ orderItem.objProductVariant.objProduct.objThumbnail }}/medium')">&nbsp;</div>{{/compare}}
+                    {{#compare orderItem.objProductVariant.objProduct.objThumbnail '' operator="=="}}<div class="card-back-image" style="background-image: url('/images/image-placeholder1.jpg')">&nbsp;</div>{{/compare}}
+                </a>
+            </div>
+        </td>
+        <td class="td-product">
+            <p>{{{orderItem.title}}}</p>
+        </td>
+        </td>
+        <td class="td-price">
+            {{#compare orderItem.onSaleActive 1 operator="!="}}
+                <small>$</small>
+                {{#formatMoney orderItem.price}}{{/formatMoney}}
+            {{/compare}}
+
+            {{#compare orderItem.onSaleActive 1 operator="=="}}
+                <del><small>${{#formatMoney orderItem.compareAtPrice}}{{/formatMoney}}</small></del>
+                <small>$</small>
+                {{#formatMoney orderItem.price}}{{/formatMoney}}
+            {{/compare}}
+        </td>
+        <td class="td-number td-quantity">
+            <input class="form-control qty js-oi-qty" type="text" value="{{ orderItem.quantity }}">
+        </td>
+        <td class="td-number">
+            <small>$</small>
+            {{#formatMoney orderItem.totalPrice}}{{/formatMoney}}
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-danger btn-sm btn-just-icon js-oi-delete"><i class="nc-icon nc-simple-remove" aria-hidden="true"></i></button>
+        </td>
+    </tr>
+{% endverbatim %}

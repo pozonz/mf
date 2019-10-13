@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-10-10 21:00:28
+//Last updated: 2019-10-13 12:07:39
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -29,7 +29,17 @@ class OrderItem extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $onSaleActive;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $price;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $compareAtPrice;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -113,6 +123,22 @@ class OrderItem extends Orm
     /**
      * @return mixed
      */
+    public function getOnSaleActive()
+    {
+        return $this->onSaleActive;
+    }
+    
+    /**
+     * @param mixed onSaleActive
+     */
+    public function setOnSaleActive($onSaleActive)
+    {
+        $this->onSaleActive = $onSaleActive;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getPrice()
     {
         return $this->price;
@@ -124,6 +150,22 @@ class OrderItem extends Orm
     public function setPrice($price)
     {
         $this->price = $price;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCompareAtPrice()
+    {
+        return $this->compareAtPrice;
+    }
+    
+    /**
+     * @param mixed compareAtPrice
+     */
+    public function setCompareAtPrice($compareAtPrice)
+    {
+        $this->compareAtPrice = $compareAtPrice;
     }
     
     /**

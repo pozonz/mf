@@ -16,28 +16,9 @@
 
             <div class="row pt-5">
                 <div class="col-md-6 mx-auto">
-                    <h5 class="description text-center">Your order identifier is <strong>#89fd0a89fd0sa</strong></h5>
+                    <h5 class="description text-center">Your order identifier is <strong>#{{ myOrderContainer.uniqid }}</strong></h5>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <td>Subtotal:</td>
-                                    <td class="text-right">$999.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Discount:</td>
-                                    <td class="text-right">-$100.00</td>
-                                </tr>
-                                <tr>
-                                    <td>GST:</td>
-                                    <td class="text-right">$200.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Total:</td>
-                                    <td class="text-right">$800.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        {% include 'cms/cart/common/order-pricing.html.twig' with { orderContainer: myOrderContainer } %}
                     </div>
                 </div>
             </div>

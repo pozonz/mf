@@ -18,153 +18,53 @@
                                     <th class="text-right">Price</th>
                                     <th class="text-right">Quantity</th>
                                     <th class="text-right" style="width: 10em;">Total</th>
-                                    <th class="text-right">&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for i in 1..3 %}
+                                {% for itm in orderContainer.objOrderItems %}
+                                    {% set variant = itm.objProductVariant %}
+                                    {% set product = variant.objProduct %}
                                     <tr>
                                         <td>
-                                            <img src="/images/product1.jpg" alt="" style="height: 150px;">
+                                            <div class="img-container">
+                                                <div class="card-back-image" style="background-image: url({% if variant and product.objThumbnail %}/images/assets/{{ product.objThumbnail }}/medium{% else %}/images/image-placeholder1.jpg{% endif %});">&nbsp;</div>
+                                            </div>
                                         </td>
                                         <td class="td-product">
-                                            <p>Product name</p>
+                                            <p>{{ itm.title }}</p>
                                         </td>
                                         <td class="td-price">
-                                            <small>$</small>
-                                            499
+                                            {% if product.onSaleActive %}
+                                                <del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>
+                                                <small>$</small>
+                                                {{ itm.price|number_format(2, '.', ',') }}
+                                            {% else %}
+                                                <small>$</small>
+                                                {{ itm.price|number_format(2, '.', ',') }}
+                                            {% endif %}
                                         </td>
                                         <td class="td-number td-quantity">
-                                            1
+                                            {{ itm.quantity }}
                                         </td>
                                         <td class="td-number">
                                             <small>$</small>
-                                            998
-                                        </td>
-                                        <td>
+                                            {{ itm.totalPrice|number_format(2, '.', ',') }}
                                         </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div id="order-info" class="container mb-5">
-        <form method="post" class="settings-form" action="#order-info" novalidate autocomplete="off">
-            <div class="row">
-                <div class="col-md-6 js-billing">
-                    <h3 class="mb-3">Send invoice to</h3>
-                    <div class="form-group pb-3">
-                        <label>Email address:</label>
-                        <p>luckyweida@gmail.com</p>
-                    </div>
-                    <h3 class="mb-3">Billing Address</h3>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label>First name:</label>
-                                <p>Weida</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label>Last name:</label>
-                                <p>Xue</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label>Phone number:</label>
-                                <p>021 123456</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Address:</label>
-                        <p>123 Queen Street</p>
-                    </div>
-                    <div class="form-group">
-                        <label>Address 2:</label>
-                        <p></p>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label>City:</label>
-                                <p>Auckland</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label>Postcode:</label>
-                                <p>1234</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label>Region:</label>
-                                <p></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label>Country:</label>
-                                <p>New Zealand</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Note:</label>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-6 js-shipping">
-                    <h3 class="mb-3">Shipping Address</h3>
-                    <div class="form-check">
-                        <label class="">
-                            Same as billing address
-                        </label>
-                    </div>
-                </div>
-                <div class="col-sm-4 pt-2 ml-auto">
-                    <div class="title">
-                        <h3>Delivery option</h3>
-                    </div>
-                    <div class="form-check-radio">
-                        <label class="">
-                            Standard Delivery (5-7 days)
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-12 text-center cart-total-summary">
-                    <div class="row">
-                        <div class="col-md-10 ml-auto mr-auto">
-                            <div class="table-responsive">
-                                <table class="table table-shopping">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-center"></th>
-                                        <th></th>
-                                        <th class="text-right">Price</th>
-                                        <th class="text-right">Quantity</th>
-                                        <th class="text-right" style="width: 10em;">Total</th>
-                                        <th class="text-right">&nbsp;</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="js-cart-total-full">
+                            <tbody>
+                                {% if orderContainer.discount %}
                                     <tr class="calc-row">
                                         <td colspan="2"></td>
                                         <td></td>
                                         <td class="td-total">
                                             Subtotal
                                         </td>
-                                        <td class="td-total" colspan="2">
+                                        <td class="td-total">
                                             <small>$</small>
-                                            900.00
+                                            {{ orderContainer.subtotal|number_format(2, '.', ',') }}
                                         </td>
                                     </tr>
                                     <tr class="calc-row">
@@ -173,57 +73,245 @@
                                         <td class="td-total">
                                             Discount
                                         </td>
-                                        <td class="td-total" colspan="2">
+                                        <td class="td-total">
                                             -
                                             <small>$</small>
-                                            100.00
+                                            {{ orderContainer.discount|number_format(2, '.', ',') }}
+                                            <div><small>(Promo code: {{ orderContainer.promoCode }})</small></div>
                                         </td>
                                     </tr>
+                                    <tr class="calc-row">
+                                        <td colspan="2"></td>
+                                        <td></td>
+                                        <td class="td-total">
+                                            After discount
+                                        </td>
+                                        <td class="td-total">
+                                            <small>$</small>
+                                            {{ orderContainer.afterDiscount|number_format(2, '.', ',') }}
+                                            <div>
+                                                <small>
+                                                    (Incl. GST ${{ orderContainer.tax|number_format(2, '.', ',') }})
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr class="calc-row">
+                                        <td colspan="2"></td>
+                                        <td></td>
+                                        <td class="td-total">
+                                            Subtotal
+                                        </td>
+                                        <td class="td-total">
+                                            <small>$</small>
+                                            {{ orderContainer.subtotal|number_format(2, '.', ',') }}
+                                            <div>
+                                                <small>
+                                                    (Incl. GST ${{ orderContainer.tax|number_format(2, '.', ',') }})
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
 
-                                    <tr class="calc-row">
-                                        <td colspan="2"></td>
-                                        <td></td>
-                                        <td class="td-total">
-                                            GST
-                                        </td>
-                                        <td class="td-total" colspan="2">
+                                <tr class="calc-row">
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                    <td class="td-total">
+                                        Delivery fee
+                                    </td>
+                                    <td class="td-total">
+                                        {% if not orderContainer.countryCode or not orderContainer.shippingId %}
+                                            To be confirmed
+                                        {% else %}
                                             <small>$</small>
-                                            200.00
-                                        </td>
-                                    </tr>
-                                    <tr class="calc-row">
-                                        <td colspan="2"></td>
-                                        <td></td>
-                                        <td class="td-total">
-                                            Delivery fee
-                                        </td>
-                                        <td class="td-total" colspan="2">
-                                            <small>$</small>
-                                            50.00
-                                        </td>
-                                    </tr>
-                                    <tr class="calc-row">
-                                        <td colspan="2"></td>
-                                        <td></td>
-                                        <td class="td-total">
-                                            Total
-                                        </td>
-                                        <td class="td-total" colspan="2">
-                                            <small>$</small>
-                                            800.00
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                            {{ orderContainer.shippingCost|number_format(2, '.', ',') }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="calc-row">
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                    <td class="td-total">
+                                        Total
+                                    </td>
+                                    <td class="td-total">
+                                        <small>$</small>
+                                        {{ orderContainer.total|number_format(2, '.', ',') }}
+                                    </td>
+                                </tr>
+                                <tr class="calc-row">
+                                    <td colspan="2"></td>
+                                    <td></td>
+                                    <td colspan="2" class="td-total">
+                                        <small>{{ orderContainer.shippingTitle }}</small>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mb-5 settings-form ">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="mb-3">Send invoice to</h3>
+                <div class="form-group pb-3">
+                    <label>Email address:</label>
+                    <p><strong>{{ orderContainer.email }}</strong></p>
+                </div>
+
+                <h3 class="mb-3">Billing Address</h3>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <p><strong>{{ orderContainer.billingFirstName }}</strong></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <p><strong>{{ orderContainer.billingLastName }}</strong></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <p><strong>{{ orderContainer.billingPhone }}</strong></p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 text-center mt-5">
-                    <a href="/wine" class="btn btn-info btn-round">&#10096; Edit cart</a>
-                    <button type="submit" class="btn btn-danger btn-round">Pay now &#10097;</button>
+                <div class="form-group">
+                    <label>Address</label>
+                    <p><strong>{{ orderContainer.billingAddress }}</strong></p>
                 </div>
+                {% if orderContainer.billingAddress2 %}
+                    <div class="form-group">
+                        <label>Address 2</label>
+                        <p><strong>{{ orderContainer.billingAddress2 }}</strong></p>
+                    </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label>City</label>
+                            <p><strong>{{ orderContainer.billingCity }}</strong></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label>Postcode</label>
+                            <p><strong>{{ orderContainer.billingPostcode }}</strong></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label>State</label>
+                            <p><strong>{{ orderContainer.billingState }}</strong></p>
+                        </div>
+                    </div>
+                    {% set orm = model.byField('ShippingCountry', 'code', orderContainer.billingCountry) %}
+                    {% if orm %}
+                        <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <p><strong>{{ orm.title }}</strong></p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if orderContainer.note %}
+                    <div class="form-group">
+                        <label>Note</label>
+                        <p><strong>{{ orderContainer.note }}</strong></p>
+                    </div>
+                {% endif %}
             </div>
-        </form>
+            <div class="col-md-6">
+                <h3 class="mb-3">Shipping Address</h3>
+                {% if orderContainer.billingSame %}
+                    <div class="form-check">
+                        <label>Same as Billing Address</label>
+                    </div>
+                {% else %}
+                    <div class="js-same-as-shipping-container mt-4">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <p><strong>{{ orderContainer.shippingFirstName }}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <p><strong>{{ orderContainer.shippingLastName }}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <p><strong>{{ orderContainer.shippingPhone }}</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <p><strong>{{ orderContainer.shippingAddress }}</strong></p>
+                        </div>
+                        {% if orderContainer.shippingAddress2 %}
+                            <div class="form-group">
+                                <label>Address 2</label>
+                                <p><strong>{{ orderContainer.shippingAddress2 }}</strong></p>
+                            </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <p><strong>{{ orderContainer.shippingCity }}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>Postcode</label>
+                                    <p><strong>{{ orderContainer.shippingPostcode }}</strong></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>State</label>
+                                    <p><strong>{{ orderContainer.shippingState }}</strong></p>
+                                </div>
+                            </div>
+                            {% set orm = model.byField('ShippingCountry', 'code', orderContainer.shippingCountry) %}
+                            {% if orm %}
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Country</label>
+                                        <p><strong>{{ orm.title }}</strong></p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-12 text-center mt-5">
+                <a href="/cart" class="btn btn-default btn-round">&#10096; Back</a>
+                <form method="post" novalidate autocomplete="nope" style="display: inline">
+                    <div style="display: none">
+                        {{ form_widget(formView.action,{attr:{value:'dps'}}) }}
+                        {{ form_rest(formView) }}
+                    </div>
+                    <button class="btn btn-danger btn-round">Pay Now &#10097;</button>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
