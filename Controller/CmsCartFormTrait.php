@@ -54,6 +54,7 @@ trait CmsCartFormTrait
         $submitted = 0;
         if ($form->isSubmitted() && $form->isValid()) {
             $orderItem->setQuantity($orderItem->getQuantity() + $stockInCart);
+            $orderItem->save();
             $submitted = 1;
 
             $customer = $this->container->get('security.token_storage')->getToken()->getUser();
