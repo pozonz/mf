@@ -322,14 +322,11 @@ trait CmsCartAccountTrait
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        /** @var Response $response */
-        $response = $this->render('cms/cart/account-login.html.twig', array(
+        return $this->render('cms/cart/account-login.html.twig', array(
             'node' => null,
             'last_username' => $lastUsername,
             'error' => $error,
         ));
-        $response->headers->set('Referrer Policy', 'no-referer');
-        return $response;
     }
 
     /**
