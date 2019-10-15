@@ -34,7 +34,7 @@
                                             <p>{{ itm.title }}</p>
                                         </td>
                                         <td class="td-price">
-                                            {% if product.onSaleActive %}
+                                            {% if itm.onSaleActive %}
                                                 <del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>
                                                 <small>$</small>
                                                 {{ itm.price|number_format(2, '.', ',') }}
@@ -89,11 +89,7 @@
                                         <td class="td-total">
                                             <small>$</small>
                                             {{ orderContainer.afterDiscount|number_format(2, '.', ',') }}
-                                            <div>
-                                                <small>
-                                                    (Incl. GST ${{ orderContainer.tax|number_format(2, '.', ',') }})
-                                                </small>
-                                            </div>
+                                            <div><small>(Incl. GST ${{ orderContainer.tax|number_format(2, '.', ',') }})</small></div>
                                         </td>
                                     </tr>
                                 {% else %}
@@ -106,11 +102,7 @@
                                         <td class="td-total">
                                             <small>$</small>
                                             {{ orderContainer.subtotal|number_format(2, '.', ',') }}
-                                            <div>
-                                                <small>
-                                                    (Incl. GST ${{ orderContainer.tax|number_format(2, '.', ',') }})
-                                                </small>
-                                            </div>
+                                            <div><small>(Incl. GST ${{ orderContainer.tax|number_format(2, '.', ',') }})</small></div>
                                         </td>
                                     </tr>
                                 {% endif %}

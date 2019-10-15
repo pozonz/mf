@@ -144,7 +144,7 @@ trait CmsCartTrait
                 $pxaccess = $this->getDpsGateway();
                 $requestString = $pxaccess->makeRequest($request);
 
-                $orderContainer->setPayStatus(CartService::STATUS_SUBMITTED);
+                $orderContainer->setCategory(CartService::STATUS_SUBMITTED);
                 $orderContainer->setPayRequest(print_r($request, true));
                 $orderContainer->setPayToken($uniqid);
                 $orderContainer->setPayDate(date('Y-m-d H:i:s'));
@@ -189,13 +189,14 @@ trait CmsCartTrait
             throw new NotFoundHttpException();
         }
 
-        if ($orderContainer->getPayStatus() != CartService::STATUS_SUCCESS) {
+        if ($orderContainer->getCategory() != CartService::STATUS_SUCCESS) {
 
-            $orderContainer->setPayStatus($pxResponse->getSuccess() ? CartService::STATUS_SUCCESS : CartService::STATUS_UNPAID);
+            $orderContainer->setCategory($pxResponse->getSuccess() ? CartService::STATUS_SUCCESS : CartService::STATUS_UNPAID);
+            $orderContainer->setPayStatus($orderContainer->getCategory());
             $orderContainer->setPayResponse(print_r($pxResponse, true));
             $orderContainer->save();
 
-            if ($orderContainer->getPayStatus() == CartService::STATUS_SUCCESS) {
+            if ($orderContainer->getCategory() == CartService::STATUS_SUCCESS) {
 
                 $messageBody = $this->container->get('twig')->render("cms/cart/emails/invoice.twig", array(
                     'orderContainer' => $orderContainer,
@@ -215,15 +216,15 @@ trait CmsCartTrait
                 return new RedirectResponse('/cart/payment/success?id=' . $orderContainer->getUniqid());
 
             } else {
-
-                $orderContainer->setPayStatus(CartService::STATUS_UNPAID);
+                $orderContainer->setCategory(CartService::STATUS_UNPAID);
+                $orderContainer->setPayStatus($orderContainer->getCategory());
                 $orderContainer->save();
                 $this->container->get('session')->set(CartService::SESSION_ID, $orderContainer->getId());
                 return new RedirectResponse('/cart-failed?id=' . $orderContainer->getUniqid());
 
             }
 
-        } else if ($orderContainer->getPayStatus() == CartService::STATUS_SUCCESS) {
+        } else if ($orderContainer->getCategory() == CartService::STATUS_SUCCESS) {
 
             $this->container->get('session')->set(CartService::SESSION_ID, null);
             return new RedirectResponse('/cart/payment/failed?id=' . $orderContainer->getUniqid());
@@ -248,7 +249,7 @@ trait CmsCartTrait
             throw new NotFoundHttpException();
         }
 
-        if ($orderContainer->getPayStatus() != CartService::STATUS_SUCCESS) {
+        if ($orderContainer->getCategory() != CartService::STATUS_SUCCESS) {
             return new RedirectResponse('/cart/payment/failed?id=' . $orderContainer->getUniqid());
         }
 
@@ -275,7 +276,7 @@ trait CmsCartTrait
             throw new NotFoundHttpException();
         }
 
-        if ($orderContainer->getPayStatus() == CartService::STATUS_SUCCESS) {
+        if ($orderContainer->getCategory() == CartService::STATUS_SUCCESS) {
             return new RedirectResponse('/cart/payment/success?id=' . $orderContainer->getUniqid());
         }
 

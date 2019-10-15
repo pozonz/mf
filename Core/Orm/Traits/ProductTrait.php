@@ -94,10 +94,10 @@ trait ProductTrait
         if ($this->getThumbnail()) {
             return $this->getThumbnail();
         }
-        $objGallery = $this->objGallery();
-        if (count($objGallery) > 0) {
-            return $objGallery[0]->getTitle();
-        }
+//        $objGallery = $this->objGallery();
+//        if (count($objGallery) > 0) {
+//            return $objGallery[0]->getTitle();
+//        }
         return null;
     }
 

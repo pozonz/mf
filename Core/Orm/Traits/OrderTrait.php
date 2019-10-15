@@ -164,4 +164,21 @@ trait OrderTrait
         $obj->objOrderItems = $this->objOrderItems();
         return $obj;
     }
+
+    /**
+     * @return string
+     */
+    static public function getCmsOrmsTwig()
+    {
+        return 'cms/orms/orms-custom-order.html.twig';
+    }
+
+    /**
+     * @return string
+     */
+    static public function getCmsOrmTwig()
+    {
+        return 'cms/orms/orm-custom-order.html.twig';
+    }
+
 }

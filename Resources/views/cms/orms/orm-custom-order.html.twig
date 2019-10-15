@@ -1,0 +1,174 @@
+{% extends 'cms/orms/orm.html.twig' %}
+
+{% block formWidgets %}
+	<h2>Order Detail</h2>
+	<div class="formStyle textarea">
+		<label>Status:</label> {% if orm.category == 0 %}NEW{% elseif orm.category == 2 %}PAID{% else %}UNPAID{% endif %}
+	</div>
+	<div class="formStyle textarea">
+		<label>ID:</label> #{{ orm.uniqid }}
+	</div>
+	<div class="formStyle textarea" style="margin-bottom: 2em;">
+		<label>Email:</label> {{ orm.email }}
+	</div>
+
+	<div class="formStyle ">
+		<div class="">
+			<h3>Billing address</h3>
+		</div>
+		<div class="formStyle textarea">
+			<label>First Name:</label> {{ orm.billingFirstname }}
+		</div>
+		<div class="formStyle textarea">
+			<label>Last Name:</label> {{ orm.billingLastname }}
+		</div>
+		<div class="formStyle textarea">
+			<label>Phone:</label> {{ orm.billingPhone }}
+		</div>
+		<div class="formStyle textarea">
+			<label>Address:</label> {{ orm.billingAddress }}
+		</div>
+		<div class="formStyle textarea">
+			<label>Address2:</label> {{ orm.billingAddress2 }}
+		</div>
+		<div class="formStyle textarea">
+			<label>Suburb:</label> {{ orm.billingState }}
+		</div>
+		<div class="formStyle textarea">
+			<label>City:</label> {{ orm.billingCity }}
+		</div>
+		<div class="formStyle textarea">
+			<label>Postcode:</label> {{ orm.billingPostcode }}
+		</div>
+		<div label="formStyle textarea">
+			<label>Country:</label> {{ orm.billingCountry }}
+		</div>
+	</div>
+
+	<div class="formStyle ">
+		<div class="">
+			<h3>Shipping address</h3>
+		</div>
+
+		{%  if orm.billingSame %}
+			<div class="pb-3">
+				<strong>Same as billing address</strong>
+			</div>
+		{% else %}
+			<div class="formStyle textarea">
+				<label>First Name:</label> {{ orm.shippingFirstname }}
+			</div>
+			<div class="formStyle textarea">
+				<label>Last Name:</label> {{ orm.shippingLastname }}
+			</div>
+			<div class="formStyle textarea">
+				<label>Phone:</label> {{ orm.shippingPhone }}
+			</div>
+			<div class="formStyle textarea">
+				<label>Address:</label> {{ orm.shippingAddress }}
+			</div>
+			<div class="formStyle textarea">
+				<label>Address2:</label> {{ orm.shippingAddress2 }}
+			</div>
+			<div class="formStyle textarea">
+				<label>Suburb:</label> {{ orm.shippingState }}
+			</div>
+			<div class="formStyle textarea">
+				<label>City:</label> {{ orm.shippingCity }}
+			</div>
+			<div class="formStyle textarea">
+				<label>Postcode:</label> {{ orm.shippingPostcode }}
+			</div>
+			<div label="formStyle textarea">
+				<label>Country:</label> {{ orm.shippingCountry }}
+			</div>
+		{% endif %}
+	</div>
+
+	<div class="pb-5">
+		<label>Note:</label> {{ orm.note|nl2br }}
+	</div>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<td class="tableHead">Product</td>
+				<td class="tableHead" style="width: 10em">Price</td>
+				<td class="tableHead">Qty</td>
+				<td class="tableHead" style="width: 10em">Subtotal</th>
+			</tr>
+		</tbody>
+
+		<tbody>
+			{% for itm in orm.objOrderItems %}
+				<tr>
+					<td>{{ itm.title }}</td>
+					<td class="text-right">
+						{% if itm.onSaleActive %}
+							<del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>
+							<small>$</small>
+							{{ itm.price|number_format(2, '.', ',') }}
+						{% else %}
+							<small>$</small>
+							{{ itm.price|number_format(2, '.', ',') }}
+						{% endif %}
+					</td>
+					<td class="text-right">{{ itm.quantity }}</td>
+					<td class="text-right">${{ itm.totalPrice|number_format(2, '.', ',') }}</td>
+				</tr>
+			{% endfor %}
+
+			{% if orm.discount %}
+				<tr>
+					<td style="border: none;"></td>
+					<td class="text-right font-weight-bold" colspan="2">Subtotal:</td>
+					<td class="text-right font-weight-bold">
+						${{ orm.subtotal|number_format(2, '.', ',') }}
+					</td>
+				</tr>
+
+				<tr>
+					<td style="border: none;"></td>
+					<td class="text-right font-weight-bold" colspan="2">Discount:</td>
+					<td class="text-right font-weight-bold">
+						-${{ orm.discount|number_format(2, '.', ',') }}
+					</td>
+				</tr>
+
+				<tr>
+					<td style="border: none;"></td>
+					<td class="text-right font-weight-bold" colspan="2">After discount:</td>
+					<td class="text-right font-weight-bold">
+						${{ orm.afterDiscount|number_format(2, '.', ',') }}
+						<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td style="border: none;"></td>
+					<td class="text-right font-weight-bold" colspan="2">Subtotal:</td>
+					<td class="text-right font-weight-bold">
+						${{ orm.subtotal|number_format(2, '.', ',') }}
+						<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
+					</td>
+				</tr>
+			{% endif %}
+
+			<tr>
+				<td style="border: none;"></td>
+				<td class="text-right font-weight-bold" colspan="2">Delivery fee:</td>
+				<td class="text-right font-weight-bold">
+					${{ orm.shippingCost|number_format(2, '.', ',') }}
+					<div><small>({{ orm.shippingTitle }})</small></div>
+				</td>
+			</tr>
+			<tr>
+				<td style="border: none;"></td>
+				<td class="text-right font-weight-bold" colspan="2">Total:</td>
+				<td class="text-right font-weight-bold">${{ orm.total|number_format(2, '.', ',') }}</td>
+			</tr>
+		</tbody>
+	</table>
+{% endblock %}
+
+

@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core\Service;
 
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class CartService
@@ -66,7 +67,10 @@ class CartService
                 }
             }
 
-            $orderContainer->update($customer);
+            $request = Request::createFromGlobals();
+            if (strpos($request->getPathInfo(), '/cart') === 0) {
+                $orderContainer->update($customer);
+            }
 
             $this->orderContainer = $orderContainer;
         }

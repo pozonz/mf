@@ -49,19 +49,59 @@ trait CmsCartAccountTrait
      */
     public function accountOrders()
     {
+        $request = Request::createFromGlobals();
+        $limit = 20;
+        $pagination = $request->get('pagination') ?: 1;
+
+        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        $fullClass = ModelService::fullClass($pdo, 'Order');
+        $orders = $fullClass::active($pdo, array(
+            'whereSql' => 'm.customerId = ? AND m.category > 0',
+            'params' => array($orm->getId()),
+            'page' => $pagination,
+            'limit' => $limit,
+            'sort' => 'id',
+            'order' => 'DESC',
+        ));
+        $total = $fullClass::active($pdo, array(
+            'whereSql' => 'm.customerId = ? AND m.category > 0',
+            'params' => array($orm->getId()),
+            'count' => 1,
+        ));
+        $total = ceil($total['count'] / $limit);
+
         return $this->render('cms/cart/account-member-orders.html.twig', array(
             'node' => null,
+            'orders' => $orders,
+            'total' => $total,
+            'pagination' => $pagination,
+            'limit' => $limit,
         ));
     }
 
     /**
-     * @route("/account/order")
+     * @route("/account/order/{id}")
      * @return mixed
      */
-    public function accountOrder()
+    public function accountOrder($id)
     {
+
+        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        $fullClass = ModelService::fullClass($pdo, 'Order');
+        $order = $fullClass::getByField($pdo, 'uniqid', $id);
+        if ($order->getCustomerId() != $orm->getId()) {
+            throw new NotFoundHttpException();
+        }
+
         return $this->render('cms/cart/account-member-order.html.twig', array(
             'node' => null,
+            'order' => $order,
         ));
     }
 

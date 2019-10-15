@@ -167,6 +167,50 @@ trait CmsOrmTrait
     }
 
     /**
+     * @route("/manage/orms/Order")
+     * @return Response
+     */
+    public function orders()
+    {
+        $className = 'Order';
+
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        /** @var _Model $model */
+        $model = _Model::getByField($pdo, 'className', $className);
+        $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
+
+        $params = $this->prepareParams();
+
+        $request = Request::createFromGlobals();
+        $pageNum = $request->get('pageNum') ?: 1;
+        $sort = $request->get('sort') ?: $model->getDefaultSortBy();
+        $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
+
+        $orms = $fullClass::data($pdo, array(
+            "whereSql" => 'm.category > 0',
+            "page" => $pageNum,
+            "limit" => $model->getNumberPerPage(),
+            "sort" => $sort,
+            "order" => $order,
+        ));
+
+        $total = $fullClass::data($pdo, array(
+            "whereSql" => 'm.category > 0',
+            "count" => 1,
+        ));
+        $params['totalPages'] = ceil($total['count'] / $model->getNumberPerPage());
+        $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order";
+        $params['pageNum'] = $pageNum;
+        $params['sort'] = $sort;
+        $params['order'] = $order;
+
+        $params['ormModel'] = $model;
+        $params['orms'] = $orms;
+        return $this->render($params['node']->getTemplate(), $params);
+    }
+
+    /**
      * @route("/manage/orms/{className}")
      * @route("/manage/admin/orms/{className}")
      * @route("/manage/pages/orms/{className}")

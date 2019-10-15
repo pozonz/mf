@@ -11,23 +11,25 @@
                             <th>ID</th>
                             <th>Date</th>
                             <th>Name</th>
+                            <th>Status</th>
                             <th class="text-right">Total</th>
                             <th class="text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for i in 1..5 %}
+                        {% for itm in orders %}
                             <tr>
-                                <td>#20181245</td>
-                                <td>15 Oct 2013</td>
-                                <td>Andrew Mike</td>
-                                <td class="text-right">$500</td>
+                                <td>#{{ itm.uniqid }}</td>
+                                <td>{{ itm.added|date('d M y') }}</td>
+                                <td>{{ itm.billingFirstName }} {{ itm.billingLastName }}</td>
+                                <td>{{ itm.category == 2 ? 'Paid' : 'Unpaid' }}</td>
+                                <td class="text-right">${{ itm.total|number_format(2) }}</td>
                                 <td class="td-actions text-right">
                                     <a href="/account/order" class="btn btn-success btn-sm">
                                         <i class="fa fa-cart-plus"></i>
                                     </a>
-                                    <a href="/account/order" class="btn btn-info btn-sm">
-                                        <i class="fa fa-info"></i>
+                                    <a href="/account/order/{{ itm.uniqid }}" class="btn btn-info btn-sm">
+                                        <i class="fa fa-search"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -38,29 +40,12 @@
         </div>
         <div class="col-12 mt-5">
             <div class="pagination-area">
-                <ul class="pagination pagination-primary pagination-no-border justify-content-center">
-                    <li class="page-item">
-                        <a href="#paper-kit" class="page-link"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-                    </li>
-                    <li class="page-item active">
-                        <a href="#paper-kit" class="page-link">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="#paper-kit" class="page-link">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="#paper-kit" class="page-link">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="#paper-kit" class="page-link">4</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="#paper-kit" class="page-link">5</a>
-                    </li>
-                    <li class="page-item">
-                        <a href="#paper-kit" class="page-link"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-                    </li>
-                </ul>
+                {% set url = app.request.pathInfo %}
+                {% include 'includes/pagination.html.twig' with {
+                    total: total,
+                    pagination: pagination,
+                    url: url
+                } %}
             </div>
         </div>
     </div>

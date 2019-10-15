@@ -20,8 +20,8 @@
                             <td><input type="radio" autocomplete="off" class="js-primary" name="primary" {% if itm.primaryAddress == 1 %}checked{% endif %}/></td>
                             <td>{{ itm.__toString }}</td>
                             <td class="td-actions text-right">
-                                <a href="/account/address/{{ itm.uniqid }}" class="btn btn-round btn-sm btn-success btn-just-icon">
-                                    <i class="nc-icon nc-zoom-split"></i>
+                                <a href="/account/address/{{ itm.uniqid }}" class="btn btn-round btn-sm btn-success btn-just-icon" style="line-height: 17px">
+                                    <i class="fa fa-pencil"></i>
                                 </a>
                                 <button class="btn btn-round btn-sm btn-danger btn-just-icon js-modal" data-toggle="modal" data-target="#deleteConfirm">
                                     <i class="nc-icon nc-simple-remove"></i>

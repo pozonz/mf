@@ -4,17 +4,37 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 
 use MillenniumFalcon\Core\Orm\CustomerAddress;
 use MillenniumFalcon\Core\Orm\CustomerMembership;
+use MillenniumFalcon\Core\Orm\Order;
+use MillenniumFalcon\Core\Service\CartService;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 trait CustomerTrait
 {
+    protected $membership;
     /**
      * @return array|null
      */
     public function objMembership()
     {
-        return CustomerMembership::getById($this->getPdo(), $this->getMembership());
+        if (!$this->membership) {
+            $this->membership = CustomerMembership::getById($this->getPdo(), $this->getMembership());
+        }
+        return $this->membership;
+    }
+
+    /**
+     * @return int
+     */
+    public function objTotalSpent()
+    {
+        $total = Order::active($this->getPdo(), array(
+            'select' => 'SUM(m.total) AS count',
+            'whereSql' => 'm.customerId = ? AND m.category = ?',
+            'params' => [$this->getId(), CartService::STATUS_SUCCESS],
+            'orm' => 0.
+        ));
+        return $total[0]['count'] ?? 0;
     }
 
     /**

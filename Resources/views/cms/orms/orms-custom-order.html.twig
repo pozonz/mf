@@ -1,0 +1,45 @@
+{% extends 'cms/orms/orms.html.twig' %}
+
+{% block container %}
+    <div id="h1">
+        <h1>{{ ormModel.title }}</h1>
+        {#<a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>#}
+    </div>
+
+    <table class="table table-striped table-bordered table-hover table-middle">
+        {% block tableHead %}
+            <tbody>
+                <tr>
+                    <td class="tableHead" width="40px"><a href="{{ app.request.pathInfo }}?sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
+                    <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Title</a></td>
+                    <td class="tableHead" width="150px"><a href="{{ app.request.pathInfo }}?sort=category&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Status</a></td>
+                    <td class="tableHead" width="90px" align="right">Action</td>
+                </tr>
+            </tbody>
+        {% endblock %}
+
+        {% block tableBody %}
+            <tbody {% block extraColumns %}{% endblock %}>
+                {% for itm in orms %}
+                    <tr id="{{ itm.id }}" class="js-orm-info">
+                        <td>{{ itm.id }}</td>
+                        <td>{{ itm.title }}</td>
+                        <td>{% if itm.category == 0 %}NEW{% elseif itm.category == 2 %}PAID{% else %}UNPAID{% endif %}</td>
+                        <td class="iconCell" align="right">
+                            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
+                            <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/develop/images/search.png" alt="Edit Record" title="Edit Record" border="0"></a>
+                            {#<a href="{{ node.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>#}
+                            {#<a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>#}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% endblock %}
+    </table>
+
+    {% block dataPagination %}
+        {% if totalPages > 1 %}
+            {% include 'cms/includes/pagination.twig' %}
+        {% endif %}
+    {% endblock %}
+{% endblock %}
