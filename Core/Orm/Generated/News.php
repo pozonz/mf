@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-19 21:46:47
+//Last updated: 2019-10-17 22:05:22
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -30,6 +30,16 @@ class News extends Orm
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $content;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $relatedBlog;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $featured;
     
     /**
      * @return mixed
@@ -109,6 +119,38 @@ class News extends Orm
     public function setContent($content)
     {
         $this->content = $content;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getRelatedBlog()
+    {
+        return $this->relatedBlog;
+    }
+    
+    /**
+     * @param mixed relatedBlog
+     */
+    public function setRelatedBlog($relatedBlog)
+    {
+        $this->relatedBlog = $relatedBlog;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getFeatured()
+    {
+        return $this->featured;
+    }
+    
+    /**
+     * @param mixed featured
+     */
+    public function setFeatured($featured)
+    {
+        $this->featured = $featured;
     }
     
 }

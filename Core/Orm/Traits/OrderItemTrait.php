@@ -44,8 +44,8 @@ trait OrderItemTrait
             $this->setPrice($variant->objPrice($customer));
         }
 
-        $this->setTotalPrice($this->getPrice() * $this->getQuantity());
-        $this->setTotalWeight($variant->getWeight() * $this->getQuantity());
+        $this->setTotalPrice(($this->getPrice() ?: 0) * $this->getQuantity());
+        $this->setTotalWeight(($variant->getWeight() ?: 0) * $this->getQuantity());
         $this->save();
         return true;
     }

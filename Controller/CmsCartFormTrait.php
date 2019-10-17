@@ -19,6 +19,8 @@ trait CmsCartFormTrait
      */
     public function addToCart($variantId, $url, CartService $cartService)
     {
+        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+
         $quantity = 1;
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
@@ -34,6 +36,7 @@ trait CmsCartFormTrait
         $orderItem->setTitle($product->objTitle() . ' - ' . $variant->getTitle());
         $orderItem->setOrderId($orderContainer->getId());
         $orderItem->setProductId($variant->getId());
+        $orderItem->setPrice($variant->objPrice($customer));
         $orderItem->setWeight($variant->getWeight());
         $orderItem->setQuantity($quantity);
 
@@ -57,7 +60,6 @@ trait CmsCartFormTrait
             $orderItem->save();
             $submitted = 1;
 
-            $customer = $this->container->get('security.token_storage')->getToken()->getUser();
             $orderContainer->update($customer);
 
             $orderItem->setQuantity($quantity);

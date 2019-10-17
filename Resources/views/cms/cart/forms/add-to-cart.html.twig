@@ -1,7 +1,7 @@
 {% form_theme formView 'form.twig' %}
 
 <div class="js-add-cart-form">
-    <form action="{{ url }}" autocomplete="off" novalidate method="POST">
+    <form action="{{ url }}" autocomplete="off" novalidate method="POST" class="add-cart-form">
         <div class="row">
             <div class="pt-3 col-md-7">
                 {{ form_label(formView.quantity) }}

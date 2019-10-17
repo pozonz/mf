@@ -46,14 +46,21 @@ trait ProductTrait
      */
     public function objRelatedProducts()
     {
-        $relatedProducts = $this->getRelatedProducts() ? json_decode($this->getRelatedProducts()) : [];
-
-        $objRelatedProducts = [];
-        $fullClass = ModelService::fullClass($this->getPdo(), 'Product');
-        foreach ($relatedProducts as $relatedProduct) {
-            $objRelatedProducts[] = $fullClass::getById($this->getPdo(), $relatedProduct);
+        $result = $this->getRelatedProducts() ? json_decode($this->getRelatedProducts()) : [];
+        if (!count($result)) {
+            return [];
         }
-        return $objRelatedProducts;
+
+        $ids = array_map(function ($itm) {
+            return '?';
+        }, $result);
+        $sql = "m.id IN (" . join(',', $ids) . ")";
+
+        $fullClass = ModelService::fullClass($this->getPdo(), 'Product');
+        return $fullClass::data($this->getPdo(), [
+            'whereSql' => $sql,
+            'params' => $result,
+        ]);
     }
 
     /**
@@ -106,15 +113,21 @@ trait ProductTrait
      */
     public function objCategories()
     {
-        $fullClass = ModelService::fullClass($this->getPdo(), 'ProductCategory');
-        $categories = [];
-        $sql = '';
-        $params = [];
         $result = $this->getCategories() ? json_decode($this->getCategories()) : [];
-        foreach ($result as $itm) {
-            $categories[] = $fullClass::getById($this->getPdo(), $itm);
+
+        $sql = '';
+        if (count($result)) {
+            $ids = array_map(function ($itm) {
+                return '?';
+            }, $result);
+            $sql = "m.id IN (" . join(',', $ids) . ")";
         }
-        return $categories;
+
+        $fullClass = ModelService::fullClass($this->getPdo(), 'ProductCategory');
+        return $fullClass::data($this->getPdo(), [
+            'whereSql' => $sql,
+            'params' => $result,
+        ]);
     }
 
 
@@ -123,7 +136,6 @@ trait ProductTrait
         $pdo = $this->getPdo();
         $fullClass = ModelService::fullClass($pdo, 'ProductCategory');
         $tree = $tree = new \BlueM\Tree($fullClass::data($pdo, [
-            "whereSql" => 'm.count > 0',
             "select" => 'm.id AS id, m.parentId AS parent, m.title',
             "sort" => 'm.rank',
             "order" => 'ASC',

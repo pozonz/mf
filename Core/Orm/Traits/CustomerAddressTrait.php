@@ -6,6 +6,8 @@ use MillenniumFalcon\Core\Service\ModelService;
 
 trait CustomerAddressTrait
 {
+    protected $country;
+    
     /**
      * @return string
      */
@@ -40,7 +42,10 @@ trait CustomerAddressTrait
      * @return Country|null
      */
     public function objCountry() {
-        $fullClass = ModelService::fullClass($this->getPdo(), 'ShippingCountry');
-        return $fullClass::getByField($this->getPdo(), 'code', $this->getCountry());
+        if ($this->country) {
+            $fullClass = ModelService::fullClass($this->getPdo(), 'ShippingCountry');
+            $this->country = $fullClass::getByField($this->getPdo(), 'code', $this->getCountry());
+        }
+        return $this->country;
     }
 }

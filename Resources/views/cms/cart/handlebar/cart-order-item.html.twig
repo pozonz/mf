@@ -3,8 +3,8 @@
         <td>
             <div class="img-container">
                 <a href="/product/{{ orderItem.objProductVariant.objProduct.url }}?option={{ orderItem.objProductVariant.slug }}">
-                    {{#compare orderItem.objProductVariant.objProduct.objThumbnail '' operator="!="}}<div class="card-back-image" style="background-image: url('/images/assets/{{ orderItem.objProductVariant.objProduct.objThumbnail }}/medium')">&nbsp;</div>{{/compare}}
-                    {{#compare orderItem.objProductVariant.objProduct.objThumbnail '' operator="=="}}<div class="card-back-image" style="background-image: url('/images/image-placeholder1.jpg')">&nbsp;</div>{{/compare}}
+                    {{#compare orderItem.objProductVariant.objProduct.objThumbnail null operator="!="}}<div class="card-back-image" style="background-image: url('/images/assets/{{ orderItem.objProductVariant.objProduct.objThumbnail }}/medium')">&nbsp;</div>{{/compare}}
+                    {{#compare orderItem.objProductVariant.objProduct.objThumbnail null operator="=="}}<div class="card-back-image" style="background-image: url('/images/placeholder.jpg')">&nbsp;</div>{{/compare}}
                 </a>
             </div>
         </td>
