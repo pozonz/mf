@@ -1,5 +1,5 @@
 {% extends 'cms/orms/orms.html.twig' %}
-{% from "cms/includes/nestable.twig" import nest as nest %}
+{% from "cms/includes/nestable-page.twig" import nest as nest %}
 
 {% set pageRoot = model.data('Page')|nestablePges(cat) %}
 
