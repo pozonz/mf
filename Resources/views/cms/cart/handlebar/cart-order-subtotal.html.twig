@@ -18,7 +18,7 @@
             Subtotal
         </td>
         <td class="td-total" colspan="2">
-            <small>$</small>
+            <small>{{currencyCountry}}$</small>
             {{#formatMoney order.subtotal}}{{/formatMoney}}
         </td>
     </tr>
@@ -42,7 +42,7 @@
                 After discount
             </td>
             <td class="td-total" colspan="2">
-                <small>$</small>
+                <small>{{currencyCountry}}$</small>
                 {{#formatMoney order.afterDiscount}}{{/formatMoney}}
             </td>
         </tr>

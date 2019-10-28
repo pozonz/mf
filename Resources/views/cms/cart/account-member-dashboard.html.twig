@@ -89,7 +89,7 @@
                         <td>{{ itm.added|date('d M y') }}</td>
                         <td>{{ itm.billingFirstName }} {{ itm.billingLastName }}</td>
                         <td>{{ itm.category == 2 ? 'Paid' : 'Unpaid' }}</td>
-                        <td class="text-right">${{ itm.total|number_format(2) }}</td>
+                        <td class="text-right">{{ getenv('CURRENCY_COUNTRY') }}${{ itm.total|number_format(2) }}</td>
                         <td class="td-actions text-right">
                             <a href="/account/order" class="btn btn-success btn-sm">
                                 <i class="fa fa-cart-plus"></i>

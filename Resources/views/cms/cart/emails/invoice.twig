@@ -207,7 +207,7 @@
                         <tr>
                             <td style="border-top: none"></td>
                             <td colspan="2" class="text-right font-weight-bold">Total:</td>
-                            <td class="text-right font-weight-bold">${{ orderContainer.total|number_format(2, '.', ',') }}</td>
+                            <td class="text-right font-weight-bold">{{ getenv('CURRENCY_COUNTRY') }}${{ orderContainer.total|number_format(2, '.', ',') }}</td>
                         </tr>
                         <tr>
                             <td style="border-top: none"></td>
