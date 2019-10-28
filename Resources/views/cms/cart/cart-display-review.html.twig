@@ -129,7 +129,7 @@
                                         Total
                                     </td>
                                     <td class="td-total">
-                                        <small>$</small>
+                                        <small>{{ getenv('CURRENCY_COUNTRY') }}$</small>
                                         {{ orderContainer.total|number_format(2, '.', ',') }}
                                     </td>
                                 </tr>

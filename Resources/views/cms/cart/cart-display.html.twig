@@ -478,7 +478,8 @@
         function renderOrderSubtotal() {
             $('.js-cart-order-subtotal').empty();
             $('.js-cart-order-subtotal').append(_templateOrderSubtotal({
-                order: _order
+                order: _order,
+                currencyCountry: '{{ getenv('CURRENCY_COUNTRY') }}',
             }));
         };
 
@@ -497,7 +498,8 @@
         function renderOrderTotal() {
             $('.js-cart-order-total').empty();
             $('.js-cart-order-total').append(_templateOrderTotal({
-                order: _order
+                order: _order,
+                currencyCountry: '{{ getenv('CURRENCY_COUNTRY') }}',
             }));
 
             //what?
