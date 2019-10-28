@@ -313,7 +313,7 @@ trait CmsOrmTrait
     public function orm($className, $ormId)
     {
         $request = Request::createFromGlobals();
-        if ($request->get('fragment') == 1) {
+        if ($request->get('fragment') == 1 && $_SERVER['APP_ENV'] == 'dev') {
             $this->container->get('profiler')->disable();
         }
 
