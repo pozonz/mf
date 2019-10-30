@@ -18,7 +18,7 @@ trait FragmentBlockTrait
      */
     public function objItems()
     {
-        return json_decode($this->getItems());
+        return $this->getItems() ? json_decode($this->getItems()) : [];
     }
 
     /**

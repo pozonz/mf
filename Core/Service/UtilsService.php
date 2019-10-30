@@ -38,7 +38,7 @@ class UtilsService
         $fullClass = ModelService::fullClass($pdo, 'FragmentBlock');
         $blocks = $fullClass::active($pdo);
         foreach ($blocks as $block) {
-            $items = json_decode($block->getItems());
+            $items = $block->getItems() ? json_decode($block->getItems()) : [];
             foreach ($items as &$item) {
                 $choices = array();
                 if ($item->widget == 9 || $item->widget == 10) {
