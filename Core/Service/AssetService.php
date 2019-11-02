@@ -137,8 +137,20 @@ class AssetService
         $file->move(AssetService::getImageCachePath());
         $tmpFile = AssetService::getImageCachePath() . $file->getFilename();
         $chkFile = $tmpFile . '.' . $ext;
-
         rename($tmpFile, $chkFile);
+        return static::processFileWithAsset($pdo, $chkFile, $orm);
+
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $tmpFile
+     * @param $orm
+     * @return JsonResponse
+     */
+    static public function processFileWithAsset(Connection $pdo, $chkFile, $orm) {
+        $ext = pathinfo($chkFile, PATHINFO_EXTENSION);
+
         $info = getimagesize($chkFile);
         if ($info !== false) {
             list($x, $y) = $info;
@@ -149,7 +161,7 @@ class AssetService
 
         $fnlFile = AssetService::getUploadPath() . $orm->getId() . '.' . $ext;
         if ($orm->getIsImage() == 1) {
-            $command = getenv('CONVERT_CMD') . ' ' . $chkFile . ' -auto-orient ' . $fnlFile;
+            $command = getenv('CONVERT_CMD') . ' "' . $chkFile . '" -auto-orient ' . $fnlFile;
             static::generateOutput($command);
             unlink($chkFile);
         } else {
