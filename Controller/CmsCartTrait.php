@@ -54,7 +54,7 @@ trait CmsCartTrait
         $request = Request::createFromGlobals();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+            $customer = UtilsService::getUser($this->container);;
             $orderContainer->update($customer);
 
             return new RedirectResponse('/cart/review');

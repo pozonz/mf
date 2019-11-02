@@ -57,7 +57,7 @@ class CartService
             $orderContainer->setBillingSave($orderContainer->getBillingSave() ? true : false);
             $orderContainer->setShippingSave($orderContainer->getShippingSave() ? true : false);
 
-            $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+            $customer = UtilsService::getUser($this->container);
             if (gettype($customer) == 'object') {
                 $orderContainer->setCustomerId($customer->getId());
                 $orderContainer->setCustomerName($customer->getFirstName() . ' ' . $customer->getLastName());

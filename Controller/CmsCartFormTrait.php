@@ -6,6 +6,7 @@ namespace MillenniumFalcon\Controller;
 use MillenniumFalcon\Core\Form\Builder\CartAddItemForm;
 use MillenniumFalcon\Core\Service\CartService;
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\Service\UtilsService;
 use Symfony\Component\HttpFoundation\Request;
 
 trait CmsCartFormTrait
@@ -19,7 +20,7 @@ trait CmsCartFormTrait
      */
     public function addToCart($variantId, $url, CartService $cartService)
     {
-        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+        $customer = UtilsService::getUser($this->container);;
 
         $quantity = 1;
 

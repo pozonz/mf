@@ -12,6 +12,7 @@ use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Exception\RedirectException;
 use MillenniumFalcon\Core\Router;
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\Service\UtilsService;
 use MillenniumFalcon\Core\Twig\Extension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +71,7 @@ trait CmsTrait
      */
     protected function getNodes()
     {
-        $cmsUser = $this->container->get('security.token_storage')->getToken()->getUser();
+        $cmsUser = UtilsService::getUser($this->container);;
         if (!$cmsUser || gettype($cmsUser) == 'string') {
             $accessibleSections = [];
         } else {

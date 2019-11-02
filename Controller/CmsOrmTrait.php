@@ -13,6 +13,7 @@ use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Exception\RedirectException;
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\Service\UtilsService;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -398,7 +399,7 @@ trait CmsOrmTrait
             $isNew = $orm->getId() ? 0 : 1;
             $this->convertDateValue($orm, $model);
 
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = UtilsService::getUser($this->container);;
             $orm->setLastEditedBy($user->getId());
             $orm->save();
 

@@ -6,6 +6,7 @@ namespace MillenniumFalcon\Controller;
 use MillenniumFalcon\Core\Form\Builder\CartAddItemForm;
 use MillenniumFalcon\Core\Service\CartService;
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\Service\UtilsService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,7 +49,7 @@ trait CmsCartRestTrait
                 if ($variant->getStock() >= $qty) {
                     $itm->setQuantity($qty);
                     $itm->save();
-                    $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+                    $customer = UtilsService::getUser($this->container);;
                     $orderContainer->update($customer);
                 } else {
                     $result->status = 0;
@@ -81,7 +82,7 @@ trait CmsCartRestTrait
             }
         }
         $orderContainer->clearOrderItemsCache();
-        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+        $customer = UtilsService::getUser($this->container);;
         $orderContainer->update($customer);
         return new JsonResponse($result);
     }
@@ -113,7 +114,7 @@ trait CmsCartRestTrait
             $result->error = "Sorry, the promo code is invalid";
         }
 
-        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+        $customer = UtilsService::getUser($this->container);;
         $orderContainer->update($customer);
 
         return new JsonResponse($result);
@@ -161,7 +162,7 @@ trait CmsCartRestTrait
 //        } else {
 //            $orderContainer->setShippingCost($shippingOption->getPrice());
 //        }
-        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+        $customer = UtilsService::getUser($this->container);;
         $orderContainer->update($customer);
         return new JsonResponse($result);
     }
@@ -189,7 +190,7 @@ trait CmsCartRestTrait
             $orderContainer->setShippingId($shippingOption->getId());
             $orderContainer->setShippingTitle($shippingOption->getTitle());
             $orderContainer->setShippingCost($shippingOption->getPrice());
-            $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+            $customer = UtilsService::getUser($this->container);;
             $orderContainer->update($customer);
         }
         return new JsonResponse($result);

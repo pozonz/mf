@@ -53,7 +53,7 @@ trait CmsCartAccountTrait
         $limit = 20;
         $pagination = $request->get('pagination') ?: 1;
 
-        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+        $orm = UtilsService::getUser($this->container);
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
@@ -89,7 +89,7 @@ trait CmsCartAccountTrait
     public function accountOrder($id)
     {
 
-        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+        $orm = UtilsService::getUser($this->container);;
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
@@ -111,7 +111,7 @@ trait CmsCartAccountTrait
      */
     public function accountAddresses()
     {
-        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+        $orm = UtilsService::getUser($this->container);;
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
@@ -133,7 +133,7 @@ trait CmsCartAccountTrait
      */
     public function accountAddress($id)
     {
-        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+        $orm = UtilsService::getUser($this->container);;
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
@@ -221,7 +221,7 @@ trait CmsCartAccountTrait
      */
     public function accountProfile()
     {
-        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+        $orm = UtilsService::getUser($this->container);;
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
@@ -253,7 +253,7 @@ trait CmsCartAccountTrait
      */
     public function ajaxAccountAddressDelete()
     {
-        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+        $orm = UtilsService::getUser($this->container);;
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
@@ -279,7 +279,7 @@ trait CmsCartAccountTrait
      */
     public function ajaxAccountAddressPrimary()
     {
-        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+        $orm = UtilsService::getUser($this->container);;
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
@@ -320,7 +320,7 @@ trait CmsCartAccountTrait
      */
     public function accountPassword()
     {
-        $orm = $this->container->get('security.token_storage')->getToken()->getUser();
+        $orm = UtilsService::getUser($this->container);;
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 

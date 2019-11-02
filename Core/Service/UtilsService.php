@@ -168,6 +168,16 @@ class UtilsService
     }
 
     /**
+     * @param $container
+     * @return null
+     */
+    static public function getUser($container)
+    {
+        $token = $container->get('security.token_storage')->getToken();
+        return $token ? $token->getUser() : null;
+    }
+
+    /**
      * @param $categoryCode
      * @return null
      */
@@ -211,7 +221,8 @@ class UtilsService
      * @param $value
      * @return string
      */
-    public function getFormData($value) {
+    public function getFormData($value)
+    {
         if ($value[2] == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType') {
             return nl2br($value[1]);
         } else if ($value[2] == '\\MillenniumFalcon\\Core\\Form\\Type\\Wysiwyg') {
