@@ -35,6 +35,7 @@ trait CmsCartFormTrait
         $fullClass = ModelService::fullClass($pdo, 'OrderItem');
         $orderItem = new $fullClass($pdo);
         $orderItem->setTitle($product->objTitle() . ' - ' . $variant->getTitle());
+        $orderItem->setSku($variant->getSku());
         $orderItem->setOrderId($orderContainer->getId());
         $orderItem->setProductId($variant->getId());
         $orderItem->setPrice($variant->objPrice($customer));

@@ -102,7 +102,10 @@
 		<tbody>
 			{% for itm in orm.objOrderItems %}
 				<tr>
-					<td>{{ itm.title }}</td>
+					<td>
+						<p>{{ itm.title }}</p>
+						<small>{{ itm.sku }}</small>
+					</td>
 					<td class="text-right">
 						{% if itm.onSaleActive %}
 							<del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>

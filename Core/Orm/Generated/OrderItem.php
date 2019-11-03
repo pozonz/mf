@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-10-13 12:07:39
+//Last updated: 2019-11-03 19:15:10
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -10,6 +10,11 @@ class OrderItem extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $title;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $sku;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -70,6 +75,22 @@ class OrderItem extends Orm
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getSku()
+    {
+        return $this->sku;
+    }
+    
+    /**
+     * @param mixed sku
+     */
+    public function setSku($sku)
+    {
+        $this->sku = $sku;
     }
     
     /**

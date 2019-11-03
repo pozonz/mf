@@ -212,6 +212,15 @@ trait CmsCartTrait
                     ->setBody($messageBody, 'text/html');
                 $this->container->get('mailer')->send($message);
 
+                //Update stock
+                $orderItems = $orderContainer->objOrderItems();
+                foreach ($orderItems as $orderItem) {
+                    $productVariant = $orderItem->objProductVariant();
+                    $stock = $productVariant->getStock();
+                    $productVariant->setStock($stock - $orderItem->getQuantity());
+                    $productVariant->save();
+                }
+
                 $this->container->get('session')->set(CartService::SESSION_ID, null);
                 return new RedirectResponse('/cart/payment/success?id=' . $orderContainer->getUniqid());
 
