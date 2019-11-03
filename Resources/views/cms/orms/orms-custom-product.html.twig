@@ -17,6 +17,12 @@
             </div>
 
             <div class="formStyle">
+                {{ form_label(formView.stock) }}
+                {{ form_widget(formView.stock) }}
+                {{ form_errors(formView.stock) }}
+            </div>
+
+            <div class="formStyle">
                 {{ form_label(formView.keywords) }}
                 {{ form_widget(formView.keywords) }}
                 {{ form_errors(formView.keywords) }}

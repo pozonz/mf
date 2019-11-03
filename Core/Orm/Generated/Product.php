@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-10-09 22:35:05
+//Last updated: 2019-11-03 19:35:58
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -95,6 +95,11 @@ class Product extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $onSaleActive;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $outOfStock;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -397,6 +402,22 @@ class Product extends Orm
     public function setOnSaleActive($onSaleActive)
     {
         $this->onSaleActive = $onSaleActive;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getOutOfStock()
+    {
+        return $this->outOfStock;
+    }
+    
+    /**
+     * @param mixed outOfStock
+     */
+    public function setOutOfStock($outOfStock)
+    {
+        $this->outOfStock = $outOfStock;
     }
     
     /**

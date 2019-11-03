@@ -4,8 +4,8 @@ namespace MillenniumFalcon\Controller;
 
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Builder\OrmForm;
+use MillenniumFalcon\Core\Form\Builder\OrmProductsForm;
 use MillenniumFalcon\Core\Form\Builder\SearchProduct;
-use MillenniumFalcon\Core\Form\Builder\CmsSearchProductForm;
 use MillenniumFalcon\Core\Nestable\FastTree;
 use MillenniumFalcon\Core\Nestable\Node;
 use MillenniumFalcon\Core\Nestable\Tree;
@@ -75,12 +75,14 @@ trait CmsOrmTrait
         $obj = new \stdClass();
         $obj->category = null;
         $obj->keywords = null;
+        $obj->stock = null;
 
         $request = Request::createFromGlobals();
         $search = $request->get('search');
         if ($search) {
             $obj->category = $search['category'] ?? null;
             $obj->keywords = $search['keywords'] ?? null;
+            $obj->stock = $search['stock'] ?? null;
 
             if ($obj->category) {
                 $node = $tree->getNodeById($obj->category);
@@ -102,6 +104,12 @@ trait CmsOrmTrait
                 ]);
             }
 
+            if ($obj->stock == 1) {
+                $sql = ($sql ?  "($sql) AND " : '') . "(m.outOfStock = 0 OR m.outOfStock IS NULL)";
+            } else if ($obj->stock == 2) {
+                $sql = ($sql ?  "($sql) AND " : '') . "(m.outOfStock = 1)";
+            }
+
 //            var_dump($sql, $params);exit;
             $extraUrl = http_build_query([
                 'search[category]' => $obj->category,
@@ -110,7 +118,7 @@ trait CmsOrmTrait
         }
 
 
-        $form = $this->container->get('form.factory')->create(CmsSearchProductForm::class, $obj, [
+        $form = $this->container->get('form.factory')->create(OrmProductsForm::class, $obj, [
             'categories' => $tree->getRootNodes(),
         ]);
         $request = Request::createFromGlobals();

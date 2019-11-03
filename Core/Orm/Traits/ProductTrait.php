@@ -216,8 +216,13 @@ trait ProductTrait
             'params' => [$this->getUniqid()],
         ]);
 
+        $outOfStock = 0;
         $price = null;
         foreach ($data as $itm) {
+            if ($itm->getAlertIfLessThan() > $itm->getStock()) {
+                $outOfStock = 1;
+            }
+
             $searchContent .= "{$itm->getTitle()} {$itm->getSku()} ";
             if ($price === null || $price > $itm->getPrice()) {
                 $price = $itm->getPrice();
@@ -231,6 +236,7 @@ trait ProductTrait
             }
         }
 
+        $this->setOutOfStock($outOfStock);
         $this->setContent($searchContent);
 
         parent::save($doubleCheckExistence);

@@ -13,13 +13,14 @@ use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CmsSearchProductForm extends AbstractType
+class OrmProductsForm extends AbstractType
 {
 
     public function getBlockPrefix()
@@ -37,6 +38,14 @@ class CmsSearchProductForm extends AbstractType
             ->add('category', ChoiceTree::class, [
                 'label' => 'Category:',
                 'choices' => $categories,
+            ])
+            ->add('stock', ChoiceType::class, [
+                'label' => 'Stock status:',
+                'choices' => [
+                    'In stock & Out of stock' => 0,
+                    'In stock only' => 1,
+                    'Out of stock only' => 2,
+                ],
             ])
             ->add('keywords', TextType::class, [
                 'label' => 'Keywords:'
