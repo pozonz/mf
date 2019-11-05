@@ -115,7 +115,7 @@ class Db
     {
         try {
             $sql = "ALTER TABLE `{$this->table}` 
-                      ADD COLUMN `$column` $attrs" . ($lastColumn ? " AFTER $lastColumn" : '');
+                      ADD COLUMN `$column` $attrs" . ($lastColumn ? " AFTER `$lastColumn`" : '');
             $stmt = $this->pdo->prepare($sql);
             return $stmt->execute();
         } catch (\Exception $ex) {
@@ -135,7 +135,7 @@ class Db
     {
         try {
             $sql = "ALTER TABLE `{$this->table}` 
-                      CHANGE `$oldColumn` `$newColumn` $dataType" . ($lastColumn ? " AFTER $lastColumn" : '');
+                      CHANGE `$oldColumn` `$newColumn` $dataType" . ($lastColumn ? " AFTER `$lastColumn`" : '');
             $stmt = $this->pdo->prepare($sql);
             return $stmt->execute();
         } catch (\Exception $ex) {

@@ -23,6 +23,36 @@ trait CmsOrmTrait
 {
 
     /**
+     * @route("/manage/orms/ProductCategory")
+     * @return Response
+     */
+    public function productCategory()
+    {
+        $className = 'ProductCategory';
+
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        /** @var _Model $model */
+        $model = _Model::getByField($pdo, 'className', $className);
+        $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
+
+        $params = $this->prepareParams();
+        $nodes = $fullClass::data($pdo, array(
+            "select" => 'm.id AS id, m.parentId AS parent, m.title, m.closed, m.status, m.count AS extraInfo',
+            "sort" => 'm.rank',
+            "order" => 'ASC',
+            "orm" => 0,
+        ));
+
+        $tree = new \BlueM\Tree($nodes, ['rootId' => null]);
+        $orms = $tree->getRootNodes();
+
+        $params['ormModel'] = $model;
+        $params['orms'] = $orms;
+        return $this->render($params['node']->getTemplate(), $params);
+    }
+
+    /**
      * @route("/manage/admin/orms/Page")
      * @return Response
      */
@@ -261,7 +291,7 @@ trait CmsOrmTrait
 
         } elseif ($model->getListType() == 2) {
             $nodes = $fullClass::data($pdo, array(
-                "select" => 'm.id AS id, m.parentId AS parent, m.title, m.closed, m.status, m.count AS extraInfo',
+                "select" => 'm.id AS id, m.parentId AS parent, m.title, m.closed, m.status',
                 "sort" => 'm.rank',
                 "order" => 'ASC',
                 "orm" => 0,

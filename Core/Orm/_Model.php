@@ -16,12 +16,14 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
         'publishFrom',
         'publishTo',
         'metaTitle',
-        'metaDescirption',
+        'metaDescription',
         'ogTitle',
-        'ogDescirption',
+        'ogDescription',
         'ogImage',
         'rank',
         'status',
+        'closed',
+        'slug',
     );
 
     const presetData = array(
@@ -38,11 +40,11 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
         ),
         'meta' => array(
             'metaTitle' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
-            'metaDescirption' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'metaDescription' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
         ),
         'og' => array(
             'ogTitle' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
-            'ogDescirption' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'ogDescription' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
             'ogImage' => '\\MillenniumFalcon\\Core\\Form\\Type\\AssetPicker'
         ),
         'rank' => array(

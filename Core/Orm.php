@@ -62,7 +62,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
      */
-    private $metaDescirption;
+    private $metaDescription;
 
     /**
      * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
@@ -72,7 +72,7 @@ abstract class Orm implements \JsonSerializable
     /**
      * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
      */
-    private $ogDescirption;
+    private $ogDescription;
 
     /**
      * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
@@ -98,6 +98,11 @@ abstract class Orm implements \JsonSerializable
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $closed;
+
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $extraInfo;
 
     /**
      * Orm constructor.
@@ -693,17 +698,17 @@ abstract class Orm implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getMetaDescirption()
+    public function getMetaDescription()
     {
-        return $this->metaDescirption;
+        return $this->metaDescription;
     }
 
     /**
-     * @param mixed $metaDescirption
+     * @param mixed $metaDescription
      */
-    public function setMetaDescirption($metaDescirption)
+    public function setMetaDescription($metaDescription)
     {
-        $this->metaDescirption = $metaDescirption;
+        $this->metaDescription = $metaDescription;
     }
 
     /**
@@ -725,17 +730,17 @@ abstract class Orm implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getOgDescirption()
+    public function getOgDescription()
     {
-        return $this->ogDescirption;
+        return $this->ogDescription;
     }
 
     /**
-     * @param mixed $ogDescirption
+     * @param mixed $ogDescription
      */
-    public function setOgDescirption($ogDescirption)
+    public function setOgDescription($ogDescription)
     {
-        $this->ogDescirption = $ogDescirption;
+        $this->ogDescription = $ogDescription;
     }
 
     /**
@@ -800,5 +805,21 @@ abstract class Orm implements \JsonSerializable
     public function setClosed($closed)
     {
         $this->closed = $closed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExtraInfo()
+    {
+        return $this->extraInfo;
+    }
+
+    /**
+     * @param mixed $extraInfo
+     */
+    public function setExtraInfo($extraInfo): void
+    {
+        $this->extraInfo = $extraInfo;
     }
 }

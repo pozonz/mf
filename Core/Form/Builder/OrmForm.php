@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\Form\Builder;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Constraints\ConstraintUnique;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
+use MillenniumFalcon\Core\Form\Type\ChoiceTree;
 use MillenniumFalcon\Core\Form\Type\LabelType;
 use MillenniumFalcon\Core\Form\Type\SpliterType;
 use MillenniumFalcon\Core\Nestable\Node;
@@ -71,10 +72,22 @@ class OrmForm extends AbstractType
             ));
         }
         foreach ($metadata as $itm) {
-            $label = preg_replace('/(?<!^)([A-Z])/', ' \\1', $itm);
-            $builder->add($itm, LabelType::class, [
-                'label' => ucfirst(strtolower($label)) . ':'
-            ]);
+            switch ($itm) {
+                case 'parentId':
+                    $column = new \stdClass();
+                    $column->widget = '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceTree';
+                    $column->label = 'Parent:';
+                    $column->sql = 'SELECT t1.id AS `key`, t1.title AS value, t1.parentId AS parentId FROM ProductCategory AS t1 ORDER BY t1.rank';
+                    $column->required = 0;
+                    $column->unique = 0;
+                    $builder->add($itm, ChoiceTree::class, $this->getOpts($pdo, $column, $orm));
+                    break;
+                default:
+                    $label = preg_replace('/(?<!^)([A-Z])/', ' \\1', $itm);
+                    $builder->add($itm, LabelType::class, [
+                        'label' => ucfirst(strtolower($label)) . ':'
+                    ]);
+            }
         }
     }
 

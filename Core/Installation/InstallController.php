@@ -12,6 +12,54 @@ use Symfony\Component\Routing\Annotation\Route;
 class InstallController extends Controller
 {
     /**
+     * @Route("/install/sync")
+     */
+    public function indexSync()
+    {
+        ini_set('max_execution_time', 9999);
+        ini_set('memory_limit', '9999M');
+
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        //Create tables
+        static::syncDbTable($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
+        if (file_exists($this->container->getParameter('kernel.project_dir') . '/src/Orm/')) {
+            static::syncDbTable($pdo, $this->container->getParameter('kernel.project_dir') . '/src/Orm/', "App\\Orm\\");
+        }
+
+        return $this->json([
+            'message' => 'Really! Again?',
+            'path' => 'src/Controller/CmsController.php',
+        ]);
+    }
+
+    /**
+     * @param $pdo
+     * @param $dir
+     * @param $namespace
+     */
+    static public function syncDbTable($pdo, $dir, $namespace)
+    {
+        $folders = [
+            '.',
+            '..',
+            'CmsConfig',
+            'Generated',
+            'Traits',
+        ];
+
+        $files = array();
+        $files = array_diff(array_merge($files, scandir($dir)), $folders);
+
+        $pdo->beginTransaction();
+        foreach ($files as $file) {
+            $className = $namespace . substr($file, 0, strrpos($file, '.'));
+            $className::sync($pdo);
+        }
+        $pdo->commit();
+    }
+
+    /**
      * @Route("/install")
      */
     public function index()

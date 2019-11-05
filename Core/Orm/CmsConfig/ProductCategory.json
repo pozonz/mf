@@ -2,9 +2,9 @@
     "id": "17",
     "uniqid": "5d7f59247451b",
     "slug": "product-categories",
-    "rank": "19",
+    "rank": "16",
     "added": "2019-09-16 21:43:00",
-    "modified": "2019-09-19 21:38:53",
+    "modified": "2019-11-05 20:06:20",
     "publishFrom": null,
     "publishTo": null,
     "metaTitle": null,
@@ -27,6 +27,6 @@
     "defaultSortBy": "id",
     "defaultOrder": 1,
     "columnsJson": "[{\"id\":\"z1568626956378\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1568885926535\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Count:\",\"field\":\"count\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
-    "metadata": "[]",
-    "presetData": "[]"
+    "metadata": "[\"parentId\"]",
+    "presetData": "[\"rank\"]"
 }

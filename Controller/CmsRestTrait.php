@@ -59,7 +59,7 @@ trait CmsRestTrait
             $orm = $fullClass::getById($pdo, $itm->id);
             if ($orm) {
                 $orm->setRank($itm->rank);
-                $orm->setParentId($itm->parentId);
+                $orm->setParentId($itm->parentId ?: null);
                 $orm->save();
             }
         }
