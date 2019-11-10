@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-09-19 22:10:57
+//Last updated: 2019-11-10 17:07:26
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -30,6 +30,11 @@ class DataGroup extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $builtInSection;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $loadFromConfig;
     
     /**
      * @return mixed
@@ -109,6 +114,22 @@ class DataGroup extends Orm
     public function setBuiltInSection($builtInSection)
     {
         $this->builtInSection = $builtInSection;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getLoadFromConfig()
+    {
+        return $this->loadFromConfig;
+    }
+    
+    /**
+     * @param mixed loadFromConfig
+     */
+    public function setLoadFromConfig($loadFromConfig)
+    {
+        $this->loadFromConfig = $loadFromConfig;
     }
     
 }

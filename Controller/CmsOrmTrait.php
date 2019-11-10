@@ -21,6 +21,40 @@ use Symfony\Component\Routing\Annotation\Route;
 
 trait CmsOrmTrait
 {
+    /**
+     * @route("/manage/orms/ShippingOptionMethod")
+     * @return Response
+     */
+    public function shippingOptionMethod()
+    {
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        $fullClass = ModelService::fullClass($pdo, 'ShippingOptionMethod');
+        $orm = $fullClass::getByField($pdo, 'selected', 1);
+        if (!$orm) {
+            $orm = $fullClass::data($pdo, [
+                'limit' => 1,
+                'oneOrNull' => 1,
+            ]);
+        }
+
+        if (!$orm) {
+            $className = 'ShippingOptionMethod';
+        } else {
+            $className = $orm->getClassName();
+        }
+
+        /** @var _Model $model */
+        $model = _Model::getByField($pdo, 'className', $className);
+        $fullClass = $model->getNamespace() . '\\' . $model->getClassName();
+
+        $params = $this->prepareParams();
+        $orms = $fullClass::data($pdo);
+
+        $params['ormModel'] = $model;
+        $params['orms'] = $orms;
+        return $this->render('cms/orms/orms-custom-shipping-option-method.html.twig', $params);
+    }
 
     /**
      * @route("/manage/orms/ProductCategory")
