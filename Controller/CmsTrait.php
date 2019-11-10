@@ -110,23 +110,28 @@ trait CmsTrait
                 $dataGroup->getIcon()
             );
 
-            if ($dataGroup->getTitle() == 'Files') {
-                $nodes[] = new PageNode(uniqid(), $dataGroup->getBuiltInSectionCode(), 0, 2, 'Asset', '/manage/orms/Asset/', 'cms/files/file.html.twig', null, 1, 1);
-            } else if ($dataGroup->getBuiltInSection() != 1) {
-                /** @var _Model[] $models */
-                $models = array_filter($modelMapData, function ($itm) use ($dataGroup) {
-                    return (strpos($itm->getDataGroups(), '"' . $dataGroup->getId() . '"') !== false && $itm->getDataType() == 0) ? 1 : 0;
-                });
-                if (count($models)) {
-                    $data = array();
-                    $data['Data'] = null;
-                    foreach ($models as $model) {
-                        $data[$model->getTitle()] = array(
-                            'model' => $model,
-                            'children' => array(),
-                        );
+            if ($dataGroup->getLoadFromConfig()) {
+                $data = json_decode($dataGroup->getConfig());
+                $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $dataGroupNodeId, $data, '/manage/orms/'));
+            } else {
+                if ($dataGroup->getTitle() == 'Files') {
+                    $nodes[] = new PageNode(uniqid(), $dataGroup->getBuiltInSectionCode(), 0, 2, 'Asset', '/manage/orms/Asset/', 'cms/files/file.html.twig', null, 1, 1);
+                } else if ($dataGroup->getBuiltInSection() != 1) {
+                    /** @var _Model[] $models */
+                    $models = array_filter($modelMapData, function ($itm) use ($dataGroup) {
+                        return (strpos($itm->getDataGroups(), '"' . $dataGroup->getId() . '"') !== false && $itm->getDataType() == 0) ? 1 : 0;
+                    });
+                    if (count($models)) {
+                        $data = array();
+                        $data['Data'] = null;
+                        foreach ($models as $model) {
+                            $data[$model->getTitle()] = array(
+                                'model' => $model,
+                                'children' => array(),
+                            );
+                        }
+                        $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $dataGroupNodeId, $data, '/manage/orms/'));
                     }
-                    $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $dataGroupNodeId, $data, '/manage/orms/'));
                 }
             }
         }
@@ -198,7 +203,7 @@ trait CmsTrait
                 'model' => $modelMapData['User'],
                 'children' => array(),
             ),
-            'Custom Sections' => array(
+            'CMS Sections' => array(
                 'model' => $modelMapData['DataGroup'],
                 'children' => array(),
             ),
@@ -291,29 +296,36 @@ trait CmsTrait
             if ($itm === null) {
                 $nodes[] = new PageNode(uniqid(), $parentId, $count, 1, $idx);
             } else {
-                $model = $itm['model'];
-                $className = $model->getClassName();
-                $children = $itm['children'];
+                $itm = (array)$itm;
+                if (isset($itm['single']) && $itm['single']) {
+                    $nodes[] = new PageNode(uniqid(), $parentId, $count, 1, $idx, $itm['url'], $itm['twig']);
+                } else {
+                    $model = $itm['model'];
+                    if (gettype($model) == 'string') {
+                        $model = _Model::getByField($pdo, 'className', $model);
+                    }
+                    $className = $model->getClassName();
+                    $children = $itm['children'];
 
-                $fullClass = ModelService::fullClass($pdo, $className);
-                $ormsTwig = $fullClass::getCmsOrmsTwig();
-                if (!$ormsTwig) {
-                    $ormsTwig = $ormsListTwig[$model->getListType()];
+                    $fullClass = ModelService::fullClass($pdo, $className);
+                    $ormsTwig = $fullClass::getCmsOrmsTwig();
+                    if (!$ormsTwig) {
+                        $ormsTwig = $ormsListTwig[$model->getListType()];
+                    }
+                    $ormTwig = $fullClass::getCmsOrmTwig();
+                    if (!$ormTwig) {
+                        $ormTwig = $ormDefaultTwig;
+                    }
+
+                    $modelNodeId = uniqid();
+                    $nodes[] = new PageNode($modelNodeId, $parentId, $count, 1, $idx, $baseUrl . $className, $ormsTwig);
+                    $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $baseUrl . $className . '/', $ormTwig, null, 1, 1);
+                    $nodes[] = new PageNode(uniqid(), $modelNodeId, 2, 2, '', $baseUrl . $className . '/copy/', $ormTwig, null, 1, 1);
+
+                    if (count($children)) {
+                        $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $modelNodeId, $children, $baseUrl, 3));
+                    }
                 }
-                $ormTwig = $fullClass::getCmsOrmTwig();
-                if (!$ormTwig) {
-                    $ormTwig = $ormDefaultTwig;
-                }
-
-                $modelNodeId = uniqid();
-                $nodes[] = new PageNode($modelNodeId, $parentId, $count, 1, $idx, $baseUrl . $className, $ormsTwig);
-                $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $baseUrl . $className . '/', $ormTwig, null, 1, 1);
-                $nodes[] = new PageNode(uniqid(), $modelNodeId, 2, 2, '', $baseUrl . $className . '/copy/', $ormTwig, null, 1, 1);
-
-                if (count($children)) {
-                    $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $modelNodeId, $children, $baseUrl, 3));
-                }
-
             }
             $count++;
         }

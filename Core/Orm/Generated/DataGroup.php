@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-11-10 17:07:26
+//Last updated: 2019-11-10 18:09:39
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -35,6 +35,11 @@ class DataGroup extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $loadFromConfig;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $config;
     
     /**
      * @return mixed
@@ -130,6 +135,22 @@ class DataGroup extends Orm
     public function setLoadFromConfig($loadFromConfig)
     {
         $this->loadFromConfig = $loadFromConfig;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+    
+    /**
+     * @param mixed config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
     }
     
 }

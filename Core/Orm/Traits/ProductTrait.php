@@ -121,6 +121,8 @@ trait ProductTrait
                 return '?';
             }, $result);
             $sql = "m.id IN (" . join(',', $ids) . ")";
+        } else {
+            return [];
         }
 
         $fullClass = ModelService::fullClass($this->getPdo(), 'ProductCategory');
