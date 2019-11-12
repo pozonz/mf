@@ -8,19 +8,20 @@
 
     {% block ormModelExtra %}{% endblock %}
 
-    <table class="table table-striped table-bordered table-hover table-middle">
-        {% block tableHead %}
-            <tbody>
+    {% block tableContainer %}
+        <table class="table table-striped table-bordered table-hover table-middle">
+            {% block tableHead %}
+                <tbody>
                 <tr>
                     <td class="tableHead" width="40px"><a href="{{ app.request.pathInfo }}?sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
                     <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Title</a></td>
                     <td class="tableHead" width="180px" align="right">Action</td>
                 </tr>
-            </tbody>
-        {% endblock %}
+                </tbody>
+            {% endblock %}
 
-        {% block tableBody %}
-            <tbody {% block extraColumns %}{% endblock %}>
+            {% block tableBody %}
+                <tbody {% block extraColumns %}{% endblock %}>
                 {% for itm in orms %}
                     <tr id="{{ itm.id }}" class="js-orm-info">
                         <td>{{ itm.id }}</td>
@@ -33,9 +34,10 @@
                         </td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        {% endblock %}
-    </table>
+                </tbody>
+            {% endblock %}
+        </table>
+    {% endblock %}
 
     {% block dataPagination %}
         {% if totalPages > 1 %}

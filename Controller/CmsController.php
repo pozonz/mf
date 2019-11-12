@@ -7,7 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CmsController extends RouterController
 {
-    use CmsOrmTrait,
+    use CmsOrmCartTrait,
+        CmsOrmTrait,
         CmsModelTrait,
         CmsRestFileTrait,
         CmsRestProductTrait,

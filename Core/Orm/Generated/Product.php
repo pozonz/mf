@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-11-03 19:35:58
+//Last updated: 2019-11-11 07:17:07
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -94,12 +94,17 @@ class Product extends Orm
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $onSaleActive;
+    private $lowStock;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $outOfStock;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $onSaleActive;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -391,17 +396,17 @@ class Product extends Orm
     /**
      * @return mixed
      */
-    public function getOnSaleActive()
+    public function getLowStock()
     {
-        return $this->onSaleActive;
+        return $this->lowStock;
     }
     
     /**
-     * @param mixed onSaleActive
+     * @param mixed lowStock
      */
-    public function setOnSaleActive($onSaleActive)
+    public function setLowStock($lowStock)
     {
-        $this->onSaleActive = $onSaleActive;
+        $this->lowStock = $lowStock;
     }
     
     /**
@@ -418,6 +423,22 @@ class Product extends Orm
     public function setOutOfStock($outOfStock)
     {
         $this->outOfStock = $outOfStock;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getOnSaleActive()
+    {
+        return $this->onSaleActive;
+    }
+    
+    /**
+     * @param mixed onSaleActive
+     */
+    public function setOnSaleActive($onSaleActive)
+    {
+        $this->onSaleActive = $onSaleActive;
     }
     
     /**

@@ -218,11 +218,16 @@ trait ProductTrait
             'params' => [$this->getUniqid()],
         ]);
 
-        $outOfStock = 0;
+        $outOfStock = 1;
+        $lowStock = 0;
         $price = null;
         foreach ($data as $itm) {
-            if ($itm->getAlertIfLessThan() > $itm->getStock()) {
-                $outOfStock = 1;
+            if ($itm->getAlertIfLessThan() > 0 && $itm->getAlertIfLessThan() > $itm->getStock()) {
+                $lowStock = 1;
+            }
+
+            if ($itm->getStock() > 0) {
+                $outOfStock = 0;
             }
 
             $searchContent .= "{$itm->getTitle()} {$itm->getSku()} ";
@@ -238,6 +243,7 @@ trait ProductTrait
             }
         }
 
+        $this->setLowStock($lowStock);
         $this->setOutOfStock($outOfStock);
         $this->setContent($searchContent);
 

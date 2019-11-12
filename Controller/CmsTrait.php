@@ -296,16 +296,17 @@ trait CmsTrait
             if ($itm === null) {
                 $nodes[] = new PageNode(uniqid(), $parentId, $count, 1, $idx);
             } else {
+                $modelNodeId = uniqid();
+
                 $itm = (array)$itm;
                 if (isset($itm['single']) && $itm['single']) {
-                    $nodes[] = new PageNode(uniqid(), $parentId, $count, 1, $idx, $itm['url'], $itm['twig']);
+                    $nodes[] = new PageNode($modelNodeId, $parentId, $count, 1, $idx, $itm['url'], $itm['twig']);
                 } else {
                     $model = $itm['model'];
                     if (gettype($model) == 'string') {
                         $model = _Model::getByField($pdo, 'className', $model);
                     }
                     $className = $model->getClassName();
-                    $children = $itm['children'];
 
                     $fullClass = ModelService::fullClass($pdo, $className);
                     $ormsTwig = $fullClass::getCmsOrmsTwig();
@@ -317,14 +318,14 @@ trait CmsTrait
                         $ormTwig = $ormDefaultTwig;
                     }
 
-                    $modelNodeId = uniqid();
-                    $nodes[] = new PageNode($modelNodeId, $parentId, $count, 1, $idx, $baseUrl . $className, $ormsTwig);
+                    $nodes[] = new PageNode($modelNodeId, $parentId, $count, $itm['status'] ?? 1, $idx, $baseUrl . $className, $ormsTwig);
                     $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $baseUrl . $className . '/', $ormTwig, null, 1, 1);
                     $nodes[] = new PageNode(uniqid(), $modelNodeId, 2, 2, '', $baseUrl . $className . '/copy/', $ormTwig, null, 1, 1);
+                }
 
-                    if (count($children)) {
-                        $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $modelNodeId, $children, $baseUrl, 3));
-                    }
+                $children = $itm['children'];
+                if (count($children)) {
+                    $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $modelNodeId, $children, $baseUrl, 3));
                 }
             }
             $count++;

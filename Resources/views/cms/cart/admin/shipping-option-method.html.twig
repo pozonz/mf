@@ -1,0 +1,79 @@
+{% extends 'cms/orms/orms-pagination.html.twig' %}
+
+{% block ormModelTitle %}<h1>Shipping Option Method</h1>{% endblock %}
+
+{% block ormModelExtra %}
+    <div style="text-align: center;">
+        <form action="{{ app.request.pathInfo }}" autocomplete="off" class="edit" style="text-align: left" novalidate method="POST">
+            <div class="formStyle">
+                {{ form_label(formView.className) }}
+                {{ form_widget(formView.className) }}
+                {{ form_errors(formView.className) }}
+            </div>
+
+            <div class="formStyle">
+                <label>&nbsp;</label>
+                {{ form_rest(formView) }}
+                <div><input type="submit" value="Update" class="submit button save-content" style="background: #82ad1d"></div>
+            </div>
+            <div>&nbsp;</div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block tableHead %}
+    <tbody>
+        <tr>
+            <td class="tableHead" width="40px">ID</td>
+            <td class="tableHead">Title</td>
+
+            {% if obj.className == 'ShippingOptionFlat' %}
+                <td class="tableHead">Price</td>
+            {% elseif obj.className == 'ShippingOption' %}
+            {% elseif obj.className == 'ShippingOptionBOC' %}
+                <td class="tableHead">Order from</td>
+                <td class="tableHead">To</td>
+                <td class="tableHead">Price</td>
+            {% endif %}
+            <td class="tableHead">Countries</td>
+            <td class="tableHead" width="180px" align="right">Action</td>
+        </tr>
+    </tbody>
+{% endblock %}
+
+{% block tableBody %}
+    <tbody class="js-sort-column">
+        {% for itm in orms %}
+            <tr id="{{ itm.id }}" class="js-orm-info">
+                <td>{{ itm.id }}</td>
+                <td>{{ itm.title }}</td>
+
+                {% if obj.className == 'ShippingOptionFlat' %}
+                    <td>${{ itm.price|number_format(2) }}</td>
+                {% elseif obj.className == 'ShippingOption' %}
+                {% elseif obj.className == 'ShippingOptionBOC' %}
+                    <td>${{ itm.from|number_format(2) }}</td>
+                    <td>${{ itm.to|number_format(2) }}</td>
+                    <td>${{ itm.price|number_format(2) }}</td>
+                {% endif %}
+
+                <td>
+                    {% for objCountry in itm.objCountries %}
+                        {{ objCountry.title }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+
+                <td class="iconCell" align="right">
+                    <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
+                    <a href="/manage/orms/{{ ormModel.className }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
+                    <a href="/manage/orms/{{ ormModel.className }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
+                    <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+{% endblock %}
+
+
+{% block dataPagination %}{% endblock %}
+

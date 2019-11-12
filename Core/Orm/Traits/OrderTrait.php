@@ -26,34 +26,84 @@ trait OrderTrait
         $fullClass = ModelService::fullClass($this->getPdo(), 'ShippingCountry');
         $country = $fullClass::getByField($this->getPdo(), 'code', $countryCode);
 
-        $fullClass = ModelService::fullClass($this->getPdo(), 'ShippingOption');
-        $result = $fullClass::active($this->getPdo());
-        foreach ($result as $itm) {
-            $itm->setPrice(-1);
-        }
+        $fullClass = ModelService::fullClass($this->getPdo(), 'ShippingOptionMethod');
+        $method = $fullClass::getByField($this->getPdo(), 'selected', 1);
+        if ($method->getClassName() == 'ShippingOptionFlat') {
 
-        if (!$country) {
-            return $result;
-        }
+            $fullClass = ModelService::fullClass($this->getPdo(), $method->getClassName());
+            $result = $fullClass::active($this->getPdo());
 
-        $shippingOptions = [];
-        foreach ($result as $itm) {
-            $itm->calculatePrice($this);
-            $valid = false;
-            $objContent = $itm->objContent();
-            foreach ($objContent as $section) {
-                foreach ($section->blocks as $block) {
-                    if (in_array($country->getId(), $block->values->countries)) {
-                        $valid = true;
-                    }
+            if (!$country) {
+                foreach ($result as $itm) {
+                    $itm->setPrice(-1);
+                }
+                return $result;
+            }
+
+            $shippingOptions = [];
+            foreach ($result as $itm) {
+                $objCountryIds = $itm->objCountryIds();
+                if (in_array($country->getId(), $objCountryIds)) {
+                    $shippingOptions[] = $itm;
                 }
             }
-            if ($valid) {
-                $itm->calculatePrice($this);
-                $shippingOptions[] = $itm;
+            return $shippingOptions;
+
+        } elseif ($method->getClassName() == 'ShippingOption') {
+
+            $fullClass = ModelService::fullClass($this->getPdo(), $method->getClassName());
+            $result = $fullClass::active($this->getPdo());
+            foreach ($result as $itm) {
+                $itm->setPrice(-1);
             }
+
+            if (!$country) {
+                return $result;
+            }
+
+            $shippingOptions = [];
+            foreach ($result as $itm) {
+                $itm->calculatePrice($this);
+                $valid = false;
+                $objContent = $itm->objContent();
+                foreach ($objContent as $section) {
+                    foreach ($section->blocks as $block) {
+                        if (in_array($country->getId(), $block->values->countries)) {
+                            $valid = true;
+                        }
+                    }
+                }
+                if ($valid) {
+                    $itm->calculatePrice($this);
+                    $shippingOptions[] = $itm;
+                }
+            }
+            return $shippingOptions;
+
+        } elseif ($method->getClassName() == 'ShippingOptionBOC') {
+
+            $fullClass = ModelService::fullClass($this->getPdo(), $method->getClassName());
+            $result = $fullClass::active($this->getPdo());
+
+            if (!$country) {
+                foreach ($result as $itm) {
+                    $itm->setPrice(-1);
+                }
+                return $result;
+            }
+
+            $shippingOptions = [];
+            foreach ($result as $itm) {
+                $afterDiscount = $this->getAfterDiscount();
+                if ($afterDiscount >= $itm->getFrom() && $afterDiscount <= $itm->getTo()) {
+                    $shippingOptions[] = $itm;
+                }
+            }
+            return $shippingOptions;
+
         }
-        return $shippingOptions;
+
+
     }
 
     /**
@@ -70,13 +120,15 @@ trait OrderTrait
             $itm->update($customer);
 
             $variant = $itm->objProductVariant();
-            $product = $variant->objProduct();
-            if (!$product->getNoPromoDiscount()) {
-                $resultPriceToDiscount += $itm->getTotalPrice();
-            }
+            if ($variant) {
+                $product = $variant->objProduct();
+                if (!$product->getNoPromoDiscount()) {
+                    $resultPriceToDiscount += $itm->getTotalPrice();
+                }
 
-            $resultPrice += $itm->getTotalPrice();
-            $resultWeight += $itm->getTotalWeight();
+                $resultPrice += $itm->getTotalPrice();
+                $resultWeight += $itm->getTotalWeight();
+            }
         }
         $subtotal = $resultPrice;
         $weight = $resultWeight;

@@ -184,7 +184,9 @@ trait CmsCartRestTrait
         $request = Request::createFromGlobals();
         $id = $request->get('id');
 
-        $fullClass = ModelService::fullClass($pdo, 'ShippingOption');
+        $fullClass = ModelService::fullClass($pdo, 'ShippingOptionMethod');
+        $method = $fullClass::getByField($pdo, 'selected', 1);
+        $fullClass = ModelService::fullClass($pdo, $method->getClassName());
         $shippingOption = $fullClass::getByField($pdo, 'uniqid', $id);
         if ($shippingOption) {
             $shippingOption->calculatePrice($orderContainer);
