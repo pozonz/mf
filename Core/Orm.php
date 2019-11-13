@@ -388,8 +388,8 @@ abstract class Orm implements \JsonSerializable
     static public function lastRank($pdo)
     {
         $result = static::data($pdo, array(
-            'select' => 'm.rank AS rank',
-            'sort' => 'rank',
+            'select' => 'm.`rank` AS `rank`',
+            'sort' => '`rank`',
             'order' => 'DESC',
             'limit' => 1,
             'oneOrNull' => 1,

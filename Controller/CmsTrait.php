@@ -323,7 +323,7 @@ trait CmsTrait
                     $nodes[] = new PageNode(uniqid(), $modelNodeId, 2, 2, '', $baseUrl . $className . '/copy/', $ormTwig, null, 1, 1);
                 }
 
-                $children = $itm['children'];
+                $children = (array)$itm['children'];
                 if (count($children)) {
                     $nodes = array_merge($nodes, static::appendModelsToParent($pdo, $modelNodeId, $children, $baseUrl, 3));
                 }
