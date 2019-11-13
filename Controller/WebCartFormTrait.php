@@ -9,7 +9,7 @@ use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
 use Symfony\Component\HttpFoundation\Request;
 
-trait CmsCartFormTrait
+trait WebCartFormTrait
 {
     /**
      * @param $variantId

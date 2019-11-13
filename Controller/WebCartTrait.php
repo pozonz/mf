@@ -34,7 +34,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 require_once (__DIR__ . '/../PxPay_Curl.inc.php');
 
-trait CmsCartTrait
+trait WebCartTrait
 {
     /**
      * @route("/cart")

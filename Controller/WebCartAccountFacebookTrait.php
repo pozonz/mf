@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Facebook\Facebook;
 
-trait CmsCartAccountFacebookTrait
+trait WebCartAccountFacebookTrait
 {
     /**
      * @route("/facebook/verify")

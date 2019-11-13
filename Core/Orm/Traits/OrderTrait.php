@@ -89,7 +89,6 @@ trait OrderTrait
                 foreach ($result as $itm) {
                     $itm->setPrice(-1);
                 }
-                return $result;
             }
 
             $shippingOptions = [];

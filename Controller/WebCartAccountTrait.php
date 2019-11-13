@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-trait CmsCartAccountTrait
+trait WebCartAccountTrait
 {
     /**
      * @route("/account/dashboard")
