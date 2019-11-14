@@ -46,7 +46,7 @@ class CartService
             $orderContainer = $fullClass::getById($pdo, $id);
             $oldOrderContainer = null;
             if (!$orderContainer || $orderContainer->getCategory() != static::STATUS_UNPAID) {
-                if ($orderContainer->getCategory() == static::STATUS_SUBMITTED) {
+                if ($orderContainer && $orderContainer->getCategory() == static::STATUS_SUBMITTED) {
                     $oldOrderContainer = clone $orderContainer;
 
                     $orderContainer->setId(null);
