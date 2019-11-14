@@ -220,56 +220,6 @@ trait WebCartRestTrait
         $fullClass = ModelService::fullClass($pdo, 'Order');
         $o = $fullClass::getByField($pdo, 'uniqid', $id);
 
-        $result = [];
-
-        foreach ($o->objOrderItems() as $oi) {
-
-            $fullClass = ModelService::fullClass($pdo, 'ProductVariant');
-            $variant  = $fullClass::getById($pdo, $oi->getProductId());
-            if ($variant || ($variant && $variant->getStock() == 0)) {
-                $product = $variant->objProduct();
-
-                $stockInCart = 0;
-                $fullClass = ModelService::fullClass($pdo, 'OrderItem');
-                $orderItem = new $fullClass($pdo);
-                $orderItem->setTitle($product->objTitle() . ' - ' . $variant->getTitle());
-                $orderItem->setSku($variant->getSku());
-                $orderItem->setOrderId($orderContainer->getId());
-                $orderItem->setProductId($variant->getId());
-                $orderItem->setPrice($variant->objPrice($customer));
-                $orderItem->setWeight($variant->getWeight());
-                $orderItem->setQuantity(0);
-
-                $orderItems = $orderContainer->objOrderItems();
-                foreach ($orderItems as $itm) {
-                    if ($itm->getProductId() == $variant->getId()) {
-                        $orderItem = $itm;
-                        $stockInCart = $itm->getQuantity();
-                    }
-                }
-
-                if ($variant->getStock() < ($oi->getQuantity() + $stockInCart)) {
-                    $result[] = [
-                        'title' => $oi->getTitle(),
-                        'message' => 'The product does not have enough stock',
-                    ];
-
-                    $orderItem->setQuantity($variant->getStock());
-                } else {
-                    $orderItem->setQuantity($oi->getQuantity() + $orderItem->getQuantity());
-                }
-
-                $orderItem->save();
-
-            } else {
-                $result[] = [
-                    'title' => $oi->getTitle(),
-                    'message' => 'The product is not availble any more',
-                ];
-            }
-
-        }
-
-        return new JsonResponse($result);
+        return $cartService->reoder($orderContainer, $o);
     }
 }

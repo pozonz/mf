@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-10-13 18:41:53
+//Last updated: 2019-11-14 21:04:43
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -225,6 +225,16 @@ class Order extends Orm
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $total;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $submitted;
+    
+    /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $submittedDate;
     
     /**
      * @return mixed
@@ -928,6 +938,38 @@ class Order extends Orm
     public function setTotal($total)
     {
         $this->total = $total;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getSubmitted()
+    {
+        return $this->submitted;
+    }
+    
+    /**
+     * @param mixed submitted
+     */
+    public function setSubmitted($submitted)
+    {
+        $this->submitted = $submitted;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getSubmittedDate()
+    {
+        return $this->submittedDate;
+    }
+    
+    /**
+     * @param mixed submittedDate
+     */
+    public function setSubmittedDate($submittedDate)
+    {
+        $this->submittedDate = $submittedDate;
     }
     
 }

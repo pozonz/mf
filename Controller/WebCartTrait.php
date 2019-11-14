@@ -144,6 +144,9 @@ trait WebCartTrait
                 $pxaccess = $this->getDpsGateway();
                 $requestString = $pxaccess->makeRequest($request);
 
+                $orderContainer->setSubmitted(1);
+                $orderContainer->setSubmittedDate(date('Y-m-d H:i:s'));
+
                 $orderContainer->setCategory(CartService::STATUS_SUBMITTED);
                 $orderContainer->setPayRequest(print_r($request, true));
                 $orderContainer->setPayToken($uniqid);
@@ -225,11 +228,12 @@ trait WebCartTrait
                 return new RedirectResponse('/cart/payment/success?id=' . $orderContainer->getUniqid());
 
             } else {
+
                 $orderContainer->setCategory(CartService::STATUS_UNPAID);
                 $orderContainer->setPayStatus($orderContainer->getCategory());
                 $orderContainer->save();
                 $this->container->get('session')->set(CartService::SESSION_ID, $orderContainer->getId());
-                return new RedirectResponse('/cart-failed?id=' . $orderContainer->getUniqid());
+                return new RedirectResponse('/cart/payment/failed?id=' . $orderContainer->getUniqid());
 
             }
 

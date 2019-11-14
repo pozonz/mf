@@ -28,9 +28,11 @@
                         <td>{{ itm.id }}</td>
                         <td>{{ itm.title }}</td>
                         <td>{{ itm.billingFirstName }} {{ itm.billingLastName }}</td>
-                        <td>{{ itm.added|date('d M y') }}</td>
+                        <td>{{ itm.submittedDate|date('d M y H:i:s') }}</td>
                         <td>${{ itm.total|number_format(2) }}</td>
-                        <td>{% if itm.category == 0 %}NEW{% elseif itm.category == 2 %}PAID{% else %}UNPAID{% endif %}</td>
+                        <td>
+                            {% if itm.category == 2 %}PAID{% else %}UNPAID{% endif %}
+                        </td>
                         <td class="iconCell" align="right">
                             <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
                             <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/develop/images/search.png" alt="Edit Record" title="Edit Record" border="0"></a>

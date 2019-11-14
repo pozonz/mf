@@ -255,7 +255,7 @@ trait CmsOrmCartTrait
         $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
 
         $orms = $fullClass::data($pdo, array(
-            "whereSql" => 'm.category > 0',
+            "whereSql" => 'm.submitted = 1',
             "page" => $pageNum,
             "limit" => $model->getNumberPerPage(),
             "sort" => $sort,
