@@ -23,6 +23,58 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsOrmCartTrait
 {
     /**
+     * @route("/manage/shop/Dashboard")
+     * @return Response
+     */
+    public function dashboard()
+    {
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+        $request = Request::createFromGlobals();
+
+        $fullClass = ModelService::fullClass($pdo, 'Product');
+        $params = $this->prepareParams();
+        $params['tables'] = [
+            [
+                'title' => 'Products',
+                'rows' => [
+                    [
+                        'title' => 'All products',
+                        'link' => '/manage/orms/Product',
+                        'value' => $fullClass::data($pdo, [
+                            'count' => 1,
+                        ])['count'],
+                    ],
+                    [
+                        'title' => 'In stock',
+                        'link' => '/manage/orms/Product',
+                        'value' => $fullClass::data($pdo, [
+                            'whereSql' => '((m.outOfStock = 0 OR m.outOfStock IS NULL) AND (m.lowStock = 0 OR m.lowStock IS NULL))',
+                            'count' => 1,
+                        ])['count'],
+                    ],
+                    [
+                        'title' => 'Low stock',
+                        'link' => '/manage/orms/Product',
+                        'value' => $fullClass::data($pdo, [
+                            'whereSql' => '(m.lowStock = 1)',
+                            'count' => 1,
+                        ])['count'],
+                    ],
+                    [
+                        'title' => 'Out of stock',
+                        'link' => '/manage/orms/Product',
+                        'value' => $fullClass::data($pdo, [
+                            'whereSql' => '(m.outOfStock = 1)',
+                            'count' => 1,
+                        ])['count'],
+                    ],
+                ],
+            ]
+        ];
+        return $this->render($params['node']->getTemplate(), $params);
+    }
+
+    /**
      * @route("/manage/shop/ShippingOptionMethod")
      * @return Response
      */
@@ -156,16 +208,18 @@ trait CmsOrmCartTrait
             }
 
             if ($obj->keywords) {
-                $sql = ($sql ?  "($sql) AND " : '') . "(MATCH (m.content) AGAINST (? IN Boolean MODE))";
+                $sql = ($sql ? "($sql) AND " : '') . "(MATCH (m.content) AGAINST (? IN Boolean MODE))";
                 $params = array_merge($params, [
                     '*' . $obj->keywords . '*'
                 ]);
             }
 
             if ($obj->stock == 1) {
-                $sql = ($sql ?  "($sql) AND " : '') . "(m.outOfStock = 0 OR m.outOfStock IS NULL)";
+                $sql = ($sql ? "($sql) AND " : '') . "((m.outOfStock = 0 OR m.outOfStock IS NULL) AND (m.lowStock = 0 OR m.lowStock IS NULL))";
             } else if ($obj->stock == 2) {
-                $sql = ($sql ?  "($sql) AND " : '') . "(m.outOfStock = 1)";
+                $sql = ($sql ? "($sql) AND " : '') . "(m.lowStock = 1)";
+            } else if ($obj->stock == 3) {
+                $sql = ($sql ? "($sql) AND " : '') . "(m.outOfStock = 1)";
             }
 
 //            var_dump($sql, $params);exit;

@@ -41,10 +41,12 @@ class OrmProductsForm extends AbstractType
             ])
             ->add('stock', ChoiceType::class, [
                 'label' => 'Stock status:',
+                'empty_data' => null,
+                'required'   => false,
                 'choices' => [
-                    'In stock & Out of stock' => 0,
                     'In stock only' => 1,
-                    'Out of stock only' => 2,
+                    'Low stock only' => 2,
+                    'Out of stock only' => 3,
                 ],
             ])
             ->add('keywords', TextType::class, [
