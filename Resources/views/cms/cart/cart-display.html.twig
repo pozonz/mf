@@ -484,6 +484,7 @@
         };
 
         function renderOrderDeliveryOptions() {
+            $('.js-cart-delivery-options').empty();
             for (var idx in _order.objShippingOptions) {
                 var itm = _order.objShippingOptions[idx];
 

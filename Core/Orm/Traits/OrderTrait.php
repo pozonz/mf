@@ -109,7 +109,22 @@ trait OrderTrait
      * @return bool
      * @throws \Exception
      */
-    public function update($customer) {
+    public function update($customer)
+    {
+        $shippingValid = false;
+        $objShippingOptions = $this->objShippingOptions();
+        foreach ($objShippingOptions as $objShippingOption) {
+            if ($objShippingOption->getId() == $this->getShippingId()) {
+                $shippingValid = true;
+            }
+        }
+
+        if (!$shippingValid) {
+            $this->setShippingId(null);
+            $this->setShippingTitle(null);
+            $this->setShippingCost(null);
+        }
+
         $resultPrice = 0;
         $resultPriceToDiscount = 0;
         $resultWeight = 0;
@@ -196,7 +211,8 @@ trait OrderTrait
     /**
      *
      */
-    public function clearOrderItemsCache() {
+    public function clearOrderItemsCache()
+    {
         $this->orderItems = null;
     }
 

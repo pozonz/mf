@@ -116,8 +116,8 @@ trait WebCartRestTrait
         }
 
         $customer = UtilsService::getUser($this->container);;
-        $orderContainer->update($customer);
-
+        $result->orderContainer->update($customer);
+        $result->orderContainer->update($customer);
         return new JsonResponse($result);
     }
 
@@ -189,12 +189,17 @@ trait WebCartRestTrait
         $fullClass = ModelService::fullClass($pdo, $method->getClassName());
         $shippingOption = $fullClass::getByField($pdo, 'uniqid', $id);
         if ($shippingOption) {
-            $shippingOption->calculatePrice($orderContainer);
-            $orderContainer->setShippingId($shippingOption->getId());
-            $orderContainer->setShippingTitle($shippingOption->getTitle());
-            $orderContainer->setShippingCost($shippingOption->getPrice());
-            $customer = UtilsService::getUser($this->container);;
-            $orderContainer->update($customer);
+            $objShippingOptions = $orderContainer->objShippingOptions();
+            foreach ($objShippingOptions as $objShippingOption) {
+                if ($objShippingOption->getId() == $shippingOption->getId()) {
+                    $shippingOption->calculatePrice($orderContainer);
+                    $orderContainer->setShippingId($shippingOption->getId());
+                    $orderContainer->setShippingTitle($shippingOption->getTitle());
+                    $orderContainer->setShippingCost($shippingOption->getPrice());
+                    $customer = UtilsService::getUser($this->container);;
+                    $orderContainer->update($customer);
+                }
+            }
         }
         return new JsonResponse($result);
     }
