@@ -35,7 +35,7 @@ trait CmsOrmCartTrait
         $params = $this->prepareParams();
         $params['tables'] = [
             [
-                'title' => 'Products',
+                'title' => 'Product Summary',
                 'rows' => [
                     [
                         'title' => 'All products',
