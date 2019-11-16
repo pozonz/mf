@@ -276,6 +276,7 @@ trait CmsOrmCartTrait
         $params = $this->prepareParams();
         $params['search'] = $search;
         $params['formView'] = $form->createView();
+        $params['total'] = $total['count'];
         $params['totalPages'] = ceil($total['count'] / $limit);
         $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order" . ($extraUrl ? '&' . $extraUrl : '');
         $params['pageNum'] = $pageNum;
