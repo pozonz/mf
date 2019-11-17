@@ -8,6 +8,9 @@ trait PromoCodeTrait
      * @return bool
      */
     public function isValid() {
+        if ($this->getStatus() != 1) {
+            return false;
+        }
         if ($this->getStart() && strtotime($this->getStart()) >= time()) {
             return false;
         }
