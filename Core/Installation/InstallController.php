@@ -189,7 +189,7 @@ class InstallController extends Controller
      */
     static public function addDefaultUser($pdo, $obj, $fullClass)
     {
-        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
+        $fullClass = ModelService::fullClass($pdo, 'User');
         $result = $fullClass::data($pdo);
         $dataGroup = array_map(function ($itm) {
             return $itm->getId();
