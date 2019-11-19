@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core\Orm\Traits;
 
 use MillenniumFalcon\Core\Nestable\NodeInterface;
+use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 
 trait PageTrait
@@ -21,6 +22,86 @@ trait PageTrait
         parent::__construct($pdo);
 
         $this->setType(1);
+    }
+
+    /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+        $templateFullClass = ModelService::fullClass($pdo, 'PageTemplate');
+
+        $navFullClass = ModelService::fullClass($pdo, 'PageCategory');
+        $mainNav = $navFullClass::getByField($pdo, 'code', 'main');
+        $footerNav = $navFullClass::getByField($pdo, 'code', 'footer');
+
+        $orm = new static($pdo);
+        $orm->setTitle('Home');
+        $orm->setType(1);
+        $orm->setUrl('/');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'home.html.twig')->getId());
+        $orm->save();
+
+        $orm = new static($pdo);
+        $orm->setTitle('About');
+        $orm->setType(1);
+        $orm->setUrl('/about');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'about.html.twig')->getId());
+        $orm->save();
+
+        $orm = new static($pdo);
+        $orm->setTitle('News');
+        $orm->setType(1);
+        $orm->setUrl('/news');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'posts.html.twig')->getId());
+        $orm->setAttachedModels(json_encode(array(_Model::getByField($pdo, 'className', 'News')->getId())));
+        $orm->save();
+        $newsPageId = $orm->getId();
+
+        $orm = new static($pdo);
+        $orm->setTitle('News detail');
+        $orm->setType(1);
+        $orm->setUrl('/news/detail');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'post.html.twig')->getId());
+        $orm->setCategoryParent(json_encode((object)[
+            'cat' . $mainNav->getId() => $newsPageId,
+        ]));
+        $orm->setCategoryRank(json_encode((object)[
+            'cat' . $mainNav->getId() => 0,
+        ]));
+        $orm->setHideFromWebNav(1);
+        $orm->setHideFromCmsNav(1);
+        $orm->setAllowExtra(1);
+        $orm->setMaxParams(1);
+        $orm->save();
+
+        $orm = new static($pdo);
+        $orm->setTitle('Contact');
+        $orm->setType(1);
+        $orm->setUrl('/contact');
+        $orm->setCategory(json_encode([$mainNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'contact.html.twig')->getId());
+        $orm->save();
+
+        $orm = new static($pdo);
+        $orm->setTitle('Terms & Conditions');
+        $orm->setType(1);
+        $orm->setUrl('/terms-and-conditions');
+        $orm->setCategory(json_encode([$footerNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.html.twig')->getId());
+        $orm->save();
+
+        $orm = new static($pdo);
+        $orm->setTitle('Privacy');
+        $orm->setType(1);
+        $orm->setUrl('/privacy');
+        $orm->setCategory(json_encode([$footerNav->getId()]));
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.html.twig')->getId());
+        $orm->save();
     }
 
     /**

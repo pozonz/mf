@@ -5,6 +5,14 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 trait PromoCodeTrait
 {
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+    
+    /**
      * @return bool
      */
     public function isValid() {

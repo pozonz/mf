@@ -4,4 +4,11 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 
 trait AssetCropTrait
 {
+    /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
 }

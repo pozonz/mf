@@ -9,6 +9,14 @@ trait OrderTrait
     protected $orderItems;
 
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+    
+    /**
      * @return mixed
      */
     public function getCountryCode()

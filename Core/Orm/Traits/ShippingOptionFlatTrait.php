@@ -7,6 +7,14 @@ use MillenniumFalcon\Core\Service\ModelService;
 trait ShippingOptionFlatTrait
 {
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+    
+    /**
      * @param $orderContainer
      * @throws \Exception
      */

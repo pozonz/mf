@@ -10,6 +10,14 @@ trait ShippingOptionTrait
     protected $price;
 
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+    
+    /**
      * @return float
      */
     public function getPrice(): float

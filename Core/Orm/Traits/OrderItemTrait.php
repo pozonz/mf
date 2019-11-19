@@ -7,6 +7,14 @@ use MillenniumFalcon\Core\Service\ModelService;
 trait OrderItemTrait
 {
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+    
+    /**
      * @return mixed
      * @throws \Exception
      */

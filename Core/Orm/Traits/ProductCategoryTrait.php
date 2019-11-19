@@ -5,6 +5,14 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 trait ProductCategoryTrait
 {
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+    
+    /**
      * @return string
      */
     static public function getCmsOrmsTwig()
