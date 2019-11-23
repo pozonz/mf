@@ -10,6 +10,44 @@ use Symfony\Component\Security\Core\User\UserInterface;
 trait UserTrait
 {
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
+        $result = $fullClass::data($pdo);
+        $dataGroup = array_map(function ($itm) {
+            return $itm->getId();
+        }, $result);
+
+        $password = uniqid();
+        $orm = new static($pdo);
+        $orm->setTitle('weida');
+        $orm->setPasswordInput($password);
+        $orm->setName('Weida Xue');
+        $orm->setEmail('luckyweida@gmail.com');
+        $orm->setAccessibleSections(json_encode($dataGroup));
+
+        $dir = $container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/views';
+        $loader = $container->get('twig')->getLoader();
+        $loader->addPath($dir);
+
+        $messageBody = $container->get('twig')->render("cms/emails/install/email-welcome.html.twig", array(
+            'orm' => $orm,
+        ));
+
+        $message = (new \Swift_Message())
+            ->setSubject('CMS is ready - ' . date('d M Y@H:i'))
+            ->setFrom(array(getenv('EMAIL_FROM')))
+            ->setTo($orm->getEmail())
+            ->setBcc(array(getenv('EMAIL_BCC')))
+            ->setBody($messageBody, 'text/html');
+        $container->get('mailer')->send($message);
+
+        $orm->save();
+    }
+    
+    /**
      * @return array|mixed
      */
     public function objAccessibleSections()

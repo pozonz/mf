@@ -8,6 +8,14 @@ use MillenniumFalcon\Core\Service\ModelService;
 trait ProductTrait
 {
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+    
+    /**
      * @param $customer
      * @return float|int
      */

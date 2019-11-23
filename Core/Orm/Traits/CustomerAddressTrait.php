@@ -7,6 +7,14 @@ use MillenniumFalcon\Core\Service\ModelService;
 trait CustomerAddressTrait
 {
     protected $country;
+
+    /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
     
     /**
      * @return string

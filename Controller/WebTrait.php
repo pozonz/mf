@@ -27,7 +27,11 @@ trait WebTrait
     {
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
-        $fullClass = ModelService::fullClass($pdo, 'Page');
-        return $fullClass::data($pdo);
+        try {
+            $fullClass = ModelService::fullClass($pdo, 'Page');
+            return $fullClass::data($pdo);
+        } catch (\Exception $ex) {
+        }
+        return [];
     }
 }

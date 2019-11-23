@@ -12,6 +12,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
 trait CustomerTrait
 {
     protected $membership;
+
+    /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+    
     /**
      * @return array|null
      */

@@ -37,6 +37,9 @@ trait CmsRestTrait
             if ($orm) {
                 $orm->setRank($idx);
                 $orm->save();
+                if ($className == '_Model') {
+                    $fullClass::setGenereatedFile($orm, $this->container);
+                }
             }
         }
         return new Response('OK');

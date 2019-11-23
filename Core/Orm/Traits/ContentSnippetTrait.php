@@ -5,6 +5,14 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 trait ContentSnippetTrait
 {
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+
+    /**
      * @return mixed
      */
     public function objContent()

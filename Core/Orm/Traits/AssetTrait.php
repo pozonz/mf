@@ -23,6 +23,14 @@ trait AssetTrait
     private $state = array();
 
     /**
+     * @param $pdo
+     */
+    static public function initData($pdo, $container)
+    {
+
+    }
+
+    /**
      * @return null|string
      */
     public function getText()
