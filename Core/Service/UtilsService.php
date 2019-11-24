@@ -207,6 +207,7 @@ class UtilsService
 
                 $node = new PageNode($itm->getId(), $parent, $rank, $itm->getHideFromWebNav() ? 0 : 1, $itm->getTitle(), $itm->getUrl(), null/** $itm->objPageTempalte()->getFilename() */, '', $itm->getAllowExtra(), $itm->getMaxParams());
 //                $node->objContent = $itm->objContent();
+                $node->iconClass = $itm->getIconClass();
                 $nodes[] = $node;
             }
 

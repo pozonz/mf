@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2019-11-19 22:57:46
+//Last updated: 2019-11-24 11:27:25
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -49,6 +49,11 @@ class Page extends Orm implements NodeInterface
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $image;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $iconClass;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -205,6 +210,22 @@ class Page extends Orm implements NodeInterface
     public function setImage($image)
     {
         $this->image = $image;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getIconClass()
+    {
+        return $this->iconClass;
+    }
+    
+    /**
+     * @param mixed iconClass
+     */
+    public function setIconClass($iconClass)
+    {
+        $this->iconClass = $iconClass;
     }
     
     /**
