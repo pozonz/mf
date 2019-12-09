@@ -1,23 +1,23 @@
 {% extends 'form_div_layout.html.twig' %}
 
 {% block form_row %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="formStyle {{ block_prefixes[block_prefixes|length - 2] }}">
             {{ form_label(form) }}
             {{ form_widget(form) }}
             {{ form_errors(form) }}
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock form_row %}
 
 {% block content_block_row %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="formStyle {{ block_prefixes[block_prefixes|length - 2] }} type34">
             {{ form_label(form) }}
             {{ form_widget(form) }}
             {{ form_errors(form) }}
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock content_block_row %}
 
 {%- block form_errors -%}
@@ -91,13 +91,13 @@
 
 {% block assetfolderpicker_row -%}
     <hr />
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="box {{ block_prefixes[block_prefixes|length - 2] }}">
             {{ form_label(form) }}
             {{ form_widget(form) }}
             {{ form_errors(form) }}
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {%- endblock assetfolderpicker_row -%}
 
 {%- block assetfolderpicker_label -%}
