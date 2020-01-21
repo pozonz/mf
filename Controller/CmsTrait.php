@@ -258,6 +258,7 @@ trait CmsTrait
                     $models = array_map(function ($itm) use ($pdo) {
                         return _Model::getById($pdo, $itm);
                     }, $attachedModels);
+                    $models = array_filter($models);
                     $data = array();
                     foreach ($models as $model) {
                         $data[$model->getTitle()] = array(
