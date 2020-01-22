@@ -30,6 +30,10 @@ class UserProvider implements UserProviderInterface
     {
         $pdo = $this->conn;
         $fullClass = ModelService::fullClass($pdo, 'User');
+
+        $fullClass = ltrim($fullClass, '\\');
+        $class = ltrim($class, '\\');
+
         return $fullClass === $class;
     }
 
