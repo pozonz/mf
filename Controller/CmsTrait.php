@@ -51,7 +51,7 @@ trait CmsTrait
     /**
      * @return array|object
      */
-    private function prepareParams()
+    protected function prepareParams()
     {
         $request = Request::createFromGlobals();
         $requestUri = rtrim($request->getPathInfo(), '/');
@@ -68,6 +68,7 @@ trait CmsTrait
 
     /**
      * @return array
+     * @throws \Exception
      */
     protected function getNodes()
     {
