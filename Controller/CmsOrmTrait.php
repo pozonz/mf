@@ -63,6 +63,11 @@ trait CmsOrmTrait
         if ($model->getListType() == 0) {
             $orms = $fullClass::data($pdo);
 
+            $total = $fullClass::data($pdo, array(
+                "count" => 1,
+            ));
+            $params['total'] = $total['count'];
+
         } elseif ($model->getListType() == 1) {
             $request = Request::createFromGlobals();
             $pageNum = $request->get('pageNum') ?: 1;
@@ -79,8 +84,10 @@ trait CmsOrmTrait
             $total = $fullClass::data($pdo, array(
                 "count" => 1,
             ));
+            $params['total'] = $total['count'];
             $params['totalPages'] = ceil($total['count'] / $model->getNumberPerPage());
             $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order";
+            $params['urlNoSort'] = $request->getPathInfo();
             $params['pageNum'] = $pageNum;
             $params['sort'] = $sort;
             $params['order'] = $order;
@@ -182,7 +189,7 @@ trait CmsOrmTrait
      * @return mixed
      * @throws RedirectException
      */
-    private function _orm($pdo, $className, $ormId)
+    protected function _orm($pdo, $className, $ormId)
     {
         $request = Request::createFromGlobals();
 
@@ -211,7 +218,7 @@ trait CmsOrmTrait
      * @return mixed
      * @throws RedirectException
      */
-    private function _ormPageWithForm($pdo, $className, $orm, $formClass = 'OrmForm', $callback = null)
+    protected function _ormPageWithForm($pdo, $className, $orm, $formClass = 'OrmForm', $callback = null)
     {
         /** @var _Model $model */
         $model = _Model::getByField($pdo, 'className', $className);

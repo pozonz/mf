@@ -3,44 +3,55 @@
 {% block container %}
     <div id="h1">
         {% block ormModelTitle %}<h1>{{ ormModel.title }}</h1>{% endblock %}
-        <a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
+        {% block ormModelAdd %}<a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>{% endblock %}
     </div>
 
     {% block ormModelExtra %}{% endblock %}
 
+    {% block dataPaginationTop %}
+        {% if totalPages is defined and totalPages > 1 %}
+            {% include 'cms/includes/pagination.twig' %}
+        {% endif %}
+    {% endblock %}
+
     {% block tableContainer %}
+        {% if total is defined %}
+            <h4>{{ total }} item(s) found</h4>
+        {% endif %}
         <table class="table table-striped table-bordered table-hover table-middle">
             {% block tableHead %}
                 <tbody>
-                <tr>
-                    <td class="tableHead" width="40px"><a href="{{ app.request.pathInfo }}?sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
-                    <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Title</a></td>
-                    <td class="tableHead" width="180px" align="right">Action</td>
-                </tr>
+                    <tr>
+                        <td class="tableHead" width="40px"><a href="{{ urlNoSort }}{{ '?' in urlNoSort ? '&' : '?' }}sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
+                        <td class="tableHead"><a href="{{ urlNoSort }}{{ '?' in urlNoSort ? '&' : '?' }}sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Title</a></td>
+                        <td class="tableHead" width="120px" align="right">Action</td>
+                    </tr>
                 </tbody>
             {% endblock %}
 
             {% block tableBody %}
                 <tbody {% block extraColumns %}{% endblock %}>
-                {% for itm in orms %}
-                    <tr id="{{ itm.id }}" class="js-orm-info">
-                        <td>{{ itm.id }}</td>
-                        <td>{{ itm.title }}</td>
-                        <td class="iconCell" align="right">
-                            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
-                            <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
-                            <a href="{{ node.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
-                            <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
-                        </td>
-                    </tr>
-                {% endfor %}
+                    {% for itm in orms %}
+                        {% block tableRow %}
+                            <tr id="{{ itm.id }}" class="js-orm-info">
+                                <td>{{ itm.id }}</td>
+                                <td>{{ itm.title }}</td>
+                                <td class="iconCell" align="right">
+                                    <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
+                                    <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
+                                    <a href="{{ node.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
+                                    <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+                                </td>
+                            </tr>
+                        {% endblock %}
+                    {% endfor %}
                 </tbody>
             {% endblock %}
         </table>
     {% endblock %}
 
     {% block dataPagination %}
-        {% if totalPages > 1 %}
+        {% if totalPages is defined and totalPages > 1 %}
             {% include 'cms/includes/pagination.twig' %}
         {% endif %}
     {% endblock %}

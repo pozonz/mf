@@ -303,6 +303,28 @@ trait CmsTrait
                 $itm = (array)$itm;
                 if (isset($itm['single']) && $itm['single']) {
                     $nodes[] = new PageNode($modelNodeId, $parentId, $count, 1, $idx, $itm['url'], $itm['twig']);
+
+                    if (isset($itm['model'])) {
+                        $model = $itm['model'];
+                        if (gettype($model) == 'string') {
+                            $model = _Model::getByField($pdo, 'className', $model);
+                        }
+                        $className = $model->getClassName();
+
+                        $fullClass = ModelService::fullClass($pdo, $className);
+                        $ormsTwig = $fullClass::getCmsOrmsTwig();
+                        if (!$ormsTwig) {
+                            $ormsTwig = $ormsListTwig[$model->getListType()];
+                        }
+                        $ormTwig = $fullClass::getCmsOrmTwig();
+                        if (!$ormTwig) {
+                            $ormTwig = $ormDefaultTwig;
+                        }
+
+                        $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $itm['url'] . '/'  . $className . '/', $ormTwig, null, 1, 1);
+                        $nodes[] = new PageNode(uniqid(), $modelNodeId, 2, 2, '', $itm['url'] . '/'  . $className . '/copy/', $ormTwig, null, 1, 1);
+                    }
+
                 } else {
                     $model = $itm['model'];
                     if (gettype($model) == 'string') {

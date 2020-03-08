@@ -9,16 +9,11 @@
         {% set start = max(totalPages - all + 1, 1) %}
     {% endif %}
 
-    <div class="grey">
-        {#<a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ max(pageNum - 1, 1) }}">&#60;</a>#}
+    <ul class="nav pagination" style="border-top: none;">
+{#        <li class="prev"><a href="?navigationNodeToView=5&amp;fileNo=1&amp;formid=-31&amp;sort=rank&amp;order=ASC&amp;pageNum=1&amp;query=null" data-page="1"></a></li>#}
         {% for i in start..end %}
-            {% if pageNum == i %}
-                {{ i }}{% if not loop.last %} |{% endif %}
-            {% else %}
-                <a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ i }}">{{ i }}</a>{% if not loop.last %} |{% endif %}
-            {% endif %}
-            {#<li class="item {% if pageNum == i %}active{% endif %}"><a href="{{ url }}/{{ i }}">{{ i }}</a></li>#}
+            <li class="{{ pageNum == i ? 'selected' : '' }}"><a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ i }}">{{ i }}</a></li>
         {% endfor %}
-        {#<a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ min(pageNum + 1, totalPages) }}">&#62;</a>#}
-    </div>
+        <li class="next {{ pageNum == totalPages ? 'disabled' : '' }}"><a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ pageNum + 1 }}"></a></li>
+    </ul>
 {% endif %}

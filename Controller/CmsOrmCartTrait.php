@@ -279,6 +279,7 @@ trait CmsOrmCartTrait
         $params['total'] = $total['count'];
         $params['totalPages'] = ceil($total['count'] / $limit);
         $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order" . ($extraUrl ? '&' . $extraUrl : '');
+        $params['urlNoSort'] = $request->getPathInfo();
         $params['pageNum'] = $pageNum;
         $params['sort'] = $sort;
         $params['order'] = $order;
@@ -321,8 +322,11 @@ trait CmsOrmCartTrait
             "whereSql" => 'm.category > 0',
             "count" => 1,
         ));
+
+        $params['total'] = $total['count'];
         $params['totalPages'] = ceil($total['count'] / $model->getNumberPerPage());
         $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order";
+        $params['urlNoSort'] = $request->getPathInfo();
         $params['pageNum'] = $pageNum;
         $params['sort'] = $sort;
         $params['order'] = $order;
