@@ -104,7 +104,8 @@ trait AssetTrait
     /**
      * @return array|null
      */
-    public function getParentFolder() {
+    public function getParentFolder()
+    {
         return static::getById($this->getPdo(), $this->getParentId());
     }
 
@@ -112,12 +113,13 @@ trait AssetTrait
      * @param bool $doubleCheckExistence
      * @return mixed
      */
-    public function save($doubleCheckExistence = false) {
+    public function save($doubleCheckExistence = false)
+    {
         if (!$this->getId()) {
             do {
                 $code = UtilsService::generateHex(4);
                 $orm = static::getByField($this->getPdo(), 'code', $code);
-            } while($orm);
+            } while ($orm);
             $this->setCode($code);
         }
         return parent::save($doubleCheckExistence);
@@ -146,7 +148,8 @@ trait AssetTrait
     /**
      * @return array|null
      */
-    public function getChildAssets() {
+    public function getChildAssets()
+    {
         return static::data($this->getPdo(), array(
             'whereSql' => 'm.parentId = ?',
             'params' => array($this->getId())
@@ -154,9 +157,24 @@ trait AssetTrait
     }
 
     /**
+     * @return array
+     */
+    public function getFolderPath()
+    {
+        $orm = $this;
+        $path = [$orm];
+        while ($orm = static::getById($this->getPdo(), $orm->getParentId())) {
+            array_unshift($path, $orm);
+        }
+        array_unshift($path, AssetService::getAssetFolderRoot());
+        return $path;
+    }
+
+    /**
      * @return string
      */
-    public function formattedSize() {
+    public function formattedSize()
+    {
         $fileSize = $this->getFileSize();
         if ($fileSize > 1000000000000) {
             return number_format($fileSize / 1000000000000, 2);
@@ -174,7 +192,8 @@ trait AssetTrait
     /**
      * @return string
      */
-    public function formattedSizeUnit() {
+    public function formattedSizeUnit()
+    {
         $fileSize = $this->getFileSize();
         if ($fileSize > 1000000000000) {
             return 'TB';
@@ -192,14 +211,16 @@ trait AssetTrait
     /**
      * @return mixed
      */
-    static public function getCmsOrmsTwig() {
+    static public function getCmsOrmsTwig()
+    {
         return 'cms/files/files.html.twig';
     }
 
     /**
      * @return mixed
      */
-    static public function getCmsOrmTwig() {
+    static public function getCmsOrmTwig()
+    {
         return 'cms/files/file.html.twig';
     }
 }

@@ -1,10 +1,7 @@
 {% extends 'cms/orms/orm.html.twig' %}
 {% block extraBodyClass %}page-orm mode-asset{% endblock %}
 
-{% set path = orm.parentFolder() ? orm.parentFolder().path(asset.root) : [{
-	id: '',
-	title: 'Home',
-}] %}
+{% set path = orm.folderPath %}
 
 {% block heading %}
 	<div class="asset-edit-single">

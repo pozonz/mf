@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Service;
 
+use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\Orm\_Model;
@@ -25,7 +26,8 @@ class AssetService
     /**
      * @return \Pz\Router\InterfaceNode
      */
-    public function getRoot() {
+    public function getRoot()
+    {
         return static::getFolderRoot($this->connection, 0);
     }
 
@@ -35,32 +37,48 @@ class AssetService
      */
     static public function getFolderRoot($pdo, $currentFolderId)
     {
-        $childrenCount = array();
         $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $data = $fullClass::data($pdo, array('whereSql' => 'm.isFolder = 1'));
-        foreach ($data as $itm) {
-            if (!isset($childrenCount[$itm->getParentId()])) {
-                $childrenCount[$itm->getParentId()] = 0;
-            }
-            $childrenCount[$itm->getParentId()]++;
-        }
-
+        $data = $fullClass::data($pdo, array(
+            "select" => 'm.id AS id, m.parentId AS parent, m.title AS text',
+            'whereSql' => 'm.isFolder = 1',
+            "sort" => 'm.rank',
+            "order" => 'ASC',
+            "orm" => 0,
+        ));
         foreach ($data as &$itm) {
-            if ($itm->getId() == $currentFolderId) {
-                $itm->setStateValue('opened', true);
-                $itm->setStateValue('selected', true);
-            } else {
-                if (isset($childrenCount[$itm->getId()]) && $childrenCount[$itm->getId()] <= static::FOLDER_OPEN_MAX_LIMIT) {
-                    $itm->setStateValue('opened', true);
-                } else {
-                    $itm->setStateValue('opened', false);
-                }
+            if ($itm['id'] == $currentFolderId) {
+                $itm['state'] = [
+                    'opened' => true,
+                    'selected' => true,
+                ];
             }
         }
 
-        $assetRoot = static::getAssetRoot($pdo, $currentFolderId);
-        $tree = new Tree($data);
-        return $tree->getRootFromNode($assetRoot);
+        $tree = new \BlueM\Tree($data, [
+            'rootId' => 0,
+            'jsonserializer' => new HierarchicalTreeJsonSerializer(),
+        ]);
+
+        $assetRoot = static::getAssetFolderRoot();
+        $assetRoot->children = $tree->jsonSerialize();
+        return $assetRoot;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    static public function getAssetFolderRoot() {
+        $assetRoot = new \stdClass();
+        $assetRoot->id = '0';
+        $assetRoot->title = 'Home';
+        $assetRoot->text = 'Home';
+        $assetRoot->closed = 0;
+        $assetRoot->status = 1;
+        $assetRoot->state = [
+            'opened' => true,
+            'selected' => false,
+        ];
+        return $assetRoot;
     }
 
     /**
@@ -69,7 +87,8 @@ class AssetService
      * @return mixed
      * @throws \Exception
      */
-    static public function getAssetRoot($pdo, $currentFolderId) {
+    static public function getAssetRoot($pdo, $currentFolderId)
+    {
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $assetRoot = new $fullClass($pdo);
         $assetRoot->setTitle('Home');
@@ -148,7 +167,8 @@ class AssetService
      * @param $orm
      * @return JsonResponse
      */
-    static public function processFileWithAsset(Connection $pdo, $chkFile, $orm) {
+    static public function processFileWithAsset(Connection $pdo, $chkFile, $orm)
+    {
         $ext = pathinfo($chkFile, PATHINFO_EXTENSION);
 
         $info = getimagesize($chkFile);
@@ -217,7 +237,8 @@ class AssetService
      * @param $asset
      * @throws \Exception
      */
-    static public function removeAssetOrms($pdo, $asset) {
+    static public function removeAssetOrms($pdo, $asset)
+    {
         $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
         $assetOrms = $fullClass::data($pdo, array(
             'whereSql' => 'm.title = ?',
@@ -231,7 +252,8 @@ class AssetService
     /**
      * @param $asset
      */
-    static public function removeFile($asset) {
+    static public function removeFile($asset)
+    {
         $link = static::getUploadPath() . $asset->getFileLocation();
         if (file_exists($link) && is_file($link)) {
             unlink($link);
@@ -243,7 +265,8 @@ class AssetService
      * @param $asset
      * @throws \Exception
      */
-    static public function removeCaches($pdo, $asset) {
+    static public function removeCaches($pdo, $asset)
+    {
         $fullClass = ModelService::fullClass($pdo, 'AssetSize');
         $assetSizes = $fullClass::data($pdo);
         foreach ($assetSizes as $assetSize) {
@@ -255,10 +278,11 @@ class AssetService
      * @param $asset
      * @param $assetSize
      */
-    static public function removeCache($asset, $assetSize) {
+    static public function removeCache($asset, $assetSize)
+    {
         $cachedFolder = AssetService::getImageCachePath();
         $cachedKey = AssetService::getCacheKey($asset, $assetSize);
-        $cachedFile =  "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
+        $cachedFile = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
         if (file_exists($cachedFile)) {
             unlink($cachedFile);
         }
@@ -273,28 +297,32 @@ class AssetService
      * @param $assetSize
      * @return string
      */
-    static public function getCacheKey($asset, $assetSize) {
+    static public function getCacheKey($asset, $assetSize)
+    {
         return "{$asset->getCode()}-{$assetSize->getCode()}-{$asset->getId()}-{$assetSize->getId()}";
     }
 
     /**
      * @return string
      */
-    static public function getUploadPath() {
+    static public function getUploadPath()
+    {
         return __DIR__ . '/../../../../../uploads/';
     }
 
     /**
      * @return string
      */
-    static public function getImageCachePath() {
+    static public function getImageCachePath()
+    {
         return __DIR__ . '/../../../../../cache/image/';
     }
 
     /**
      * @return string
      */
-    static public function getTemplateFilePath() {
+    static public function getTemplateFilePath()
+    {
         return __DIR__ . '/../../Resources/files/';
     }
 }

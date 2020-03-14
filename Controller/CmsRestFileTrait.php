@@ -165,20 +165,19 @@ trait CmsRestFileTrait
 
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
         if ($currentFolderId == 0) {
-            $path = array(AssetService::getAssetRoot($pdo, $currentFolderId));
+            $path = [];
         } else {
-            $root = AssetService::getFolderRoot($pdo, $currentFolderId);
             if ($orm) {
-                $path = $orm->path($root);
+                $path = $orm->getFolderPath();
             } else {
-                $path = array();
+                $path = [];
             }
         }
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'currentFolder' => end($path),
             'path' => $path,
-        ));
+        ]);
     }
 
     /**
