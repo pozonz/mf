@@ -74,7 +74,7 @@ class CartService
             }
 
             if ($oldOrderContainer) {
-                $this->reoder($orderContainer, $oldOrderContainer);
+                $this->reorder($orderContainer, $oldOrderContainer);
             }
 
             //convert 1/0 to boolean
@@ -109,7 +109,7 @@ class CartService
      * @return JsonResponse
      * @throws \Exception
      */
-    public function reoder($newOrderContainer, $oldOrderContainer)
+    public function reorder($newOrderContainer, $oldOrderContainer)
     {
         $pdo = $this->container->get('doctrine.dbal.default_connection');
         $customer = UtilsService::getUser($this->container);

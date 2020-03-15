@@ -225,6 +225,6 @@ trait WebCartRestTrait
         $fullClass = ModelService::fullClass($pdo, 'Order');
         $o = $fullClass::getByField($pdo, 'uniqid', $id);
 
-        return $cartService->reoder($orderContainer, $o);
+        return $cartService->reorder($orderContainer, $o);
     }
 }
