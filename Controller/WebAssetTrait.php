@@ -25,21 +25,25 @@ trait WebAssetTrait
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $orm = $fullClass::getByField($pdo, 'code', $assetCode);
-        if (!$orm) {
+        $asset = $fullClass::getByField($pdo, 'code', $assetCode);
+        if (!$asset) {
+            $asset = $fullClass::getById($pdo, $assetCode);
+        }
+
+        if (!$asset) {
             throw new NotFoundHttpException();
         }
 
-        if ($orm->getIsImage() == 1) {
+        if ($asset->getIsImage() == 1) {
 
             $response = $this->assetImage($assetCode);
-            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $orm->getFileName());
+            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $asset->getFileName());
 
         } else {
 
-            $fileType = $orm->getFileType();
-            $fileName = $orm->getFileName();
-            $fnlFile = AssetService::getUploadPath() . $orm->getFileLocation();
+            $fileType = $asset->getFileType();
+            $fileName = $asset->getFileName();
+            $fnlFile = AssetService::getUploadPath() . $asset->getFileLocation();
             if (!file_exists($fnlFile)) {
                 throw new NotFoundHttpException();
             }
