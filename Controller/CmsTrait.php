@@ -70,7 +70,7 @@ trait CmsTrait
      * @return array
      * @throws \Exception
      */
-    protected function getNodes()
+    public function getNodes()
     {
         $cmsUser = UtilsService::getUser($this->container);;
         if (!$cmsUser || gettype($cmsUser) == 'string') {
