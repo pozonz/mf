@@ -30,6 +30,7 @@ class CartService
     public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->connectionName = getenv('CONNECTION_NAME') ?: 'default_connection';
     }
 
     /**
@@ -39,7 +40,7 @@ class CartService
     public function getOrderContainer()
     {
         if (!$this->orderContainer) {
-            $pdo = $this->container->get('doctrine.dbal.default_connection');
+            $pdo = $this->container->get('doctrine.dbal.' . $this->connectionName);
 
             $fullClass = ModelService::fullClass($pdo, 'Order');
             $id = $this->container->get('session')->get(static::SESSION_ID);
@@ -111,7 +112,7 @@ class CartService
      */
     public function reorder($newOrderContainer, $oldOrderContainer)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
+        $pdo = $this->container->get('doctrine.dbal.' . $this->connectionName);
         $customer = UtilsService::getUser($this->container);
 
         $result = [];
