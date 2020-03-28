@@ -174,7 +174,8 @@ class UtilsService
     static public function getUser($container)
     {
         $token = $container->get('security.token_storage')->getToken();
-        return $token ? $token->getUser() : null;
+        $user = $token ? $token->getUser() : null;
+        return $user && gettype($user) == 'object' ? $user : null;
     }
 
     /**

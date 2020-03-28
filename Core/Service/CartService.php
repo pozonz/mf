@@ -84,13 +84,12 @@ class CartService
             $orderContainer->setShippingSave($orderContainer->getShippingSave() ? true : false);
 
             $customer = UtilsService::getUser($this->container);
-            if (gettype($customer) == 'object') {
+            if ($customer) {
                 $orderContainer->setCustomerId($customer->getId());
                 $orderContainer->setCustomerName($customer->getFirstName() . ' ' . $customer->getLastName());
-
-                if (!$orderContainer->getEmail()) {
-                    $orderContainer->setEmail($customer->getTitle());
-                }
+                $orderContainer->setBillingFirstName($orderContainer->getBillingFirstName() ?: $customer->getFirstName());
+                $orderContainer->setBillingLastname($orderContainer->getBillingLastName() ?: $customer->getLastName());
+                $orderContainer->setEmail($orderContainer->getEmail() && filter_var($orderContainer->getEmail(), FILTER_VALIDATE_EMAIL) ? $orderContainer->getEmail() : $customer->getTitle());
             }
 
             $request = Request::createFromGlobals();
