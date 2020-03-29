@@ -48,6 +48,7 @@ class Extension extends AbstractExtension
     public function getFilters()
     {
         return array(
+            'file_exists' => new TwigFilter('file_exists', array($this, 'file_exists')),
             'json_decode' => new TwigFilter('json_decode', array($this, 'json_decode')),
             'ksort' => new TwigFilter('ksort', array($this, 'ksort')),
             'block' => new TwigFilter('block', array($this, 'block')),
@@ -58,6 +59,11 @@ class Extension extends AbstractExtension
 
     }
 
+    public function file_exists($filepath)
+    {
+        $dir = __DIR__ . '/../../../../../public';
+        return file_exists($dir . $filepath);
+    }
 
     public function json_decode($value)
     {
