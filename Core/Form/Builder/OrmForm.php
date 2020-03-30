@@ -123,6 +123,11 @@ class OrmForm extends AbstractType
                 foreach ($result as $key => $val) {
                     $opts['choices'][$val->value] = $val->key;
                 }
+
+                if ($column->widget == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType') {
+                    $opts['placeholder'] = 'Choose an option';
+                }
+
 //                $opts['required'] = false;
                 break;
 
