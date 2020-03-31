@@ -227,6 +227,8 @@ trait CmsTrait
             $nodes = array_merge($nodes, static::appendModelsToParent($pdo, 'admin', $data, '/manage/orms/', 30));
         }
 
+        $nodes[] = new PageNode(uniqid(), null, null, null, 'Manage Account', '/manage/current-user', 'cms/orms/orm.html.twig');
+
         return $nodes;
     }
 
