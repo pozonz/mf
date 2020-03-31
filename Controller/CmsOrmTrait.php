@@ -18,6 +18,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use function ZendTest\Code\Reflection\TestAsset\function1;
 
 trait CmsOrmTrait
 {
@@ -143,6 +144,27 @@ trait CmsOrmTrait
             if ($uploadedFile) {
                 AssetService::processUploadedFileWithAsset($pdo, $uploadedFile, $orm);
             }
+        });
+    }
+
+    /**
+     * @route("/manage/current-user")
+     * @return Response
+     */
+    public function user()
+    {
+        $request = Request::createFromGlobals();
+        if ($request->get('fragment') == 1 && $_SERVER['APP_ENV'] == 'dev') {
+            $this->container->get('profiler')->disable();
+        }
+
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        $className = 'User';
+        $ormId = 1;
+        $orm = $this->_orm($pdo, $className, $ormId);
+        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmForm', function() {
+            throw new RedirectException('/manage/current-user');
         });
     }
 
