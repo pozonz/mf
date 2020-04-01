@@ -160,8 +160,10 @@ trait CmsOrmTrait
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
+        $cmsUser = UtilsService::getUser($this->container);;
+
         $className = 'User';
-        $ormId = 1;
+        $ormId = $cmsUser->getId();
         $orm = $this->_orm($pdo, $className, $ormId);
         return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmForm', function() {
             throw new RedirectException('/manage/current-user');
