@@ -12,9 +12,9 @@
 	{% block heading %}
 		<div id="h1">
 			{% if orm.id %}
-				<h1>Editing #{{ orm.id }}</h1>
+				<h1>Editing "{{ orm.title ?: '#' ~ orm.id }}"</h1>
 			{% else %}
-				<h1>Creating new record...</h1>
+				<h1>Creating new record</h1>
 			{% endif %}
 		</div>
 	{% endblock %}

@@ -191,7 +191,7 @@ class UtilsService
         $category = $fullClass::getByField($pdo, 'code', $categoryCode);
         if ($category) {
             $fullClass = ModelService::fullClass($pdo, 'Page');
-            $pages = $fullClass::data($pdo, array(
+            $pages = $fullClass::active($pdo, array(
                 'whereSql' => 'm.category LIKE ? ',
                 'params' => array('%"' . $category->getId() . '"%'),
             ));

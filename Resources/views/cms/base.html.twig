@@ -1,4 +1,5 @@
 {% set isFragment = app.request.get('fragment') == 1 ? 1 : 0 %}
+{% set version = 2 %}
 
 <!DOCTYPE html>
 
@@ -30,11 +31,11 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     {#<link href="/cms/css/cms.css" rel="stylesheet" type="text/css" media="screen"/>#}
-    <link href="/cms/css/dropzone.css" rel="stylesheet" type="text/css"/>
-    <link href="/cms/css/originate.form.builder.css" rel="stylesheet" type="text/css" media="screen"/>
-    <link href="/cms/css/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="/cms/css/dropzone.css?v={{ version }}" rel="stylesheet" type="text/css"/>
+    <link href="/cms/css/originate.form.builder.css?v={{ version }}" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/cms/css/styles.css?v={{ version }}" rel="stylesheet" type="text/css"/>
 
-    <link href="/cms/develop/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="/cms/develop/styles.css?v={{ version }}" rel="stylesheet" type="text/css"/>
     {% block externalHead %}{% endblock %}
 </head>
 
