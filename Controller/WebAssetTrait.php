@@ -156,6 +156,7 @@ trait WebAssetTrait
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));
         $saveDate = $date->setTimezone(new \DateTimeZone("GMT"))->format("D, d M y H:i:s T");
         $response = BinaryFileResponse::create($thumbnail, Response::HTTP_OK, [
+            "cache-control" => 'max-age=31536000',
             "content-length" => $fileSize,
             "content-type" => $fileType,
             "last-modified" => $saveDate,
