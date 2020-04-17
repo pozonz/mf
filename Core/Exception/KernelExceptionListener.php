@@ -53,14 +53,15 @@ class KernelExceptionListener extends WebController
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $e = $event->getException();
-        if ($e instanceof NotFoundHttpException) {
-            $event->setResponse($this->render('404.html.twig', [
-                'node' => null,
-            ]));
-        }
 
         //For custom redirect exception
         do {
+            if ($e instanceof NotFoundHttpException) {
+                $event->setResponse($this->render('404.html.twig', [
+                    'node' => null,
+                ]));
+            }
+
             //do we have a redirect exception?
             if ($e instanceof RedirectException) {
                 $event->setResponse(new RedirectResponse($e->getUrl(), $e->getStatusCode()));
