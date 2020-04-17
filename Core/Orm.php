@@ -105,6 +105,11 @@ abstract class Orm implements \JsonSerializable
     private $extraInfo;
 
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $siteMapUrl;
+
+    /**
      * Orm constructor.
      * @param Connection $pdo
      */
@@ -821,5 +826,21 @@ abstract class Orm implements \JsonSerializable
     public function setExtraInfo($extraInfo): void
     {
         $this->extraInfo = $extraInfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteMapUrl()
+    {
+        return $this->siteMapUrl;
+    }
+
+    /**
+     * @param mixed $siteMapUrl
+     */
+    public function setSiteMapUrl($siteMapUrl): void
+    {
+        $this->siteMapUrl = $siteMapUrl;
     }
 }

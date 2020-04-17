@@ -1,5 +1,5 @@
 <?php
-//Last updated: 2020-02-09 18:46:22
+//Last updated: 2020-04-17 14:52:17
 namespace MillenniumFalcon\Core\Orm\Generated;
 
 use MillenniumFalcon\Core\Orm;
@@ -59,6 +59,11 @@ class Asset extends Orm implements NodeInterface
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $isFolder;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $parentId;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -217,6 +222,22 @@ class Asset extends Orm implements NodeInterface
     public function setIsFolder($isFolder)
     {
         $this->isFolder = $isFolder;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+    
+    /**
+     * @param mixed parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
     }
     
     /**

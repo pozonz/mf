@@ -80,6 +80,9 @@ class ModelForm extends AbstractType
                     'DESC' => 1,
                 )
             ))
+            ->add('siteMapUrl', TextType::class, array(
+                'label' => 'Frontend URL:',
+            ))
             ->add('dataGroups', ChoiceMultiJson::class, array(
                 'label' => 'Choose Partitions:',
                 'choices' => $dataGroups,
