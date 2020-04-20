@@ -106,10 +106,11 @@ class InstallController extends Controller
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
-        //Create tables
-        static::syncDbTable($pdo, $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Core/Orm', "MillenniumFalcon\\Core\\Orm\\");
-        if (file_exists($this->container->getParameter('kernel.project_dir') . '/src/Orm/')) {
-            static::syncDbTable($pdo, $this->container->getParameter('kernel.project_dir') . '/src/Orm/', "App\\Orm\\");
+        /** @var _Model[] $models */
+        $models = _Model::data($pdo);
+        foreach ($models as $model) {
+            $fullClass = ModelService::fullClass($pdo, $model->getClassName());
+            $fullClass::sync($pdo);
         }
 
         return $this->json([
