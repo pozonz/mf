@@ -106,6 +106,8 @@ class InstallController extends Controller
 
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
+        _Model::sync($pdo);
+
         /** @var _Model[] $models */
         $models = _Model::data($pdo);
         foreach ($models as $model) {
