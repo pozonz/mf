@@ -19,7 +19,9 @@
         <div id="maincontent">
             <div id="bodyContent">
 
-
+                {% if getenv('CMS_TITLE') %}
+                    <h1>{{ getenv('CMS_TITLE') }}</h1>
+                {% endif %}
                 <p>Welcome to the Content Management System. Please enter your username and password to enter.</p>
 
                 <form class="form-login" method="post" action="/manage/login_check" novalidate autocomplete="off">
