@@ -15,6 +15,7 @@ use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
 use MillenniumFalcon\Core\Twig\Extension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,6 +37,23 @@ trait CmsTrait
             'last_username' => $lastUsername,
             'error' => $error,
         )));
+    }
+
+    /**
+     * @route("/manage/after_login")
+     */
+    public function afterLogin(AuthenticationUtils $authenticationUtils)
+    {
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
+        $orm = $fullClass::active($pdo, [
+            'limit' => 1,
+            'oneOrNull' => 1,
+        ]);
+        if (!$orm) {
+            return new RedirectResponse('/manage/pages');
+        }
+        return new RedirectResponse($orm->getBuiltInSection() ? "/manage/{$orm->getBuiltInSectionCode()}" : "/manage/section/{$orm->getId()}");
     }
 
     /**
