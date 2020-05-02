@@ -9,7 +9,7 @@
                         <label>Choose a size</label>
                         <select id="redactor_image_size">
                             {{#each imageSizes}}
-                                <option value="{{id}}" data-code="{{code}}">{{title}}</option>
+                                <option {{#compare ../size code operator='=='}}selected{{/compare}} value="{{id}}" data-code="{{code}}">{{title}}</option>
                             {{/each}}
                         </select>
                     </section>

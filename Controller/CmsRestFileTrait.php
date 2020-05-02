@@ -350,6 +350,41 @@ trait CmsRestFileTrait
     }
 
     /**
+     * @route("/manage/rest/asset/file/size")
+     * @return Response
+     */
+    public function assetAjaxImageSize()
+    {
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        $request = Request::createFromGlobals();
+        $assetId = $request->get('code');
+        $assetSize = $request->get('size');
+
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $asset = $fullClass::getById($pdo, $assetId);
+        if (!$asset) {
+            $asset = $fullClass::getByField($pdo, 'code', $assetId);
+        }
+        if (!$asset) {
+            return new JsonResponse([
+                'id' => null,
+                'width' => null,
+                'height' => null,
+                'size' => null,
+            ]);
+        }
+
+        return new JsonResponse([
+            'id' => $asset->getId(),
+            'width' => $asset->getWidth(),
+            'height' => $asset->getHeight(),
+            'size' => $assetSize,
+        ]);
+
+    }
+
+    /**
      * @route("/manage/rest/asset/file/crop")
      * @return Response
      */
@@ -368,6 +403,9 @@ trait CmsRestFileTrait
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $asset = $fullClass::getById($pdo, $assetId);
         if (!$asset) {
+            $asset = $fullClass::getByField($pdo, 'code', $assetId);
+        }
+        if (!$asset) {
             throw new NotFoundHttpException();
         }
 
@@ -380,7 +418,7 @@ trait CmsRestFileTrait
         $fullClass = ModelService::fullClass($pdo, 'AssetCrop');
         $orm = $fullClass::data($pdo, array(
             'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
-            'params' => array($assetId, $assetSizeId),
+            'params' => array($asset->getId(), $assetSizeId),
             'limit' => 1,
             'oneOrNull' => 1,
         ));
@@ -395,7 +433,7 @@ trait CmsRestFileTrait
         $orm->setY($y);
         $orm->setWidth($width);
         $orm->setHeight($height);
-        $orm->setAssetId($assetId);
+        $orm->setAssetId($asset->getId());
         $orm->setAssetSizeId($assetSizeId);
         $orm->save();
         return new Response('OK');
