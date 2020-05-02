@@ -207,6 +207,18 @@ trait PageTrait
         return $result;
     }
 
+    public function saveVersion()
+    {
+        $obj = static::getById($this->getPdo(), $this->setId());
+        $obj->setVersionId($this->getId());
+        $obj->setVersionUuid();
+    }
+
+    public function restoreVersion()
+    {
+
+    }
+
     /**
      * @return string
      */

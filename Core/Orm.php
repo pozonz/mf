@@ -6,6 +6,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\SolutionInterface\VersionInterface;
 
 abstract class Orm implements \JsonSerializable
 {
@@ -20,12 +21,12 @@ abstract class Orm implements \JsonSerializable
     private $id;
 
     /**
-     * #pz varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
+     * #pz varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
      */
     private $uniqid;
 
     /**
-     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL
+     * #pz varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
      */
     private $slug;
 
@@ -110,6 +111,16 @@ abstract class Orm implements \JsonSerializable
     private $siteMapUrl;
 
     /**
+     * #pz varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
+     */
+    private $versionUuid;
+
+    /**
+     * #pz int(11) DEFAULT NULL
+     */
+    private $versionId;
+
+    /**
      * Orm constructor.
      * @param Connection $pdo
      */
@@ -122,134 +133,6 @@ abstract class Orm implements \JsonSerializable
         $this->added = date('Y-m-d H:i:s');
         $this->modified = date('Y-m-d H:i:s');
         $this->status = 1;
-    }
-
-    /**
-     * @return Connection
-     */
-    public function getPdo(): Connection
-    {
-        return $this->pdo;
-    }
-
-    /**
-     * @param Connection $pdo
-     */
-    public function setPdo(Connection $pdo): void
-    {
-        $this->pdo = $pdo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUniqid()
-    {
-        return $this->uniqid;
-    }
-
-    /**
-     * @param mixed $uniqid
-     */
-    public function setUniqid($uniqid)
-    {
-        $this->uniqid = $uniqid;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param mixed $slug
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRank()
-    {
-        return $this->rank;
-    }
-
-    /**
-     * @param mixed $rank
-     */
-    public function setRank($rank)
-    {
-        $this->rank = $rank;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAdded()
-    {
-        return $this->added;
-    }
-
-    /**
-     * @param mixed $added
-     */
-    public function setAdded($added)
-    {
-        $this->added = $added;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getModified()
-    {
-        return $this->modified;
-    }
-
-    /**
-     * @param mixed $modified
-     */
-    public function setModified($modified)
-    {
-        $this->modified = $modified;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param mixed $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
     }
 
     /**
@@ -285,6 +168,10 @@ abstract class Orm implements \JsonSerializable
      */
     public function save($doubleCheckExistence = false)
     {
+        if (!$doubleCheckExistence && $this instanceof VersionInterface) {
+            $versionedObject->saveVersion();
+        }
+
         $tableName = static::getTableName();
         $fields = array_keys(static::getFields());
 
@@ -294,17 +181,9 @@ abstract class Orm implements \JsonSerializable
         }
         $this->setModified(date('Y-m-d H:i:s'));
 
-        $notFound = 0;
-        if ($this->getId() && $doubleCheckExistence) {
-            $orm = static::getById($this->getPdo(), $this->getId());
-            if (!$orm) {
-                $notFound = 1;
-            }
-        }
-
         $sql = '';
         $params = array();
-        if (!$this->getId() || $notFound) {
+        if (!$this->getId()) {
             $sql = "INSERT INTO `{$tableName}` ";
             $part1 = '(';
             $part2 = ' VALUES (';
@@ -350,7 +229,6 @@ abstract class Orm implements \JsonSerializable
         }
 
         return null;
-
     }
 
     /**
@@ -653,6 +531,134 @@ abstract class Orm implements \JsonSerializable
     }
 
     /**
+     * @return Connection
+     */
+    public function getPdo(): Connection
+    {
+        return $this->pdo;
+    }
+
+    /**
+     * @param Connection $pdo
+     */
+    public function setPdo(Connection $pdo): void
+    {
+        $this->pdo = $pdo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUniqid()
+    {
+        return $this->uniqid;
+    }
+
+    /**
+     * @param mixed $uniqid
+     */
+    public function setUniqid($uniqid)
+    {
+        $this->uniqid = $uniqid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRank()
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param mixed $rank
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdded()
+    {
+        return $this->added;
+    }
+
+    /**
+     * @param mixed $added
+     */
+    public function setAdded($added)
+    {
+        $this->added = $added;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModified()
+    {
+        return $this->modified;
+    }
+
+    /**
+     * @param mixed $modified
+     */
+    public function setModified($modified)
+    {
+        $this->modified = $modified;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
      * @return mixed
      */
     public function getPublishFrom()
@@ -842,5 +848,37 @@ abstract class Orm implements \JsonSerializable
     public function setSiteMapUrl($siteMapUrl): void
     {
         $this->siteMapUrl = $siteMapUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVersionUuid()
+    {
+        return $this->versionUuid;
+    }
+
+    /**
+     * @param mixed $versionUuid
+     */
+    public function setVersionUuid($versionUuid): void
+    {
+        $this->versionUuid = $versionUuid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVersionId()
+    {
+        return $this->versionId;
+    }
+
+    /**
+     * @param mixed $versionId
+     */
+    public function setVersionId($versionId): void
+    {
+        $this->versionId = $versionId;
     }
 }
