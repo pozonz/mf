@@ -12,12 +12,15 @@ trait VersionTrait
     protected function getCurrentVersion()
     {
         $orm = static::getById($this->getPdo(), $this->getId());
-        $orm->setVersionId($this->getId());
-        $orm->setVersionUuid(Uuid::uuid4());
-        $orm->setId(null);
-        $orm->setUniqid(uniqid());
-        $orm->setAdded($this->getModified());
-        return $orm;
+        if ($orm) {
+            $orm->setVersionId($this->getId());
+            $orm->setVersionUuid(Uuid::uuid4());
+            $orm->setId(null);
+            $orm->setUniqid(uniqid());
+            $orm->setAdded($this->getModified());
+            return $orm;
+        }
+        return null;
     }
 
     /**
@@ -34,7 +37,9 @@ trait VersionTrait
     public function saveVersion()
     {
         $orm = $this->getCurrentVersion();
-        $orm->save(true);
+        if ($orm) {
+            $orm->save(true);
+        }
         return $orm;
     }
 

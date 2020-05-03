@@ -134,6 +134,7 @@ abstract class Orm implements \JsonSerializable
         $this->added = date('Y-m-d H:i:s');
         $this->modified = date('Y-m-d H:i:s');
         $this->status = 1;
+        $this->versionUuid = '';
     }
 
     /**
