@@ -7,6 +7,7 @@ use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Version\VersionInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class Orm implements \JsonSerializable
 {
@@ -426,6 +427,17 @@ abstract class Orm implements \JsonSerializable
      */
     static public function data(Connection $pdo, $options = array())
     {
+        $path = explode('\\', get_called_class());
+        $className = array_pop($path);
+        $request = Request::createFromGlobals();
+        $previewOrmToken = $request->get('__preview_' . $className);
+        if ($previewOrmToken) {
+//            $options['debug'] = 1;
+            $options['whereSql'] = 'm.versionUuid = ?';
+            $options['params'] = [$previewOrmToken];
+            $options['includePreviousVersion'] = 1;
+        }
+
         $options['select'] = isset($options['select']) && !empty($options['select']) ? $options['select'] : 'm.*';
         $options['joins'] = isset($options['joins']) && !empty($options['joins']) ? $options['joins'] : null;
         $options['whereSql'] = isset($options['whereSql']) && !empty($options['whereSql']) ? "({$options['whereSql']})" : null;
