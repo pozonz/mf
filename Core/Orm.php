@@ -6,7 +6,7 @@ use Cocur\Slugify\Slugify;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
-use MillenniumFalcon\Core\SolutionInterface\VersionInterface;
+use MillenniumFalcon\Core\Version\VersionInterface;
 
 abstract class Orm implements \JsonSerializable
 {
@@ -136,9 +136,44 @@ abstract class Orm implements \JsonSerializable
     }
 
     /**
+     * @return string|string[]|null
+     */
+    public function getFrontendUrl() {
+        $model = $this->getModel();
+        $siteMapUrl = $model->getSiteMapUrl();
+        if (!$siteMapUrl) {
+            return null;
+        }
+        $frontendUrl = $siteMapUrl;
+        $fields = array_keys(static::getFields());
+        foreach ($fields as $field) {
+            $method = 'get' . ucfirst($field);
+            $frontendUrl = str_replace("{{{$field}}}", $this->$method(), $frontendUrl);
+        }
+        return $frontendUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVersioned()
+    {
+        return $this instanceof VersionInterface;
+    }
+
+    /**
+     * @return int
+     */
+    public function canBePreviewed()
+    {
+        return $this->isVersioned() && $this->getFrontendUrl() !== null ? 1 : 0;
+    }
+
+    /**
      * @return array|null
      */
-    public function getModel() {
+    public function getModel()
+    {
         $rc = static::getReflectionClass();
         return _Model::getByField($this->getPdo(), 'className', $rc->getShortName());
     }
@@ -169,7 +204,7 @@ abstract class Orm implements \JsonSerializable
     public function save($doubleCheckExistence = false)
     {
         if (!$doubleCheckExistence && $this instanceof VersionInterface) {
-            $versionedObject->saveVersion();
+            $this->saveVersion();
         }
 
         $tableName = static::getTableName();
@@ -224,7 +259,7 @@ abstract class Orm implements \JsonSerializable
             }
             return $this->getId();
         } catch (\Exception $ex) {
-            echo ($ex->getMessage());
+            echo($ex->getMessage());
             exit;
         }
 
@@ -253,14 +288,16 @@ abstract class Orm implements \JsonSerializable
     /**
      * @return mixed
      */
-    static public function getCmsOrmsTwig() {
+    static public function getCmsOrmsTwig()
+    {
         return null;
     }
 
     /**
      * @return mixed
      */
-    static public function getCmsOrmTwig() {
+    static public function getCmsOrmTwig()
+    {
         return null;
     }
 
@@ -401,6 +438,7 @@ abstract class Orm implements \JsonSerializable
         $options['orm'] = isset($options['orm']) ? $options['orm'] : 1;
         $options['debug'] = isset($options['debug']) ? $options['debug'] : 0;
         $options['idArray'] = isset($options['idArray']) ? $options['idArray'] : 0;
+        $options['includePreviousVersion'] = isset($options['includePreviousVersion']) ? $options['includePreviousVersion'] : 0;
 
         $options['oneOrNull'] = isset($options['oneOrNull']) ? $options['oneOrNull'] == true : false;
         if ($options['oneOrNull']) {
@@ -423,7 +461,11 @@ abstract class Orm implements \JsonSerializable
 
         $sql = "SELECT {$options['select']} FROM `{$tableName}` AS m";
         $sql .= $options['joins'] ? ' ' . $options['joins'] : '';
-        $sql .= $options['whereSql'] ? ' WHERE ' . $options['whereSql'] : '';
+        if ($options['includePreviousVersion']) {
+            $sql .= $options['whereSql'] ? ' WHERE ' . $options['whereSql'] : '';
+        } else {
+            $sql .= ' WHERE m.versionId IS NULL ' . ($options['whereSql'] ? ' AND (' . $options['whereSql'] . ')' : '');
+        }
         $sql .= $options['groupby'] ? ' GROUP BY ' . $options['groupby'] : '';
         if ($options['sort']) {
             $sql .= " ORDER BY {$options['sort']} {$options['order']}";

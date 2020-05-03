@@ -16,12 +16,12 @@ class ConstraintUniqueValidator extends ConstraintValidator
         $fullClass = ModelService::fullClass($orm->getPdo(), $orm->getModel()->getClassName());
         if ($orm->getId()) {
             $data = $fullClass::data($orm->getPdo(), array(
-                'whereSql' => "(m.$field = ? AND m.id != ?)" . ($extraSql ? " AND ($extraSql)" : ''),
+                'whereSql' => "(m.$field = ? AND m.id != ? AND m.versionId IS NULL)" . ($extraSql ? " AND ($extraSql)" : ''),
                 'params' => array($value, $orm->getId()),
             ));
         } else {
             $data = $fullClass::data($orm->getPdo(), array(
-                'whereSql' => "(m.$field = ?)" . ($extraSql ? " AND ($extraSql)" : ''),
+                'whereSql' => "(m.$field = ? AND m.versionId IS NULL)" . ($extraSql ? " AND ($extraSql)" : ''),
                 'params' => array($value),
             ));
         }

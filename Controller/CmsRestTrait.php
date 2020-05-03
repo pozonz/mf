@@ -20,6 +20,31 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsRestTrait
 {
     /**
+     * @route("/manage/rest/version/delete")
+     * @return Response
+     */
+    public function cmsRestVersionDelete()
+    {
+        $pdo = $this->container->get('doctrine.dbal.default_connection');
+
+        $request = Request::createFromGlobals();
+        $id = $request->get('id');
+        $className = $request->get('className');
+
+        $fullClass = ModelService::fullClass($pdo, $className);
+        $version = $fullClass::data($pdo, [
+            'whereSql' => 'm.id = ?',
+            'params' => [$id],
+            'limit' => 1,
+            'oneOrNull' => 1,
+            'includePreviousVersion' => 1,
+        ]);
+        $version->delete();
+
+        return new Response('OK');
+    }
+
+    /**
      * @route("/manage/rest/column/sort")
      * @return Response
      */

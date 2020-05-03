@@ -3,7 +3,13 @@
 
 {% block content_block_widget -%}
     {% set fragments = app.request.requestUri|trim('/')|split('/') %}
-    {% set ormModel = model.byField('_Model', 'className', ('/copy' in app.request.pathInfo ? fragments[fragments|length - 3] : fragments[fragments|length - 2])) %}
+    {% if '/version' in app.request.pathInfo %}
+        {% set ormModel = model.byField('_Model', 'className', fragments[fragments|length - 4]) %}
+    {% elseif '/copy' in app.request.pathInfo %}
+        {% set ormModel = model.byField('_Model', 'className', fragments[fragments|length - 3]) %}
+    {% else %}
+        {% set ormModel = model.byField('_Model', 'className', fragments[fragments|length - 2]) %}
+    {% endif %}
 
     <div id="{{ id }}_wrap" class="js-fragment-container cms_from_various_snippets_container" data-id="{{ id }}">
         <div id="{{ id }}_container"></div>

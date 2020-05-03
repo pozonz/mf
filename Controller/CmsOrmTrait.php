@@ -15,6 +15,7 @@ use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -112,17 +113,21 @@ trait CmsOrmTrait
 
     /**
      * @route("/manage/pages/orms/Page/{ormId}")
+     * @route("/manage/pages/orms/Page/{ormId}/version/{versionUuid}")
      * @return Response
      */
-    public function page($ormId)
+    public function page($ormId, $versionUuid = null)
     {
         $className = 'Page';
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $orm = $this->_orm($pdo, $className, $ormId);
-        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmPageForm', function () {
+        if ($versionUuid) {
+            $orm = $orm->getByVersionUuid($versionUuid);
+        }
+        return $this->_ormPageWithForm($pdo, $className, $orm, 'OrmPageForm', function () use ($orm) {
             $request = Request::createFromGlobals();
-            throw new RedirectException($request->getUri());
+            throw new RedirectException('/manage/pages/orms/Page/' . $orm->getId());
         });
     }
 
@@ -174,9 +179,12 @@ trait CmsOrmTrait
      * @route("/manage/orms/{className}/{ormId}")
      * @route("/manage/admin/orms/{className}/{ormId}")
      * @route("/manage/pages/orms/{className}/{ormId}")
+     * @route("/manage/orms/{className}/{ormId}/version/{versionUuid}")
+     * @route("/manage/admin/orms/{className}/{ormId}/version/{versionUuid}")
+     * @route("/manage/pages/orms/{className}/{ormId}/version/{versionUuid}")
      * @return Response
      */
-    public function orm($className, $ormId)
+    public function orm($className, $ormId, $versionUuid = null)
     {
         $request = Request::createFromGlobals();
         if ($request->get('fragment') == 1 && $_SERVER['APP_ENV'] == 'dev') {
@@ -186,6 +194,9 @@ trait CmsOrmTrait
         $pdo = $this->container->get('doctrine.dbal.default_connection');
 
         $orm = $this->_orm($pdo, $className, $ormId);
+        if ($versionUuid) {
+            $orm = $orm->getByVersionUuid($versionUuid);
+        }
         return $this->_ormPageWithForm($pdo, $className, $orm);
     }
 
@@ -261,6 +272,13 @@ trait CmsOrmTrait
         $params['fragmentSubmitted'] = 0;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $submitButtonValue = $request->get('submit');
+
+            if ($submitButtonValue == 'Preview') {
+                $orm->savePreview();
+                throw new RedirectException($orm->getFrontendUrl() . "?__preview_{$model->getClassName()}=" . $orm->getVersionUuid());
+            }
+
             $isNew = $orm->getId() ? 0 : 1;
             $this->convertDateValue($orm, $model);
 
@@ -278,11 +296,11 @@ trait CmsOrmTrait
             }
 
             $baseUrl = str_replace('copy/', '', $params['node']->getUrl());
-            if ($request->get('submit') == 'Apply') {
+            if ($submitButtonValue == 'Apply') {
                 throw new RedirectException($baseUrl . $orm->getId() . '?returnUrl=' . urlencode($returnUrl));
-            } else if ($request->get('submit') == 'Save') {
+            } else if ($submitButtonValue == 'Save') {
                 throw new RedirectException($returnUrl);
-            } else if ($request->get('submit') == 'Save changes') {
+            } else if ($submitButtonValue == 'Save changes') {
                 $params['fragmentSubmitted'] = 1;
             }
         }

@@ -263,7 +263,7 @@ trait CmsTrait
                 return;
             }
             $pageId = uniqid();
-            $nodes[] = new PageNode($pageId, $parentId, $count + 1, 1, $pageNode->getTitle(), '/manage/pages/orms/Page/' . $pageNode->getId(), 'cms/orms/orm-custom-page.html.twig');
+            $nodes[] = new PageNode($pageId, $parentId, $count + 1, 1, $pageNode->getTitle(), '/manage/pages/orms/Page/' . $pageNode->getId(), 'cms/orms/orm-custom-page.html.twig', '', 1, 2);
         } else {
             $pageId = $parentId;
         }
@@ -341,7 +341,7 @@ trait CmsTrait
                             $ormTwig = $ormDefaultTwig;
                         }
 
-                        $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $itm['url'] . '/'  . $className . '/', $ormTwig, null, 1, 1);
+                        $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $itm['url'] . '/'  . $className . '/', $ormTwig, null, 1, 3);
                         $nodes[] = new PageNode(uniqid(), $modelNodeId, 2, 2, '', $itm['url'] . '/'  . $className . '/copy/', $ormTwig, null, 1, 1);
                     }
 
@@ -363,7 +363,7 @@ trait CmsTrait
                     }
 
                     $nodes[] = new PageNode($modelNodeId, $parentId, $count, $itm['status'] ?? 1, $idx, $baseUrl . $className, $ormsTwig);
-                    $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $baseUrl . $className . '/', $ormTwig, null, 1, 1);
+                    $nodes[] = new PageNode(uniqid(), $modelNodeId, 1, 2, '', $baseUrl . $className . '/', $ormTwig, null, 1, 3);
                     $nodes[] = new PageNode(uniqid(), $modelNodeId, 2, 2, '', $baseUrl . $className . '/copy/', $ormTwig, null, 1, 1);
                 }
 

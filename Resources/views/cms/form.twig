@@ -204,13 +204,13 @@
 
 
 {% block _orm_added_widget -%}
-    <div>{{ value ? value|date('d F Y H:i') : '' }}</div>
+    <div>{{ value ? value|date('d F Y H:i:s') : '' }}</div>
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
 {%- endblock _orm_added_widget %}
 
 
 {% block _orm_modified_widget -%}
-    <div>{{ value ? value|date('d F Y H:i') : '' }}</div>
+    <div>{{ value ? value|date('d F Y H:i:s') : '' }}</div>
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
 {%- endblock _orm_modified_widget %}
 

@@ -74,10 +74,21 @@ trait WebTrait
     public function getNodes()
     {
         $pdo = $this->container->get('doctrine.dbal.default_connection');
+        $request = Request::createFromGlobals();
+        $previewPageToken = $request->get('__preview_Page');
 
         try {
             $fullClass = ModelService::fullClass($pdo, 'Page');
-            return $fullClass::data($pdo);
+            if ($previewPageToken) {
+                return $fullClass::data($pdo, [
+                    'whereSql' => 'm.versionUuid = ?',
+                    'params' => [$previewPageToken],
+                    'includePreviousVersion' => 1,
+                ]);
+            } else {
+                return $fullClass::data($pdo);
+            }
+
         } catch (\Exception $ex) {
         }
         return [];

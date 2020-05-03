@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\Orm\Traits;
 use MillenniumFalcon\Core\Nestable\NodeInterface;
 use MillenniumFalcon\Core\Orm\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
+use Ramsey\Uuid\Uuid;
 
 trait PageTrait
 {
@@ -205,18 +206,6 @@ trait PageTrait
             $result[$itm->attr] = $itm;
         }
         return $result;
-    }
-
-    public function saveVersion()
-    {
-        $obj = static::getById($this->getPdo(), $this->setId());
-        $obj->setVersionId($this->getId());
-        $obj->setVersionUuid();
-    }
-
-    public function restoreVersion()
-    {
-
     }
 
     /**
