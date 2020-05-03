@@ -51,10 +51,18 @@
 
         {% block tableBody %}
             <tbody {% block extraColumns %}{% endblock %}>
+            {% set limit = 40 %}
             {% for itm in orms %}
                 <tr id="{{ itm.id }}" class="js-orm-info">
                     <td>{{ itm.subtitle }}</td>
-                    <td title="{{ itm.title }}">{{ itm.title|slice(0, 40) ~ (itm.title|length > 40 ? '...' : '') }}</td>
+                    <td title="{{ itm.title }}">
+                        {% set frontendUrl = itm.getFrontendUrl %}
+                        {% if frontendUrl and itm.status == 1 %}
+                            <a target="_blank" href="{{ frontendUrl }}">{{ itm.title|length > limit ? (itm.title|slice(0, limit) ~ '&hellip;')|raw : itm.title }}</a>
+                        {% else %}
+                            {{ itm.title|length > limit ? (itm.title|slice(0, limit) ~ '&hellip;')|raw : itm.title }}
+                        {% endif %}
+                    </td>
                     <td>{{ itm.brand }}</td>
                     <td>{{ itm.type }}</td>
                     <td class="iconCell" align="right">

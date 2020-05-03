@@ -31,11 +31,19 @@
 
             {% block tableBody %}
                 <tbody {% block extraColumns %}{% endblock %}>
+                    {% set limit = 40 %}
                     {% for itm in orms %}
                         {% block tableRow %}
                             <tr id="{{ itm.id }}" class="js-orm-info">
                                 <td>{{ itm.id }}</td>
-                                <td>{{ itm.title }}</td>
+                                <td>
+                                    {% set frontendUrl = itm.getFrontendUrl %}
+                                    {% if frontendUrl and itm.status == 1 %}
+                                        <a target="_blank" href="{{ frontendUrl }}">{{ itm.title|length > limit ? (itm.title|slice(0, limit) ~ '&hellip;')|raw : itm.title }}</a>
+                                    {% else %}
+                                        {{ itm.title|length > limit ? (itm.title|slice(0, limit) ~ '&hellip;')|raw : itm.title }}
+                                    {% endif %}
+                                </td>
                                 <td class="iconCell" align="right">
                                     <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
                                     <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
