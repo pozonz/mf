@@ -18,6 +18,7 @@
 
 {% block container %}
 	<input id="canBePreviewed" value="{{ orm.canBePreviewed ? 1 : 0 }}" type="hidden">
+	<input id="isRestoringFromVersion" value="{{ versionOrm ? 1 : 0 }}" type="hidden">
 
 	{% block heading %}
 		<div id="h1">
@@ -80,13 +81,29 @@
 						<button class="submit button save-content" style="background: #2281cf;" name='submit' value='Save changes'>Save changes</button>
 					</div>
 				{% else %}
+
+
+
 					<div class="submit-area">
-						{#{{ form_widget(form._token) }}#}
-						<a class="back-button button js-returnUrl" href="{{ returnUrl }}">‹ Back</a>
-						<button class="js-orm-apply submit button save-content" style="background: #2281cf;" name='submit' value='Apply'>Apply</button>
-						<button class="js-orm-save submit button" name='submit' value='Save'>Save & Exit ›</button>
 						{% if orm.canBePreviewed %}
-							<button class="js-orm-preview submit button preview" name='submit' value='Preview'>Preview</button>
+							<div class="preview">
+								<button class="js-orm-preview submit button preview" name='submit' value='Preview'>Preview</button>
+							</div>
+						{% endif %}
+
+						{#{{ form_widget(form._token) }}#}
+
+						{% if returnUrl %}
+							<a class="back-button button js-returnUrl" href="{{ returnUrl }}">‹ Back</a>
+						{% endif %}
+
+						{% if versionOrm %}
+							<button class="js-orm-restore submit button restore" name='submit' value='Restore'>Restore</button>
+							{% set versionUrlFragment = '/version/' ~ versionOrm.versionUuid %}
+							<a href="{{ app.request.uri|replace({(versionUrlFragment):''}) }}" class="js-orm-restore-cancel submit button cancel">Cancel</a>
+						{% else %}
+							<button class="js-orm-apply submit button save-content" style="background: #2281cf;" name='submit' value='Apply'>Apply</button>
+							<button class="js-orm-save submit button" name='submit' value='Save'>Save</button>
 						{% endif %}
 					</div>
 				{% endif %}

@@ -260,7 +260,7 @@ trait CmsOrmTrait
         $params = $this->prepareParams();
 
         $request = Request::createFromGlobals();
-        $returnUrl = $request->get('returnUrl') ?: '/manage/orms/' . $model->getClassName();
+        $returnUrl = $request->get('returnUrl') ?: null;
 
         $fullFormClass = "MillenniumFalcon\\Core\\Form\\Builder\\{$formClass}";
         $form = $this->container->get('form.factory')->create($fullFormClass, $orm, array(
@@ -296,7 +296,7 @@ trait CmsOrmTrait
             }
 
             $baseUrl = str_replace('copy/', '', $params['node']->getUrl());
-            if ($submitButtonValue == 'Apply') {
+            if ($submitButtonValue == 'Apply' || $submitButtonValue == 'Restore') {
                 throw new RedirectException($baseUrl . $orm->getId() . '?returnUrl=' . urlencode($returnUrl));
             } else if ($submitButtonValue == 'Save') {
                 throw new RedirectException($returnUrl);

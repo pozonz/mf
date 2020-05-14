@@ -4,10 +4,14 @@
             <i class="fa fa-info-circle"></i> Content overview
         </div>
         <div class="panel-body scroll-content"></div>
+        <div class="sidebar-preview-area js-sidebar-preview-area" style="display: none;" >
+            <input class="submit button save-content preview" class="bg-preview" type="submit" value="Preview" name="submit" />
+        </div>
         <div class="sidebar-submit-area">
-            <input class="submit button save-content apply" class="bg-blue" style="margin-right: .5em;" type="submit" value="Apply" name="submit" />
-            <input class="submit button save-content save" class="bg-green" type="submit" value="Save" name="submit" />
-            <input style="display: none;" lass="submit button save-content preview" class="bg-preview" type="submit" value="Preview" name="submit" />
+            <input style="display: none;" class="submit button save-content apply" class="bg-blue" style="margin-right: .5em;" type="submit" value="Apply" name="submit" />
+            <input style="display: none;" class="submit button save-content save" class="bg-green" type="submit" value="Save" name="submit" />
+            <input style="display: none;" class="submit button save-content restore" class="bg-restore" type="submit" value="Restore" name="submit" />
+            <a style="display: none;" class="submit button save-content cancel" class="bg-cancel">Cancel</a>
         </div>
     </div>
 {% endverbatim %}
