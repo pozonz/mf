@@ -202,6 +202,9 @@
 
 {% use 'cms/form-content-block.twig' %}
 
+{% if false %}
+    {% use 'core/custom-widget/form.twig' %}
+{% endif %}
 
 {% block _orm_added_widget -%}
     <div>{{ value ? value|date('d F Y H:i:s') : '' }}</div>

@@ -368,6 +368,10 @@ EOD;
             'Textarea' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType',
             'Hidden' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\HiddenType',
         );
+        global $CUSTOM_WIDGETS;
+        if ($CUSTOM_WIDGETS) {
+            $result = array_merge($result, $CUSTOM_WIDGETS);
+        }
         ksort($result);
         return $result;
     }
