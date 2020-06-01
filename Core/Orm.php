@@ -121,6 +121,9 @@ abstract class Orm implements \JsonSerializable
      */
     private $versionId;
 
+
+    protected $_objLastEditedBy;
+
     /**
      * Orm constructor.
      * @param Connection $pdo
@@ -936,4 +939,17 @@ abstract class Orm implements \JsonSerializable
     {
         $this->versionId = $versionId;
     }
-}
+
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function objLastEditedBy()
+    {
+        if (!$this->_objLastEditedBy) {
+            $fullClass = ModelService::fullClass($this->getPdo(), 'User');
+            $this->_objLastEditedBy = $fullClass::getById($this->getPdo(), $this->lastEditedBy);
+        }
+        return $this->_objLastEditedBy;
+    }}
