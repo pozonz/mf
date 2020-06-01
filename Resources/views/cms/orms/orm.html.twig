@@ -58,15 +58,29 @@
 						<label>Previous versions:</label>
 					{% endif %}
 					{% if versions|length %}
-						<ul id="versions">
+						<ul id="versions" class="versions">
 							{% for itm in versions %}
-								<li>
+								<li class="versions__item">
 									{% if itm.canBeRestored %}
-										<a href="{{ app.request.pathInfo }}/version/{{ itm.versionUuid }}{% if app.request.queryString %}?{{ app.request.queryString }}{% endif %}">{{ itm.added|date('d F Y H:i:s') }} - {{ itm.title }}&hellip;</a>
+									<div class="versions__info versions-info">
+
+										<div class="versions-info__author">
+											{{ itm.objLastEditedBy.name }}
+										</div>
+										<div class="versions-info__time">
+											{{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }}
+										</div>
+
+
+									</div>
 									{% else %}
-										{{ itm.added|date('d F Y H:i:s') }} - {{ itm.title }}&hellip; (Can not be restored)
+										<div class="versions-info__time">
+											{{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }} (Can not be restored)
+										</div>
+
 									{% endif %}
-									<a href="#versions" data-classname="{{ ormModel.className }}" data-id="{{ itm.id }}" class="js-delete-version" data-idxsec="0" title="Remove version"><img src="/cms/images/binIcon.gif"></a>
+								<a class="versions__restore" href="{{ app.request.pathInfo }}/version/{{ itm.versionUuid }}{% if app.request.queryString %}?{{ app.request.queryString }}{% endif %}">Restore</a>
+									<a class="versions__delete" href="#versions" data-classname="{{ ormModel.className }}" data-id="{{ itm.id }}" class="js-delete-version" data-idxsec="0" title="Remove version"><img src="/cms/images/binIcon.gif"></a>
 								</li>
 							{% endfor %}
 						</ul>
@@ -98,7 +112,7 @@
 						{% endif %}
 
 						{% if versionOrm %}
-							<button class="js-orm-restore submit button restore" name='submit' value='Restore'>Restore</button>
+							<button class="js-orm-restore submit button restore" name='submit' value='Restore'>Confirm</button>
 							{% set versionUrlFragment = '/version/' ~ versionOrm.versionUuid %}
 							<a href="{{ app.request.uri|replace({(versionUrlFragment):''}) }}" class="js-orm-restore-cancel submit button cancel">Cancel</a>
 						{% else %}
