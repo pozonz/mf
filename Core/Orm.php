@@ -552,11 +552,15 @@ abstract class Orm implements \JsonSerializable
         $encodedModel = static::getEncodedModel();
         if (gettype($encodedModel) == 'string') {
             $decodedModel = json_decode($encodedModel);
-            $model = new _Model($pdo);
+            $model = _Model::getById($pdo, $decodedModel->id);
+            if (!$model) {
+                $model = new _Model($pdo);
+            }
             foreach ($decodedModel as $idx => $itm) {
                 $setMethod = "set" . ucfirst($idx);
                 $model->$setMethod($itm);
             }
+            $model->setId(null);
             $model->setPdo($pdo);
             $model->save(true);
         }
