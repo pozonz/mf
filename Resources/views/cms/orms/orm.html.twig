@@ -65,7 +65,7 @@
 									<div class="versions__info versions-info">
 
 										<div class="versions-info__author">
-											{{ itm.objLastEditedBy.name }}
+											{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : '' }}
 										</div>
 										<div class="versions-info__time">
 											{{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }}

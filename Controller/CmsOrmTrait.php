@@ -282,7 +282,7 @@ trait CmsOrmTrait
             $isNew = $orm->getId() ? 0 : 1;
             $this->convertDateValue($orm, $model);
 
-            $user = UtilsService::getUser($this->container);;
+            $user = UtilsService::getUser($this->container);
             $orm->setLastEditedBy($user->getId());
             $orm->save();
 
