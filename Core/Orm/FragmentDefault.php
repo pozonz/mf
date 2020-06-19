@@ -1,10 +1,10 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\FragmentDefaultTrait;
+use MillenniumFalcon\Core\ORM\Traits\FragmentDefaultTrait;
 
-class FragmentDefault extends \MillenniumFalcon\Core\Orm\Generated\FragmentDefault
+class FragmentDefault extends \MillenniumFalcon\Core\ORM\Generated\FragmentDefault
 {
     use FragmentDefaultTrait;
 }

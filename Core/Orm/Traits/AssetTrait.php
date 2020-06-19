@@ -1,6 +1,6 @@
 <?php
-//Last updated: 2019-04-30 11:33:32
-namespace MillenniumFalcon\Core\Orm\Traits;
+
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\UtilsService;
@@ -8,83 +8,15 @@ use MillenniumFalcon\Core\Service\UtilsService;
 trait AssetTrait
 {
     /**
-     * @var array
-     */
-    private $children = array();
-
-    /**
-     * @var string
-     */
-    private $text;
-
-    /**
-     * @var int
-     */
-    private $state = array();
-
-    /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
 
     }
 
     /**
-     * @return null|string
-     */
-    public function getText()
-    {
-        return $this->getTitle();
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setUrl(string $url): void
-    {
-        $this->url = $url;
-    }
-
-    /**
-     * @return array
-     */
-    public function getState(): array
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param array $state
-     */
-    public function setState(array $state)
-    {
-        $this->state = $state;
-    }
-
-    /**
-     * @param $idx
-     * @param $value
-     */
-    public function setStateValue($idx, $value)
-    {
-        $this->state[$idx] = $value;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * @return \stdClass
      */
     public function jsonSerialize()
     {
@@ -99,14 +31,6 @@ trait AssetTrait
         $obj->state = $this->getState();
         $obj->children = $this->getChildren();
         return $obj;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getParentFolder()
-    {
-        return static::getById($this->getPdo(), $this->getParentId());
     }
 
     /**
@@ -154,58 +78,6 @@ trait AssetTrait
             'whereSql' => 'm.parentId = ?',
             'params' => array($this->getId())
         ));
-    }
-
-    /**
-     * @return array
-     */
-    public function getFolderPath()
-    {
-        $orm = $this;
-        $path = [$orm];
-        while ($orm = static::getById($this->getPdo(), $orm->getParentId())) {
-            array_unshift($path, $orm);
-        }
-        array_unshift($path, AssetService::getAssetFolderRoot());
-        return $path;
-    }
-
-    /**
-     * @return string
-     */
-    public function formattedSize()
-    {
-        $fileSize = $this->getFileSize();
-        if ($fileSize > 1000000000000) {
-            return number_format($fileSize / 1000000000000, 2);
-        } elseif ($fileSize > 1000000000) {
-            return number_format($fileSize / 1000000000, 2);
-        } elseif ($fileSize > 1000000) {
-            return number_format($fileSize / 1000000, 2);
-        } elseif ($fileSize > 1000) {
-            return number_format($fileSize / 1000, 0);
-        } else {
-            return $fileSize;
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function formattedSizeUnit()
-    {
-        $fileSize = $this->getFileSize();
-        if ($fileSize > 1000000000000) {
-            return 'TB';
-        } elseif ($fileSize > 1000000000) {
-            return 'GB';
-        } elseif ($fileSize > 1000000) {
-            return 'MB';
-        } elseif ($fileSize > 1000) {
-            return 'KB';
-        } else {
-            return 'B';
-        }
     }
 
     /**

@@ -1,14 +1,14 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm\Generated;
+namespace MillenniumFalcon\Core\ORM\Generated;
 
-use MillenniumFalcon\Core\Orm;
+use MillenniumFalcon\Core\Db\Base;
 
 /**
  * Class _Model
- * @package Web\Orm
+ * @package MillenniumFalcon\Core\ORM\Generated
  */
-class _Model extends Orm
+class _Model extends Base
 {
     /**
      * #pz varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -249,14 +249,6 @@ class _Model extends Orm
     public function setColumnsJson($columnsJson)
     {
         $this->columnsJson = $columnsJson;
-    }
-
-    /**
-     * @return null
-     */
-    public static function getEncodedModel()
-    {
-        return null;
     }
 
     /**

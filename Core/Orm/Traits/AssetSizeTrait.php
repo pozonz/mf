@@ -1,13 +1,13 @@
 <?php
-//Last updated: 2019-04-17 15:05:21
-namespace MillenniumFalcon\Core\Orm\Traits;
+
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 trait AssetSizeTrait
 {
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
         $orm = new static($pdo);
         $orm->setTitle('CMS small');

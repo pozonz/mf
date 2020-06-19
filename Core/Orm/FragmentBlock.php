@@ -1,10 +1,10 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\FragmentBlockTrait;
+use MillenniumFalcon\Core\ORM\Traits\FragmentBlockTrait;
 
-class FragmentBlock extends \MillenniumFalcon\Core\Orm\Generated\FragmentBlock
+class FragmentBlock extends \MillenniumFalcon\Core\ORM\Generated\FragmentBlock
 {
     use FragmentBlockTrait;
 }

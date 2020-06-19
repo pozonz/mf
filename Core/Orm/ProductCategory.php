@@ -1,10 +1,10 @@
 <?php
 //Last updated: 2019-09-16 22:06:40
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\ProductCategoryTrait;
+use MillenniumFalcon\Core\ORM\Traits\ProductCategoryTrait;
 
-class ProductCategory extends \MillenniumFalcon\Core\Orm\Generated\ProductCategory
+class ProductCategory extends \MillenniumFalcon\Core\ORM\Generated\ProductCategory
 {
     use ProductCategoryTrait;
 

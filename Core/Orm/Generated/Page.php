@@ -1,20 +1,11 @@
 <?php
-//Last updated: 2020-05-03 14:16:37
-namespace MillenniumFalcon\Core\Orm\Generated;
 
-use MillenniumFalcon\Core\Orm;
-use MillenniumFalcon\Core\Nestable\NodeInterface;
-use MillenniumFalcon\Core\Nestable\NodeExtraTrait;
+namespace MillenniumFalcon\Core\ORM\Generated;
 
-class Page extends Orm implements NodeInterface
+use MillenniumFalcon\Core\Db\Base;
+
+class Page extends Base
 {
-    use NodeExtraTrait;
-
-    /**
-     * @var array
-     */
-    private $children = array();
-
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */

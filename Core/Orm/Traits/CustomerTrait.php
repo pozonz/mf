@@ -1,11 +1,9 @@
 <?php
-//Last updated: 2019-09-27 10:36:35
-namespace MillenniumFalcon\Core\Orm\Traits;
 
-use MillenniumFalcon\Core\Orm\CustomerAddress;
-use MillenniumFalcon\Core\Orm\CustomerMembership;
-use MillenniumFalcon\Core\Orm\Order;
+namespace MillenniumFalcon\Core\ORM\Traits;
+
 use MillenniumFalcon\Core\Service\CartService;
+use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -16,7 +14,7 @@ trait CustomerTrait
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
 
     }
@@ -27,7 +25,8 @@ trait CustomerTrait
     public function objMembership()
     {
         if (!$this->membership) {
-            $this->membership = CustomerMembership::getById($this->getPdo(), $this->getMembership());
+            $fullClass = ModelService::fullClass($this->getPdo(), 'CustomerMembership');
+            $this->membership = $fullClass::getById($this->getPdo(), $this->getMembership());
         }
         return $this->membership;
     }
@@ -37,6 +36,7 @@ trait CustomerTrait
      */
     public function objTotalSpent()
     {
+        $fullClass = ModelService::fullClass($this->getPdo(), 'Order');
         $total = Order::active($this->getPdo(), array(
             'select' => 'SUM(m.total) AS count',
             'whereSql' => 'm.customerId = ? AND m.category = ?',
@@ -51,7 +51,8 @@ trait CustomerTrait
      */
     public function objAddresses()
     {
-        return CustomerAddress::active($this->getPdo(), array(
+        $fullClass = ModelService::fullClass($this->getPdo(), 'CustomerAddress');
+        return $fullClass::active($this->getPdo(), array(
             'whereSql' => 'm.customerId = ?',
             'params' => [$this->getId()],
         ));

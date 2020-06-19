@@ -1,10 +1,10 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\AssetSizeTrait;
+use MillenniumFalcon\Core\ORM\Traits\AssetSizeTrait;
 
-class AssetSize extends \MillenniumFalcon\Core\Orm\Generated\AssetSize
+class AssetSize extends \MillenniumFalcon\Core\ORM\Generated\AssetSize
 {
     use AssetSizeTrait;
 }

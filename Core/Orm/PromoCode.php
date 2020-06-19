@@ -1,10 +1,10 @@
 <?php
 //Last updated: 2019-09-27 10:25:27
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\PromoCodeTrait;
+use MillenniumFalcon\Core\ORM\Traits\PromoCodeTrait;
 
-class PromoCode extends \MillenniumFalcon\Core\Orm\Generated\PromoCode
+class PromoCode extends \MillenniumFalcon\Core\ORM\Generated\PromoCode
 {
     use PromoCodeTrait;
 }

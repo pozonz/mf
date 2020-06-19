@@ -1,13 +1,13 @@
 <?php
 //Last updated: 2019-09-16 22:06:40
-namespace MillenniumFalcon\Core\Orm\Traits;
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 trait ProductCategoryTrait
 {
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
 
     }

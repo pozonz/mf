@@ -1,6 +1,6 @@
 <?php
 //Last updated: 2019-04-18 11:47:07
-namespace MillenniumFalcon\Core\Orm\Traits;
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 use MillenniumFalcon\Core\Service\TemplateService;
 
@@ -9,7 +9,7 @@ trait PageTemplateTrait
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
         $orm = new static($pdo);
         $orm->setTitle('home.html.twig');

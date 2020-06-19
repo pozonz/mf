@@ -1,9 +1,8 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm\Traits;
+namespace MillenniumFalcon\Core\ORM\Traits;
 
-use MillenniumFalcon\Core\Nestable\NodeInterface;
-use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use Ramsey\Uuid\Uuid;
 
@@ -28,7 +27,7 @@ trait PageTrait
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
         $templateFullClass = ModelService::fullClass($pdo, 'PageTemplate');
 
@@ -127,7 +126,7 @@ trait PageTrait
             $templateFile = rtrim($templateFile, '.twig') . '.twig';
 
             $fullClass = ModelService::fullClass($this->getPdo(), 'PageTemplate');
-            /** @var \MillenniumFalcon\Core\Orm\PageTemplate $orm */
+            /** @var \MillenniumFalcon\Core\ORM\PageTemplate $orm */
             $orm = new $fullClass($this->getPdo());
             $orm->setTitle($templateName);
             $orm->setFilename($templateFile);

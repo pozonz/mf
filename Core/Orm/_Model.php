@@ -1,16 +1,14 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
 use Doctrine\DBAL\Connection;
-use MillenniumFalcon\Core\Orm;
-use function ZendTest\Code\Reflection\TestAsset\function1;
 
 /**
  * Class _Model
  * @package Web\Orm
  */
-class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
+class _Model extends \MillenniumFalcon\Core\ORM\Generated\_Model
 {
     const metaExludes = array(
         'publishFrom',
@@ -73,7 +71,7 @@ class _Model extends \MillenniumFalcon\Core\Orm\Generated\_Model
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
 
     }
@@ -124,7 +122,6 @@ EOD;
 
         $generated_file = $orm->getListType() == 2 ? 'orm_generated_node.txt' : 'orm_generated.txt';
         $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/' . $generated_file);
-        $str = str_replace('{time}', date('Y-m-d H:i:s'), $str);
         $str = str_replace('{namespace}', $orm->getNamespace() . '\\Generated', $str);
         $str = str_replace('{classname}', $orm->getClassName(), $str);
         $str = str_replace('{fields}', join("\n", $fields), $str);
@@ -158,7 +155,6 @@ EOD;
         $file = $path . 'Traits/' . $orm->getClassName() . 'Trait.php';
         if (!file_exists($file)) {
             $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/orm_custom_trait.txt');
-            $str = str_replace('{time}', date('Y-m-d H:i:s'), $str);
             $str = str_replace('{namespace}', $orm->getNamespace(), $str);
             $str = str_replace('{classname}', $orm->getClassName(), $str);
 
@@ -173,7 +169,6 @@ EOD;
         if (!file_exists($file)) {
             $custom_file = 'orm_custom.txt';
             $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/' . $custom_file);
-            $str = str_replace('{time}', date('Y-m-d H:i:s'), $str);
             $str = str_replace('{namespace}', $orm->getNamespace(), $str);
             $str = str_replace('{classname}', $orm->getClassName(), $str);
 

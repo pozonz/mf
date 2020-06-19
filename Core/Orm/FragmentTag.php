@@ -1,10 +1,10 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\FragmentTagTrait;
+use MillenniumFalcon\Core\ORM\Traits\FragmentTagTrait;
 
-class FragmentTag extends \MillenniumFalcon\Core\Orm\Generated\FragmentTag
+class FragmentTag extends \MillenniumFalcon\Core\ORM\Generated\FragmentTag
 {
     use FragmentTagTrait;
 }

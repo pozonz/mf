@@ -1,10 +1,10 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\PageCategoryTrait;
+use MillenniumFalcon\Core\ORM\Traits\PageCategoryTrait;
 
-class PageCategory extends \MillenniumFalcon\Core\Orm\Generated\PageCategory
+class PageCategory extends \MillenniumFalcon\Core\ORM\Generated\PageCategory
 {
     use PageCategoryTrait;
 }

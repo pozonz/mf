@@ -6,7 +6,7 @@ MillenniumFalcon\Core\Exception\RedirectExceptionListener:
     tags:
         - { name: 'kernel.event_listener', event: 'kernel.exception', priority: 11}
 
-MillenniumFalcon\Controller\:
+MillenniumFalcon\Core\Controller\:
         resource: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/Controller'
         tags: ['controller.service_arguments']
 

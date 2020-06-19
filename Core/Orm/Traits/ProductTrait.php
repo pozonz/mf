@@ -1,6 +1,6 @@
 <?php
 //Last updated: 2019-09-16 21:43:24
-namespace MillenniumFalcon\Core\Orm\Traits;
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Service\ModelService;
@@ -10,7 +10,7 @@ trait ProductTrait
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
 
     }

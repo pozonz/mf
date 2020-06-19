@@ -1,13 +1,13 @@
 <?php
-//Last updated: 2019-09-27 10:28:47
-namespace MillenniumFalcon\Core\Orm\Traits;
+
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 trait CustomerMembershipTrait
 {
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
 
     }

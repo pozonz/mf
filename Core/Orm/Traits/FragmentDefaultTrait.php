@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm\Traits;
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 use MillenniumFalcon\Core\Service\ModelService;
 
@@ -9,7 +9,7 @@ trait FragmentDefaultTrait
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
         $tagFullClass = ModelService::fullClass($pdo, 'FragmentTag');
         $tagOrm = $tagFullClass::getByField($pdo, 'title', 'Page');

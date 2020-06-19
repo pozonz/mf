@@ -1,20 +1,11 @@
 <?php
-//Last updated: 2020-04-17 14:52:17
-namespace MillenniumFalcon\Core\Orm\Generated;
 
-use MillenniumFalcon\Core\Orm;
-use MillenniumFalcon\Core\Nestable\NodeInterface;
-use MillenniumFalcon\Core\Nestable\NodeExtraTrait;
+namespace MillenniumFalcon\Core\ORM\Generated;
 
-class ProductCategory extends Orm implements NodeInterface
+use MillenniumFalcon\Core\Db\Base;
+
+class ProductCategory extends Base
 {
-    use NodeExtraTrait;
-
-    /**
-     * @var array
-     */
-    private $children = array();
-
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */

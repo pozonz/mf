@@ -1,10 +1,10 @@
 <?php
-//Last updated: {time}
+
 namespace {namespace};
 
-use MillenniumFalcon\Core\Orm;
+use MillenniumFalcon\Core\ORM;
 
-class {classname} extends Orm
+class {classname} extends Base
 {
 {fields}
 {methods}

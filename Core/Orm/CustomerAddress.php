@@ -1,10 +1,10 @@
 <?php
 //Last updated: 2019-09-27 10:39:11
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\CustomerAddressTrait;
+use MillenniumFalcon\Core\ORM\Traits\CustomerAddressTrait;
 
-class CustomerAddress extends \MillenniumFalcon\Core\Orm\Generated\CustomerAddress
+class CustomerAddress extends \MillenniumFalcon\Core\ORM\Generated\CustomerAddress
 {
     use CustomerAddressTrait;
 }

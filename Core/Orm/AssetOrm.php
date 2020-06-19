@@ -1,10 +1,10 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\AssetOrmTrait;
+use MillenniumFalcon\Core\ORM\Traits\AssetOrmTrait;
 
-class AssetOrm extends \MillenniumFalcon\Core\Orm\Generated\AssetOrm
+class AssetOrm extends \MillenniumFalcon\Core\ORM\Generated\AssetOrm
 {
     use AssetOrmTrait;
 }

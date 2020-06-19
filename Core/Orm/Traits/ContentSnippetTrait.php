@@ -1,13 +1,13 @@
 <?php
-//Last updated: 2019-08-06 19:44:20
-namespace MillenniumFalcon\Core\Orm\Traits;
+
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 trait ContentSnippetTrait
 {
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
 
     }

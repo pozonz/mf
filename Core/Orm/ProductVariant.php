@@ -1,10 +1,10 @@
 <?php
 //Last updated: 2019-09-21 10:12:35
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\ProductVariantTrait;
+use MillenniumFalcon\Core\ORM\Traits\ProductVariantTrait;
 
-class ProductVariant extends \MillenniumFalcon\Core\Orm\Generated\ProductVariant
+class ProductVariant extends \MillenniumFalcon\Core\ORM\Generated\ProductVariant
 {
     use ProductVariantTrait;
 }

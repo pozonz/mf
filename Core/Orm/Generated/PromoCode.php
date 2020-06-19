@@ -1,10 +1,10 @@
 <?php
-//Last updated: 2020-04-17 14:52:17
-namespace MillenniumFalcon\Core\Orm\Generated;
 
-use MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM\Generated;
 
-class PromoCode extends Orm
+use MillenniumFalcon\Core\Db\Base;
+
+class PromoCode extends Base
 {
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL

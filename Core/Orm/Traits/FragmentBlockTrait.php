@@ -1,6 +1,6 @@
 <?php
 //Last updated: 2019-04-18 11:48:16
-namespace MillenniumFalcon\Core\Orm\Traits;
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\TemplateService;
@@ -10,7 +10,7 @@ trait FragmentBlockTrait
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
         $tagFullClass = ModelService::fullClass($pdo, 'FragmentTag');
         $tagOrm = $tagFullClass::getByField($pdo, 'title', 'Page');

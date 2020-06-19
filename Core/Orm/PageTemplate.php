@@ -1,10 +1,10 @@
 <?php
 
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\PageTemplateTrait;
+use MillenniumFalcon\Core\ORM\Traits\PageTemplateTrait;
 
-class PageTemplate extends \MillenniumFalcon\Core\Orm\Generated\PageTemplate
+class PageTemplate extends \MillenniumFalcon\Core\ORM\Generated\PageTemplate
 {
     use PageTemplateTrait;
 }

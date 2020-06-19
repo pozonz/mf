@@ -1,5 +1,5 @@
 <?php
-//Last updated: {time}
+
 namespace {namespace};
 
 use {namespace}\Traits\{classname}Trait;

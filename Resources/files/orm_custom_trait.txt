@@ -1,5 +1,5 @@
 <?php
-//Last updated: {time}
+
 namespace {namespace}\Traits;
 
 trait {classname}Trait
@@ -7,7 +7,7 @@ trait {classname}Trait
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
 
     }

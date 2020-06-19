@@ -1,10 +1,10 @@
 <?php
 //Last updated: 2019-09-27 09:57:41
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\ShippingCountryTrait;
+use MillenniumFalcon\Core\ORM\Traits\ShippingCountryTrait;
 
-class ShippingCountry extends \MillenniumFalcon\Core\Orm\Generated\ShippingCountry
+class ShippingCountry extends \MillenniumFalcon\Core\ORM\Generated\ShippingCountry
 {
     use ShippingCountryTrait;
 }

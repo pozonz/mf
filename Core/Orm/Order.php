@@ -1,10 +1,10 @@
 <?php
 //Last updated: 2019-09-27 09:24:36
-namespace MillenniumFalcon\Core\Orm;
+namespace MillenniumFalcon\Core\ORM;
 
-use MillenniumFalcon\Core\Orm\Traits\OrderTrait;
+use MillenniumFalcon\Core\ORM\Traits\OrderTrait;
 
-class Order extends \MillenniumFalcon\Core\Orm\Generated\Order
+class Order extends \MillenniumFalcon\Core\ORM\Generated\Order
 {
     use OrderTrait;
 }

@@ -1,13 +1,13 @@
 <?php
 //Last updated: 2019-04-18 11:48:22
-namespace MillenniumFalcon\Core\Orm\Traits;
+namespace MillenniumFalcon\Core\ORM\Traits;
 
 trait FragmentTagTrait
 {
     /**
      * @param $pdo
      */
-    static public function initData($pdo, $container)
+    static public function initData($pdo)
     {
         $orm = new static($pdo);
         $orm->setTitle('Page');
