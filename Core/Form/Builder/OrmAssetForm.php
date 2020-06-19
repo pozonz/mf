@@ -4,7 +4,6 @@ namespace MillenniumFalcon\Core\Form\Builder;
 
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
-use MillenniumFalcon\Core\Nestable\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;

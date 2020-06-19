@@ -3,7 +3,7 @@
 namespace MillenniumFalcon\Core\Exception;
 
 use Doctrine\DBAL\Connection;
-use MillenniumFalcon\Controller\WebController;
+use MillenniumFalcon\Core\Controller\WebController;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -2,7 +2,7 @@
 
 namespace MillenniumFalcon\Core\Service;
 
-use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\ORM\_Model;
 
 class ModelService
 {

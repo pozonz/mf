@@ -11,21 +11,38 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserProvider implements UserProviderInterface
 {
+    /**
+     * UserProvider constructor.
+     * @param Connection $conn
+     */
     public function __construct(Connection $conn)
     {
         $this->conn = $conn;
     }
 
+    /**
+     * @param string $username
+     * @return UserInterface
+     */
     public function loadUserByUsername($username)
     {
         return $this->fetchUser($username);
     }
 
+    /**
+     * @param UserInterface $user
+     * @return UserInterface
+     */
     public function refreshUser(UserInterface $user)
     {
         return $this->fetchUser($user->getUsername());
     }
 
+    /**
+     * @param string $class
+     * @return bool
+     * @throws \Exception
+     */
     public function supportsClass($class)
     {
         $pdo = $this->conn;
@@ -37,6 +54,11 @@ class UserProvider implements UserProviderInterface
         return $fullClass === $class;
     }
 
+    /**
+     * @param $username
+     * @return mixed
+     * @throws \Exception
+     */
     private function fetchUser($username)
     {
 

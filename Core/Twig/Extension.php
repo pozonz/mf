@@ -2,7 +2,7 @@
 
 namespace MillenniumFalcon\Core\Twig;
 
-use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Exception\RedirectException;
 use MillenniumFalcon\Core\Nestable\Tree;
 

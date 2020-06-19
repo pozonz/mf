@@ -4,8 +4,7 @@ namespace MillenniumFalcon\Core\Service;
 
 use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
 use Doctrine\DBAL\Connection;
-use MillenniumFalcon\Core\Nestable\Tree;
-use MillenniumFalcon\Core\Orm\_Model;
+use MillenniumFalcon\Core\ORM\_Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +17,7 @@ class AssetService
      * DbService constructor.
      * @param \Doctrine\DBAL\Connection $connection
      */
-    public function __construct(\Doctrine\DBAL\Connection $connection)
+    public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }

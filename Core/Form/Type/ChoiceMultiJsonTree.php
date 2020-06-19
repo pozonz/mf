@@ -1,7 +1,7 @@
 <?php
 namespace MillenniumFalcon\Core\Form\Type;
 
-use MillenniumFalcon\Core\Nestable\Node;
+use \BlueM\Tree\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -40,7 +40,7 @@ class ChoiceMultiJsonTree extends AbstractType
      * @param $level
      * @return array
      */
-    private function getChoices(\BlueM\Tree\Node $node, $level) {
+    private function getChoices(Node $node, $level) {
         $result = [];
         $result[] = [
             'level' => $level,
