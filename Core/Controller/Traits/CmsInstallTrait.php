@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller;
+namespace MillenniumFalcon\Core\Controller\Traits;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
@@ -9,12 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/install")
- * Class InstallController
- * @package MillenniumFalcon\Core\Controller
- */
-class InstallController extends AbstractController
+trait CmsInstallTrait
 {
     /**
      * @var Connection
@@ -26,7 +21,10 @@ class InstallController extends AbstractController
      */
     protected $kernel;
 
-    const IGNORE_FOLDERS_UNDER_ORM = [
+    /**
+     * @var string[]
+     */
+    protected $IGNORE_FOLDERS_UNDER_ORM = [
         '.',
         '..',
         'CmsConfig',
@@ -35,17 +33,7 @@ class InstallController extends AbstractController
     ];
 
     /**
-     * InstallController constructor.
-     * @param Connection $connection
-     */
-    public function __construct(Connection $connection, KernelInterface $kernel)
-    {
-        $this->connection = $connection;
-        $this->kernel = $kernel;
-    }
-
-    /**
-     * @Route("/init")
+     * @Route("/install/init")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function init()
@@ -73,7 +61,7 @@ class InstallController extends AbstractController
      */
     public function populateDb($dir, $namespace)
     {
-        $files = array_diff(scandir($dir), static::IGNORE_FOLDERS_UNDER_ORM);
+        $files = array_diff(scandir($dir), $this->IGNORE_FOLDERS_UNDER_ORM);
 
         //Create table
         $this->connection->beginTransaction();
@@ -119,7 +107,7 @@ class InstallController extends AbstractController
     }
 
     /**
-     * @Route("/sync")
+     * @Route("/install/sync")
      */
     public function sync()
     {

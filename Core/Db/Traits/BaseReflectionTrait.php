@@ -8,18 +8,6 @@ use MillenniumFalcon\Core\Db\Sql;
 trait BaseReflectionTrait
 {
     /**
-     * @param $pdo
-     */
-    static public function sync($pdo)
-    {
-        $tableName = static::getTableName();
-
-        $db = new Sql($pdo, $tableName);
-        $db->create();
-        $db->sync(static::getFields());
-    }
-
-    /**
      * @return array
      */
     static public function getFields()

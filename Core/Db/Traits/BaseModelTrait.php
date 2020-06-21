@@ -20,7 +20,7 @@ trait BaseModelTrait
      */
     static public function updateModel($pdo)
     {
-        $encodedModel = static::getEncodedModel();
+        $encodedModel = static::getCmsConfigModel();
         if (gettype($encodedModel) == 'string') {
             $decodedModel = json_decode($encodedModel);
             $model = _Model::getById($pdo, $decodedModel->id);
@@ -44,7 +44,7 @@ trait BaseModelTrait
      * @param $model
      * @return string
      */
-    static public function encodedModel($model)
+    static public function getEncodedModel($model)
     {
         $fields = array_keys(_Model::getFields());
 
@@ -59,7 +59,7 @@ trait BaseModelTrait
     /**
      * @return bool|string
      */
-    static public function getEncodedModel()
+    static public function getCmsConfigModel()
     {
         $rc = static::getReflectionClass();
         $configFilePath = dirname($rc->getFileName()) . '/CmsConfig/' . $rc->getShortName() . '.json';

@@ -59,6 +59,18 @@ abstract class Base implements \JsonSerializable
     }
 
     /**
+     * @param $pdo
+     */
+    static public function sync($pdo)
+    {
+        $tableName = static::getTableName();
+
+        $db = new Sql($pdo, $tableName);
+        $db->create();
+        $db->sync(static::getFields());
+    }
+    
+    /**
      * @return mixed|\stdClass
      */
     public function jsonSerialize()

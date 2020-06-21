@@ -4,52 +4,61 @@ namespace MillenniumFalcon\Core\Exception;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Controller\WebController;
-use MillenniumFalcon\Core\Service\ModelService;
-use MillenniumFalcon\Core\Service\UtilsService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 class KernelExceptionListener extends WebController
 {
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
     const LAST_URI = '__lastUrl';
+
     const ALLOWED_URIS = [
         '/cart',
     ];
 
-    public function __construct(Container $container)
+    /**
+     * KernelExceptionListener constructor.
+     * @param Connection $connection
+     */
+    public function __construct(Connection $connection)
     {
-        $this->container = $container;
+        $this->connection = $connection;
     }
 
+    /**
+     * @param RequestEvent $event
+     */
     public function onKernelController(RequestEvent $event)
     {
+        /** @var Request $request */
         $request = $event->getRequest();
-        $path = rtrim($request->getPathInfo(), '/');
-        $uri = $request->getRequestUri();
-
-        $pdo = $this->container->get('doctrine')->getConnection();
-
+        $requestUri = $request->getRequestUri();
+        $pathInfo = $request->getPathInfo();
         $params = null;
+
         try {
-            $params = $this->getParams($path);
+            $params = $this->getTemplateParams($request);
         } catch (NotFoundHttpException $ex) {
         } catch (RedirectException $ex) {
         }
 
         $session = $event->getRequest()->getSession();
-        if ($params || in_array($path, static::ALLOWED_URIS)) {
-            $session->set(static::LAST_URI, $uri);
+        if ($params || in_array($pathInfo, static::ALLOWED_URIS)) {
+            $session->set(static::LAST_URI, $requestUri);
         }
     }
 
+    /**
+     * @param GetResponseForExceptionEvent $event
+     */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $e = $event->getException();
@@ -57,7 +66,7 @@ class KernelExceptionListener extends WebController
         //For custom redirect exception
         do {
             if ($e instanceof NotFoundHttpException) {
-                $event->setResponse($this->render('404.html.twig', [
+                $event->setResponse($this->render('404.twig', [
                     'node' => null,
                 ]));
             }
@@ -69,7 +78,7 @@ class KernelExceptionListener extends WebController
             }
 
             //this could be bad..
-            if ($e instanceof HttpException && $event->getException() !== $e) {
+            if ($e instanceof \HttpException && $event->getException() !== $e) {
                 $event->setException($e);
                 return;
             }

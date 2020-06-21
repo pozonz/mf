@@ -20,7 +20,7 @@
     "siteMapUrl": null,
     "title": "Orders",
     "className": "Order",
-    "namespace": "MillenniumFalcon\\Core\\Orm",
+    "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",
     "dataType": "0",
     "dataGroups": "[\"5\"]",

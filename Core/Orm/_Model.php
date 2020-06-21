@@ -3,10 +3,11 @@
 namespace MillenniumFalcon\Core\ORM;
 
 use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\Db\Base;
 
 /**
  * Class _Model
- * @package Web\Orm
+ * @package MillenniumFalcon\Core\ORM
  */
 class _Model extends \MillenniumFalcon\Core\ORM\Generated\_Model
 {
@@ -58,7 +59,7 @@ class _Model extends \MillenniumFalcon\Core\ORM\Generated\_Model
     {
         $this->setTitle('New models');
         $this->setClassName('NewModel');
-        $this->setNamespace('Web\\Orm');
+        $this->setNamespace('Web\\ORM');
         $this->setModelType(0);
         $this->setDataType(0);
         $this->setListType(0);
@@ -127,14 +128,14 @@ EOD;
         $str = str_replace('{fields}', join("\n", $fields), $str);
         $str = str_replace('{methods}', join("\n", $methods), $str);
 
-        $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/Generated/';
+        $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/ORM' : '/vendor/pozoltd/millennium-falcon/Core/ORM') . '/Generated/';
 
         $file = $path . '../CmsConfig/' . $orm->getClassName() . '.json';
         $dir = dirname($file);
         if (!file_exists($dir)) {
             mkdir($dir, 0777, true);
         }
-        file_put_contents($file, _Model::encodedModel($orm));
+        file_put_contents($file, _Model::getEncodedModel($orm));
 
         $file = $path . $orm->getClassName() . '.php';
         $dir = dirname($file);
@@ -150,7 +151,7 @@ EOD;
      */
     static public function setCustomFile(_Model $orm, $container)
     {
-        $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/Orm' : '/vendor/pozoltd/millennium-falcon/Core/Orm') . '/';
+        $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/ORM' : '/vendor/pozoltd/millennium-falcon/Core/ORM') . '/';
 
         $file = $path . 'Traits/' . $orm->getClassName() . 'Trait.php';
         if (!file_exists($file)) {
@@ -207,7 +208,7 @@ EOD;
      */
     static public function getMetadataChoices()
     {
-        $fields = Orm::getFields();
+        $fields = Base::getFields();
         $values = array_diff(array_keys($fields), static::metaExludes);
         $keys = array_map(function ($itm) {
             return ucfirst($itm);

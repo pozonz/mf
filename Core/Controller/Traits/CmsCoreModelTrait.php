@@ -10,53 +10,49 @@ use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-trait CmsModelTrait
+trait CmsCoreModelTrait
 {
     /**
      * @route("/manage/admin/model-builder/{modelId}")
      * @return Response
      */
-    public function model($modelId)
+    public function model(Request $request, $modelId)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $model = _Model::getById($pdo, $modelId);
+        $model = _Model::getById($this->connection, $modelId);
         if (!$model) {
-            $model = new _Model($pdo);
+            $model = new _Model($this->connection);
         }
 
-        return $this->_model($pdo, $model);
+        return $this->_model($request, $model);
     }
 
     /**
      * @route("/manage/admin/model-builder/copy/{modelId}")
      * @return Response
      */
-    public function copyModel($modelId)
+    public function copyModel(Request $request, $modelId)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $model = _Model::getById($pdo, $modelId);
+        $model = _Model::getById($this->connection, $modelId);
         if (!$model) {
-            $model = new _Model($pdo);
+            $model = new _Model($this->connection);
         }
 
         $model->setId(null);
-        return $this->_model($pdo, $model);
+        return $this->_model($request, $model);
     }
 
     /**
-     * @param $pdo
+     * @param Request $request
      * @param $model
      * @return mixed
      * @throws RedirectException
      */
-    private function _model($pdo, $model) {
-        $params = $this->prepareParams();
+    private function _model(Request $request, $model) {
+        $params = $this->getCmsTemplateParams($request);
         $dataGroups = array();
 
-        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
-        $result = $fullClass::active($pdo);
+        $fullClass = ModelService::fullClass($this->connection, 'DataGroup');
+        $result = $fullClass::active($this->connection);
         foreach ($result as $itm) {
             $dataGroups[$itm->getTitle()] = $itm->getId();
         }
@@ -71,9 +67,9 @@ trait CmsModelTrait
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($model->getModelType() == 0) {
-                $model->setNamespace('App\\Orm');
+                $model->setNamespace('App\\ORM');
             } else {
-                $model->setNamespace('MillenniumFalcon\\Core\\Orm');
+                $model->setNamespace('MillenniumFalcon\\Core\\ORM');
             }
             _Model::setGenereatedFile($model, $this->container);
             _Model::setCustomFile($model, $this->container);
@@ -81,11 +77,11 @@ trait CmsModelTrait
             $fullClassname = $model->getNamespace() . '\\' . $model->getClassName();
 
             if (!$model->getId()) {
-                $model->setRank(_Model::lastRank($pdo));
+                $model->setRank(_Model::lastRank($this->connection));
             }
             $model->save();
 
-            $fullClassname::sync($pdo);
+            $fullClassname::sync($this->connection);
 
             $baseUrl = '/manage/admin/model-builder';
             if ($request->get('submit') == 'Apply') {
@@ -97,6 +93,7 @@ trait CmsModelTrait
 
         $params['form'] = $form->createView();
         $params['ormModel'] = $model;
-        return $this->render($params['node']->getTemplate(), $params);
+
+        return $this->render($params['theNode']->template, $params);
     }
 }

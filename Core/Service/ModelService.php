@@ -84,12 +84,12 @@ class ModelService
     static public function fullClass($pdo, $className)
     {
         if ($className == '_Model') {
-            return "\\MillenniumFalcon\\Core\\Orm\\_Model";
+            return "\\MillenniumFalcon\\Core\\ORM\\_Model";
         }
 
         //temporary solution
         $appClass = "\\App\\Orm\\{$className}";
-        $cmsClass = "\\MillenniumFalcon\\Core\\Orm\\{$className}";
+        $cmsClass = "\\MillenniumFalcon\\Core\\ORM\\{$className}";
         if (class_exists($appClass)) {
             return $appClass;
         } elseif (class_exists($cmsClass)) {

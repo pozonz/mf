@@ -20,7 +20,7 @@
     "siteMapUrl": null,
     "title": "Customer Addresses",
     "className": "CustomerAddress",
-    "namespace": "MillenniumFalcon\\Core\\Orm",
+    "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",
     "dataType": "1",
     "dataGroups": null,

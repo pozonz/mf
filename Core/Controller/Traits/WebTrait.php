@@ -56,17 +56,17 @@ trait WebTrait
         ]);
     }
 
-    /**
-     * @route("/{page}", requirements={"page" = ".*"})
-     * @return Response
-     */
-    public function web()
-    {
-        $request = Request::createFromGlobals();
-        $path = rtrim($request->getPathInfo(), '/');
-        $params = $this->getParams($path);
-        return $this->render($params['node']->getTemplate(), $params);
-    }
+//    /**
+//     * @route("/{page}", requirements={"page" = ".*"})
+//     * @return Response
+//     */
+//    public function web()
+//    {
+//        $request = Request::createFromGlobals();
+//        $path = rtrim($request->getPathInfo(), '/');
+//        $params = $this->getParams($path);
+//        return $this->render($params['node']->getTemplate(), $params);
+//    }
 
     /**
      * @return array

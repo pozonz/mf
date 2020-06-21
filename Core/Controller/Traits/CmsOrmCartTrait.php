@@ -23,52 +23,10 @@ trait CmsOrmCartTrait
      * @route("/manage/shop/Dashboard")
      * @return Response
      */
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-        $request = Request::createFromGlobals();
-
-        $fullClass = ModelService::fullClass($pdo, 'Product');
-        $params = $this->prepareParams();
-        $params['tables'] = [
-            [
-                'title' => 'Product Summary',
-                'rows' => [
-                    [
-                        'title' => 'All products',
-                        'link' => '/manage/orms/Product',
-                        'value' => $fullClass::data($pdo, [
-                            'count' => 1,
-                        ])['count'],
-                    ],
-                    [
-                        'title' => 'In stock',
-                        'link' => '/manage/orms/Product',
-                        'value' => $fullClass::data($pdo, [
-                            'whereSql' => '((m.outOfStock = 0 OR m.outOfStock IS NULL) AND (m.lowStock = 0 OR m.lowStock IS NULL))',
-                            'count' => 1,
-                        ])['count'],
-                    ],
-                    [
-                        'title' => 'Low stock',
-                        'link' => '/manage/orms/Product',
-                        'value' => $fullClass::data($pdo, [
-                            'whereSql' => '(m.lowStock = 1)',
-                            'count' => 1,
-                        ])['count'],
-                    ],
-                    [
-                        'title' => 'Out of stock',
-                        'link' => '/manage/orms/Product',
-                        'value' => $fullClass::data($pdo, [
-                            'whereSql' => '(m.outOfStock = 1)',
-                            'count' => 1,
-                        ])['count'],
-                    ],
-                ],
-            ]
-        ];
-        return $this->render($params['node']->getTemplate(), $params);
+        $params = $this->getCmsTemplateParams($request);
+        return $this->render($params['theNode']->getTemplate(), $params);
     }
 
     /**

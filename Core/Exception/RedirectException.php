@@ -21,7 +21,7 @@ class RedirectException extends \Exception
     {
         parent::__construct(static::MESSAGE[$statusCode] ?? 'Redirect', $statusCode);
         $this->url = $url;
-        $this->statusCode  = $statusCode;
+        $this->statusCode = $statusCode;
     }
 
     /**
@@ -39,5 +39,4 @@ class RedirectException extends \Exception
     {
         return $this->url;
     }
-
 }

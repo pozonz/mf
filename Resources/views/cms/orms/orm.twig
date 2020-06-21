@@ -1,11 +1,11 @@
-{% extends 'cms/base.html.twig' %}
+{% extends 'cms/base.twig' %}
 {% block extraBodyClass %}page-orm{% endblock %}
 
 {% form_theme form 'cms/form.twig' %}
 
 {% set versionOrm = model.active(ormModel.className, {
 	whereSql: 'm.versionUuid = ?',
-	params: [fragments|last],
+	params: [urlFragments|last],
 	limit: 1,
 	oneOrNull: 1,
 	includePreviousVersion: 1,

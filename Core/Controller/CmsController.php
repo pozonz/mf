@@ -2,32 +2,44 @@
 
 namespace MillenniumFalcon\Core\Controller;
 
-use MillenniumFalcon\Core\Controller\Traits\CmsModelTrait;
+use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\Controller\Traits\CmsCoreModelTrait;
+use MillenniumFalcon\Core\Controller\Traits\CmsCoreOrmsTrait;
+use MillenniumFalcon\Core\Controller\Traits\CmsCoreOrmTrait;
+use MillenniumFalcon\Core\Controller\Traits\CmsInstallTrait;
+use MillenniumFalcon\Core\Controller\Traits\CmsCoreLoginTrait;
+use MillenniumFalcon\Core\Controller\Traits\CmsCoreTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsOrmCartTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsOrmTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsRestFileTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsRestProductTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsRestTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsTrait;
 use MillenniumFalcon\Core\RouterController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class CmsController extends RouterController
 {
-    use CmsOrmCartTrait,
-        CmsOrmTrait,
-        CmsModelTrait,
+    use CmsInstallTrait,
+        CmsCoreLoginTrait,
+        CmsCoreModelTrait,
+        CmsCoreOrmsTrait,
+        CmsCoreOrmTrait,
+
         CmsRestFileTrait,
-        CmsRestProductTrait,
-        CmsRestTrait,
-        CmsTrait;
 
-    public function setContainer(ContainerInterface $container = null)
+//        CmsOrmCartTrait,
+//        CmsRestProductTrait,
+//        CmsRestTrait,
+
+        CmsCoreTrait;
+
+    /**
+     * CmsController constructor.
+     * @param Connection $connection
+     * @param KernelInterface $kernel
+     */
+    public function __construct(Connection $connection, KernelInterface $kernel)
     {
-        parent::setContainer($container);
-
-        $dir = $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/views';
-        $loader = $this->container->get('twig')->getLoader();
-        $loader->addPath($dir);
+        $this->connection = $connection;
+        $this->kernel = $kernel;
     }
 }

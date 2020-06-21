@@ -20,7 +20,7 @@
     "siteMapUrl": null,
     "title": "Shipping Countries",
     "className": "ShippingCountry",
-    "namespace": "MillenniumFalcon\\Core\\Orm",
+    "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",
     "dataType": "1",
     "dataGroups": "[\"4\"]",

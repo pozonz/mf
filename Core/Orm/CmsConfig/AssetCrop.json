@@ -20,7 +20,7 @@
     "siteMapUrl": null,
     "title": "Image Cropping Sizes",
     "className": "AssetCrop",
-    "namespace": "MillenniumFalcon\\Core\\Orm",
+    "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",
     "dataType": "2",
     "dataGroups": "[]",
