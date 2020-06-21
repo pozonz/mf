@@ -121,7 +121,7 @@ EOD;
 EOD;
         }, $columnsJson);
 
-        $generated_file = $orm->getListType() == 2 ? 'orm_generated_node.txt' : 'orm_generated.txt';
+        $generated_file = 'orm_generated.txt';
         $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/' . $generated_file);
         $str = str_replace('{namespace}', $orm->getNamespace() . '\\Generated', $str);
         $str = str_replace('{classname}', $orm->getClassName(), $str);
