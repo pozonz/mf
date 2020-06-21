@@ -63,7 +63,6 @@ trait CmsCoreModelTrait
             'dataGroups' => $dataGroups,
         ));
 
-        $request = Request::createFromGlobals();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($model->getModelType() == 0) {

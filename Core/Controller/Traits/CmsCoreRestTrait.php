@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-trait CmsRestTrait
+trait CmsCoreRestTrait
 {
     /**
      * @route("/manage/rest/version/delete")

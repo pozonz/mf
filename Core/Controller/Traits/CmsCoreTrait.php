@@ -147,7 +147,18 @@ trait CmsCoreTrait
             'url' => "/manage/admin/model-builder/",
             'template' => 'cms/models/model.twig',
             'allowExtra' => 1,
-            'maxParams' => 2,
+            'maxParams' => 1,
+            'status' => 2,
+        ]);
+
+        $nodes[] = (array)new RawData([
+            'id' => 'modelCopy',
+            'parent' => 'model',
+            'title' => 'Model copy',
+            'url' => "/manage/admin/model-builder/copy/",
+            'template' => 'cms/models/model.twig',
+            'allowExtra' => 1,
+            'maxParams' => 1,
             'status' => 2,
         ]);
 
