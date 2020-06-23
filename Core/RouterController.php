@@ -61,6 +61,7 @@ abstract class RouterController extends AbstractController
                 }
             }
         }
+
         if (!$rawData) {
             throw new NotFoundHttpException();
         }

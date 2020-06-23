@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Shipping Countries",
+    "title": "Shipping countries",
     "className": "ShippingCountry",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

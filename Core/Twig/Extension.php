@@ -2,10 +2,11 @@
 
 namespace MillenniumFalcon\Core\Twig;
 
+use BlueM\Tree;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Exception\RedirectException;
-use MillenniumFalcon\Core\Nestable\Tree;
 
+use MillenniumFalcon\Core\Tree\RawData;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -134,11 +135,19 @@ class Extension extends AbstractExtension
             $page->setRank($categoryRankValue);
             $page->setClosed($categoryClosedValue);
 
-            $nodes[] =$page;
+            $nodes[] = (array)new RawData([
+                'id' => $page->getId(),
+                'title' => $page->getTitle(),
+                'parent' => $categoryParentValue,
+                'rank' => $categoryRankValue,
+                'status' => $page->getStatus(),
+                'closed' => $categoryClosedValue,
+                'extraInfo' => $page->getUrl(),
+            ]);
         }
 
         $tree = new Tree($nodes);
-        return $tree->getRoot();
+        return $tree;
     }
 
     /**

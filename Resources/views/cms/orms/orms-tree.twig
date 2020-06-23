@@ -1,10 +1,10 @@
-{% extends 'cms/orms/orms.html.twig' %}
+{% extends 'cms/orms/orms.twig' %}
 {% from "cms/includes/nestable.twig" import nest as nest %}
 
 {% block container %}
     <div id="h1">
         <h1>{{ ormModel.title }}</h1>
-        <a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
+        <a class="addForm button" href="{{ theNode.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
     </div>
 
 

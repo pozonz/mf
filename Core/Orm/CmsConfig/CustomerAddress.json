@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Customer Addresses",
+    "title": "Customer addresses",
     "className": "CustomerAddress",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

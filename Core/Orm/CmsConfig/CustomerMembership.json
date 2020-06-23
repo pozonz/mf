@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Customer Membership",
+    "title": "Customer membership",
     "className": "CustomerMembership",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Page Categories",
+    "title": "Page categories",
     "className": "PageCategory",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

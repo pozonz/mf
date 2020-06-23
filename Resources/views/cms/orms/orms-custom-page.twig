@@ -1,12 +1,12 @@
-{% extends 'cms/orms/orms.html.twig' %}
+{% extends 'cms/orms/orms.twig' %}
 {% from "cms/includes/nestable-page.twig" import nest as nest %}
 
-{% set pageRoot = model.data('Page')|nestablePges(cat) %}
+{% set pageTree = model.data('Page')|nestablePges(cat) %}
 
 {% block container %}
     <div id="h1">
         <h1>Webpage Builder</h1>
-        <a class="addForm button" href="{{ node.url }}/new?category={{ (cat == 0 ? [] : [cat])|json_encode|url_encode }}&returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
+        <a class="addForm button" href="{{ theNode.url }}/new?category={{ (cat == 0 ? [] : [cat])|json_encode|url_encode }}&returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
     </div>
 
     <div class="page-category">
@@ -32,7 +32,7 @@
     <div class="nestable-lists">
         <div class="dd" id="nestable">
             <ol class="dd-list">
-                {% for itm in pageRoot.children %}
+                {% for itm in pageTree.rootNodes %}
                     {{ nest(itm, ormModel, 1) }}
                 {% endfor %}
             </ol>

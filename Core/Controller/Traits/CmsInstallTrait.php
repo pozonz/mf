@@ -93,7 +93,7 @@ trait CmsInstallTrait
 
         sleep(5);
 
-        //Init data
+//        //Init data
         $models = _Model::data($this->connection);
         $this->connection->beginTransaction();
         foreach ($models as $model) {

@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Form Builder",
+    "title": "Form builder",
     "className": "FormDescriptor",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

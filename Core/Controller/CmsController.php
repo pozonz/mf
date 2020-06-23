@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Controller\Traits\CmsCoreModelTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsCoreOrmsTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsCoreOrmTrait;
+use MillenniumFalcon\Core\Controller\Traits\CmsCoreRestPageTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsCoreRestTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsInstallTrait;
 use MillenniumFalcon\Core\Controller\Traits\CmsCoreLoginTrait;
@@ -18,12 +19,15 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CmsController extends RouterController
 {
-    use CmsInstallTrait,
+    use
+        CmsInstallTrait,
         CmsCoreLoginTrait,
         CmsCoreModelTrait,
-        CmsCoreRestTrait,
         CmsCoreOrmsTrait,
         CmsCoreOrmTrait,
+
+        CmsCoreRestTrait,
+        CmsCoreRestPageTrait,
 
         CmsRestFileTrait,
 

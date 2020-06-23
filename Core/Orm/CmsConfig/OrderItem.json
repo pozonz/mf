@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Order Items",
+    "title": "Order items",
     "className": "OrderItem",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

@@ -23,6 +23,6 @@ trait BaseCustomisationTrait
      */
     static public function getCmsOrmTwig()
     {
-        return null;
+        return 'cms/orms/orm.twig';
     }
 }

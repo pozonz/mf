@@ -212,7 +212,7 @@ trait PageTrait
      */
     static public function getCmsOrmsTwig()
     {
-        return 'cms/orms/orms-custom-page.html.twig';
+        return 'cms/orms/orms-custom-page.twig';
     }
 
     /**
@@ -220,6 +220,6 @@ trait PageTrait
      */
     static public function getCmsOrmTwig()
     {
-        return 'cms/orms/orm-custom-page.html.twig';
+        return 'cms/orms/orm-custom-page.twig';
     }
 }

@@ -4,8 +4,6 @@ namespace MillenniumFalcon\Core\Tree;
 
 use BlueM\Tree\Node;
 use Cocur\Slugify\Slugify;
-use MillenniumFalcon\Core\Nestable\PageNode;
-use MillenniumFalcon\Core\Nestable\Tree;
 
 class TreeUtils
 {
@@ -16,7 +14,7 @@ class TreeUtils
     static public function ancestor(Node $theNode)
     {
         $ancestors = $theNode->getAncestors();
-        return end($ancestors);
+        return end($ancestors) ?: $theNode;
     }
 
     /**

@@ -64,6 +64,15 @@ class RawData
      */
     public $redirectTo;
 
+    /**
+     * @var int
+     */
+    public $closed;
+
+    /**
+     * @var string
+     */
+    public $extraInfo;
 
     /**
      * RawData constructor.
@@ -83,5 +92,7 @@ class RawData
         $this->maxParams = $options['maxParams'] ?? null;
         $this->type = $options['type'] ?? null;
         $this->redirectTo = $options['redirectTo'] ?? null;
+        $this->closed = $options['closed'] ?? null;
+        $this->extraInfo = $options['extraInfo'] ?? null;
     }
 }

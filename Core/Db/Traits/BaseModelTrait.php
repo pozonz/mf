@@ -23,17 +23,15 @@ trait BaseModelTrait
         $encodedModel = static::getCmsConfigModel();
         if (gettype($encodedModel) == 'string') {
             $decodedModel = json_decode($encodedModel);
-            $model = _Model::getById($pdo, $decodedModel->id);
+            $model = _Model::getByField($pdo, 'className', $decodedModel->className);
             if (!$model) {
                 $model = new _Model($pdo);
             }
             foreach ($decodedModel as $idx => $itm) {
-                if ($idx === 'id') {
-                    continue;
-                }
                 $setMethod = "set" . ucfirst($idx);
                 $model->$setMethod($itm);
             }
+            $model->setId(null);
             $model->setPdo($pdo);
             $model->save(true);
         }

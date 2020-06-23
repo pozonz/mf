@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Form Submissions",
+    "title": "Form submissions",
     "className": "FormSubmission",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Blog Articles",
+    "title": "Blog articles",
     "className": "News",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

@@ -1,9 +1,9 @@
-{% extends 'cms/orms/orms.html.twig' %}
+{% extends 'cms/orms/orms.twig' %}
 
 {% block container %}
     <div id="h1">
         {% block ormModelTitle %}<h1>{{ ormModel.title }}</h1>{% endblock %}
-        {% block ormModelAdd %}<a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>{% endblock %}
+        {% block ormModelAdd %}<a class="addForm button" href="{{ theNode.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>{% endblock %}
     </div>
 
     {% block ormModelExtra %}{% endblock %}
@@ -46,8 +46,8 @@
                                 </td>
                                 <td class="iconCell" align="right">
                                     <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
-                                    <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
-                                    <a href="{{ node.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
+                                    <a href="{{ theNode.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
+                                    <a href="{{ theNode.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
                                     <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
                                 </td>
                             </tr>

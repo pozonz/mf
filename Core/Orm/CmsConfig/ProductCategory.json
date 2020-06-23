@@ -18,7 +18,7 @@
     "closed": null,
     "extraInfo": null,
     "siteMapUrl": null,
-    "title": "Product Categories",
+    "title": "Product categories",
     "className": "ProductCategory",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",

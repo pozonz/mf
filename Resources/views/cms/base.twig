@@ -104,7 +104,7 @@
                                                                                 <button class="toggle-icon {% if treeUtils.contains(itmLvl2, theNode) %}selected{% endif %}" data-target="{{ itmLvl2.id }}">&nbsp;</button>
                                                                             {% endif %}
                                                                         </a>
-                                                                        {% if treeUtils.hasActiveChildren(itmLvl1) %}
+                                                                        {% if treeUtils.hasActiveChildren(itmLvl2) %}
                                                                             <ul data-source="{{ itmLvl2.id }}" class="subcategory sub-2" {% if treeUtils.contains(itmLvl2, theNode) %}style="display: block;"{% endif %}>
                                                                                 {% for itmLvl3 in itmLvl2.children %}
                                                                                     {% if itmLvl2.status == 1 %}
