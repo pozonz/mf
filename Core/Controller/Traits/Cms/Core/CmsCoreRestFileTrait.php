@@ -144,20 +144,15 @@ trait CmsCoreRestFileTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Asset');
         $orm = $fullClass::getById($this->connection, $currentFolderId);
-        if ($orm) {
-            $path = [];
-            $parent = $orm;
-            do {
-                $path[] = $parent;
-                $parent = $fullClass::getById($this->connection, $parent->getParentId());
-            } while($parent);
+        if (!$orm) {
+            $path[] = [
+                'id' => 0,
+                'title' => 'Home',
+            ];
+        } else {
+            $path = $orm->getFolderPath();
         }
-        $path[] = [
-            'id' => 0,
-            'title' => 'Home',
-        ];
-        $path = array_reverse($path);
-
+        
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
         return new JsonResponse([
             'currentFolder' => end($path),

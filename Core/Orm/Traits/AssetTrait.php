@@ -16,6 +16,25 @@ trait AssetTrait
     }
 
     /**
+     * @return array
+     */
+    public function getFolderPath()
+    {
+        $path = [];
+        $parent = $this;
+        do {
+            $path[] = $parent;
+            $parent = static::getById($this->getPdo(), $parent->getParentId());
+        } while ($parent);
+        $path[] = [
+            'id' => 0,
+            'title' => 'Home',
+        ];
+        $path = array_reverse($path);
+        return $path;
+    }
+
+    /**
      * @param bool $doNotSaveVersion
      * @param array $options
      * @return mixed|null
@@ -64,11 +83,49 @@ trait AssetTrait
     }
 
     /**
+     * @return string
+     */
+    public function formattedSize()
+    {
+        $fileSize = $this->getFileSize();
+        if ($fileSize > 1000000000000) {
+            return number_format($fileSize / 1000000000000, 2);
+        } elseif ($fileSize > 1000000000) {
+            return number_format($fileSize / 1000000000, 2);
+        } elseif ($fileSize > 1000000) {
+            return number_format($fileSize / 1000000, 2);
+        } elseif ($fileSize > 1000) {
+            return number_format($fileSize / 1000, 0);
+        } else {
+            return $fileSize;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function formattedSizeUnit()
+    {
+        $fileSize = $this->getFileSize();
+        if ($fileSize > 1000000000000) {
+            return 'TB';
+        } elseif ($fileSize > 1000000000) {
+            return 'GB';
+        } elseif ($fileSize > 1000000) {
+            return 'MB';
+        } elseif ($fileSize > 1000) {
+            return 'KB';
+        } else {
+            return 'B';
+        }
+    }
+    
+    /**
      * @return mixed
      */
     static public function getCmsOrmsTwig()
     {
-        return 'cms/files/files.html.twig';
+        return 'cms/files/files.twig';
     }
 
     /**
@@ -76,6 +133,6 @@ trait AssetTrait
      */
     static public function getCmsOrmTwig()
     {
-        return 'cms/files/file.html.twig';
+        return 'cms/files/file.twig';
     }
 }

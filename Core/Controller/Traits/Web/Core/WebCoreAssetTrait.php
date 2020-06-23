@@ -63,8 +63,9 @@ trait WebCoreAssetTrait
      * @Route("/images/assets/{assetCode}/{assetSizeCode}", methods={"GET"})
      * @Route("/images/assets/{assetCode}/{assetSizeCode}/{fileName}", methods={"GET"})
      */
-    public function assetImage(Request $request, $assetCode, $assetSizeCode = null, $fileName = null)
+    public function assetImage($assetCode, $assetSizeCode = null, $fileName = null)
     {
+        $request = Request::createFromGlobals();
         $useWebp = in_array('image/webp', $request->getAcceptableContentTypes());
 
         $fullClass = ModelService::fullClass($this->connection, 'Asset');

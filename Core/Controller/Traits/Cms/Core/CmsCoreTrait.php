@@ -153,9 +153,9 @@ trait CmsCoreTrait
             'template' => 'cms/orms/orms-custom-page.twig',
             'status' => 1,
         ]);
-        $nodes = $this->_addModelDetailToParent($nodes, 'pageBuilder', 'Page');
-        $nodes = $this->_addModelListingToParent($nodes, 'pageBuilder', 'PageCategory');
-        $nodes = $this->_addModelListingToParent($nodes, 'pageBuilder', 'PageTemplate');
+        $nodes = $this->_addModelDetailToParent($nodes, 'pageBuilder', 'Page', '/manage/admin');
+        $nodes = $this->_addModelListingToParent($nodes, 'pageBuilder', 'PageCategory', '/manage/admin');
+        $nodes = $this->_addModelListingToParent($nodes, 'pageBuilder', 'PageTemplate', '/manage/admin');
 
         $nodes[] = (array)new RawData([
             'id' => 'modelBuilder',
@@ -185,12 +185,12 @@ trait CmsCoreTrait
             'maxParams' => 1,
             'status' => 2,
         ]);
-        $nodes = $this->_addModelListingToParent($nodes, 'modelBuilder', 'FragmentBlock');
-        $nodes = $this->_addModelListingToParent($nodes, 'modelBuilder', 'FragmentTag');
-        $nodes = $this->_addModelListingToParent($nodes, 'modelBuilder', 'FragmentDefault');
+        $nodes = $this->_addModelListingToParent($nodes, 'modelBuilder', 'FragmentBlock', '/manage/admin');
+        $nodes = $this->_addModelListingToParent($nodes, 'modelBuilder', 'FragmentTag', '/manage/admin');
+        $nodes = $this->_addModelListingToParent($nodes, 'modelBuilder', 'FragmentDefault', '/manage/admin');
 
-        $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'AssetSize');
-        $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'FormDescriptor');
+        $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'AssetSize', '/manage/admin');
+        $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'FormDescriptor', '/manage/admin');
 
         $nodes[] = (array)new RawData([
             'id' => 'adminAdmin',
@@ -198,10 +198,10 @@ trait CmsCoreTrait
             'title' => 'Admin',
             'status' => 1,
         ]);
-        $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'User');
-        $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'DataGroup');
+        $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'User', '/manage/admin');
+        $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'DataGroup', '/manage/admin');
 
-        $nodes = $this->_getDataGroupNodes($nodes, $dataGroup);
+        $nodes = $this->_getDataGroupNodes($nodes, $dataGroup, '/manage/admin');
         return $nodes;
     }
 
@@ -211,7 +211,7 @@ trait CmsCoreTrait
      * @return mixed
      * @throws \ReflectionException
      */
-    private function _getDataGroupNodes($nodes, $dataGroup)
+    private function _getDataGroupNodes($nodes, $dataGroup, $baseUrl = '/manage')
     {
         $dataGroupClass = $this->_getClass($dataGroup);
 
@@ -225,7 +225,7 @@ trait CmsCoreTrait
         foreach ($this->models as $model) {
             $modelDataGroups = json_decode($model->getDataGroups() ?: '[]');
             if (in_array($dataGroup->getId(), $modelDataGroups)) {
-                $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), $model->getClassName());
+                $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), $model->getClassName(), $baseUrl);
             }
         }
 
@@ -240,7 +240,7 @@ trait CmsCoreTrait
      * @return mixed
      * @throws \Exception
      */
-    private function _addModelListingToParent($nodes, $parentId, $modelClassName)
+    private function _addModelListingToParent($nodes, $parentId, $modelClassName, $baseUrl = '/manage')
     {
         $model = $this->models[$modelClassName] ?? null;
 
@@ -255,13 +255,13 @@ trait CmsCoreTrait
             'id' => $modelClassName,
             'parent' => $parentId,
             'title' => $model->getTitle(),
-            'url' => "/manage/admin/orms/{$modelClassName}",
+            'url' => "{$baseUrl}/orms/{$modelClassName}",
             'template' => $fullClass::getCmsOrmsTwig() ?: $ormsListTwig[$model->getListType()],
             'status' => 1,
             'allowExtra' => 1,
             'maxParams' => 1,
         ]);
-        return $this->_addModelDetailToParent($nodes, $modelClassName, $modelClassName);
+        return $this->_addModelDetailToParent($nodes, $modelClassName, $modelClassName, $baseUrl);
     }
 
     /**
@@ -271,10 +271,8 @@ trait CmsCoreTrait
      * @return mixed
      * @throws \Exception
      */
-    private function _addModelDetailToParent($nodes, $parentId, $modelClassName, $options = null)
+    private function _addModelDetailToParent($nodes, $parentId, $modelClassName, $baseUrl = '/manage')
     {
-        $baseUrl = $options['baseUrl'] ?? '/manage';
-
         $fullClass = ModelService::fullClass($this->connection, $modelClassName);
         $nodes[] = (array)new RawData([
             'id' => "{$modelClassName}Detail",

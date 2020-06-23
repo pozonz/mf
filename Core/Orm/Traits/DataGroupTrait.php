@@ -14,7 +14,7 @@ trait DataGroupTrait
         $orm->setIcon('cms_viewmode_cms');
         $orm->setBuiltInSection(1);
         $orm->setBuiltInSectionCode('pages');
-        $orm->setBuiltInSectionTemplate('cms/pages.html.twig');
+        $orm->setBuiltInSectionTemplate('cms/pages.twig');
         $orm->save();
 
         $orm = new static($pdo);
@@ -27,7 +27,7 @@ trait DataGroupTrait
         $orm->setIcon('cms_viewmode_asset');
         $orm->setBuiltInSection(1);
         $orm->setBuiltInSectionCode('files');
-        $orm->setBuiltInSectionTemplate('cms/files/files.html.twig');
+        $orm->setBuiltInSectionTemplate('cms/files/files.twig');
         $orm->save();
 
         $orm = new static($pdo);
@@ -35,7 +35,7 @@ trait DataGroupTrait
         $orm->setIcon('cms_viewmode_admin');
         $orm->setBuiltInSection(1);
         $orm->setBuiltInSectionCode('admin');
-        $orm->setBuiltInSectionTemplate('cms/admin.html.twig');
+        $orm->setBuiltInSectionTemplate('cms/admin.twig');
         $orm->save();
     }
 }
