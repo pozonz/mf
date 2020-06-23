@@ -78,7 +78,9 @@ trait CmsCoreModelTrait
             if (!$model->getId()) {
                 $model->setRank(_Model::lastRank($this->connection));
             }
-            $model->save();
+            $model->save(false, [
+                'doNotUpdateModified' => true,
+            ]);
 
             $fullClassname::sync($this->connection);
 

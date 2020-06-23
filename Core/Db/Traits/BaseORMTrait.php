@@ -8,8 +8,21 @@ use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Version\VersionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-trait BaseQueryTrait
+trait BaseORMTrait
 {
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function objLastEditedBy()
+    {
+        if (!$this->_objLastEditedBy) {
+            $fullClass = ModelService::fullClass($this->getPdo(), 'User');
+            $this->_objLastEditedBy = $fullClass::getById($this->getPdo(), $this->lastEditedBy);
+        }
+        return $this->_objLastEditedBy;
+    }
+
     /**
      * @return mixed
      */
@@ -33,20 +46,24 @@ trait BaseQueryTrait
     /**
      * @return mixed
      */
-    public function save($doNotSaveVersion = false)
+    public function save($doNotSaveVersion = false, $options = [])
     {
+        $doNotUpdateModified = $options['doNotUpdateModified'] ?? false;
+        if (!$doNotUpdateModified) {
+            $this->setModified(date('Y-m-d H:i:s'));
+        }
+
+        if (method_exists($this, 'getTitle')) {
+            $slugify = new Slugify(['trim' => false]);
+            $this->setSlug($slugify->slugify($this->getTitle()));
+        }
+
         if (!$doNotSaveVersion && $this instanceof VersionInterface) {
             $this->saveVersion();
         }
 
         $tableName = static::getTableName();
         $fields = array_keys(static::getFields());
-
-        if (method_exists($this, 'getTitle')) {
-            $slugify = new Slugify(['trim' => false]);
-            $this->setSlug($slugify->slugify($this->getTitle()));
-        }
-        $this->setModified(date('Y-m-d H:i:s'));
 
         $sql = '';
         $params = array();
@@ -246,5 +263,22 @@ trait BaseQueryTrait
     static public function getBySlug(Connection $pdo, $slug)
     {
         return static::getByField($pdo, 'slug', $slug);
+    }
+
+    /**
+     * @param $pdo
+     * @return array|null
+     */
+    static public function lastRank($pdo)
+    {
+        $result = static::data($pdo, array(
+            'select' => 'm.`rank` AS `rank`',
+            'sort' => '`rank`',
+            'order' => 'DESC',
+            'limit' => 1,
+            'oneOrNull' => 1,
+            'orm' => 0,
+        ));
+        return $result['rank'] + 1;
     }
 }

@@ -20,7 +20,7 @@ abstract class Base implements \JsonSerializable
     use BaseCustomisationTrait,
         BaseDefaultTrait,
         BaseModelTrait,
-        BaseQueryTrait,
+        BaseORMTrait,
         BaseReflectionTrait,
         BaseVersionTrait;
 
@@ -44,20 +44,7 @@ abstract class Base implements \JsonSerializable
         $this->status = 1;
         $this->versionUuid = '';
     }
-
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public function objLastEditedBy()
-    {
-        if (!$this->_objLastEditedBy) {
-            $fullClass = ModelService::fullClass($this->getPdo(), 'User');
-            $this->_objLastEditedBy = $fullClass::getById($this->getPdo(), $this->lastEditedBy);
-        }
-        return $this->_objLastEditedBy;
-    }
-
+    
     /**
      * @param $pdo
      */
@@ -69,7 +56,7 @@ abstract class Base implements \JsonSerializable
         $db->create();
         $db->sync(static::getFields());
     }
-    
+
     /**
      * @return mixed|\stdClass
      */
@@ -85,20 +72,4 @@ abstract class Base implements \JsonSerializable
         return $obj;
     }
 
-    /**
-     * @param $pdo
-     * @return array|null
-     */
-    static public function lastRank($pdo)
-    {
-        $result = static::data($pdo, array(
-            'select' => 'm.`rank` AS `rank`',
-            'sort' => '`rank`',
-            'order' => 'DESC',
-            'limit' => 1,
-            'oneOrNull' => 1,
-            'orm' => 0,
-        ));
-        return $result['rank'] + 1;
-    }
 }
