@@ -52,12 +52,12 @@ trait FragmentBlockTrait
     }
 
     /**
-     * @param bool $doubleCheckExistence
-     * @throws \Exception
+     * @param bool $doNotSaveVersion
+     * @param array $options
      */
-    public function save($doubleCheckExistence = false)
+    public function save($doNotSaveVersion = false, $options = [])
     {
         TemplateService::createBlockFile($this);
-        parent::save($doubleCheckExistence);
+        return parent::save($doNotSaveVersion, $options);
     }
 }

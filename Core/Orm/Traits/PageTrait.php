@@ -113,10 +113,12 @@ trait PageTrait
     }
 
     /**
-     * @param bool $doubleCheckExistence
+     * @param bool $doNotSaveVersion
+     * @param array $options
+     * @return mixed|null
      * @throws \Exception
      */
-    public function save($doubleCheckExistence = false)
+    public function save($doNotSaveVersion = false, $options = [])
     {
         if (!is_numeric($this->getTemplateFile())) {
             $json = json_decode($this->getTemplateFile());
@@ -134,8 +136,7 @@ trait PageTrait
 
             $this->setTemplateFile($orm->getId());
         }
-
-        parent::save($doubleCheckExistence);
+        return parent::save($doNotSaveVersion, $options);
     }
 
     /**

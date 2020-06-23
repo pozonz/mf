@@ -53,17 +53,20 @@ trait ProductVariantTrait
     }
 
     /**
-     * @param bool $doubleCheckExistence
+     * @param bool $doNotSaveVersion
+     * @param array $options
+     * @return mixed|null
      * @throws \Exception
      */
-    public function save($doubleCheckExistence = false)
+    public function save($doNotSaveVersion = false, $options = [])
     {
-        parent::save($doubleCheckExistence);
+        $result = parent::save($doNotSaveVersion, $options);
 
         $orm = $this->objProduct();
         if ($orm) {
             $orm->save();
         }
+        return $result;
     }
 
     /**

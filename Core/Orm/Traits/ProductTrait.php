@@ -197,10 +197,12 @@ trait ProductTrait
     }
 
     /**
-     * @param bool $doubleCheckExistence
+     * @param bool $doNotSaveVersion
+     * @param array $options
+     * @return mixed|null
      * @throws \Exception
      */
-    public function save($doubleCheckExistence = false)
+    public function save($doNotSaveVersion = false, $options = [])
     {
         $this->objSuitableFor();
 
@@ -255,7 +257,7 @@ trait ProductTrait
         $this->setOutOfStock($outOfStock);
         $this->setContent($searchContent);
 
-        parent::save($doubleCheckExistence);
+        return parent::save($doNotSaveVersion, $options);
     }
 
     /**

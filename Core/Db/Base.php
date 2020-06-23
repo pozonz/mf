@@ -7,7 +7,7 @@ use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Db\Traits\BaseCustomisationTrait;
 use MillenniumFalcon\Core\Db\Traits\BaseDefaultTrait;
 use MillenniumFalcon\Core\Db\Traits\BaseModelTrait;
-use MillenniumFalcon\Core\Db\Traits\BaseQueryTrait;
+use MillenniumFalcon\Core\Db\Traits\BaseORMTrait;
 use MillenniumFalcon\Core\Db\Traits\BaseReflectionTrait;
 use MillenniumFalcon\Core\Db\Traits\BaseVersionTrait;
 use MillenniumFalcon\Core\ORM\_Model;
@@ -44,7 +44,7 @@ abstract class Base implements \JsonSerializable
         $this->status = 1;
         $this->versionUuid = '';
     }
-    
+
     /**
      * @param $pdo
      */

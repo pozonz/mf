@@ -41,14 +41,15 @@ trait PageTemplateTrait
         $orm->setFilename('common.html.twig');
         $orm->save();
     }
-    
+
     /**
-     * @param bool $doubleCheckExistence
-     * @throws \Exception
+     * @param bool $doNotSaveVersion
+     * @param array $options
+     * @return mixed|null
      */
-    public function save($doubleCheckExistence = false)
+    public function save($doNotSaveVersion = false, $options = [])
     {
         TemplateService::createTemplateFile($this);
-        parent::save($doubleCheckExistence);
+        return parent::save($doNotSaveVersion, $options);
     }
 }

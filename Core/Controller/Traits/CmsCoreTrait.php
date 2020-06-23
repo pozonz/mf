@@ -106,7 +106,7 @@ trait CmsCoreTrait
                 'whereSql' => 'm.category LIKE ? AND (m.hideFromCMSNav IS NULL OR m.hideFromCMSNav != 1)',
                 'params' => ['%' . $pageCategory->getId() . '%'],
             ]);
-            $nodes = array_merge($nodes, array_map(function ($itm) use ($dataGroup, $dataGroupClass, $pageCategory) {
+            $nodes = array_merge($nodes, array_map(function ($itm) use ($dataGroup, $dataGroupClass, $pageCategory, $fullClass) {
                 $categoryParent = (object)json_decode($itm->getCategoryParent() ?: '[]');
                 $categoryParentAttr = "cat{$pageCategory->getId()}";
                 $parentId = isset($categoryParent->{$categoryParentAttr}) ? $this->_getClass($itm) . $categoryParent->{$categoryParentAttr} : $dataGroupClass . $dataGroup->getId();
@@ -115,7 +115,7 @@ trait CmsCoreTrait
                     'parent' => $parentId,
                     'title' => $itm->getTitle(),
                     'url' => "/manage/pages/orms/{$this->_getClass($itm)}/{$itm->getId()}",
-                    'template' => 'cms/orms/orm-custom-page.html.twig',
+                    'template' => $fullClass::getCmsOrmTwig(),
                     'status' => 1,
                 ]);
             }, $pages));

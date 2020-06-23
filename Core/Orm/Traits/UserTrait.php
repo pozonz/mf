@@ -42,14 +42,14 @@ trait UserTrait
     /**
      * @param bool $doubleCheck
      */
-    public function save($doubleCheck = false)
+    public function save($doNotSaveVersion = false, $options = [])
     {
         if ($this->getPasswordInput()) {
             $encoder = new MessageDigestPasswordEncoder();
             $this->setPassword($encoder->encodePassword($this->getPasswordInput(), ''));
             $this->setPasswordInput(null);
         }
-        parent::save($doubleCheck);
+        return parent::save($doNotSaveVersion, $options);
     }
 
     /**

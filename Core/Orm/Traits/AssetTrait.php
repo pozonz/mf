@@ -34,10 +34,11 @@ trait AssetTrait
     }
 
     /**
-     * @param bool $doubleCheckExistence
-     * @return mixed
+     * @param bool $doNotSaveVersion
+     * @param array $options
+     * @return mixed|null
      */
-    public function save($doubleCheckExistence = false)
+    public function save($doNotSaveVersion = false, $options = [])
     {
         if (!$this->getId()) {
             do {
@@ -46,7 +47,7 @@ trait AssetTrait
             } while ($orm);
             $this->setCode($code);
         }
-        return parent::save($doubleCheckExistence);
+        return parent::save($doNotSaveVersion, $options);
     }
 
     /**
