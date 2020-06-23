@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits;
+namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Tree\RawData;
@@ -74,6 +74,8 @@ trait CmsCoreTrait
                 $nodes = $this->_getDataGroupNodesForPages($nodes, $dataGroup);
             } else if ($dataGroup->getTitle() == 'Admin') {
                 $nodes = $this->_getDataGroupNodesForAdmin($nodes, $dataGroup);
+            } else if ($dataGroup->getTitle() == 'Files') {
+                $nodes = $this->_addModelDetailToParent($nodes, $this->_getClass($dataGroup) . $dataGroup->getId(), 'Asset');
             } else {
                 $nodes = $this->_getDataGroupNodes($nodes, $dataGroup);
             }
@@ -114,9 +116,11 @@ trait CmsCoreTrait
                     'id' => $this->_getClass($itm) . $itm->getId(),
                     'parent' => $parentId,
                     'title' => $itm->getTitle(),
-                    'url' => "/manage/pages/orms/{$this->_getClass($itm)}/{$itm->getId()}",
+                    'url' => "/manage/pages/orms/{$this->_getClass($itm)}/",
                     'template' => $fullClass::getCmsOrmTwig(),
                     'status' => 1,
+                    'allowExtra' => 1,
+                    'maxParams' => 3,
                 ]);
             }, $pages));
         }
@@ -267,25 +271,27 @@ trait CmsCoreTrait
      * @return mixed
      * @throws \Exception
      */
-    private function _addModelDetailToParent($nodes, $parentId, $modelClassName)
+    private function _addModelDetailToParent($nodes, $parentId, $modelClassName, $options = null)
     {
+        $baseUrl = $options['baseUrl'] ?? '/manage';
+
         $fullClass = ModelService::fullClass($this->connection, $modelClassName);
         $nodes[] = (array)new RawData([
             'id' => "{$modelClassName}Detail",
             'parent' => $parentId,
             'title' => "{$modelClassName} detail",
-            'url' => "/manage/admin/orms/{$modelClassName}/",
+            'url' => "{$baseUrl}/orms/{$modelClassName}/",
             'template' => $fullClass::getCmsOrmTwig(),
             'status' => 2,
             'allowExtra' => 1,
-            'maxParams' => 1,
+            'maxParams' => 3,
         ]);
 
         $nodes[] = (array)new RawData([
             'id' => "{$modelClassName}Copy",
             'parent' => $parentId,
             'title' => "{$modelClassName} copy",
-            'url' => "/manage/admin/orms/{$modelClassName}/copy/",
+            'url' => "{$baseUrl}/orms/{$modelClassName}/copy/",
             'template' => $fullClass::getCmsOrmTwig(),
             'status' => 2,
             'allowExtra' => 1,

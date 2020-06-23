@@ -3,17 +3,18 @@
 namespace MillenniumFalcon\Core\Controller;
 
 use Doctrine\DBAL\Connection;
-use MillenniumFalcon\Core\Controller\Traits\CmsCoreModelTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsCoreOrmsTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsCoreOrmTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsCoreRestPageTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsCoreRestTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsInstallTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsCoreLoginTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsCoreTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsOrmCartTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsRestFileTrait;
-use MillenniumFalcon\Core\Controller\Traits\CmsRestProductTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Install\CmsInstallTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreModelTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreOrmsTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreOrmTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreRestFileTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreRestPageTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreRestTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreLoginTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsOrmCartTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsRestFileTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsRestProductTrait;
 use MillenniumFalcon\Core\RouterController;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -27,15 +28,25 @@ class CmsController extends RouterController
         CmsCoreOrmTrait,
 
         CmsCoreRestTrait,
+        CmsCoreRestFileTrait,
         CmsCoreRestPageTrait,
 
-        CmsRestFileTrait,
 
 //        CmsOrmCartTrait,
 //        CmsRestProductTrait,
 
         CmsCoreTrait;
 
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var KernelInterface
+     */
+    protected $kernel;
+    
     /**
      * CmsController constructor.
      * @param Connection $connection

@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits;
+namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,9 +33,8 @@ trait CmsCoreLoginTrait
      */
     public function afterLogin(AuthenticationUtils $authenticationUtils)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
-        $orm = $fullClass::active($pdo, [
+        $fullClass = ModelService::fullClass($this->connection, 'DataGroup');
+        $orm = $fullClass::active($this->connection, [
             'limit' => 1,
             'oneOrNull' => 1,
         ]);

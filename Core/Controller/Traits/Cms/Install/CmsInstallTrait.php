@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits;
+namespace MillenniumFalcon\Core\Controller\Traits\Cms\Install;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;

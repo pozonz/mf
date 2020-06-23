@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-require_once(__DIR__ . '/../../../PxPay_Curl.inc.php');
+require_once(__DIR__ . '/../../../../PxPay_Curl.inc.php');
 
 trait WebCartTrait
 {

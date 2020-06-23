@@ -62,17 +62,17 @@
 							{% for itm in versions %}
 								<li class="versions__item">
 									{% if itm.canBeRestored %}
-									<div class="versions__info versions-info">
+										<div class="versions__info versions-info">
 
-										<div class="versions-info__author">
-											{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : '' }}
+											<div class="versions-info__author">
+												{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
+											</div>
+											<div class="versions-info__time">
+												{{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }}
+											</div>
+
+
 										</div>
-										<div class="versions-info__time">
-											{{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }}
-										</div>
-
-
-									</div>
 									{% else %}
 										<div class="versions-info__time">
 											{{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }} (Can not be restored)

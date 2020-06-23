@@ -40,7 +40,7 @@ trait PageTrait
         $orm->setType(1);
         $orm->setUrl('/');
         $orm->setCategory(json_encode([$mainNav->getId()]));
-        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'home.html.twig')->getId());
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'home.twig')->getId());
         $orm->save();
 
         $orm = new static($pdo);
@@ -48,7 +48,7 @@ trait PageTrait
         $orm->setType(1);
         $orm->setUrl('/about');
         $orm->setCategory(json_encode([$mainNav->getId()]));
-        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'about.html.twig')->getId());
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'about.twig')->getId());
         $orm->save();
 
         $orm = new static($pdo);
@@ -56,7 +56,7 @@ trait PageTrait
         $orm->setType(1);
         $orm->setUrl('/news');
         $orm->setCategory(json_encode([$mainNav->getId()]));
-        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'posts.html.twig')->getId());
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'posts.twig')->getId());
         $orm->setAttachedModels(json_encode(array(_Model::getByField($pdo, 'className', 'News')->getId())));
         $orm->save();
         $newsPageId = $orm->getId();
@@ -66,7 +66,7 @@ trait PageTrait
         $orm->setType(1);
         $orm->setUrl('/news/detail');
         $orm->setCategory(json_encode([$mainNav->getId()]));
-        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'post.html.twig')->getId());
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'post.twig')->getId());
         $orm->setCategoryParent(json_encode((object)[
             'cat' . $mainNav->getId() => $newsPageId,
         ]));
@@ -84,7 +84,7 @@ trait PageTrait
         $orm->setType(1);
         $orm->setUrl('/contact');
         $orm->setCategory(json_encode([$mainNav->getId()]));
-        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'contact.html.twig')->getId());
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'contact.twig')->getId());
         $orm->save();
 
         $orm = new static($pdo);
@@ -92,7 +92,7 @@ trait PageTrait
         $orm->setType(1);
         $orm->setUrl('/terms-and-conditions');
         $orm->setCategory(json_encode([$footerNav->getId()]));
-        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.html.twig')->getId());
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.twig')->getId());
         $orm->save();
 
         $orm = new static($pdo);
@@ -100,7 +100,7 @@ trait PageTrait
         $orm->setType(1);
         $orm->setUrl('/privacy');
         $orm->setCategory(json_encode([$footerNav->getId()]));
-        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.html.twig')->getId());
+        $orm->setTemplateFile($templateFullClass::getByField($pdo, 'filename', 'common.twig')->getId());
         $orm->save();
     }
 

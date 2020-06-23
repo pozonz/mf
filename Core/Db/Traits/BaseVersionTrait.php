@@ -27,6 +27,21 @@ trait BaseVersionTrait
     }
 
     /**
+     * @param $siteMapUrl
+     * @return string|string[]|null
+     */
+    public function getFrontendUrlBySiteMapUrl($siteMapUrl)
+    {
+        $frontendUrl = $siteMapUrl;
+        $fields = array_keys(static::getFields());
+        foreach ($fields as $field) {
+            $method = 'get' . ucfirst($field);
+            $frontendUrl = str_replace("{{{$field}}}", $this->$method(), $frontendUrl);
+        }
+        return $frontendUrl;
+    }
+
+    /**
      * @return bool
      */
     public function isVersioned()

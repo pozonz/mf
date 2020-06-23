@@ -12,33 +12,33 @@ trait PageTemplateTrait
     static public function initData($pdo)
     {
         $orm = new static($pdo);
-        $orm->setTitle('home.html.twig');
-        $orm->setFilename('home.html.twig');
+        $orm->setTitle('home.twig');
+        $orm->setFilename('home.twig');
         $orm->save();
 
         $orm = new static($pdo);
-        $orm->setTitle('about.html.twig');
-        $orm->setFilename('about.html.twig');
+        $orm->setTitle('about.twig');
+        $orm->setFilename('about.twig');
         $orm->save();
 
         $orm = new static($pdo);
-        $orm->setTitle('posts.html.twig');
-        $orm->setFilename('posts.html.twig');
+        $orm->setTitle('posts.twig');
+        $orm->setFilename('posts.twig');
         $orm->save();
 
         $orm = new static($pdo);
-        $orm->setTitle('post.html.twig');
-        $orm->setFilename('post.html.twig');
+        $orm->setTitle('post.twig');
+        $orm->setFilename('post.twig');
         $orm->save();
 
         $orm = new static($pdo);
-        $orm->setTitle('contact.html.twig');
-        $orm->setFilename('contact.html.twig');
+        $orm->setTitle('contact.twig');
+        $orm->setFilename('contact.twig');
         $orm->save();
 
         $orm = new static($pdo);
-        $orm->setTitle('common.html.twig');
-        $orm->setFilename('common.html.twig');
+        $orm->setTitle('common.twig');
+        $orm->setFilename('common.twig');
         $orm->save();
     }
 

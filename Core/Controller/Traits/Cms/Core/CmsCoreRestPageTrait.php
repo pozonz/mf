@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits;
+namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Db;

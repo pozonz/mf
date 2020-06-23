@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core\Twig;
 
 use BlueM\Tree;
+use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Exception\RedirectException;
 
@@ -10,6 +11,8 @@ use MillenniumFalcon\Core\Tree\RawData;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -17,17 +20,31 @@ use Twig\TwigFunction;
 class Extension extends AbstractExtension
 {
     /**
-     * @var Container
+     * @var Connection
      */
-    private $container;
+    protected $connection;
+
+    /**
+     * @var KernelInterface
+     */
+    protected $kernel;
+
+    /**
+     * @var Environment
+     */
+    protected $environment;
 
     /**
      * Extension constructor.
-     * @param Container $container
+     * @param Connection $connection
+     * @param KernelInterface $kernel
+     * @param Environment $environment
      */
-    public function __construct(Container $container)
+    public function __construct(Connection $connection, KernelInterface $kernel, Environment $environment)
     {
-        $this->container = $container;
+        $this->connection = $connection;
+        $this->kernel = $kernel;
+        $this->environment = $environment;
     }
 
     /**
@@ -77,14 +94,28 @@ class Extension extends AbstractExtension
         return $array;
     }
 
+    /**
+     * @param $block
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function block($block)
     {
         if (!isset($block->status) || !$block->status || $block->status == 0) {
             return '';
         }
-        return $this->container->get('twig')->render("fragments/{$block->twig}", (array)$block->values);
+        return $this->environment->render("fragments/{$block->twig}", (array)$block->values);
     }
 
+    /**
+     * @param $section
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function section($section)
     {
         if (!isset($section->status) || !$section->status || $section->status == 0) {
@@ -97,6 +128,13 @@ class Extension extends AbstractExtension
         return $html;
     }
 
+    /**
+     * @param $sections
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function sections($sections)
     {
         if (gettype($sections) == 'string') {
@@ -113,7 +151,7 @@ class Extension extends AbstractExtension
     /**
      * @param $pages
      * @param $cat
-     * @return mixed
+     * @return Tree
      */
     static public function nestablePges($pages, $cat)
     {

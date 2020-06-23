@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits;
+namespace MillenniumFalcon\Core\Controller\Traits\Web\Core;
 
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-trait WebAssetTrait
+trait WebCoreAssetTrait
 {
     /**
      * @Route("/downloads/assets/{assetCode}", methods={"GET"})
@@ -22,12 +22,10 @@ trait WebAssetTrait
      */
     public function assetDownload($assetCode, $fileName = null)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $asset = $fullClass::getByField($pdo, 'code', $assetCode);
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $asset = $fullClass::getByField($this->connection, 'code', $assetCode);
         if (!$asset) {
-            $asset = $fullClass::getById($pdo, $assetCode);
+            $asset = $fullClass::getById($this->connection, $assetCode);
         }
 
         if (!$asset) {
@@ -65,16 +63,14 @@ trait WebAssetTrait
      * @Route("/images/assets/{assetCode}/{assetSizeCode}", methods={"GET"})
      * @Route("/images/assets/{assetCode}/{assetSizeCode}/{fileName}", methods={"GET"})
      */
-    public function assetImage($assetCode, $assetSizeCode = null, $fileName = null)
+    public function assetImage(Request $request, $assetCode, $assetSizeCode = null, $fileName = null)
     {
-        $request = Request::createFromGlobals();
         $useWebp = in_array('image/webp', $request->getAcceptableContentTypes());
 
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $asset = $fullClass::getByField($pdo, 'code', $assetCode);
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $asset = $fullClass::getByField($this->connection, 'code', $assetCode);
         if (!$asset) {
-            $asset = $fullClass::getById($pdo, $assetCode);
+            $asset = $fullClass::getById($this->connection, $assetCode);
         }
         if (!$asset) {
             throw new NotFoundHttpException();
@@ -89,8 +85,8 @@ trait WebAssetTrait
 
         if ($asset->getIsImage()) {
             if ($assetSizeCode) {
-                $fullClass = ModelService::fullClass($pdo, 'AssetSize');
-                $assetSize = $fullClass::getByField($pdo, 'code', $assetSizeCode);
+                $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
+                $assetSize = $fullClass::getByField($this->connection, 'code', $assetSizeCode);
                 if (!$assetSize) {
                     throw new NotFoundHttpException();
                 }
@@ -101,8 +97,8 @@ trait WebAssetTrait
                     mkdir($cachedFolder, 0777, true);
                 }
 
-                $fullClass = ModelService::fullClass($pdo, 'AssetCrop');
-                $assetCrop = $fullClass::data($pdo, array(
+                $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
+                $assetCrop = $fullClass::data($this->connection, array(
                     'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
                     'params' => array($asset->getId(), $assetSize->getId()),
                     'limit' => 1,

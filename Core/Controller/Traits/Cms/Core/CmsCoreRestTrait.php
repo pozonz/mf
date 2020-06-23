@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits;
+namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Db;
@@ -22,16 +22,13 @@ trait CmsCoreRestTrait
      * @route("/manage/rest/version/delete")
      * @return Response
      */
-    public function cmsRestVersionDelete()
+    public function cmsRestVersionDelete(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $id = $request->get('id');
         $className = $request->get('className');
 
-        $fullClass = ModelService::fullClass($pdo, $className);
-        $version = $fullClass::data($pdo, [
+        $fullClass = ModelService::fullClass($this->connection, $className);
+        $version = $fullClass::data($this->connection, [
             'whereSql' => 'm.id = ?',
             'params' => [$id],
             'limit' => 1,
@@ -47,17 +44,14 @@ trait CmsCoreRestTrait
      * @route("/manage/rest/column/sort")
      * @return Response
      */
-    public function cmsRestColumnSort()
+    public function cmsRestColumnSort(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $data = json_decode($request->get('data'));
         $className = $request->get('className');
 
-        $fullClass = ModelService::fullClass($pdo, $className);
+        $fullClass = ModelService::fullClass($this->connection, $className);
         foreach ($data as $idx => $itm) {
-            $orm = $fullClass::getById($pdo, $itm);
+            $orm = $fullClass::getById($this->connection, $itm);
             if ($orm) {
                 $orm->setRank($idx);
                 $orm->save(true);
@@ -73,17 +67,14 @@ trait CmsCoreRestTrait
      * @route("/manage/rest/nestable/sort")
      * @return Response
      */
-    public function cmsRestNestableSort()
+    public function cmsRestNestableSort(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $data = json_decode($request->get('data'));
         $className = $request->get('model');
 
-        $fullClass = ModelService::fullClass($pdo, $className);
+        $fullClass = ModelService::fullClass($this->connection, $className);
         foreach ($data as $idx => $itm) {
-            $orm = $fullClass::getById($pdo, $itm->id);
+            $orm = $fullClass::getById($this->connection, $itm->id);
             if ($orm) {
                 $orm->setRank($itm->rank);
                 $orm->setParentId($itm->parentId ?: null);
@@ -97,17 +88,14 @@ trait CmsCoreRestTrait
      * @route("/manage/rest/nestable/closed")
      * @return Response
      */
-    public function cmsRestNestableClosed()
+    public function cmsRestNestableClosed(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $id = $request->get('id');
         $closed = $request->get('closed') ?: 0;
         $className = $request->get('model');
 
-        $fullClass = ModelService::fullClass($pdo, $className);
-        $orm = $fullClass::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($this->connection, $className);
+        $orm = $fullClass::getById($this->connection, $id);
         if (!$orm) {
             throw new NotFoundHttpException();
         }
@@ -122,17 +110,14 @@ trait CmsCoreRestTrait
      * @route("/manage/rest/status")
      * @return Response
      */
-    public function cmsRestStatus()
+    public function cmsRestStatus(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $status = $request->get('status');
         $id = $request->get('id');
         $className = $request->get('className');
 
-        $fullClass = ModelService::fullClass($pdo, $className);
-        $orm = $fullClass::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($this->connection, $className);
+        $orm = $fullClass::getById($this->connection, $id);
         if ($orm) {
             $orm->setStatus($status);
             $orm->save(true);
@@ -144,17 +129,14 @@ trait CmsCoreRestTrait
      * @route("/manage/rest/delete")
      * @return Response
      */
-    public function cmsRestDelete()
+    public function cmsRestDelete(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $status = $request->get('status');
         $id = $request->get('id');
         $className = $request->get('className');
 
-        $fullClass = ModelService::fullClass($pdo, $className);
-        $orm = $fullClass::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($this->connection, $className);
+        $orm = $fullClass::getById($this->connection, $id);
         if ($orm) {
             $orm->delete();
         }

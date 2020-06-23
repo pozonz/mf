@@ -28,10 +28,12 @@ trait BaseModelTrait
                 $model = new _Model($pdo);
             }
             foreach ($decodedModel as $idx => $itm) {
+                if ($idx === 'id') {
+                    continue;
+                }
                 $setMethod = "set" . ucfirst($idx);
                 $model->$setMethod($itm);
             }
-            $model->setId(null);
             $model->setPdo($pdo);
             $model->save(true);
         }

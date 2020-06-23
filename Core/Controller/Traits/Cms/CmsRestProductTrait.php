@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits;
+namespace MillenniumFalcon\Core\Controller\Traits\Cms;
 
 use BlueM\Tree\Node;
 use Cocur\Slugify\Slugify;

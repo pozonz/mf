@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits;
+namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
 use MillenniumFalcon\Core\Asset\AssetController;
 use MillenniumFalcon\Core\Service\AssetService;
@@ -15,31 +15,28 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-trait CmsRestFileTrait
+trait CmsCoreRestFileTrait
 {
     /**
      * @route("/manage/rest/asset/files/chosen/rank")
      * @return Response
      */
-    public function assetAjaxFilesChosenRank()
+    public function assetAjaxFilesChosenRank(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
-        $request = Request::createFromGlobals();
+        $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
         $modelName = $request->get('modelName');
         $attributeName = $request->get('attributeName');
         $ormId = $request->get('ormId');
         $ids = json_decode($request->get('ids'));
         foreach ($ids as $idx => $id) {
-            $orm = $fullClass::data($pdo, array(
+            $orm = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.title = ? AND m.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($id, $modelName, $attributeName, $ormId),
                 'oneOrNull' => 1,
             ));
             if ($orm) {
                 $orm->setMyRank($idx);
-                $orm->save();
+                $orm->save(true);
             }
         }
 
@@ -50,20 +47,17 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/files/chosen")
      * @return Response
      */
-    public function assetAjaxFilesChosen()
+    public function assetAjaxFilesChosen(Request $request)
     {
         $data = array();
 
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
-        $request = Request::createFromGlobals();
+        $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
         $modelName = $request->get('modelName');
         $attributeName = $request->get('attributeName');
         $ormId = $request->get('ormId');
         if ($modelName && $attributeName && $ormId) {
 
-            $result = $fullClass::data($pdo, array(
+            $result = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($modelName, $attributeName, $ormId),
                 'sort' => 'm.myRank',
@@ -81,36 +75,32 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/files")
      * @return Response
      */
-    public function assetAjaxFiles()
+    public function assetAjaxFiles(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
-
         $keyword = $request->get('keyword') ?: '';
         $currentFolderId = $request->get('currentFolderId') ?: 0;
 
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
         if ($keyword) {
-            $data = $fullClass::data($pdo, array(
+            $data = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.isFolder = 0 AND m.title LIKE ?',
                 'params' => array("%$keyword%"),
             ));
         } else {
-            $data = $fullClass::data($pdo, array(
+            $data = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.isFolder = 0 AND m.parentId = ?',
                 'params' => array($currentFolderId),
             ));
         }
 
-        $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
+        $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
         $modelName = $request->get('modelName');
         $attributeName = $request->get('attributeName');
         $ormId = $request->get('ormId');
         if ($modelName && $attributeName && $ormId) {
             $assetOrmMap = array();
-            $result = $fullClass::data($pdo, array(
+            $result = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($modelName, $attributeName, $ormId),
             ));
@@ -134,16 +124,13 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/folders")
      * @return Response
      */
-    public function assetAjaxFolders()
+    public function assetAjaxFolders(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $currentFolderId = $request->get('currentFolderId') ?: 0;
 
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
         return new JsonResponse(array(
-            'folders' => AssetService::getFolderRoot($pdo, $currentFolderId),
+            'folders' => AssetService::getFolderRoot($this->connection, $currentFolderId),
         ));
     }
 
@@ -151,27 +138,27 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/nav")
      * @return Response
      */
-    public function assetAjaxNav()
+    public function assetAjaxNav(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $currentFolderId = $request->get('currentFolderId') ?: 0;
 
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $orm = $fullClass::getById($pdo, $currentFolderId);
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $orm = $fullClass::getById($this->connection, $currentFolderId);
+        if ($orm) {
+            $path = [];
+            $parent = $orm;
+            do {
+                $path[] = $parent;
+                $parent = $fullClass::getById($this->connection, $parent->getParentId());
+            } while($parent);
+        }
+        $path[] = [
+            'id' => 0,
+            'title' => 'Home',
+        ];
+        $path = array_reverse($path);
 
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
-        if ($currentFolderId == 0) {
-            $path = [];
-        } else {
-            if ($orm) {
-                $path = $orm->getFolderPath();
-            } else {
-                $path = [];
-            }
-        }
-
         return new JsonResponse([
             'currentFolder' => end($path),
             'path' => $path,
@@ -182,16 +169,13 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/files/add/folder")
      * @return Response
      */
-    public function assetAjaxAddFolder()
+    public function assetAjaxAddFolder(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $title = $request->get('title');
         $parentId = $request->get('parentId');
 
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $rank = $fullClass::data($pdo, array(
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $rank = $fullClass::data($this->connection, array(
             'select' => 'MAX(m.rank) AS max',
             'orm' => 0,
             'whereSql' => 'm.parentId = ?',
@@ -200,12 +184,12 @@ trait CmsRestFileTrait
         ));
         $max = ($rank['max'] ?: 0) + 1;
 
-        $orm = new $fullClass($pdo);
+        $orm = new $fullClass($this->connection);
         $orm->setTitle($title);
         $orm->setParentId($parentId);
         $orm->setRank($max);
         $orm->setIsFolder(1);
-        $orm->save();
+        $orm->save(true);
         return new Response('OK');
     }
 
@@ -213,20 +197,16 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/files/edit/folder")
      * @return Response
      */
-    public function assetAjaxEditFolder()
+    public function assetAjaxEditFolder(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
-
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $orm = $fullClass::getById($pdo, $request->get('id'));
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $orm = $fullClass::getById($this->connection, $request->get('id'));
         if (!$orm) {
             throw new NotFoundHttpException();
         }
 
         $orm->setTitle($request->get('title'));
-        $orm->save();
+        $orm->save(true);
         return new Response('OK');
     }
 
@@ -234,18 +214,15 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/folders/update")
      * @return Response
      */
-    public function assetAjaxFoldersUpdate()
+    public function assetAjaxFoldersUpdate(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $request = Request::createFromGlobals();
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
         $data = json_decode($request->get('data'));
         foreach ($data as $itm) {
-            $orm = $fullClass::getById($pdo, $itm->id);
+            $orm = $fullClass::getById($this->connection, $itm->id);
             $orm->setParentId($itm->parentId);
             $orm->setRank($itm->rank);
-            $orm->save();
+            $orm->save(true);
         }
         return new Response('OK');
     }
@@ -254,17 +231,14 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/file/move")
      * @return Response
      */
-    public function assetAjaxFileMove()
+    public function assetAjaxFileMove(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $data = json_decode($request->get('data'));
 
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $orm = $fullClass::getById($pdo, $request->get('id'));
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $orm = $fullClass::getById($this->connection, $request->get('id'));
         $orm->setParentId($request->get('parentId'));
-        $orm->save();
+        $orm->save(true);
         return new Response('OK');
 
     }
@@ -273,15 +247,12 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/files/delete/folder")
      * @return Response
      */
-    public function assetAjaxDeleteFolder()
+    public function assetAjaxDeleteFolder(Request $request)
     {
-        $request = Request::createFromGlobals();
         $id = $request->get('id');
 
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $orm = $fullClass::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $orm = $fullClass::getById($this->connection, $id);
         if ($orm) {
             $orm->delete();
         }
@@ -293,15 +264,12 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/files/delete/file")
      * @return Response
      */
-    public function assetAjaxDeleteFile()
+    public function assetAjaxDeleteFile(Request $request)
     {
-        $request = Request::createFromGlobals();
         $id = $request->get('id');
 
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $orm = $fullClass::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $orm = $fullClass::getById($this->connection, $id);
         if ($orm) {
             $orm->delete();
         }
@@ -312,15 +280,12 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/files/get/file")
      * @return Response
      */
-    public function assetAjaxGetFile()
+    public function assetAjaxGetFile(Request $request)
     {
-        $request = Request::createFromGlobals();
         $id = $request->get('id');
 
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $orm = $fullClass::getById($pdo, $id);
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $orm = $fullClass::getById($this->connection, $id);
         return new JsonResponse($orm);
     }
 
@@ -328,14 +293,11 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/files/upload")
      * @return Response
      */
-    public function assetAjaxUpload()
+    public function assetAjaxUpload(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $file = $files = $request->files->get('file');
         if ($file) {
-            return AssetService::processUploadedFile($pdo, $file);
+            return AssetService::processUploadedFile($this->connection, $file);
         }
 
         return new JsonResponse(array(
@@ -351,18 +313,15 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/file/size")
      * @return Response
      */
-    public function assetAjaxImageSize()
+    public function assetAjaxImageSize(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $assetId = $request->get('code');
         $assetSize = $request->get('size');
 
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $asset = $fullClass::getById($pdo, $assetId);
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $asset = $fullClass::getById($this->connection, $assetId);
         if (!$asset) {
-            $asset = $fullClass::getByField($pdo, 'code', $assetId);
+            $asset = $fullClass::getByField($this->connection, 'code', $assetId);
         }
         if (!$asset) {
             return new JsonResponse([
@@ -386,11 +345,8 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/file/crop")
      * @return Response
      */
-    public function assetAjaxImageCrop()
+    public function assetAjaxImageCrop(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $x = $request->get('x');
         $y = $request->get('y');
         $width = $request->get('width');
@@ -398,30 +354,30 @@ trait CmsRestFileTrait
         $assetId = $request->get('assetId');
         $assetSizeId = $request->get('assetSizeId');
 
-        $fullClass = ModelService::fullClass($pdo, 'Asset');
-        $asset = $fullClass::getById($pdo, $assetId);
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $asset = $fullClass::getById($this->connection, $assetId);
         if (!$asset) {
-            $asset = $fullClass::getByField($pdo, 'code', $assetId);
+            $asset = $fullClass::getByField($this->connection, 'code', $assetId);
         }
         if (!$asset) {
             throw new NotFoundHttpException();
         }
 
-        $fullClass = ModelService::fullClass($pdo, 'AssetSize');
-        $assetSize = $fullClass::getById($pdo, $assetSizeId);
+        $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
+        $assetSize = $fullClass::getById($this->connection, $assetSizeId);
         if (!$assetSize) {
             throw new NotFoundHttpException();
         }
 
-        $fullClass = ModelService::fullClass($pdo, 'AssetCrop');
-        $orm = $fullClass::data($pdo, array(
+        $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
+        $orm = $fullClass::data($this->connection, array(
             'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
             'params' => array($asset->getId(), $assetSizeId),
             'limit' => 1,
             'oneOrNull' => 1,
         ));
         if (!$orm) {
-            $orm = new $fullClass($pdo);
+            $orm = new $fullClass($this->connection);
             $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . $assetSize->getTitle());
         }
 
@@ -433,7 +389,7 @@ trait CmsRestFileTrait
         $orm->setHeight($height);
         $orm->setAssetId($asset->getId());
         $orm->setAssetSizeId($assetSizeId);
-        $orm->save();
+        $orm->save(true);
         return new Response('OK');
 
     }
@@ -442,11 +398,8 @@ trait CmsRestFileTrait
      * @route("/manage/rest/asset/folders/file/select")
      * @return Response
      */
-    public function assetAjaxFoldersFileSelect()
+    public function assetAjaxFoldersFileSelect(Request $request)
     {
-        $pdo = $this->container->get('doctrine.dbal.default_connection');
-
-        $request = Request::createFromGlobals();
         $addOrDelete = $request->get('addOrDelete') ?: 0;
         $ids = $request->get('id');
 
@@ -454,10 +407,10 @@ trait CmsRestFileTrait
         $ormId = $request->get('ormId');
         $attributeName = $request->get('attributeName');
 
-        $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
+        $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
         if ($addOrDelete == 0) {
             foreach ($ids as $id) {
-                $assetOrms = $fullClass::data($pdo, array(
+                $assetOrms = $fullClass::data($this->connection, array(
                     'whereSql' => 'm.title = ? AND m.modelName = ? AND m.attributeName = ? AND ormId = ?',
                     'params' => array($id, $modelName, $attributeName, $ormId),
                 ));
@@ -468,24 +421,24 @@ trait CmsRestFileTrait
         } elseif ($addOrDelete == 1) {
 
             foreach ($ids as $id) {
-                $assetOrm = $fullClass::data($pdo, array(
+                $assetOrm = $fullClass::data($this->connection, array(
                     'whereSql' => 'm.title = ? AND m.modelName = ? AND m.attributeName = ? AND ormId = ?',
                     'params' => array($id, $modelName, $attributeName, $ormId),
                     'oneOrNull' => 1,
                 ));
                 if (!$assetOrm) {
-                    $assetOrm = new $fullClass($pdo);
+                    $assetOrm = new $fullClass($this->connection);
                     $assetOrm->setTitle($id);
                     $assetOrm->setModelName($modelName);
                     $assetOrm->setAttributeName($attributeName);
                     $assetOrm->setOrmId($ormId);
                     $assetOrm->setMyRank(999);
-                    $assetOrm->save();
+                    $assetOrm->save(true);
                 }
             }
         } elseif ($addOrDelete == 2) {
 
-            $assetOrms = $fullClass::data($pdo, array(
+            $assetOrms = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($modelName, $attributeName, $ormId),
 //                'debug' => 1,

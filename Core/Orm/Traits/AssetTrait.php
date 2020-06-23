@@ -16,24 +16,6 @@ trait AssetTrait
     }
 
     /**
-     * @return \stdClass
-     */
-    public function jsonSerialize()
-    {
-        $fields = array_keys(static::getFields());
-
-        $obj = new \stdClass();
-        foreach ($fields as $field) {
-            $getMethod = "get" . ucfirst($field);
-            $obj->{$field} = $this->$getMethod();
-        }
-        $obj->text = $this->getText();
-        $obj->state = $this->getState();
-        $obj->children = $this->getChildren();
-        return $obj;
-    }
-
-    /**
      * @param bool $doNotSaveVersion
      * @param array $options
      * @return mixed|null

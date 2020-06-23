@@ -2,37 +2,43 @@
 
 namespace MillenniumFalcon\Core\Controller;
 
-use MillenniumFalcon\Core\Controller\Traits\WebAssetTrait;
-use MillenniumFalcon\Core\Controller\Traits\WebCartAccountFacebookTrait;
-use MillenniumFalcon\Core\Controller\Traits\WebCartAccountGoogleTrait;
-use MillenniumFalcon\Core\Controller\Traits\WebCartAccountTrait;
-use MillenniumFalcon\Core\Controller\Traits\WebCartFormTrait;
-use MillenniumFalcon\Core\Controller\Traits\WebCartRestTrait;
-use MillenniumFalcon\Core\Controller\Traits\WebCartTrait;
-use MillenniumFalcon\Core\Controller\Traits\WebTrait;
-
+use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreAssetTrait;
 use MillenniumFalcon\Core\RouterController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class WebController extends RouterController
 {
-//    use WebCartTrait,
+    use WebCoreAssetTrait
+//        WebCartTrait,
 //        WebCartFormTrait,
 //        WebCartRestTrait,
 //        WebCartAccountTrait,
 //        WebCartAccountGoogleTrait,
 //        WebCartAccountFacebookTrait,
-//        WebAssetTrait,
-//        WebTrait;
+//        WebTrait
+;
 
-//    public function setContainer(ContainerInterface $container = null)
-//    {
-//        parent::setContainer($container);
-//
-//        $dir = $this->container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/views';
-//        $loader = $this->container->get('twig')->getLoader();
-//        $loader->addPath($dir);
-//    }
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var KernelInterface
+     */
+    protected $kernel;
+
+    /**
+     * WebController constructor.
+     * @param Connection $connection
+     * @param KernelInterface $kernel
+     */
+    public function __construct(Connection $connection, KernelInterface $kernel)
+    {
+        $this->connection = $connection;
+        $this->kernel = $kernel;
+    }
 
     public function getNodes()
     {
