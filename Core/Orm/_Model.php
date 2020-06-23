@@ -152,20 +152,6 @@ EOD;
     static public function setCustomFile(_Model $orm, $container)
     {
         $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/ORM' : '/vendor/pozoltd/millennium-falcon/Core/ORM') . '/';
-
-        $file = $path . 'Traits/' . $orm->getClassName() . 'Trait.php';
-        if (!file_exists($file)) {
-            $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/orm_custom_trait.txt');
-            $str = str_replace('{namespace}', $orm->getNamespace(), $str);
-            $str = str_replace('{classname}', $orm->getClassName(), $str);
-
-            $dir = dirname($file);
-            if (!file_exists($dir)) {
-                mkdir($dir, 0777, true);
-            }
-            file_put_contents($file, $str);
-        }
-
         $file = $path . $orm->getClassName() . '.php';
         if (!file_exists($file)) {
             $custom_file = 'orm_custom.txt';

@@ -88,7 +88,7 @@ class ModelService
         }
 
         //temporary solution
-        $appClass = "\\App\\Orm\\{$className}";
+        $appClass = "\\App\\ORM\\{$className}";
         $cmsClass = "\\MillenniumFalcon\\Core\\ORM\\{$className}";
         if (class_exists($appClass)) {
             return $appClass;

@@ -14,8 +14,8 @@ class AssetService
     const FOLDER_OPEN_MAX_LIMIT = 10;
 
     /**
-     * DbService constructor.
-     * @param \Doctrine\DBAL\Connection $connection
+     * AssetService constructor.
+     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {

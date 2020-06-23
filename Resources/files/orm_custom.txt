@@ -6,5 +6,4 @@ use {namespace}\Traits\{classname}Trait;
 
 class {classname} extends \{namespace}\Generated\{classname}
 {
-    use {classname}Trait;
 }
