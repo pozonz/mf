@@ -36,6 +36,10 @@
     <link href="/cms/css/styles.css?v={{ version }}" rel="stylesheet" type="text/css"/>
 
     <link href="/cms/develop/styles.css?v={{ version }}" rel="stylesheet" type="text/css"/>
+
+    {% if file_exists('/css/cms.css') %}
+        <link href="/css/cms.css" rel="stylesheet" type="text/css"/>
+    {% endif %}
     {% block externalHead %}{% endblock %}
 </head>
 
@@ -48,7 +52,7 @@
         <![endif]-->
 
         <div class="header" id="headContainer" {% if treeUtils.contains(theDataGroup, theNode) %}style="padding-left: 25em !important; background: #000;" {% else %}style="padding-left: 10em !important; background: #000;"{% endif %}>
-            <div id="head" style="{% if '/images/head.jpg'|file_exists %}background: url('/images/head.jpg') no-repeat #000;{% else %}background: #000;{% endif %}">
+            <div id="head" style="{% if file_exists('/images/head.jpg') %}background: url('/images/head.jpg') no-repeat #000;{% else %}background: #000;{% endif %}">
                 <a class="logo" href="/" target="_blank" title="View my site &rsaquo;"></a>
             </div>
         </div>

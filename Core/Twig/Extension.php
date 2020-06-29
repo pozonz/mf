@@ -53,10 +53,11 @@ class Extension extends AbstractExtension
     public function getFunctions(): array
     {
         return array(
-            'getenv' => new TwigFunction('getenv', 'getenv'),
+            'getenv' => new TwigFunction('getenv', [$this, 'getenv']),
             'redirect' => new TwigFunction('redirect', [$this, 'throwRedirectException']),
             'not_found' => new TwigFunction('not_found', [$this, 'throwNotFoundException']),
-            'http_exception' => new TwigFunction('http_exception', [$this, 'throwHttpException'])
+            'http_exception' => new TwigFunction('http_exception', [$this, 'throwHttpException']),
+            'file_exists' => new TwigFunction('file_exists', [$this, 'file_exists']),
         );
     }
 
@@ -66,7 +67,6 @@ class Extension extends AbstractExtension
     public function getFilters()
     {
         return array(
-            'file_exists' => new TwigFilter('file_exists', array($this, 'file_exists')),
             'json_decode' => new TwigFilter('json_decode', array($this, 'json_decode')),
             'ksort' => new TwigFilter('ksort', array($this, 'ksort')),
             'block' => new TwigFilter('block', array($this, 'block')),

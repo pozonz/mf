@@ -3,7 +3,7 @@
 
 {% block bodyContainer %}
     <div class="header" id="headContainer" style="padding-left: 2em !important; background: #000;">
-        <div id="head" style="{% if '/images/head.jpg'|file_exists %}background: url('/images/head.jpg') no-repeat #000;{% else %}background: #000;{% endif %}">
+        <div id="head" style="{% if file_exists('/images/head.jpg') %}background: url('/images/head.jpg') no-repeat #000;{% else %}background: #000;{% endif %}">
             <a class="logo" href="/cms/html/index.php?viewModeSent=0&amp;fileNo=13#_tab_home"></a>
         </div>
     </div><!-- .header -->

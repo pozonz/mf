@@ -50,6 +50,9 @@ trait BaseModelTrait
 
         $obj = new \stdClass();
         foreach ($fields as $field) {
+            if ($field == 'id') {
+                continue;
+            }
             $getMethod = "get" . ucfirst($field);
             $obj->{$field} = $model->$getMethod();
         }

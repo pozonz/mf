@@ -116,11 +116,11 @@ trait CmsCoreTrait
                     'id' => $this->_getClass($itm) . $itm->getId(),
                     'parent' => $parentId,
                     'title' => $itm->getTitle(),
-                    'url' => "/manage/pages/orms/{$this->_getClass($itm)}/",
+                    'url' => "/manage/pages/orms/{$this->_getClass($itm)}/{$itm->getId()}",
                     'template' => $fullClass::getCmsOrmTwig(),
                     'status' => 1,
                     'allowExtra' => 1,
-                    'maxParams' => 3,
+                    'maxParams' => 2,
                 ]);
             }, $pages));
         }
