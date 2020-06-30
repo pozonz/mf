@@ -11,12 +11,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class WebController extends RouterController
 {
     use WebCoreAssetTrait,
-//        WebCartTrait,
-//        WebCartFormTrait,
-//        WebCartRestTrait,
-//        WebCartAccountTrait,
-//        WebCartAccountGoogleTrait,
-//        WebCartAccountFacebookTrait,
         WebCoreTrait
 ;
 
