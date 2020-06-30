@@ -62,6 +62,51 @@ class Extension extends AbstractExtension
     }
 
     /**
+     * @param $arg
+     * @return array|false|string
+     */
+    public function getenv($arg)
+    {
+        return getenv($arg);
+    }
+
+    /**
+     * @param $filepath
+     * @return bool
+     */
+    public function file_exists($filepath)
+    {
+        $dir = __DIR__ . '/../../../../../public';
+        return file_exists($dir . $filepath);
+    }
+
+    /**
+     * @param $status
+     * @param $message
+     */
+    public function throwHttpException($status = Response::HTTP_INTERNAL_SERVER_ERROR, $message)
+    {
+        throw new HttpException($status, $message);
+    }
+
+    /**
+     * @param $status
+     * @param $location
+     */
+    public function throwRedirectException($status = Response::HTTP_FOUND, $location)
+    {
+        throw new RedirectException($location, $status);
+    }
+
+    /**
+     * @param $message
+     */
+    public function throwNotFoundException($message = '')
+    {
+        throw new NotFoundHttpException($message);
+    }
+
+    /**
      * @return array
      */
     public function getFilters()
@@ -74,20 +119,21 @@ class Extension extends AbstractExtension
             'sections' => new TwigFilter('sections', array($this, 'sections')),
             'nestablePges' => new TwigFilter('nestablePges', array($this, 'nestablePges')),
         );
-
     }
 
-    public function file_exists($filepath)
-    {
-        $dir = __DIR__ . '/../../../../../public';
-        return file_exists($dir . $filepath);
-    }
-
+    /**
+     * @param $value
+     * @return mixed
+     */
     public function json_decode($value)
     {
         return json_decode($value);
     }
 
+    /**
+     * @param $array
+     * @return mixed
+     */
     public function ksort($array)
     {
         ksort($array);
@@ -186,31 +232,5 @@ class Extension extends AbstractExtension
 
         $tree = new Tree($nodes);
         return $tree;
-    }
-
-    /**
-     * @param $status
-     * @param $message
-     */
-    public function throwHttpException($status = Response::HTTP_INTERNAL_SERVER_ERROR, $message)
-    {
-        throw new HttpException($status, $message);
-    }
-
-    /**
-     * @param $status
-     * @param $location
-     */
-    public function throwRedirectException($status = Response::HTTP_FOUND, $location)
-    {
-        throw new RedirectException($location, $status);
-    }
-
-    /**
-     * @param $message
-     */
-    public function throwNotFoundException($message = '')
-    {
-        throw new NotFoundHttpException($message);
     }
 }
