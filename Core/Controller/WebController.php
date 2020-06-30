@@ -4,19 +4,20 @@ namespace MillenniumFalcon\Core\Controller;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreAssetTrait;
+use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreTrait;
 use MillenniumFalcon\Core\RouterController;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class WebController extends RouterController
 {
-    use WebCoreAssetTrait
+    use WebCoreAssetTrait,
 //        WebCartTrait,
 //        WebCartFormTrait,
 //        WebCartRestTrait,
 //        WebCartAccountTrait,
 //        WebCartAccountGoogleTrait,
 //        WebCartAccountFacebookTrait,
-//        WebTrait
+        WebCoreTrait
 ;
 
     /**
@@ -38,10 +39,5 @@ class WebController extends RouterController
     {
         $this->connection = $connection;
         $this->kernel = $kernel;
-    }
-
-    public function getNodes()
-    {
-        return [];
     }
 }
