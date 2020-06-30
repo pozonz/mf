@@ -11,7 +11,7 @@ trait ShippingCountryTrait
      */
     static public function initData($pdo)
     {
-        $csv = new Xlsx(__DIR__ . '/../../../../../../vendor/pozoltd/millennium-falcon/Resources/files/countries.xlsx');
+        $csv = new Xlsx(__DIR__ . '/../../../../../../vendor/pozoltd/mf/Resources/files/countries.xlsx');
         $row = $csv->getNextRow();
         while ($row = $csv->getNextRow()) {
             if ($row[2]) {

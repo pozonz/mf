@@ -43,7 +43,7 @@ trait CmsInstallTrait
 
         $webPath = $this->kernel->getProjectDir();
 
-        $this->populateDb($webPath . '/vendor/pozoltd/millennium-falcon/Core/ORM', "MillenniumFalcon\\Core\\ORM\\");
+        $this->populateDb($webPath . '/vendor/pozoltd/mf/Core/ORM', "MillenniumFalcon\\Core\\ORM\\");
         if (file_exists($webPath . '/src/ORM/')) {
             $this->populateDb($webPath . '/src/ORM/', "App\\ORM\\");
         }

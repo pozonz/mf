@@ -122,13 +122,13 @@ EOD;
         }, $columnsJson);
 
         $generated_file = 'orm_generated.txt';
-        $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/' . $generated_file);
+        $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/mf/Resources/files/' . $generated_file);
         $str = str_replace('{namespace}', $orm->getNamespace() . '\\Generated', $str);
         $str = str_replace('{classname}', $orm->getClassName(), $str);
         $str = str_replace('{fields}', join("\n", $fields), $str);
         $str = str_replace('{methods}', join("\n", $methods), $str);
 
-        $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/ORM' : '/vendor/pozoltd/millennium-falcon/Core/ORM') . '/Generated/';
+        $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/ORM' : '/vendor/pozoltd/mf/Core/ORM') . '/Generated/';
 
         $file = $path . '../CmsConfig/' . $orm->getClassName() . '.json';
         $dir = dirname($file);
@@ -151,11 +151,11 @@ EOD;
      */
     static public function setCustomFile(_Model $orm, $container)
     {
-        $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/ORM' : '/vendor/pozoltd/millennium-falcon/Core/ORM') . '/';
+        $path = $container->getParameter('kernel.project_dir') . ($orm->getModelType() == 0 ? '/src/ORM' : '/vendor/pozoltd/mf/Core/ORM') . '/';
         $file = $path . $orm->getClassName() . '.php';
         if (!file_exists($file)) {
             $custom_file = 'orm_custom.txt';
-            $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/files/' . $custom_file);
+            $str = file_get_contents($container->getParameter('kernel.project_dir') . '/vendor/pozoltd/mf/Resources/files/' . $custom_file);
             $str = str_replace('{namespace}', $orm->getNamespace(), $str);
             $str = str_replace('{classname}', $orm->getClassName(), $str);
 

@@ -18,7 +18,7 @@ abstract class RouterController extends AbstractController
      */
     public function setContainer(ContainerInterface $container): ?ContainerInterface
     {
-        $dir = $container->getParameter('kernel.project_dir') . '/vendor/pozoltd/millennium-falcon/Resources/views';
+        $dir = $container->getParameter('kernel.project_dir') . '/vendor/pozoltd/mf/Resources/views';
         $loader = $container->get('twig')->getLoader();
         $loader->addPath($dir);
 

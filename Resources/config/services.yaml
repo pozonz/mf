@@ -1,13 +1,13 @@
 MillenniumFalcon\:
-    resource: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/*'
-    exclude: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+    resource: '%kernel.project_dir%/vendor/pozoltd/mf/*'
+    exclude: '%kernel.project_dir%/vendor/pozoltd/mf/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
 MillenniumFalcon\Core\Exception\RedirectExceptionListener:
     tags:
         - { name: 'kernel.event_listener', event: 'kernel.exception', priority: 11}
 
 MillenniumFalcon\Core\Controller\:
-        resource: '%kernel.project_dir%/vendor/pozoltd/millennium-falcon/Controller'
+        resource: '%kernel.project_dir%/vendor/pozoltd/mf/Controller'
         tags: ['controller.service_arguments']
 
 MillenniumFalcon\Core\Twig\Extension:

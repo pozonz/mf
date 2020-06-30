@@ -4,7 +4,7 @@ namespace MillenniumFalcon\Core\ORM\Generated;
 
 use MillenniumFalcon\Core\Db\Base;
 
-class AssetsBinary extends Base
+class AssetBinary extends Base
 {
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL

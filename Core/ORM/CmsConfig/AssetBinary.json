@@ -1,6 +1,6 @@
 {
     "uniqid": "5ef31693d3036",
-    "slug": "assets-binary",
+    "slug": "asset-binary",
     "rank": 12,
     "added": "2020-06-24 21:02:11",
     "modified": "2020-06-24 21:02:45",
@@ -19,8 +19,8 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
-    "title": "Assets binary",
-    "className": "AssetsBinary",
+    "title": "Asset binary",
+    "className": "AssetBinary",
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": "1",
     "dataType": "2",
