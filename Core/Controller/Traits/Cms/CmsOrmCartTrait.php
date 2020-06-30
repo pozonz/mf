@@ -8,7 +8,7 @@ use MillenniumFalcon\Core\Form\Builder\OrmProductsForm;
 use MillenniumFalcon\Core\Form\Builder\OrmShippingOptionMethodForm;
 use MillenniumFalcon\Core\Form\Builder\SearchProduct;
 use MillenniumFalcon\Core\ORM\_Model;
-use MillenniumFalcon\Core\Exception\RedirectException;
+use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;

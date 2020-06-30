@@ -3,7 +3,7 @@
 namespace MillenniumFalcon\Core;
 
 use BlueM\Tree;
-use MillenniumFalcon\Core\Exception\RedirectException;
+use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use MillenniumFalcon\Core\Tree\TreeUtils;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

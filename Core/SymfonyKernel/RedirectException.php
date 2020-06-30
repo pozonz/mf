@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Exception;
+namespace MillenniumFalcon\Core\SymfonyKernel;
 
 use Symfony\Component\HttpFoundation\Response;
 

@@ -5,7 +5,7 @@ namespace MillenniumFalcon\Core\Twig;
 use BlueM\Tree;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
-use MillenniumFalcon\Core\Exception\RedirectException;
+use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 
 use MillenniumFalcon\Core\Tree\RawData;
 use Symfony\Component\DependencyInjection\Container;

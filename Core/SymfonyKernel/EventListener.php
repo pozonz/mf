@@ -4,7 +4,7 @@ namespace MillenniumFalcon\Core\SymfonyKernel;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Controller\WebController;
-use MillenniumFalcon\Core\Exception\RedirectException;
+use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
