@@ -2,9 +2,9 @@
 
 namespace MillenniumFalcon\Core\Service;
 
+use BlueM\Tree;
 use Cocur\Slugify\Slugify;
-use MillenniumFalcon\Core\Nestable\PageNode;
-use MillenniumFalcon\Core\Nestable\Tree;
+use MillenniumFalcon\Core\Tree\RawData;
 
 class UtilsService
 {
@@ -206,14 +206,22 @@ class UtilsService
                 $parent = isset($categoryParent['cat' . $category->getId()]) ? $categoryParent['cat' . $category->getId()] : 0;
                 $rank = isset($categoryRank['cat' . $category->getId()]) ? $categoryRank['cat' . $category->getId()] : 0;
 
-                $node = new PageNode($itm->getId(), $parent, $rank, $itm->getHideFromWebNav() ? 0 : 1, $itm->getTitle(), $itm->getUrl(), null/** $itm->objPageTempalte()->getFilename() */, '', $itm->getAllowExtra(), $itm->getMaxParams());
-//                $node->objContent = $itm->objContent();
-                $node->iconClass = $itm->getIconClass();
-                $nodes[] = $node;
+                $nodes[] = (array)new RawData([
+                    'id' => $itm->getId(),
+                    'parent' => $parent,
+                    'title' => $itm->getTitle(),
+                    'url' => $itm->getUrl(),
+                    'template' => $itm->objPageTempalte()->getTitle(),
+                    'rank' => $rank,
+                    'status' => $itm->getHideFromWebNav() ? 0 : 1,
+                    'icon' => $itm->getIconClass(),
+                    'allowExtra' => $itm->getAllowExtra(),
+                    'maxParams' => $itm->getMaxParams(),
+                ]);
             }
 
             $tree = new Tree($nodes);
-            $result = $tree->getRoot();
+            $result = $tree->getRootNodes();
         }
 
         return $result;
