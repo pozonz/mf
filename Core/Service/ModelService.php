@@ -95,12 +95,5 @@ class ModelService
         } elseif (class_exists($cmsClass)) {
             return $cmsClass;
         }
-
-        /** @var _Model $model */
-        $model = _Model::getByField($pdo, 'className', $className);
-        if (!$model) {
-            throw new \Exception("Class \"{$className}\" Not Found");
-        }
-        return $model->getNamespace() . '\\' . $model->getClassName();
     }
 }

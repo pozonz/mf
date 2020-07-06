@@ -122,14 +122,21 @@ trait BaseORMTrait
      */
     static public function data(Connection $pdo, $options = array())
     {
-        $path = explode('\\', get_called_class());
-        $className = array_pop($path);
-        $request = Request::createFromGlobals();
-        $previewOrmToken = $request->get('__preview_' . $className);
-        if ($previewOrmToken) {
-            $options['whereSql'] = 'm.versionUuid = ?';
-            $options['params'] = [$previewOrmToken];
-            $options['includePreviousVersion'] = 1;
+        $myClass = get_called_class();
+        $tableName = static::getTableName();
+        $fields = array_keys(static::getFields());
+        $implementedInterfaces = class_implements($myClass);
+
+        if (in_array('MillenniumFalcon\\Core\\Version\\VersionInterface', $implementedInterfaces)) {
+            $path = explode('\\', $myClass);
+            $className = array_pop($path);
+            $request = $options['request'] ?? Request::createFromGlobals();
+            $previewOrmToken = $request->get('__preview_' . $className);
+            if ($previewOrmToken) {
+                $options['whereSql'] = 'm.versionUuid = ?';
+                $options['params'] = [$previewOrmToken];
+                $options['includePreviousVersion'] = 1;
+            }
         }
 
         $options['select'] = isset($options['select']) && !empty($options['select']) ? $options['select'] : 'm.*';
@@ -160,10 +167,6 @@ trait BaseORMTrait
             $options['page'] = null;
             $options['limit'] = null;
         }
-
-        $myClass = get_called_class();
-        $tableName = static::getTableName();
-        $fields = array_keys(static::getFields());
 
         $sql = "SELECT {$options['select']} FROM `{$tableName}` AS m";
         $sql .= $options['joins'] ? ' ' . $options['joins'] : '';

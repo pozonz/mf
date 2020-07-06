@@ -33,26 +33,46 @@ trait WebCoreAssetTrait
         }
 
         if ($asset->getIsImage() == 1) {
-
             $response = $this->assetImage($assetCode);
             $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $asset->getFileName());
-
         } else {
+            $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+            if ($SAVE_ASSETS_TO_DB) {
+                $cachedFolder = AssetService::getImageCachePath();
+                if (!file_exists($cachedFolder)) {
+                    mkdir($cachedFolder, 0777, true);
+                }
 
-            $fileType = $asset->getFileType();
-            $fileName = $asset->getFileName();
-            $fnlFile = AssetService::getUploadPath() . $asset->getFileLocation();
-            if (!file_exists($fnlFile)) {
-                throw new NotFoundHttpException();
+                $cachedOriginalFolder = AssetService::getImageCachePath() . '../original/';
+                if (!file_exists($cachedOriginalFolder)) {
+                    mkdir($cachedOriginalFolder, 0777, true);
+                }
+
+                $fileType = $asset->getFileType();
+                $fileSize = $asset->getFileSize();
+                $fileLocation = $cachedOriginalFolder . $asset->getFileLocation();
+
+                $assetBinaryFullClass = ModelService::fullClass($this->connection, 'AssetBinary');
+                $assetBinary = $assetBinaryFullClass::getByField($this->connection, 'title', $asset->getId());
+                if (!$assetBinary) {
+                    throw new NotFoundHttpException();
+                }
+                $thumbnail = $fileLocation;
+                file_put_contents($thumbnail, $assetBinary->getContent());
+
+                $date = new \DateTimeImmutable('@' . filectime($thumbnail));
+                $saveDate = $date->setTimezone(new \DateTimeZone("GMT"))->format("D, d M y H:i:s T");
+                $response = BinaryFileResponse::create($thumbnail, Response::HTTP_OK, [
+                    "content-length" => $fileSize,
+                    "content-type" => $fileType,
+                    "last-modified" => $saveDate,
+                    "etag" => '"' . sprintf("%x-%x", $date->getTimestamp(), $fileSize) . '"',
+                ], true, null, false, true);
+                $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $asset->getFileName());
+            } else {
+
             }
-            $stream = function () use ($fnlFile) {
-                readfile($fnlFile);
-            };
-            return new StreamedResponse($stream, 200, array(
-                'Content-Type' => $fileType,
-                'Content-length' => filesize($fnlFile),
-                'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
-            ));
+
         }
 
         return $response;
@@ -146,8 +166,24 @@ trait WebCoreAssetTrait
             }
         }
 
-        if (!file_exists($thumbnail)) {
-            $returnValue = AssetService::generateOutput($command);
+        $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+        if ($SAVE_ASSETS_TO_DB) {
+            if (!file_exists($thumbnail)) {
+                $assetBinaryFullClass = ModelService::fullClass($this->connection, 'AssetBinary');
+                $assetBinary = $assetBinaryFullClass::getByField($this->connection, 'title', $asset->getId());
+                if (!$assetBinary) {
+                    throw new NotFoundHttpException();
+                }
+                file_put_contents($fileLocation, $assetBinary->getContent());
+                if ($assetSizeCode) {
+                    $returnValue = AssetService::generateOutput($command);
+                    unlink($fileLocation);
+                }
+            }
+        } else {
+            if (!file_exists($thumbnail)) {
+                $returnValue = AssetService::generateOutput($command);
+            }
         }
 
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));

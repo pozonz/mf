@@ -322,6 +322,7 @@ EOD;
             'extra48' => "text COLLATE utf8mb4_unicode_ci DEFAULT NULL",
             'extra49' => "text COLLATE utf8mb4_unicode_ci DEFAULT NULL",
             'extra50' => "text COLLATE utf8mb4_unicode_ci DEFAULT NULL",
+            'blob' => "LONGBLOB NULL",
         );
         ksort($result, SORT_NATURAL);
         return $result;

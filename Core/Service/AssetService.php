@@ -66,7 +66,8 @@ class AssetService
     /**
      * @return \stdClass
      */
-    static public function getAssetFolderRoot() {
+    static public function getAssetFolderRoot()
+    {
         $assetRoot = new \stdClass();
         $assetRoot->id = '0';
         $assetRoot->title = 'Home';
@@ -156,19 +157,6 @@ class AssetService
         $tmpFile = AssetService::getImageCachePath() . $file->getFilename();
         $chkFile = $tmpFile . '.' . $ext;
         rename($tmpFile, $chkFile);
-        return static::processFileWithAsset($pdo, $chkFile, $orm);
-
-    }
-
-    /**
-     * @param Connection $pdo
-     * @param $tmpFile
-     * @param $orm
-     * @return JsonResponse
-     */
-    static public function processFileWithAsset(Connection $pdo, $chkFile, $orm)
-    {
-        $ext = pathinfo($chkFile, PATHINFO_EXTENSION);
 
         $info = getimagesize($chkFile);
         if ($info !== false) {
@@ -178,7 +166,12 @@ class AssetService
             $orm->setHeight($y);
         }
 
-        $fnlFile = AssetService::getUploadPath() . $orm->getId() . '.' . $ext;
+        $uploadedDir = static::getUploadPath();
+        if (!file_exists($uploadedDir)) {
+            mkdir($uploadedDir, 0777, true);
+        }
+
+        $fnlFile = $uploadedDir . $orm->getId() . '.' . $ext;
         if ($orm->getIsImage() == 1) {
             $command = getenv('CONVERT_CMD') . ' "' . $chkFile . '" -auto-orient ' . $fnlFile;
             static::generateOutput($command);
@@ -189,6 +182,26 @@ class AssetService
 
         $orm->setFileLocation($orm->getId() . '.' . $ext);
         $orm->save();
+
+        $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+        if ($SAVE_ASSETS_TO_DB) {
+            $fileLocation = $uploadedDir . $orm->getFileLocation();
+            if (file_exists($fileLocation)) {
+                $content = file_get_contents($fileLocation);
+
+                $assetBinaryFullClass = ModelService::fullClass($pdo, 'AssetBinary');
+                $assetBinary = $assetBinaryFullClass::getByField($pdo, 'title', $orm->getId());
+                if (!$assetBinary) {
+                    $assetBinary = new $assetBinaryFullClass($pdo);
+                    $assetBinary->setTitle($orm->getId());
+                }
+                $assetBinary->setContent($content);
+                $assetBinary->save();
+
+                static::removeFile($orm);
+                static::removeCaches($pdo, $orm);
+            }
+        }
 
         return new JsonResponse(array(
             'status' => 1,
@@ -258,6 +271,23 @@ class AssetService
             unlink($link);
         }
     }
+
+    /**
+     * @param $pdo
+     * @param $asset
+     */
+    static public function removeAssetBinary($pdo, $asset)
+    {
+        $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+        if ($SAVE_ASSETS_TO_DB) {
+            $assetBinaryFullClass = ModelService::fullClass($pdo, 'AssetBinary');
+            $assetBinary = $assetBinaryFullClass::getByField($pdo, 'title', $asset->getId());
+            if ($assetBinary) {
+                $assetBinary->delete();
+            }
+        }
+    }
+
 
     /**
      * @param $pdo

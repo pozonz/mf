@@ -66,6 +66,7 @@ trait AssetTrait
             }
         } else {
             AssetService::removeFile($this);
+            AssetService::removeAssetBinary($this->getPdo(), $this);
         }
 
         return parent::delete();

@@ -12,7 +12,7 @@ class AssetBinary extends Base
     private $title;
     
     /**
-     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     * #pz LONGBLOB NULL
      */
     private $content;
     
