@@ -2,8 +2,6 @@
 
 namespace {namespace};
 
-use {namespace}\Traits\{classname}Trait;
-
 class {classname} extends \{namespace}\Generated\{classname}
 {
 }

@@ -52,10 +52,12 @@ class UtilsService
 
                         $item->sql = str_replace($matches[0], "FROM $tablename", $item->sql);
                     }
-                    $stmt = $pdo->prepare($item->sql);
-                    $stmt->execute();
-                    foreach ($stmt->fetchAll() as $key => $val) {
-                        $choices[$val['key']] = $val['value'];
+                    if ($item->sql) {
+                        $stmt = $pdo->prepare($item->sql);
+                        $stmt->execute();
+                        foreach ($stmt->fetchAll() as $key => $val) {
+                            $choices[$val['key']] = $val['value'];
+                        }
                     }
                 }
                 $item->choices = $choices;
