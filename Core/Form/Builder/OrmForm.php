@@ -113,9 +113,12 @@ class OrmForm extends AbstractType
                     $column->sql = str_replace($matches[0], "FROM $tablename", $column->sql);
                 }
 
-                $stmt = $pdo->prepare($column->sql);
-                $stmt->execute();
-                $result = $stmt->fetchAll(\PDO::FETCH_OBJ);
+                $result= [];
+                if ($column->sql) {
+                    $stmt = $pdo->prepare($column->sql);
+                    $stmt->execute();
+                    $result = $stmt->fetchAll(\PDO::FETCH_OBJ);
+                }
 
                 $opts['choices'] = array();
                 foreach ($result as $key => $val) {
@@ -143,9 +146,12 @@ class OrmForm extends AbstractType
                     $column->sql = str_replace($matches[0], "FROM $tablename", $column->sql);
                 }
 
-                $stmt = $pdo->prepare($column->sql);
-                $stmt->execute();
-                $result = $stmt->fetchAll(\PDO::FETCH_OBJ);
+                $result= [];
+                if ($column->sql) {
+                    $stmt = $pdo->prepare($column->sql);
+                    $stmt->execute();
+                    $result = $stmt->fetchAll(\PDO::FETCH_OBJ);
+                }
 
                 $nodes = array();
                 foreach ($result as $key => $val) {
