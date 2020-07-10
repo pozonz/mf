@@ -98,6 +98,10 @@ trait WebCoreAssetTrait
         }
 
         $uploadPath = AssetService::getUploadPath();
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
         $fileType = $asset->getFileType();
         $fileName = $asset->getFileName();
         $fileSize = $asset->getFileSize();
