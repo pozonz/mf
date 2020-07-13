@@ -38,7 +38,8 @@ abstract class RouterController extends AbstractController
 
         $nodes = $this->getNodes();
         $tree = new Tree($nodes, [
-            'rootId' => null
+            'rootId' => null,
+            'buildwarningcallback' => function () {},
         ]);
 
         $urlParams = array();

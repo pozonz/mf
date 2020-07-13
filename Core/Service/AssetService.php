@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Service;
 
+use BlueM\Tree;
 use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
@@ -53,9 +54,10 @@ class AssetService
             }
         }
 
-        $tree = new \BlueM\Tree($data, [
+        $tree = new Tree($data, [
             'rootId' => 0,
             'jsonserializer' => new HierarchicalTreeJsonSerializer(),
+            'buildwarningcallback' => function () {},
         ]);
 
         $assetRoot = static::getAssetFolderRoot();

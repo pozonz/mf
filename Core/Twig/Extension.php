@@ -230,7 +230,9 @@ class Extension extends AbstractExtension
             ]);
         }
 
-        $tree = new Tree($nodes);
+        $tree = new Tree($nodes, [
+            'buildwarningcallback' => function () {},
+        ]);
         return $tree;
     }
 }

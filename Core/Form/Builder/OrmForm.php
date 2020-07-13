@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Form\Builder;
 
+use BlueM\Tree;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Constraints\ConstraintUnique;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
@@ -161,7 +162,9 @@ class OrmForm extends AbstractType
                         'title' => $val->value,
                     ];
                 }
-                $tree = new \BlueM\Tree($nodes);
+                $tree = new Tree($nodes, [
+                    'buildwarningcallback' => function () {},
+                ]);
                 $opts['choices'] = $tree->getRootNodes();
 //                $opts['required'] = false;
                 break;

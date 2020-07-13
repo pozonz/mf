@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Controller\Traits\Cms;
 
+use BlueM\Tree;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Builder\OrmForm;
 use MillenniumFalcon\Core\Form\Builder\OrmProductsForm;
@@ -103,7 +104,10 @@ trait CmsOrmCartTrait
             "orm" => 0,
         ));
 
-        $tree = new \BlueM\Tree($nodes, ['rootId' => null]);
+        $tree = new Tree($nodes, [
+            'rootId' => null,
+            'buildwarningcallback' => function () {},
+        ]);
         $orms = $tree->getRootNodes();
 
         $params['ormModel'] = $model;
@@ -123,7 +127,7 @@ trait CmsOrmCartTrait
         $model = _Model::getByField($pdo, 'className', $className);
 
         $fullClass = ModelService::fullClass($pdo, 'ProductCategory');
-        $tree = new \BlueM\Tree($fullClass::data($pdo, [
+        $tree = new Tree($fullClass::data($pdo, [
             "whereSql" => 'm.count > 0',
             "select" => 'm.id AS id, m.parentId AS parent, CONCAT(m.title, " (", m.count , ")") AS title',
             "sort" => 'm.rank',
@@ -131,6 +135,7 @@ trait CmsOrmCartTrait
             "orm" => 0,
         ]), [
             'rootId' => null,
+            'buildwarningcallback' => function () {},
         ]);
 
         $sql = '';

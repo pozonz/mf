@@ -222,7 +222,9 @@ class UtilsService
                 ]);
             }
 
-            $tree = new Tree($nodes);
+            $tree = new Tree($nodes, [
+                'buildwarningcallback' => function () {},
+            ]);
             $result = $tree->getRootNodes();
         }
 
