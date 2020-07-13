@@ -145,13 +145,14 @@ trait ProductTrait
     {
         $pdo = $this->getPdo();
         $fullClass = ModelService::fullClass($pdo, 'ProductCategory');
-        $tree = $tree = new \BlueM\Tree($fullClass::data($pdo, [
+        $tree = new \BlueM\Tree($fullClass::data($pdo, [
             "select" => 'm.id AS id, m.parentId AS parent, m.title',
             "sort" => 'm.rank',
             "order" => 'ASC',
             "orm" => 0,
         ]), [
             'rootId' => null,
+            'buildwarningcallback' => function () {},
         ]);
 
         $suitableFor = [];

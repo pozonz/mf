@@ -6,7 +6,6 @@ use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Db;
 use MillenniumFalcon\Core\Form\Builder\Model;
 use MillenniumFalcon\Core\Form\Builder\Orm;
-use MillenniumFalcon\Core\Nestable\Tree;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Twig\Extension;

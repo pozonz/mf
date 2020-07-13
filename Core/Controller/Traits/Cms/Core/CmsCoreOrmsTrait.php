@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
+use BlueM\Tree;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,8 +85,9 @@ trait CmsCoreOrmsTrait
                 "orm" => 0,
             ]);
 
-            $tree = new \BlueM\Tree($nodes, [
-                'rootId' => null
+            $tree = new Tree($nodes, [
+                'rootId' => null,
+                'buildwarningcallback' => function () {},
             ]);
             $orms = $tree->getRootNodes();
         }

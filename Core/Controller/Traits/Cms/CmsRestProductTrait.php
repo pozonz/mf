@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Controller\Traits\Cms;
 
+use BlueM\Tree;
 use BlueM\Tree\Node;
 use Cocur\Slugify\Slugify;
 
@@ -33,13 +34,14 @@ trait CmsRestProductTrait
             $categories[$itm->getId()] = $itm;
         }
 
-        $tree = new \BlueM\Tree($fullClassCategory::data($pdo, [
+        $tree = new Tree($fullClassCategory::data($pdo, [
             "select" => 'm.id AS id, m.parentId AS parent, m.title, m.count',
             "sort" => 'm.rank',
             "order" => 'ASC',
             "orm" => 0,
         ]), [
             'rootId' => null,
+            'buildwarningcallback' => function () {},
         ]);
 
         foreach ($tree->getRootNodes() as $node) {
