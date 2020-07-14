@@ -213,7 +213,7 @@ class UtilsService
                     'parent' => $parent,
                     'title' => $itm->getTitle(),
                     'url' => $itm->getUrl(),
-                    'template' => $itm->objPageTempalte()->getTitle(),
+                    'template' => $itm->objPageTempalte()->getFilename(),
                     'rank' => $rank,
                     'status' => $itm->getHideFromWebNav() ? 0 : 1,
                     'icon' => $itm->getIconClass(),

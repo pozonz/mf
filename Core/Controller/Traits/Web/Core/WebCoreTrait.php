@@ -98,9 +98,11 @@ trait WebCoreTrait
                 'parent' => null,
                 'title' => $page->getTitle(),
                 'url' => $page->getUrl(),
-                'template' => $page->objPageTempalte()->getTitle(),
+                'template' => $page->objPageTempalte()->getFilename(),
                 'status' => 1,
                 'icon' => $page->getIcon(),
+                'allowExtra' => $page->getAllowExtra(),
+                'maxParams' => $page->getMaxParams(),
             ]);
         }
 
