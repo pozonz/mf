@@ -123,6 +123,14 @@ trait CmsCoreTrait
                     'maxParams' => 2,
                 ]);
             }, $pages));
+
+            foreach ($pages as $itm) {
+                $attachedModelIds = json_decode($itm->getAttachedModels() ?: '[]');
+                foreach ($attachedModelIds as $attachedModelId) {
+                    $attachedModel = _Model::getById($this->connection, $attachedModelId);
+                    $nodes = $this->_addModelListingToParent($nodes, $this->_getClass($itm) . $itm->getId(), $attachedModel->getClassname(), '/manage/pages');
+                }
+            }
         }
 
         return $nodes;
@@ -250,9 +258,10 @@ trait CmsCoreTrait
             2 => 'cms/orms/orms-tree.twig',
         );
 
+        $modelId = $parentId . $modelClassName;
         $fullClass = ModelService::fullClass($this->connection, $modelClassName);
         $nodes[] = (array)new RawData([
-            'id' => $modelClassName,
+            'id' => $modelId,
             'parent' => $parentId,
             'title' => $model->getTitle(),
             'url' => "{$baseUrl}/orms/{$modelClassName}",
@@ -261,7 +270,7 @@ trait CmsCoreTrait
             'allowExtra' => 1,
             'maxParams' => 1,
         ]);
-        return $this->_addModelDetailToParent($nodes, $modelClassName, $modelClassName, $baseUrl);
+        return $this->_addModelDetailToParent($nodes, $modelId, $modelClassName, $baseUrl);
     }
 
     /**
@@ -275,7 +284,7 @@ trait CmsCoreTrait
     {
         $fullClass = ModelService::fullClass($this->connection, $modelClassName);
         $nodes[] = (array)new RawData([
-            'id' => "{$modelClassName}Detail",
+            'id' => "{$parentId}{$modelClassName}Detail",
             'parent' => $parentId,
             'title' => "{$modelClassName} detail",
             'url' => "{$baseUrl}/orms/{$modelClassName}/",
@@ -286,7 +295,7 @@ trait CmsCoreTrait
         ]);
 
         $nodes[] = (array)new RawData([
-            'id' => "{$modelClassName}Copy",
+            'id' => "{$parentId}{$modelClassName}Copy",
             'parent' => $parentId,
             'title' => "{$modelClassName} copy",
             'url' => "{$baseUrl}/orms/{$modelClassName}/copy/",
