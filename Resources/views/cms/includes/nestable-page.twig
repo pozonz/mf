@@ -4,7 +4,7 @@
         <div class="dd-handle dd3-handle"></div>
         <div class="dd-handle dd3-handle"></div>
         <div class="dd3-content">
-            <span>{{ node.title }} {% if node.extraInfo is defined %}<a href="{{ node.extraInfo }}" target="_blank" style="color: dodgerblue; margin-left: 1em; font-size: 90%; font-weight: 400">{{ node.extraInfo }}</a>{% endif %}</span>
+            <span>{{ node.title }} {% if node.extraInfo is defined %}<a href="{{ node.extraInfo }}" target="_blank" style="color: dodgerblue; margin-left: 1em; font-size: 90%; font-weight: 400">{{ node.extraInfo }}</a>{% endif %} {% if node.extra1 %}<span class="hide-from-nav hide-from-cms-nav">(cms)</span>{% endif %} {% if node.extra2 %}<span class="hide-from-nav hide-from-web-nav">(web)</span>{% endif %}</span>
             <a style="right: 5.9em;" class="state change-state js-orm-status" href="#" data-status="{{ node.status }}"><img src="/cms/images/dot{{ node.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
             <a style="right: 4.1em;" class="edit" href="/manage/{{ ormModel.dataType == 2 ? 'admin/' : '' }}orms/{{ ormModel.className }}/{{ node.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
             <a style="right: 2.3em;" class="state copy" href="/manage/{{ ormModel.dataType == 2 ? 'admin/' : '' }}orms/{{ ormModel.className }}/copy/{{ node.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>

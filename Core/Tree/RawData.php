@@ -75,6 +75,16 @@ class RawData
     public $extraInfo;
 
     /**
+     * @var string
+     */
+    public $extra1;
+
+    /**
+     * @var string
+     */
+    public $extra2;
+
+    /**
      * RawData constructor.
      * @param array $options
      */
@@ -94,5 +104,7 @@ class RawData
         $this->redirectTo = $options['redirectTo'] ?? null;
         $this->closed = $options['closed'] ?? null;
         $this->extraInfo = $options['extraInfo'] ?? null;
+        $this->extra1 = $options['extra1'] ?? null;
+        $this->extra2 = $options['extra2'] ?? null;
     }
 }
