@@ -227,6 +227,8 @@ class Extension extends AbstractExtension
                 'status' => $page->getStatus(),
                 'closed' => $categoryClosedValue,
                 'extraInfo' => $page->getUrl(),
+                'extra1' => $page->getHideFromCmsNav(),
+                'extra2' => $page->getHideFromWebNav(),
             ]);
         }
 
