@@ -219,6 +219,7 @@ class UtilsService
                     'icon' => $itm->getIconClass(),
                     'allowExtra' => $itm->getAllowExtra(),
                     'maxParams' => $itm->getMaxParams(),
+                    'extraInfo' => $itm,
                 ]);
             }
 

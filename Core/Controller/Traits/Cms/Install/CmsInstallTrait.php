@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\Controller\Traits\Cms\Install;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
 
+use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -119,7 +120,7 @@ trait CmsInstallTrait
         /** @var _Model[] $models */
         $models = _Model::data($this->connection);
         foreach ($models as $model) {
-            $fullClass = ModelService::fullClass($model->getClassName());
+            $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
             $fullClass::sync($this->connection);
         }
 

@@ -103,6 +103,7 @@ trait WebCoreTrait
                 'icon' => $page->getIcon(),
                 'allowExtra' => $page->getAllowExtra(),
                 'maxParams' => $page->getMaxParams(),
+                'extraInfo' => $page,
             ]);
         }
 
