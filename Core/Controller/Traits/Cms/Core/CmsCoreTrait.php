@@ -48,7 +48,7 @@ trait CmsCoreTrait
      */
     public function getNodes()
     {
-        $data = _Model::data($this->connection);
+        $data = _Model::active($this->connection);
         foreach ($data as $itm) {
             $this->models[$itm->getClassName()] = $itm;
         }
@@ -96,19 +96,13 @@ trait CmsCoreTrait
         $fullClass = ModelService::fullClass($this->connection, 'PageCategory');
         $pageCategories = $fullClass::active($this->connection);
         foreach ($pageCategories as $pageCategory) {
-            $nodes[] = (array)new RawData([
-                'id' => $this->_getClass($pageCategory) . $pageCategory->getId(),
-                'parent' => $dataGroupClass . $dataGroup->getId(),
-                'title' => $pageCategory->getTitle(),
-                'status' => 1,
-            ]);
-
+            $toBeMergedNodes = [];
             $fullClass = ModelService::fullClass($this->connection, 'Page');
             $pages = $fullClass::active($this->connection, [
                 'whereSql' => 'm.category LIKE ? AND (m.hideFromCMSNav IS NULL OR m.hideFromCMSNav != 1)',
                 'params' => ['%' . $pageCategory->getId() . '%'],
             ]);
-            $nodes = array_merge($nodes, array_map(function ($itm) use ($dataGroup, $dataGroupClass, $pageCategory, $fullClass) {
+            $toBeMergedNodes = array_merge($toBeMergedNodes, array_map(function ($itm) use ($dataGroup, $dataGroupClass, $pageCategory, $fullClass) {
                 $categoryParent = (object)json_decode($itm->getCategoryParent() ?: '[]');
                 $categoryParentAttr = "cat{$pageCategory->getId()}";
                 $parentId = isset($categoryParent->{$categoryParentAttr}) ? $this->_getClass($itm) . $categoryParent->{$categoryParentAttr} : $dataGroupClass . $dataGroup->getId();
@@ -128,8 +122,18 @@ trait CmsCoreTrait
                 $attachedModelIds = json_decode($itm->getAttachedModels() ?: '[]');
                 foreach ($attachedModelIds as $attachedModelId) {
                     $attachedModel = _Model::getById($this->connection, $attachedModelId);
-                    $nodes = $this->_addModelListingToParent($nodes, $this->_getClass($itm) . $itm->getId(), $attachedModel->getClassname(), '/manage/pages');
+                    $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $this->_getClass($itm) . $itm->getId(), $attachedModel->getClassname(), '/manage/pages');
                 }
+            }
+
+            if (count($toBeMergedNodes)) {
+                $nodes[] = (array)new RawData([
+                    'id' => $this->_getClass($pageCategory) . $pageCategory->getId(),
+                    'parent' => $dataGroupClass . $dataGroup->getId(),
+                    'title' => $pageCategory->getTitle(),
+                    'status' => 1,
+                ]);
+                $nodes = array_merge($nodes, $toBeMergedNodes);
             }
         }
 
@@ -223,18 +227,23 @@ trait CmsCoreTrait
     {
         $dataGroupClass = $this->_getClass($dataGroup);
 
-        $nodes[] = (array)new RawData([
-            'id' => "data{$dataGroup->getId()}",
-            'parent' => $dataGroupClass . $dataGroup->getId(),
-            'title' => 'Data',
-            'status' => 1,
-        ]);
+        $toBeMergedNodes = [];
 
         foreach ($this->models as $model) {
             $modelDataGroups = json_decode($model->getDataGroups() ?: '[]');
             if (in_array($dataGroup->getId(), $modelDataGroups)) {
-                $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), $model->getClassName(), $baseUrl);
+                $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $dataGroupClass . $dataGroup->getId(), $model->getClassName(), $baseUrl);
             }
+        }
+
+        if (count($toBeMergedNodes)) {
+            $nodes[] = (array)new RawData([
+                'id' => "data{$dataGroup->getId()}",
+                'parent' => $dataGroupClass . $dataGroup->getId(),
+                'title' => 'Data',
+                'status' => 1,
+            ]);
+            $nodes = array_merge($nodes, $toBeMergedNodes);
         }
 
         return $nodes;

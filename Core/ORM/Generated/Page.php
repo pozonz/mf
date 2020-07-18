@@ -52,6 +52,11 @@ class Page extends Base
     private $attachedModels;
     
     /**
+     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $content;
+    
+    /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $hideFromWebNav;
@@ -60,11 +65,6 @@ class Page extends Base
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $hideFromCMSNav;
-    
-    /**
-     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $content;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -238,6 +238,22 @@ class Page extends Base
     /**
      * @return mixed
      */
+    public function getContent()
+    {
+        return $this->content;
+    }
+    
+    /**
+     * @param mixed content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getHideFromWebNav()
     {
         return $this->hideFromWebNav;
@@ -265,22 +281,6 @@ class Page extends Base
     public function setHideFromCMSNav($hideFromCMSNav)
     {
         $this->hideFromCMSNav = $hideFromCMSNav;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-    
-    /**
-     * @param mixed content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
     }
     
     /**

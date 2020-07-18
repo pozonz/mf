@@ -24,6 +24,7 @@ class OrmPageForm extends OrmForm
 //        $builder->remove('type');
 //        $builder->remove('redirectTo');
 
+        $builder->remove('category');
         $builder->remove('templateFile');
         $builder->remove('attachedModels');
         $builder->remove('hideFromCMSNav');
