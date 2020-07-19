@@ -64,7 +64,7 @@ trait WebCoreTrait
     public function web(Request $request)
     {
         $params = $this->getTemplateParams($request);
-        return $this->render($params['theNode']->template, $params);
+        return $this->render($params['theNode']->extraInfo->objPageTempalte()->getFilename(), $params);
     }
 
     /**
@@ -98,7 +98,6 @@ trait WebCoreTrait
                 'parent' => null,
                 'title' => $page->getTitle(),
                 'url' => $page->getUrl(),
-                'template' => $page->objPageTempalte()->getFilename(),
                 'status' => 1,
                 'icon' => $page->getIcon(),
                 'allowExtra' => $page->getAllowExtra(),

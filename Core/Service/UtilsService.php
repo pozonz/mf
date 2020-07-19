@@ -200,9 +200,6 @@ class UtilsService
 
             $nodes = array();
             foreach ($pages as $itm) {
-                if ($itm->getHideFromWebNav()) {
-//                    continue;
-                }
                 $categoryParent = !$itm->getCategoryParent() ? array() : (array)json_decode($itm->getCategoryParent());
                 $categoryRank = !$itm->getCategoryRank() ? array() : (array)json_decode($itm->getCategoryRank());
                 $parent = isset($categoryParent['cat' . $category->getId()]) ? $categoryParent['cat' . $category->getId()] : 0;
@@ -213,7 +210,6 @@ class UtilsService
                     'parent' => $parent,
                     'title' => $itm->getTitle(),
                     'url' => $itm->getUrl(),
-                    'template' => $itm->objPageTempalte()->getFilename(),
                     'rank' => $rank,
                     'status' => $itm->getHideFromWebNav() ? 0 : 1,
                     'icon' => $itm->getIconClass(),
@@ -224,6 +220,7 @@ class UtilsService
             }
 
             $tree = new Tree($nodes, [
+                'rootId' => null,
                 'buildwarningcallback' => function () {},
             ]);
             $result = $tree->getRootNodes();
