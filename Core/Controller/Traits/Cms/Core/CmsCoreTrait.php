@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Tree\RawData;
 use MillenniumFalcon\Core\ORM\_Model;
+use MillenniumFalcon\Core\Tree\TreeUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -33,6 +34,10 @@ trait CmsCoreTrait
     {
         $params = $this->getTemplateParams($request);
 
+        $theDataGroup = TreeUtils::ancestor($params['theNode']);
+        $params['theDataGroup'] = $theDataGroup;
+        $params['rootNodes'] = $this->_tree->getRootNodes();
+
         //Check permission
 //        if (!$params['verticalMenuRoot']) {
 //            throw new NotFoundHttpException();
@@ -46,7 +51,7 @@ trait CmsCoreTrait
      * @return array
      * @throws \Exception
      */
-    public function getNodes()
+    public function getRawData()
     {
         $data = _Model::active($this->connection);
         foreach ($data as $itm) {

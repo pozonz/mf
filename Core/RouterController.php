@@ -13,6 +13,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 abstract class RouterController extends AbstractController
 {
     /**
+     * @var null
+     */
+    protected $_tree = null;
+
+    /**
+     * @var null
+     */
+    protected $_nodes = null;
+
+    /**
      * @param ContainerInterface $container
      * @return ContainerInterface|null
      */
@@ -21,7 +31,6 @@ abstract class RouterController extends AbstractController
         $dir = $container->getParameter('kernel.project_dir') . '/vendor/pozoltd/mf/Resources/views';
         $loader = $container->get('twig')->getLoader();
         $loader->addPath($dir);
-
         return parent::setContainer($container);
     }
 
@@ -34,15 +43,20 @@ abstract class RouterController extends AbstractController
     {
         $requestUri = $request->getPathInfo();
         $requestUri = rtrim($requestUri, '/');
+        return $this->getTemplateParamsByUrl($requestUri);
+    }
+
+    /**
+     * @param $requestUri
+     * @return array
+     * @throws RedirectException
+     */
+    protected function getTemplateParamsByUrl($requestUri)
+    {
+        $tree = $this->getTree();
         $urlFragments = explode('/', trim($requestUri, '/'));
+        $urlParams = [];
 
-        $nodes = $this->getNodes();
-        $tree = new Tree($nodes, [
-            'rootId' => null,
-            'buildwarningcallback' => function () {},
-        ]);
-
-        $urlParams = array();
         $rawData = $this->getRawDataByUrl($requestUri);
         if (!$rawData) {
             for ($i = count($urlFragments), $il = 0; $i > $il; $i--) {
@@ -66,18 +80,16 @@ abstract class RouterController extends AbstractController
         if (!$rawData) {
             throw new NotFoundHttpException();
         }
+
         if ($rawData->type == 2 && $rawData->redirectTo) {
             throw new RedirectException($rawData->getRedirectTo());
         }
 
         $theNode = $tree->getNodeById($rawData->id);
-        $theDataGroup = TreeUtils::ancestor($theNode);
         return [
             'urlParams' => $urlParams,
             'urlFragments' => $urlFragments,
             'theNode' => $theNode,
-            'theDataGroup' => $theDataGroup,
-            'rootNodes' => $tree->getRootNodes(),
         ];
     }
 
@@ -100,5 +112,32 @@ abstract class RouterController extends AbstractController
     /**
      * @return mixed
      */
-    abstract public function getNodes();
+    protected function getTree()
+    {
+        if (!$this->_tree) {
+            $nodes = $this->getNodes();
+            $this->_tree = new Tree($nodes, [
+                'rootId' => null,
+                'buildwarningcallback' => function () {
+                },
+            ]);
+        }
+        return $this->_tree;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getNodes()
+    {
+        if (!$this->_nodes) {
+            $this->_nodes = $this->getRawData();
+        }
+        return $this->_nodes;
+    }
+
+    /**
+     * @return mixed
+     */
+    abstract public function getRawData();
 }

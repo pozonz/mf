@@ -70,7 +70,7 @@ trait WebCoreTrait
     /**
      * @return array
      */
-    public function getNodes()
+    public function getRawData()
     {
         $request = Request::createFromGlobals();
         $previewPageToken = $request->get('__preview_Page');
