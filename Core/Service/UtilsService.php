@@ -220,7 +220,6 @@ class UtilsService
             }
 
             $tree = new Tree($nodes, [
-                'rootId' => null,
                 'buildwarningcallback' => function () {},
             ]);
             $result = $tree->getRootNodes();
