@@ -41,7 +41,7 @@ class UtilsService
             $items = $block->getItems() ? json_decode($block->getItems()) : [];
             foreach ($items as &$item) {
                 $choices = array();
-                if ($item->widget == 9 || $item->widget == 10) {
+                if (($item->widget == 9 || $item->widget == 10) && isset($item->sql)) {
                     preg_match('/\bfrom\b\s*(\w+)/i', $item->sql, $matches);
                     if (count($matches) == 2) {
                         if (substr($matches[1], 0, 1) == '_') {
