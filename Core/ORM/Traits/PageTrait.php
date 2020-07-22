@@ -122,19 +122,20 @@ trait PageTrait
     {
         if (!is_numeric($this->getTemplateFile())) {
             $json = json_decode($this->getTemplateFile());
+            if ($json) {
+                $templateName = $json->name;
+                $templateFile = preg_replace("/[^a-z0-9\_\-\.]/i", '', $json->file);
+                $templateFile = rtrim($templateFile, '.twig') . '.twig';
 
-            $templateName = $json->name;
-            $templateFile = preg_replace("/[^a-z0-9\_\-\.]/i", '', $json->file);
-            $templateFile = rtrim($templateFile, '.twig') . '.twig';
+                $fullClass = ModelService::fullClass($this->getPdo(), 'PageTemplate');
+                /** @var \MillenniumFalcon\Core\ORM\PageTemplate $orm */
+                $orm = new $fullClass($this->getPdo());
+                $orm->setTitle($templateName);
+                $orm->setFilename($templateFile);
+                $orm->save();
 
-            $fullClass = ModelService::fullClass($this->getPdo(), 'PageTemplate');
-            /** @var \MillenniumFalcon\Core\ORM\PageTemplate $orm */
-            $orm = new $fullClass($this->getPdo());
-            $orm->setTitle($templateName);
-            $orm->setFilename($templateFile);
-            $orm->save();
-
-            $this->setTemplateFile($orm->getId());
+                $this->setTemplateFile($orm->getId());
+            }
         }
         return parent::save($doNotSaveVersion, $options);
     }

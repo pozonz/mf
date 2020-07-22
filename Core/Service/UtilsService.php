@@ -219,6 +219,10 @@ class UtilsService
                 ]);
             }
 
+            usort($nodes, function($a, $b) {
+                return $a['rank'] >= $b['rank'];
+            });
+
             $tree = new Tree($nodes, [
                 'buildwarningcallback' => function () {},
             ]);
