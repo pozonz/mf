@@ -110,7 +110,7 @@
                         <select class="js-elem no-chosen js-after-chosen" id="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}">
                             <option></option>
                             {{#each choices}}
-                                <option {{#getByKeyAndCompare ../../block.values ../id @key}}selected{{/getByKeyAndCompare}} value="{{@key}}">{{this}}</option>
+                                <option {{#getByValueAndCompare ../../block.values ../id this}}selected{{/getByValueAndCompare}} value="{{#myOptionKey this}}{{/myOptionKey}}">{{#myOptionValue this}}{{/myOptionValue}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -121,7 +121,7 @@
                         <label>{{title}}</label>
                         <select class="js-elem no-chosen js-after-chosen" id="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}" multiple>
                             {{#each choices}}
-                                <option {{#getByKeyAndCompare ../../block.values ../id @key}}selected{{/getByKeyAndCompare}} value="{{@key}}">{{this}}</option>
+                                <option {{#getByValueAndCompare ../../block.values ../id this}}selected{{/getByValueAndCompare}} value="{{#myOptionKey this}}{{/myOptionKey}}">{{#myOptionValue this}}{{/myOptionValue}}</option>
                             {{/each}}
                         </select>
                     </div>

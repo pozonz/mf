@@ -56,7 +56,7 @@ class UtilsService
                         $stmt = $pdo->prepare($item->sql);
                         $stmt->execute();
                         foreach ($stmt->fetchAll() as $key => $val) {
-                            $choices[$val['key']] = $val['value'];
+                            $choices[] = $val['key'] . "-" . $val['value'];
                         }
                     }
                 }
