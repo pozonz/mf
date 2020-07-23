@@ -223,7 +223,7 @@ class Extension extends AbstractExtension
                 'id' => $page->getId(),
                 'title' => $page->getTitle(),
                 'parent' => $categoryParentValue,
-                'rank' => $categoryRankValue,
+                'rank' => (int)$categoryRankValue,
                 'status' => $page->getStatus(),
                 'closed' => $categoryClosedValue,
                 'extraInfo' => $page->getUrl(),
@@ -231,6 +231,10 @@ class Extension extends AbstractExtension
                 'extra2' => $page->getHideFromWebNav(),
             ]);
         }
+
+        usort($nodes, function($a, $b) {
+            return $a['rank'] >= $b['rank'];
+        });
 
         $tree = new Tree($nodes, [
             'buildwarningcallback' => function () {},
