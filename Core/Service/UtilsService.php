@@ -36,7 +36,9 @@ class UtilsService
         $pdo = $this->connection;
 
         $fullClass = ModelService::fullClass($pdo, 'FragmentBlock');
-        $blocks = $fullClass::active($pdo);
+        $blocks = $fullClass::active($pdo, [
+            'sort' => 'title',
+        ]);
         foreach ($blocks as $block) {
             $items = $block->getItems() ? json_decode($block->getItems()) : [];
             foreach ($items as &$item) {

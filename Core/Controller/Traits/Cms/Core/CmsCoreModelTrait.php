@@ -70,8 +70,8 @@ trait CmsCoreModelTrait
             } else {
                 $model->setNamespace('MillenniumFalcon\\Core\\ORM');
             }
-            _Model::setGenereatedFile($model, $this->container);
-            _Model::setCustomFile($model, $this->container);
+            _Model::setGenereatedFile($model, $this->kernel);
+            _Model::setCustomFile($model, $this->kernel);
 
             $fullClassname = $model->getNamespace() . '\\' . $model->getClassName();
 
