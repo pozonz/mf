@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 use BlueM\Tree;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\Tree\RawData;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -78,12 +79,15 @@ trait CmsCoreOrmsTrait
             $params['order'] = $order;
 
         } elseif ($model->getListType() == 2) {
-            $nodes = $fullClass::data($this->connection, [
-                "select" => 'm.id AS id, m.parentId AS parent, m.title, m.closed, m.status',
-                "sort" => 'm.rank',
-                "order" => 'ASC',
-                "orm" => 0,
-            ]);
+            $nodes = array_map(function ($itm) use ($model) {
+                return (array)new RawData([
+                    'id' => $itm->getId(),
+                    'parent' => $itm->getParentId(),
+                    'title' => $itm->getTitle(),
+                    'url' => '/manage/' . ($model->getDataType() == 2 ? 'admin' : '') . '/orms/' . $model->getClassName() . '/' . $itm->getId(),
+                    'status' => $itm->getStatus(),
+                ]);
+            }, $fullClass::data($this->connection));
 
             $tree = new Tree($nodes, [
                 'rootId' => null,

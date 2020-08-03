@@ -1,4 +1,5 @@
 {% extends 'cms/orms/orm.twig' %}
+
 {% block extraBodyClass %}page-orm mode-asset{% endblock %}
 
 {% set path = orm.folderPath %}
@@ -21,6 +22,8 @@
 {% endblock %}
 
 {% block formWidgets %}
+	{% form_theme form 'cms/form-file.twig' %}
+
 	<div class="asset-edit-single">
 		<div class="asset-record-fields">
 			{{ form_row(form.title) }}

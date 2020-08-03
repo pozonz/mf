@@ -130,26 +130,16 @@ trait WebCoreAssetTrait
                     'oneOrNull' => 1,
                 ));
 
-                if ($useWebp) {
-                    $thumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
 
-                    $resizeCmd = "-resize {$assetSize->getWidth()} 0";
-                    $cropCmd = '';
-                    if ($assetCrop) {
-                        $cropCmd = "-crop {$assetCrop->getX()} {$assetCrop->getY()} {$assetCrop->getWidth()} {$assetCrop->getHeight()}";
-                    }
-                    $command = getenv('CWEBP_CMD') . " $fileLocation {$cropCmd} {$resizeCmd} -o $thumbnail";
-
-                } else {
-                    $thumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
-                    $resizeCmd = "-resize {$assetSize->getWidth()}";
-                    $qualityCmd = "-quality 95";
-                    $cropCmd = '';
-                    if ($assetCrop) {
-                        $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
-                    }
-                    $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} $thumbnail";
+                $thumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
+                $resizeCmd = "-resize {$assetSize->getWidth()}";
+                $qualityCmd = "-quality 95";
+                $colorCmd = '-colorspace sRGB';
+                $cropCmd = '';
+                if ($assetCrop) {
+                    $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
                 }
+                $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} $thumbnail";
 
             } else {
                 $thumbnail = $fileLocation;
@@ -188,6 +178,16 @@ trait WebCoreAssetTrait
             if (!file_exists($thumbnail)) {
                 $returnValue = AssetService::generateOutput($command);
             }
+        }
+
+        if ($useWebp) {
+            $webpThumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
+            if (!file_exists($webpThumbnail)) {
+                $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
+                $returnValue = AssetService::generateOutput($command);
+            }
+            $thumbnail = $webpThumbnail;
+            $fileType = 'image/webp';
         }
 
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));
