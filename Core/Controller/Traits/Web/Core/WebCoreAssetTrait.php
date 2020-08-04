@@ -108,6 +108,10 @@ trait WebCoreAssetTrait
         $fileExtension = $asset->getFileExtension();
         $fileLocation = $uploadPath . $asset->getFileLocation();
 
+        if ($assetSizeCode == 1) {
+            $assetSizeCode = null;
+        }
+
         if ($asset->getIsImage()) {
             if ($assetSizeCode) {
                 $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
@@ -180,7 +184,7 @@ trait WebCoreAssetTrait
             }
         }
 
-        if ($useWebp) {
+        if ($useWebp && $assetSizeCode) {
             $webpThumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
             if (!file_exists($webpThumbnail)) {
                 $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
