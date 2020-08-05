@@ -280,7 +280,11 @@ trait CmsCoreRestFileTrait
         $id = $request->get('id');
 
         $fullClass = ModelService::fullClass($this->connection, 'Asset');
-        $orm = $fullClass::getById($this->connection, $id);
+
+        $orm = $fullClass::getByField($this->connection, 'code', $id);
+        if (!$orm) {
+            $orm = $fullClass::getById($this->connection, $id);
+        }
         return new JsonResponse($orm);
     }
 

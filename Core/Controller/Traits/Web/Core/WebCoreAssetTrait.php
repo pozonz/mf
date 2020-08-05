@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 trait WebCoreAssetTrait
 {
@@ -111,6 +112,40 @@ trait WebCoreAssetTrait
         if ($assetSizeCode == 1) {
             $assetSizeCode = null;
         }
+
+        if ($fileType == 'image/svg+xml') {
+            $assetSizeCode = null;
+        }
+
+//        if ($fileType ==  'application/pdf') {
+//            //1. build a url for the pdf
+//            $url = $request->getSchemeAndHttpHost() . "/downloads/assets/{$assetCode}";
+//
+//            //replace this with guzzle????
+//            //2. build a request for the pdf service
+//            $payload = [
+//                'url' => $url,
+//                'token' => getenv('PDF_RASTER_TOKEN')
+//            ];
+//
+//            //3. fetch the pdf.
+//            $opts = array('http' =>
+//                array(
+//                    'method'  => 'POST',
+//                    'header'  => 'Content-type: application/json',
+//                    'content' => json_encode($payload)
+//                )
+//            );
+//
+//
+//            $data = file_get_contents(getenv('PDF_RASTER_ENDPOINT'), false, stream_context_create($opts));
+//
+//            $ff = new \finfo(\FILEINFO_MIME_TYPE);
+//            $mime  = $ff->buffer($data);
+//
+//            var_dump($mime);exit;
+//
+//        }
 
         if ($asset->getIsImage()) {
             if ($assetSizeCode) {
