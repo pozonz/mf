@@ -55,6 +55,12 @@
 
         <div>
             <div class="formStyle">
+                {{ form_label(form.dataGroups) }}
+                {{ form_widget(form.dataGroups, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.dataGroups) }}
+            </div>
+
+            <div class="formStyle">
                 {{ form_label(form.dataType) }}
                 {{ form_widget(form.dataType) }}
                 {{ form_errors(form.dataType) }}
@@ -64,14 +70,6 @@
                 {{ form_label(form.siteMapUrl) }}
                 {{ form_widget(form.siteMapUrl) }}
                 {{ form_errors(form.siteMapUrl) }}
-            </div>
-
-            <div class="model-data-group js-model-data-group" style="display: none;">
-                <div class="formStyle">
-                    {{ form_label(form.dataGroups) }}
-                    {{ form_widget(form.dataGroups, {attr: {class: 'form-control'}}) }}
-                    {{ form_errors(form.dataGroups) }}
-                </div>
             </div>
         </div>
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Controller\Traits\Cms;
+namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
 use BlueM\Tree;
 use BlueM\Tree\Node;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-trait CmsRestProductTrait
+trait CmsCoreRestProductTrait
 {
     /**
      * @route("/manage/rest/product-categories")

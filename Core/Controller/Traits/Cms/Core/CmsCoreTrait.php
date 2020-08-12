@@ -280,7 +280,7 @@ trait CmsCoreTrait
             'title' => $model->getTitle(),
             'url' => "{$baseUrl}/orms/{$modelClassName}",
             'template' => $fullClass::getCmsOrmsTwig() ?: $ormsListTwig[$model->getListType()],
-            'status' => 1,
+            'status' => $model->getDataType() == 3 ? 3 : 1,
             'allowExtra' => 1,
             'maxParams' => 1,
         ]);

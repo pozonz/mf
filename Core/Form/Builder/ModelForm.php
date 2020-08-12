@@ -66,11 +66,10 @@ class ModelForm extends AbstractType
                 'choices' => $defaultSortByOptions,
             ))
             ->add('dataType', ChoiceType::class, array(
-                'label' => 'Display In:',
+                'label' => 'Visibility:',
                 'choices' => array(
-                    'Admin' => 1,
-                    'Custom Sections' => 0,
-                    'Hidden' => 2,
+                    'Show' => 0,
+                    'Hidden' => 3,
                 )
             ))
             ->add('defaultOrder', ChoiceType::class, array(
