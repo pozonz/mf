@@ -87,7 +87,7 @@ trait CmsCoreOrmsTrait
                     'id' => $itm->getId(),
                     'parent' => $itm->getParentId(),
                     'title' => $itm->getTitle(),
-                    'url' => "/manage/orms/{$className}/",
+                    'url' => '/manage/' . ($model->getDataType() == 2 ? 'admin' : '') . '/orms/' . $model->getClassName() . '/',
                     'template' => $fullClass::getCmsOrmTwig(),
                     'status' => $itm->getStatus(),
                     'allowExtra' => 1,

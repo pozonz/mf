@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 trait WebCoreAssetTrait
 {
@@ -108,6 +109,44 @@ trait WebCoreAssetTrait
         $fileExtension = $asset->getFileExtension();
         $fileLocation = $uploadPath . $asset->getFileLocation();
 
+        if ($assetSizeCode == 1) {
+            $assetSizeCode = null;
+        }
+
+        if ($fileType == 'image/svg+xml') {
+            $assetSizeCode = null;
+        }
+
+//        if ($fileType ==  'application/pdf') {
+//            //1. build a url for the pdf
+//            $url = $request->getSchemeAndHttpHost() . "/downloads/assets/{$assetCode}";
+//
+//            //replace this with guzzle????
+//            //2. build a request for the pdf service
+//            $payload = [
+//                'url' => $url,
+//                'token' => getenv('PDF_RASTER_TOKEN')
+//            ];
+//
+//            //3. fetch the pdf.
+//            $opts = array('http' =>
+//                array(
+//                    'method'  => 'POST',
+//                    'header'  => 'Content-type: application/json',
+//                    'content' => json_encode($payload)
+//                )
+//            );
+//
+//
+//            $data = file_get_contents(getenv('PDF_RASTER_ENDPOINT'), false, stream_context_create($opts));
+//
+//            $ff = new \finfo(\FILEINFO_MIME_TYPE);
+//            $mime  = $ff->buffer($data);
+//
+//            var_dump($mime);exit;
+//
+//        }
+
         if ($asset->getIsImage()) {
             if ($assetSizeCode) {
                 $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
@@ -130,26 +169,16 @@ trait WebCoreAssetTrait
                     'oneOrNull' => 1,
                 ));
 
-                if ($useWebp) {
-                    $thumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
 
-                    $resizeCmd = "-resize {$assetSize->getWidth()} 0";
-                    $cropCmd = '';
-                    if ($assetCrop) {
-                        $cropCmd = "-crop {$assetCrop->getX()} {$assetCrop->getY()} {$assetCrop->getWidth()} {$assetCrop->getHeight()}";
-                    }
-                    $command = getenv('CWEBP_CMD') . " $fileLocation {$cropCmd} {$resizeCmd} -o $thumbnail";
-
-                } else {
-                    $thumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
-                    $resizeCmd = "-resize {$assetSize->getWidth()}";
-                    $qualityCmd = "-quality 95";
-                    $cropCmd = '';
-                    if ($assetCrop) {
-                        $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
-                    }
-                    $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} $thumbnail";
+                $thumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
+                $resizeCmd = "-resize {$assetSize->getWidth()}";
+                $qualityCmd = "-quality 95";
+                $colorCmd = '-colorspace sRGB';
+                $cropCmd = '';
+                if ($assetCrop) {
+                    $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
                 }
+                $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} $thumbnail";
 
             } else {
                 $thumbnail = $fileLocation;
@@ -188,6 +217,16 @@ trait WebCoreAssetTrait
             if (!file_exists($thumbnail)) {
                 $returnValue = AssetService::generateOutput($command);
             }
+        }
+
+        if ($useWebp && $assetSizeCode) {
+            $webpThumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
+            if (!file_exists($webpThumbnail)) {
+                $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
+                $returnValue = AssetService::generateOutput($command);
+            }
+            $thumbnail = $webpThumbnail;
+            $fileType = 'image/webp';
         }
 
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));
