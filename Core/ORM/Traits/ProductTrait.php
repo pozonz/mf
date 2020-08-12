@@ -175,12 +175,13 @@ trait ProductTrait
      */
     public function objTitle()
     {
-        return rtrim(
-            ($this->getSubtitle() ? "({$this->getSubtitle()}) " : '')
-            . ($this->getBrand() ? "{$this->getBrand()} " : '')
-            . ($this->getType() ? "{$this->getType()} " : '')
-            . ($this->getTitle() ? "{$this->getTitle()} " : '')
-        );
+        return rtrim($this->getTitle());
+//        return rtrim(
+//            ($this->getSubtitle() ? "({$this->getSubtitle()}) " : '')
+//            . ($this->getBrand() ? "{$this->getBrand()} " : '')
+//            . ($this->getType() ? "{$this->getType()} " : '')
+//            . ($this->getTitle() ? "{$this->getTitle()} " : '')
+//        );
     }
 
     /**
