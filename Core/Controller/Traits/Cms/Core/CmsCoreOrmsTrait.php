@@ -5,9 +5,9 @@ namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 use BlueM\Tree;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
-use MillenniumFalcon\Core\Tree\RawData;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use MillenniumFalcon\Core\Tree\RawData;
 
 trait CmsCoreOrmsTrait
 {
@@ -79,15 +79,22 @@ trait CmsCoreOrmsTrait
             $params['order'] = $order;
 
         } elseif ($model->getListType() == 2) {
-            $nodes = array_map(function ($itm) use ($model) {
-                return (array)new RawData([
+            $result = $fullClass::data($this->connection);
+
+            $nodes = [];
+            foreach ($result as $itm) {
+                $nodes[] = (array)new RawData([
                     'id' => $itm->getId(),
                     'parent' => $itm->getParentId(),
                     'title' => $itm->getTitle(),
-                    'url' => '/manage/' . ($model->getDataType() == 2 ? 'admin' : '') . '/orms/' . $model->getClassName() . '/' . $itm->getId(),
+                    'url' => '/manage/' . ($model->getDataType() == 2 ? 'admin' : '') . '/orms/' . $model->getClassName() . '/',
+                    'template' => $fullClass::getCmsOrmTwig(),
                     'status' => $itm->getStatus(),
+                    'allowExtra' => 1,
+                    'maxParams' => 3,
+                    'closed' => $itm->getClosed(),
                 ]);
-            }, $fullClass::data($this->connection));
+            }
 
             $tree = new Tree($nodes, [
                 'rootId' => null,

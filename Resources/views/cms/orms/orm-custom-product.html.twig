@@ -2,18 +2,18 @@
 
 {% block formWidgets %}
     {{ form_row(form.title) }}
-    {{ form_row(form.subtitle) }}
+    {{ form_row(form.sku) }}
     {{ form_row(form.brand) }}
-    {{ form_row(form.type) }}
+{#    {{ form_row(form.type) }}#}
 
     {{ form_row(form.categories) }}
-    {{ form_row(form.sku) }}
 
     {{ form_row(form.noMemberDiscount) }}
     {{ form_row(form.noPromoDiscount) }}
     {{ form_row(form.pageRank) }}
 
     {{ form_row(form.gallery) }}
+    {{ form_row(form.subtitle) }}
     {{ form_row(form.description) }}
 
     <div class="variant-container">

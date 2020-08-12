@@ -9,12 +9,11 @@ use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreOrmsTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreOrmTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreRestFileTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreRestPageTrait;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreRestProductTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreRestTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreLoginTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsOrmCartTrait;
-use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsRestFileTrait;
-use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsRestProductTrait;
 use MillenniumFalcon\Core\RouterController;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -31,9 +30,9 @@ class CmsController extends RouterController
         CmsCoreRestFileTrait,
         CmsCoreRestPageTrait,
 
+        CmsCoreRestProductTrait,
 
 //        CmsOrmCartTrait,
-//        CmsRestProductTrait,
 
         CmsCoreTrait;
 
