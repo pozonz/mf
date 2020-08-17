@@ -143,31 +143,32 @@ trait ProductTrait
 
     public function objSuitableFor()
     {
-        $pdo = $this->getPdo();
-        $fullClass = ModelService::fullClass($pdo, 'ProductCategory');
-        $tree = new \BlueM\Tree($fullClass::data($pdo, [
-            "select" => 'm.id AS id, m.parentId AS parent, m.title',
-            "sort" => 'm.rank',
-            "order" => 'ASC',
-            "orm" => 0,
-        ]), [
-            'rootId' => null,
-            'buildwarningcallback' => function () {},
-        ]);
-
-        $suitableFor = [];
-        $objCategories = $this->objCategories();
-        foreach ($objCategories as $objCategory) {
-            $node = $tree->getNodeById($objCategory->getId());
-            $ancesters = $node->getAncestors();
-            $ancester = end($ancesters);
-
-            if (!isset($suitableFor[$ancester->title])) {
-                $suitableFor[$ancester->title] = [];
-            }
-            $suitableFor[$ancester->title][] = $objCategory->getTitle();
-        }
-        return $suitableFor;
+        return null;
+//        $pdo = $this->getPdo();
+//        $fullClass = ModelService::fullClass($pdo, 'ProductCategory');
+//        $tree = new \BlueM\Tree($fullClass::data($pdo, [
+//            "select" => 'm.id AS id, m.parentId AS parent, m.title',
+//            "sort" => 'm.rank',
+//            "order" => 'ASC',
+//            "orm" => 0,
+//        ]), [
+//            'rootId' => null,
+//            'buildwarningcallback' => function () {},
+//        ]);
+//
+//        $suitableFor = [];
+//        $objCategories = $this->objCategories();
+//        foreach ($objCategories as $objCategory) {
+//            $node = $tree->getNodeById($objCategory->getId());
+//            $ancesters = $node->getAncestors();
+//            $ancester = end($ancesters);
+//
+//            if (!isset($suitableFor[$ancester->title])) {
+//                $suitableFor[$ancester->title] = [];
+//            }
+//            $suitableFor[$ancester->title][] = $objCategory->getTitle();
+//        }
+//        return $suitableFor;
     }
 
     /**
@@ -206,7 +207,7 @@ trait ProductTrait
      */
     public function save($doNotSaveVersion = false, $options = [])
     {
-        $this->objSuitableFor();
+//        $this->objSuitableFor();
 
         $slugify = new Slugify(['trim' => false]);
         $this->setUrl($slugify->slugify("{$this->objTitle()}-{$this->getId()}", [
