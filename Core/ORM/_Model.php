@@ -349,6 +349,7 @@ EOD;
             'Text' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
             'Textarea' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType',
             'Hidden' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\HiddenType',
+            'MKVP' => '\\MillenniumFalcon\\Core\\Form\\Type\\MkvpType',
         );
         global $CUSTOM_WIDGETS;
         if ($CUSTOM_WIDGETS) {

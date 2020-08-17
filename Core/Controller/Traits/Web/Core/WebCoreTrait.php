@@ -87,7 +87,7 @@ trait WebCoreTrait
                     'includePreviousVersion' => 1,
                 ]);
             } else {
-                $pages = $fullClass::data($this->connection);
+                $pages = $fullClass::active($this->connection);
             }
         } catch (\Exception $ex) {
         }

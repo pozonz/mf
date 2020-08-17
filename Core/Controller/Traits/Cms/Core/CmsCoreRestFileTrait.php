@@ -18,6 +18,55 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsCoreRestFileTrait
 {
     /**
+     * @route("/manage/rest/asset/file/current-folder")
+     * @return Response
+     */
+    public function assetAjaxFilesCurrentFolderSet(Request $request)
+    {
+        $modelName = $request->get('modelName');
+        $attributeName = $request->get('attributeName');
+        $ormId = $request->get('ormId');
+        $currentAssetId = $request->get('currentAssetId') ?: 0;
+
+        $currentFolderId = 0;
+
+        if ($modelName && $attributeName && $ormId) {
+            $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
+            $assetOrm = $fullClass::data($this->connection, array(
+                'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
+                'params' => array($modelName, $attributeName, $ormId),
+                'limit' => 1,
+                'oneOrNull' => 1,
+            ));
+
+            if ($assetOrm) {
+                $fullClass = ModelService::fullClass($this->connection, 'Asset');
+                $asset = $fullClass::getById($this->connection, $assetOrm->getTitle());
+                if ($asset) {
+                    $currentFolderId = $asset->getParentId();
+                }
+            }
+        }
+
+        if ($currentAssetId) {
+            $fullClass = ModelService::fullClass($this->connection, 'Asset');
+            $asset = $fullClass::getById($this->connection, $currentAssetId);
+            if (!$asset) {
+                $asset = $fullClass::getByField($this->connection, 'code', $currentAssetId);
+            }
+            if ($asset) {
+                $currentFolderId = $asset->getParentId();
+            }
+        }
+
+        $this->container->get('session')->set('currentFolderId', $currentFolderId);
+
+        return new JsonResponse(array(
+            'currentFolderId' => $currentFolderId,
+        ));
+    }
+
+    /**
      * @route("/manage/rest/asset/files/chosen/rank")
      * @return Response
      */
