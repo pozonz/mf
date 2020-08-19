@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\Controller\Traits\Web\Core;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Tree\RawData;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -64,6 +65,15 @@ trait WebCoreTrait
     public function web(Request $request)
     {
         $params = $this->getTemplateParams($request);
+        $theNode = $params['theNode'];
+        $pageOrm = $theNode->getExtraInfo();
+        if ($pageOrm->getType() == 2 && $pageOrm->getRedirectTo() && $pageOrm->getRedirectTo() != $pageOrm->getUrl()) {
+            $redirectTo = $pageOrm->getRedirectTo();
+            if (strpos($redirectTo, '?') === false and $request->getQueryString()) {
+                $redirectTo .= '?' . $request->getQueryString();
+            }
+            return new RedirectResponse($redirectTo);
+        }
         return $this->render($params['theNode']->extraInfo->objPageTempalte()->getFilename(), $params);
     }
 
