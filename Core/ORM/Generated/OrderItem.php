@@ -39,7 +39,22 @@ class OrderItem extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $noMemberDiscount;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $noPromoDiscount;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $price;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $discount;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -60,6 +75,26 @@ class OrderItem extends Base
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $totalWeight;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $totalDiscount;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $totalCompareAtPrice;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $imageUrl;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $productPageUrl;
     
     /**
      * @return mixed
@@ -160,6 +195,38 @@ class OrderItem extends Base
     /**
      * @return mixed
      */
+    public function getNoMemberDiscount()
+    {
+        return $this->noMemberDiscount;
+    }
+    
+    /**
+     * @param mixed noMemberDiscount
+     */
+    public function setNoMemberDiscount($noMemberDiscount)
+    {
+        $this->noMemberDiscount = $noMemberDiscount;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getNoPromoDiscount()
+    {
+        return $this->noPromoDiscount;
+    }
+    
+    /**
+     * @param mixed noPromoDiscount
+     */
+    public function setNoPromoDiscount($noPromoDiscount)
+    {
+        $this->noPromoDiscount = $noPromoDiscount;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getPrice()
     {
         return $this->price;
@@ -171,6 +238,22 @@ class OrderItem extends Base
     public function setPrice($price)
     {
         $this->price = $price;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+    
+    /**
+     * @param mixed discount
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
     }
     
     /**
@@ -235,6 +318,70 @@ class OrderItem extends Base
     public function setTotalWeight($totalWeight)
     {
         $this->totalWeight = $totalWeight;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getTotalDiscount()
+    {
+        return $this->totalDiscount;
+    }
+    
+    /**
+     * @param mixed totalDiscount
+     */
+    public function setTotalDiscount($totalDiscount)
+    {
+        $this->totalDiscount = $totalDiscount;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getTotalCompareAtPrice()
+    {
+        return $this->totalCompareAtPrice;
+    }
+    
+    /**
+     * @param mixed totalCompareAtPrice
+     */
+    public function setTotalCompareAtPrice($totalCompareAtPrice)
+    {
+        $this->totalCompareAtPrice = $totalCompareAtPrice;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
+    }
+    
+    /**
+     * @param mixed imageUrl
+     */
+    public function setImageUrl($imageUrl)
+    {
+        $this->imageUrl = $imageUrl;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getProductPageUrl()
+    {
+        return $this->productPageUrl;
+    }
+    
+    /**
+     * @param mixed productPageUrl
+     */
+    public function setProductPageUrl($productPageUrl)
+    {
+        $this->productPageUrl = $productPageUrl;
     }
     
 }

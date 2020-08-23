@@ -3,8 +3,10 @@
 namespace MillenniumFalcon\Core\ORM;
 
 use MillenniumFalcon\Core\ORM\Traits\ProductVariantTrait;
+use MillenniumFalcon\Core\Pattern\Cart\CartProductVariantInterface;
+use MillenniumFalcon\Core\Pattern\Cart\CartProductVariantTrait;
 
-class ProductVariant extends \MillenniumFalcon\Core\ORM\Generated\ProductVariant
+class ProductVariant extends \MillenniumFalcon\Core\ORM\Generated\ProductVariant implements CartProductVariantInterface
 {
-    use ProductVariantTrait;
+    use ProductVariantTrait, CartProductVariantTrait;
 }

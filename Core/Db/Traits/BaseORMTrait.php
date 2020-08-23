@@ -4,8 +4,8 @@ namespace MillenniumFalcon\Core\Db\Traits;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\Pattern\Version\VersionInterface;
 use MillenniumFalcon\Core\Service\ModelService;
-use MillenniumFalcon\Core\Version\VersionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 trait BaseORMTrait
@@ -55,6 +55,9 @@ trait BaseORMTrait
 
         if (method_exists($this, 'getTitle')) {
             $slugify = new Slugify(['trim' => false]);
+//            $this->setSlug($slugify->slugify("{$this->getTitle()}-{$this->getId()}", [
+//                'trim' => true,
+//            ]));
             $this->setSlug($slugify->slugify($this->getTitle()));
         }
 

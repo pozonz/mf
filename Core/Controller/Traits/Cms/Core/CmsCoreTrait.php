@@ -254,7 +254,6 @@ trait CmsCoreTrait
         return $nodes;
     }
 
-
     /**
      * @param $nodes
      * @param $parentId

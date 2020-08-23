@@ -69,7 +69,39 @@ abstract class Base implements \JsonSerializable
             $getMethod = "get" . ucfirst($field);
             $obj->{$field} = $this->$getMethod();
         }
+
+
+        $class = new \ReflectionClass(get_called_class());
+        $methods = $class->getMethods();
+
+        foreach ($methods as $method) {
+            $methodName = $method->getName();
+            if (strpos($methodName, 'obj') === 0) {
+                $obj->{$methodName} = $this->$methodName();
+            }
+        }
+
         return $obj;
     }
 
+    /**
+     * @return mixed
+     */
+    public function objContent()
+    {
+        if (!method_exists($this, 'getContent')) {
+            return null;
+        }
+        
+        $result = [];
+        $objContent = json_decode($this->getContent());
+        if ($objContent === null && json_last_error() !== JSON_ERROR_NONE) {
+            $objContent = [];
+        }
+
+        foreach ($objContent as $itm) {
+            $result[$itm->attr] = $itm;
+        }
+        return $result;
+    }
 }

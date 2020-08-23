@@ -14,21 +14,6 @@ class Product extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $subtitle;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $brand;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $type;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
     private $categories;
     
     /**
@@ -84,17 +69,12 @@ class Product extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $fromPrice;
+    private $price;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $compareAtPrice;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $lowStock;
+    private $salePrice;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -104,22 +84,7 @@ class Product extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $onSaleActive;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $thumbnail;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $url;
-    
-    /**
-     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $content;
+    private $lowStock;
     
     /**
      * @return mixed
@@ -135,54 +100,6 @@ class Product extends Base
     public function setTitle($title)
     {
         $this->title = $title;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getSubtitle()
-    {
-        return $this->subtitle;
-    }
-    
-    /**
-     * @param mixed subtitle
-     */
-    public function setSubtitle($subtitle)
-    {
-        $this->subtitle = $subtitle;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getBrand()
-    {
-        return $this->brand;
-    }
-    
-    /**
-     * @param mixed brand
-     */
-    public function setBrand($brand)
-    {
-        $this->brand = $brand;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-    
-    /**
-     * @param mixed type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
     }
     
     /**
@@ -364,49 +281,33 @@ class Product extends Base
     /**
      * @return mixed
      */
-    public function getFromPrice()
+    public function getPrice()
     {
-        return $this->fromPrice;
+        return $this->price;
     }
     
     /**
-     * @param mixed fromPrice
+     * @param mixed price
      */
-    public function setFromPrice($fromPrice)
+    public function setPrice($price)
     {
-        $this->fromPrice = $fromPrice;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getCompareAtPrice()
-    {
-        return $this->compareAtPrice;
-    }
-    
-    /**
-     * @param mixed compareAtPrice
-     */
-    public function setCompareAtPrice($compareAtPrice)
-    {
-        $this->compareAtPrice = $compareAtPrice;
+        $this->price = $price;
     }
     
     /**
      * @return mixed
      */
-    public function getLowStock()
+    public function getSalePrice()
     {
-        return $this->lowStock;
+        return $this->salePrice;
     }
     
     /**
-     * @param mixed lowStock
+     * @param mixed salePrice
      */
-    public function setLowStock($lowStock)
+    public function setSalePrice($salePrice)
     {
-        $this->lowStock = $lowStock;
+        $this->salePrice = $salePrice;
     }
     
     /**
@@ -428,65 +329,17 @@ class Product extends Base
     /**
      * @return mixed
      */
-    public function getOnSaleActive()
+    public function getLowStock()
     {
-        return $this->onSaleActive;
+        return $this->lowStock;
     }
     
     /**
-     * @param mixed onSaleActive
+     * @param mixed lowStock
      */
-    public function setOnSaleActive($onSaleActive)
+    public function setLowStock($lowStock)
     {
-        $this->onSaleActive = $onSaleActive;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getThumbnail()
-    {
-        return $this->thumbnail;
-    }
-    
-    /**
-     * @param mixed thumbnail
-     */
-    public function setThumbnail($thumbnail)
-    {
-        $this->thumbnail = $thumbnail;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-    
-    /**
-     * @param mixed url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-    
-    /**
-     * @param mixed content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
+        $this->lowStock = $lowStock;
     }
     
 }

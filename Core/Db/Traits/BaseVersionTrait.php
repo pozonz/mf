@@ -2,10 +2,24 @@
 
 namespace MillenniumFalcon\Core\Db\Traits;
 
-use MillenniumFalcon\Core\Version\VersionInterface;
+use MillenniumFalcon\Core\Pattern\Version\VersionInterface;
 
 trait BaseVersionTrait
 {
+    /**
+     * @param $siteMapUrl
+     * @return string|string[]|null
+     */
+    public function getFrontendUrlByCustomUrl($customUrl)
+    {
+        $fields = array_keys(static::getFields());
+        foreach ($fields as $field) {
+            $method = 'get' . ucfirst($field);
+            $customUrl = str_replace("{{{$field}}}", $this->$method(), $customUrl);
+        }
+        return $customUrl;
+    }
+
     /**
      * Return the front-end URL by replacing the value of the sitemap URL's variables
      * @return string|string[]|null
@@ -13,32 +27,11 @@ trait BaseVersionTrait
     public function getFrontendUrl()
     {
         $model = $this->getModel();
-        $siteMapUrl = $model->getSiteMapUrl();
-        if (!$siteMapUrl) {
-            return null;
+        if (!$model) {
+            $frontendUrl = $model->getFrontendUrl();
+            return $this->getFrontendUrlByCustomUrl($frontendUrl);
         }
-        $frontendUrl = $siteMapUrl;
-        $fields = array_keys(static::getFields());
-        foreach ($fields as $field) {
-            $method = 'get' . ucfirst($field);
-            $frontendUrl = str_replace("{{{$field}}}", $this->$method(), $frontendUrl);
-        }
-        return $frontendUrl;
-    }
-
-    /**
-     * @param $siteMapUrl
-     * @return string|string[]|null
-     */
-    public function getFrontendUrlBySiteMapUrl($siteMapUrl)
-    {
-        $frontendUrl = $siteMapUrl;
-        $fields = array_keys(static::getFields());
-        foreach ($fields as $field) {
-            $method = 'get' . ucfirst($field);
-            $frontendUrl = str_replace("{{{$field}}}", $this->$method(), $frontendUrl);
-        }
-        return $frontendUrl;
+        return null;
     }
 
     /**

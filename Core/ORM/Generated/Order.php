@@ -194,6 +194,16 @@ class Order extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $discountType;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $discountValue;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $weight;
     
     /**
@@ -826,6 +836,38 @@ class Order extends Base
     public function setPromoCode($promoCode)
     {
         $this->promoCode = $promoCode;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getDiscountType()
+    {
+        return $this->discountType;
+    }
+    
+    /**
+     * @param mixed discountType
+     */
+    public function setDiscountType($discountType)
+    {
+        $this->discountType = $discountType;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getDiscountValue()
+    {
+        return $this->discountValue;
+    }
+    
+    /**
+     * @param mixed discountValue
+     */
+    public function setDiscountValue($discountValue)
+    {
+        $this->discountValue = $discountValue;
     }
     
     /**

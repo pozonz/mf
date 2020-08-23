@@ -6,13 +6,18 @@ use MillenniumFalcon\Core\ORM\_Model;
 
 trait BaseModelTrait
 {
+    protected $model;
+
     /**
      * @return array|null
      */
     public function getModel()
     {
-        $rc = static::getReflectionClass();
-        return _Model::getByField($this->getPdo(), 'className', $rc->getShortName());
+        if (!$this->model) {
+            $rc = static::getReflectionClass();
+            $this->model = _Model::getByField($this->getPdo(), 'className', $rc->getShortName());
+        }
+        return $this->model;
     }
 
     /**

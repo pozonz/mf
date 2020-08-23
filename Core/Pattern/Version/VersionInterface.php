@@ -1,6 +1,6 @@
 <?php
 
-namespace MillenniumFalcon\Core\Version;
+namespace MillenniumFalcon\Core\Pattern\Version;
 
 Interface VersionInterface
 {

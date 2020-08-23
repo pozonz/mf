@@ -25,16 +25,12 @@ class CmsController extends RouterController
         CmsCoreModelTrait,
         CmsCoreOrmsTrait,
         CmsCoreOrmTrait,
-
         CmsCoreRestTrait,
         CmsCoreRestFileTrait,
         CmsCoreRestPageTrait,
-
         CmsCoreRestProductTrait,
-
-//        CmsOrmCartTrait,
-
-        CmsCoreTrait;
+        CmsCoreTrait
+        ;
 
     /**
      * @var Connection

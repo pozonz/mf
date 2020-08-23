@@ -193,23 +193,6 @@ trait PageTrait
     }
 
     /**
-     * @return mixed
-     */
-    public function objContent()
-    {
-        $result = [];
-        $objContent = json_decode($this->getContent());
-        if ($objContent === null && json_last_error() !== JSON_ERROR_NONE) {
-            $objContent = [];
-        }
-
-        foreach ($objContent as $itm) {
-            $result[$itm->attr] = $itm;
-        }
-        return $result;
-    }
-
-    /**
      * @return string
      */
     static public function getCmsOrmsTwig()
