@@ -46,6 +46,11 @@ trait OrderItemTrait
      */
     public function update($order, $customer)
     {
+        if ($this->getQuantity() <= 0) {
+            $this->delete();
+            return false;
+        }
+
         $variant = $this->objProductVariant();
         if (!$variant || !$variant->getStatus()) {
             $this->delete();

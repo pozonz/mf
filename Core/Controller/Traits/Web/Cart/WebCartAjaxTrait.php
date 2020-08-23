@@ -61,6 +61,7 @@ trait WebCartAjaxTrait
         foreach ($orderItems as $itm) {
             if ($itm->getProductId() == $variant->getId()) {
                 $itm->setQuantity($itm->getQuantity() + $qty);
+                $itm->save();
                 $exist = true;
             }
         }
@@ -73,6 +74,82 @@ trait WebCartAjaxTrait
             $orderItem->setProductId($variant->getId());
             $orderItem->setQuantity($qty);
             $orderItem->save();
+        }
+
+        $order->update($customer);
+
+        return new JsonResponse([
+            'order' => $order,
+        ]);
+    }
+
+    /**
+     * @Route("/cart/order/item/qty")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function changeOrderItemQty(Request $request)
+    {
+        $id = $request->get('id');
+        $qty = $request->get('qty');
+
+        $customer = $this->cartService->getCustomer();
+        $order = $this->cartService->getOrder();
+
+        $orderItems = $order->objOrderItems();
+        foreach ($orderItems as $itm) {
+            if ($itm->getId() == $id) {
+                $itm->setQuantity($qty);
+                $itm->save();
+            }
+        }
+
+        $order->update($customer);
+
+        return new JsonResponse([
+            'order' => $order,
+        ]);
+    }
+
+    /**
+     * @Route("/cart/order/item/delete")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteOrderItem(Request $request)
+    {
+        $id = $request->get('id');
+
+        $customer = $this->cartService->getCustomer();
+        $order = $this->cartService->getOrder();
+
+        $orderItems = $order->objOrderItems();
+        foreach ($orderItems as $itm) {
+            if ($itm->getId() == $id) {
+                $itm->delete();
+            }
+        }
+
+        $order->update($customer);
+
+        return new JsonResponse([
+            'order' => $order,
+        ]);
+    }
+
+    /**
+     * @Route("/cart/order/clear")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function clearOrder(Request $request)
+    {
+        $customer = $this->cartService->getCustomer();
+        $order = $this->cartService->getOrder();
+
+        $orderItems = $order->objOrderItems();
+        foreach ($orderItems as $itm) {
+            $itm->delete();
         }
 
         $order->update($customer);

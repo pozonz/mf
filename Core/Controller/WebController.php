@@ -9,7 +9,10 @@ use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreAssetTrait;
 use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreTrait;
 use MillenniumFalcon\Core\RouterController;
 use MillenniumFalcon\Core\Service\CartService;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Twig\Environment;
 
 class WebController extends RouterController
 {
@@ -35,10 +38,13 @@ class WebController extends RouterController
      */
     protected $cartService;
 
+
     /**
      * WebController constructor.
      * @param Connection $connection
      * @param KernelInterface $kernel
+     * @param CartService $cartService
+     * @param Environment $environment
      */
     public function __construct(Connection $connection, KernelInterface $kernel, CartService $cartService)
     {

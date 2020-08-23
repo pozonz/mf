@@ -81,40 +81,39 @@ class CartService
             $orderId = $this->session->get(static::SESSION_ID);
             $order = $fullClass::getById($this->connection, $orderId);
 
-            $oldOrder = null;
-            if (!$order || $order->getCategory() != static::STATUS_UNPAID) {
+            if (!$order) {
 
-                if ($order && $order->getCategory() == static::STATUS_SUBMITTED) {
-                    $oldOrder = clone $order;
-
-                    //created a new order and copy the current items over
-                    $order->setId(null);
-                    $order->setUniqId(uniqid());
-                    $order->setSubmitted(null);
-                    $order->setSubmittedDate(null);
-                    $order->setCategory(static::STATUS_UNPAID);
-                    $order->setAdded(date('Y-m-d H:i:s'));
-                    $order->setModified(date('Y-m-d H:i:s'));
-                    $order->save();
-
-                    $this->copyOrderItems($order, $oldOrder);
-
-                } else {
-
-                    //created a new order only
-                    $order = new $fullClass($this->connection);
-                    $order->setCategory(static::STATUS_UNPAID);
-                    $order->setBillingSame(1);
-                    $order->save();
-
-                }
+                //created a new order only
+                $order = new $fullClass($this->connection);
+                $order->setCategory(static::STATUS_UNPAID);
+                $order->setBillingSame(1);
+                $order->save();
 
                 //reset the order id
                 $order->setTitle(UtilsService::generateHex(4) . '-' . $order->getId());
                 $order->save();
 
-                $this->session->set(static::SESSION_ID, $order->getId());
+            } else if ($order->getCategory() != static::STATUS_UNPAID) {
+                $oldOrder = clone $order;
+
+                //created a new order and copy the current items over
+                $order->setId(null);
+                $order->setUniqId(uniqid());
+                $order->setSubmitted(null);
+                $order->setSubmittedDate(null);
+                $order->setCategory(static::STATUS_UNPAID);
+                $order->setAdded(date('Y-m-d H:i:s'));
+                $order->setModified(date('Y-m-d H:i:s'));
+                $order->save();
+
+                //reset the order id
+                $order->setTitle(UtilsService::generateHex(4) . '-' . $order->getId());
+                $order->save();
+
+                $this->copyOrderItems($order, $oldOrder);
             }
+
+            $this->session->set(static::SESSION_ID, $order->getId());
 
             //convert 1/0 to boolean
             $order->setBillingSame($order->getBillingSame() ? true : false);
@@ -152,6 +151,7 @@ class CartService
             $oi->setId(null);
             $oi->setUniqId(uniqid());
             $oi->setOrderId($newOrder->getId());
+            $oi->save();
         }
     }
 
