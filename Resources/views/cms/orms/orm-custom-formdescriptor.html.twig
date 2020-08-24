@@ -1,5 +1,7 @@
 {% extends 'cms/orms/orm.twig' %}
 
+{% block extraBodyClass %}page-orm page-formbuilder{% endblock %}
+
 {% block asset %}
     {#<link rel="stylesheet" href="{{ asset('build/cms-orm-formbuilder.css') }}" as="style" rel="preload">#}
     {#<script src="{{ asset('build/cms-orm-formbuilder.js') }}" async defer></script>#}
@@ -25,6 +27,11 @@
         {{ form_errors(form.code) }}
     </div>
     <div class="formStyle">
+        {{ form_label(form.formName) }}
+        {{ form_widget(form.formName) }}
+        {{ form_errors(form.formName) }}
+    </div>
+    <div class="formStyle">
         {{ form_label(form.fromAddress) }}
         {{ form_widget(form.fromAddress) }}
         {{ form_errors(form.fromAddress) }}
@@ -34,9 +41,14 @@
         {{ form_widget(form.recipients) }}
         {{ form_errors(form.recipients) }}
     </div>
+    <div class="formStyle">
+        {{ form_label(form.antispam) }}
+        {{ form_widget(form.antispam) }}
+        {{ form_errors(form.antispam) }}
+    </div>
     <div class="formStyle type6">
         {#{{ form_label(form.formFields) }}#}
-        {{ form_widget(form.formFields,{attr:{style:'display:none;'}}) }}
+        {{ form_widget(form.formFields,{attr:{style:'display:none2;'}}) }}
 
         <div class="section-toolbar">
             <select id="{{ form.formFields.vars.id }}_add" type="button" style="width: 16em;" data-placeholder="Add a field...">
@@ -72,6 +84,6 @@
     <script>
         window._formWidgets = {{ utils.formWidgets()|json_encode|raw }};
     </script>
-    <script src="/cms/develop/js/orm-formdescriptor.js"></script>
+    <script src="/cms/develop/js/orm-formdescriptor.js?v=4"></script>
 {% endblock %}
 

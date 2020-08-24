@@ -97,19 +97,22 @@ class UtilsService
      */
     public function getFormWidgets()
     {
-        return array(
-            '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType' => 'Choice',
-            '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType' => 'Checkbox',
-//            '\\Pz\\Forms\\Types\\DatePicker' => 'Date picker',
-//            '\\Pz\\Forms\\Types\\DateTimePicker' => 'Date time picker',
-            '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\EmailType' => 'Email',
-            '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\HiddenType' => 'Hidden',
-            '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType' => 'Text',
-            '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType' => 'Textarea',
-            '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\RepeatedType' => 'Repeated',
-//            '\\Pz\\Forms\\Types\\Wysiwyg' => 'Wysiwyg',
-            '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\SubmitType' => 'Submit',
+        $widgets = array(
+            'Date' => '\\MillenniumFalcon\\FormDescriptor\\Type\\DateType',
+            'File' => '\\MillenniumFalcon\\FormDescriptor\\Type\\FileType',
+            'Dropdown' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType',
+            'Checkboxes' => '\\MillenniumFalcon\\FormDescriptor\\Type\\CheckboxesType',
+            'Radio buttons' => '\\MillenniumFalcon\\FormDescriptor\\Type\\RadioButtonsType',
+            'Checkbox' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType',
+            'Email' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\EmailType',
+            'Hidden' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\HiddenType',
+            'Text' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+            'Textarea' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType',
+            'Repeated' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\RepeatedType',
+            'Submit' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\SubmitType',
         );
+        ksort($widgets);
+        return array_flip($widgets);
     }
 
     /**
@@ -151,9 +154,9 @@ class UtilsService
 
     /**
      * Convert a multi-dimensional array into a single-dimensional array.
-     * @author Sean Cannon, LitmusBox.com | seanc@litmusbox.com
-     * @param  array $array The multi-dimensional array.
+     * @param array $array The multi-dimensional array.
      * @return array
+     * @author Sean Cannon, LitmusBox.com | seanc@litmusbox.com
      */
     static public function flattenArray($array)
     {
@@ -221,12 +224,13 @@ class UtilsService
                 ]);
             }
 
-            usort($nodes, function($a, $b) {
+            usort($nodes, function ($a, $b) {
                 return $a['rank'] >= $b['rank'];
             });
 
             $tree = new Tree($nodes, [
-                'buildwarningcallback' => function () {},
+                'buildwarningcallback' => function () {
+                },
             ]);
             $result = $tree->getRootNodes();
         }

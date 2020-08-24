@@ -4,23 +4,54 @@
             <td>
                 <select class="wgt form-control" data-idx="{{ idx }}">
                     {{# each widgets }}
-                    <option {{#compare @key ../itm.widget operator="=="}}selected{{/compare}} value="{{@key}}">{{ this }}</option>
+                        <option {{#compare @key ../itm.widget operator="=="}}selected{{/compare}} value="{{@key}}">{{ this }}</option>
                     {{/each}}
                 </select>
             </td>
             <td><input class="lbl form-control" type="text" value="{{ itm.label }}"/></td>
             <td><input class="id form-control" type="text" value="{{ itm.id }}"/></td>
             <td>
-                <input type="checkbox" class="req form-control" {{#compare itm.required 1 operator="=="}}checked{{/compare}}/>
+                <input type="checkbox" class="js-req req form-control" {{#compare itm.required 1 operator="=="}}checked{{/compare}}/>
             </td>
             <td>
                 <a href="#" class="js-formbuilderfield-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
             </td>
         </tr>
-        <tr style="display: none;"></tr>
-        <tr id="sql{{ idx }}" {{#compare '\Symfony\Component\Form\Extension\Core\Type\ChoiceType' itm.widget operator="!="}}style="display: none;"{{/compare}}>
+        <tr id="err{{ idx }}" {{#compare 1 itm.required operator="!="}}style="display: none;"{{/compare}}>
             <td></td>
-            <td colspan="3"><textarea class="sql form-control" placeholder="SQL statement">{{ itm.sql }}</textarea></td>
+            <td colspan="3"><input type="text" class="js-error-message error-message form-control" placeholder="Error message for mandatory field"></input></td>
+            <td></td>
+        </tr>
+        <tr style="display: none;"></tr>
+        <tr id="sql{{ idx }}" {{#isNotChoiceType itm.widget}}style="display: none;"{{/isNotChoiceType}}>
+            <td></td>
+            <td colspan="3">
+                <div class="option-type">
+                    <label>
+                        Database options
+                        <input type="radio" value="1" name="optType{{idx}}" class="js-optiontype optiontype" {{#compare 1 itm.optionType operator="=="}}checked{{/compare}}>
+                    </label>
+                    <label>
+                        Custom options
+                        <input type="radio" value="2" name="optType{{idx}}" class="js-optiontype optiontype" {{#compare 2 itm.optionType operator="=="}}checked{{/compare}}>
+                    </label>
+                </div>
+                <div class="js-sql" {{#compare 1 itm.optionType operator="!="}}style="display: none;"{{/compare}}>
+                    <textarea class="sql form-control" placeholder="SQL statement">{{ itm.sql }}</textarea>
+                </div>
+                <div class="js-custom" {{#compare 2 itm.optionType operator="!="}}style="display: none;"{{/compare}}>
+                    <button type="button" class="js-option-add">Add an option</button>
+
+                    <div>
+                        {{# each itm.options }}
+                            <div class="js-custom-option custom-option">
+                                <input type="text" class="option-key js-option-key" value="{{key}}">
+                                <input type="text" class="option-val js-option-val" value="{{val}}">
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </td>
             <td></td>
         </tr>
     </tbody>

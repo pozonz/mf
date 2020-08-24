@@ -38,20 +38,20 @@ class ModelForm extends AbstractType
                 )
             ))
             ->add('className', TextType::class, array(
-                'label' => 'Class Name:',
+                'label' => 'Class name:',
                 'constraints' => array(
                     new Assert\NotBlank()
                 )
             ))
             ->add('modelType', ChoiceType::class, array(
-                'label' => 'Model Type:',
+                'label' => 'Model type:',
                 'choices' => array(
                     'Customised' => 0,
                     'Built in' => 1,
                 )
             ))
             ->add('listType', ChoiceType::class, array(
-                'label' => 'Listing Type:',
+                'label' => 'Listing type:',
                 'choices' => array(
                     'Drag & Drop' => 0,
                     'Pagination' => 1,
@@ -59,10 +59,10 @@ class ModelForm extends AbstractType
                 )
             ))
             ->add('numberPerPage', TextType::class, array(
-                'label' => 'Page Size:',
+                'label' => 'Page size:',
             ))
             ->add('defaultSortBy', ChoiceType::class, array(
-                'label' => 'Default Sorted By:',
+                'label' => 'Default sorted By:',
                 'choices' => $defaultSortByOptions,
             ))
             ->add('dataType', ChoiceType::class, array(
@@ -73,7 +73,7 @@ class ModelForm extends AbstractType
                 )
             ))
             ->add('defaultOrder', ChoiceType::class, array(
-                'label' => 'Default Order:',
+                'label' => 'Default order:',
                 'choices' => array(
                     'ASC' => 0,
                     'DESC' => 1,
@@ -83,7 +83,7 @@ class ModelForm extends AbstractType
                 'label' => 'Frontend URL:',
             ))
             ->add('dataGroups', ChoiceMultiJson::class, array(
-                'label' => 'Choose Partitions:',
+                'label' => 'Choose menu items:',
                 'choices' => $dataGroups,
             ))
             ->add('presetData', ChoiceType::class, array(

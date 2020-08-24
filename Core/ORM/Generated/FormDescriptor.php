@@ -19,6 +19,11 @@ class FormDescriptor extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $formName;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $fromAddress;
     
     /**
@@ -29,7 +34,17 @@ class FormDescriptor extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $antispam;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $formFields;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $formOverviewText;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -39,7 +54,22 @@ class FormDescriptor extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $antispam;
+    private $sendThankYouEmail;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $thankYouEmailSubject;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $thankYouEmailText;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $oldId;
     
     /**
      * @return mixed
@@ -71,6 +101,22 @@ class FormDescriptor extends Base
     public function setCode($code)
     {
         $this->code = $code;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getFormName()
+    {
+        return $this->formName;
+    }
+    
+    /**
+     * @param mixed formName
+     */
+    public function setFormName($formName)
+    {
+        $this->formName = $formName;
     }
     
     /**
@@ -108,6 +154,22 @@ class FormDescriptor extends Base
     /**
      * @return mixed
      */
+    public function getAntispam()
+    {
+        return $this->antispam;
+    }
+    
+    /**
+     * @param mixed antispam
+     */
+    public function setAntispam($antispam)
+    {
+        $this->antispam = $antispam;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getFormFields()
     {
         return $this->formFields;
@@ -119,6 +181,22 @@ class FormDescriptor extends Base
     public function setFormFields($formFields)
     {
         $this->formFields = $formFields;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getFormOverviewText()
+    {
+        return $this->formOverviewText;
+    }
+    
+    /**
+     * @param mixed formOverviewText
+     */
+    public function setFormOverviewText($formOverviewText)
+    {
+        $this->formOverviewText = $formOverviewText;
     }
     
     /**
@@ -140,17 +218,65 @@ class FormDescriptor extends Base
     /**
      * @return mixed
      */
-    public function getAntispam()
+    public function getSendThankYouEmail()
     {
-        return $this->antispam;
+        return $this->sendThankYouEmail;
     }
     
     /**
-     * @param mixed antispam
+     * @param mixed sendThankYouEmail
      */
-    public function setAntispam($antispam)
+    public function setSendThankYouEmail($sendThankYouEmail)
     {
-        $this->antispam = $antispam;
+        $this->sendThankYouEmail = $sendThankYouEmail;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getThankYouEmailSubject()
+    {
+        return $this->thankYouEmailSubject;
+    }
+    
+    /**
+     * @param mixed thankYouEmailSubject
+     */
+    public function setThankYouEmailSubject($thankYouEmailSubject)
+    {
+        $this->thankYouEmailSubject = $thankYouEmailSubject;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getThankYouEmailText()
+    {
+        return $this->thankYouEmailText;
+    }
+    
+    /**
+     * @param mixed thankYouEmailText
+     */
+    public function setThankYouEmailText($thankYouEmailText)
+    {
+        $this->thankYouEmailText = $thankYouEmailText;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getOldId()
+    {
+        return $this->oldId;
+    }
+    
+    /**
+     * @param mixed oldId
+     */
+    public function setOldId($oldId)
+    {
+        $this->oldId = $oldId;
     }
     
 }
