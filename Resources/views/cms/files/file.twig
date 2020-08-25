@@ -29,6 +29,7 @@
 			{{ form_row(form.title) }}
 			{{ form_row(form.code) }}
 			{{ form_row(form.description) }}
+			{{ form_row(form.url) }}
 		</div>
 
 		<div class="asset-image-area">
@@ -58,6 +59,8 @@
 
 
 		<div style="display: none;">
+			{{ form_row(form.parentId) }}
+
 			{{ form_row(form.fileName) }}
 			{{ form_row(form.fileSize) }}
 			{{ form_row(form.fileExtension) }}
