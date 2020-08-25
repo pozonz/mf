@@ -155,10 +155,12 @@ class AssetService
         $orm->setWidth(null);
         $orm->setHeight(null);
 
-        $file->move(AssetService::getImageCachePath());
-        $tmpFile = AssetService::getImageCachePath() . $file->getFilename();
-        $chkFile = $tmpFile . '.' . $ext;
-        rename($tmpFile, $chkFile);
+//        $file->move(AssetService::getImageCachePath());
+//        $tmpFile = AssetService::getImageCachePath() . $file->getFilename();
+//        $chkFile = $tmpFile . '.' . $ext;
+//        rename($tmpFile, $chkFile);
+
+        $chkFile = $file->getPathName();
 
         $info = getimagesize($chkFile);
         if ($info !== false) {
@@ -177,9 +179,9 @@ class AssetService
         if ($orm->getIsImage() == 1) {
             $command = getenv('CONVERT_CMD') . ' "' . $chkFile . '" -auto-orient ' . $fnlFile;
             static::generateOutput($command);
-            unlink($chkFile);
+//            unlink($chkFile);
         } else {
-            rename($chkFile, $fnlFile);
+            copy($chkFile, $fnlFile);
         }
 
         $orm->setFileLocation($orm->getId() . '.' . $ext);
@@ -290,7 +292,6 @@ class AssetService
         }
     }
 
-
     /**
      * @param $pdo
      * @param $asset
@@ -312,7 +313,7 @@ class AssetService
     static public function removeCache($asset, $assetSize)
     {
         $cachedFolder = AssetService::getImageCachePath();
-        $cachedKey = AssetService::getCacheKey($asset, $assetSize);
+        $cachedKey = AssetService::getCacheKey($asset, $assetSize->getCode());
         $cachedFile = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
         if (file_exists($cachedFile)) {
             unlink($cachedFile);
@@ -328,9 +329,9 @@ class AssetService
      * @param $assetSize
      * @return string
      */
-    static public function getCacheKey($asset, $assetSize)
+    static public function getCacheKey($asset, $assetSizeCode)
     {
-        return "{$asset->getCode()}-{$assetSize->getCode()}-{$asset->getId()}-{$assetSize->getId()}";
+        return "{$asset->getCode()}-{$assetSizeCode}";
     }
 
     /**

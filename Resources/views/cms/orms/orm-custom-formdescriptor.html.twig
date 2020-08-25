@@ -46,9 +46,9 @@
         {{ form_widget(form.antispam) }}
         {{ form_errors(form.antispam) }}
     </div>
-    <div class="formStyle type6">
+    <div id="formBuilder" class="formStyle type6">
         {#{{ form_label(form.formFields) }}#}
-        {{ form_widget(form.formFields,{attr:{style:'display:none2;'}}) }}
+        {{ form_widget(form.formFields,{attr:{style:'display:none;'}}) }}
 
         <div class="section-toolbar">
             <select id="{{ form.formFields.vars.id }}_add" type="button" style="width: 16em;" data-placeholder="Add a field...">

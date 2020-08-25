@@ -57,6 +57,21 @@ class FormSubmission extends Base
     private $formDescriptorId;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $url;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $ip;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $country;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -214,6 +229,54 @@ class FormSubmission extends Base
     public function setFormDescriptorId($formDescriptorId)
     {
         $this->formDescriptorId = $formDescriptorId;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+    
+    /**
+     * @param mixed url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
+    
+    /**
+     * @param mixed ip
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+    
+    /**
+     * @param mixed country
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
     }
     
 }

@@ -1,5 +1,5 @@
 {% verbatim %}
-    <tbody class="js-row" data-idx="{{idx}}">
+    <tbody class="js-row js-row-{{idx}}" data-idx="{{idx}}">
         <tr>
             <td>
                 <select class="wgt form-control" data-idx="{{ idx }}">
@@ -19,13 +19,13 @@
         </tr>
         <tr id="err{{ idx }}" {{#compare 1 itm.required operator="!="}}style="display: none;"{{/compare}}>
             <td></td>
-            <td colspan="3"><input type="text" class="js-error-message error-message form-control" placeholder="Error message for mandatory field"></input></td>
+            <td colspan="3"><input type="text" value="{{ itm.errorMessage }}" class="js-error-message error-message form-control" placeholder="Error message for mandatory field"></input></td>
             <td></td>
         </tr>
         <tr style="display: none;"></tr>
         <tr id="sql{{ idx }}" {{#isNotChoiceType itm.widget}}style="display: none;"{{/isNotChoiceType}}>
             <td></td>
-            <td colspan="3">
+            <td colspan="4">
                 <div class="option-type">
                     <label>
                         Database options
@@ -40,19 +40,19 @@
                     <textarea class="sql form-control" placeholder="SQL statement">{{ itm.sql }}</textarea>
                 </div>
                 <div class="js-custom" {{#compare 2 itm.optionType operator="!="}}style="display: none;"{{/compare}}>
-                    <button type="button" class="js-option-add">Add an option</button>
+                    <button type="button" class="js-option-add option-add">Add an option</button>
 
-                    <div>
+                    <div class="js-custom-options custom-options">
                         {{# each itm.options }}
                             <div class="js-custom-option custom-option">
-                                <input type="text" class="option-key js-option-key" value="{{key}}">
-                                <input type="text" class="option-val js-option-val" value="{{val}}">
+                                <input type="text" class="option-key js-option-key form-control" value="{{key}}">
+                                <input type="text" class="option-val js-option-val form-control" value="{{val}}">
+                                <div class="remove option-remove js-option-remove" title="Remove" data-optidx="{{@index}}"></div>
                             </div>
                         {{/each}}
                     </div>
                 </div>
             </td>
-            <td></td>
         </tr>
     </tbody>
 {% endverbatim %}

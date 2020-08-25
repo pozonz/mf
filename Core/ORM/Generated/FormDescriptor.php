@@ -49,7 +49,7 @@ class FormDescriptor extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $thankYouMessage;
+    private $thankyouHeading;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -202,17 +202,17 @@ class FormDescriptor extends Base
     /**
      * @return mixed
      */
-    public function getThankYouMessage()
+    public function getThankyouHeading()
     {
-        return $this->thankYouMessage;
+        return $this->thankyouHeading;
     }
     
     /**
-     * @param mixed thankYouMessage
+     * @param mixed thankyouHeading
      */
-    public function setThankYouMessage($thankYouMessage)
+    public function setThankyouHeading($thankyouHeading)
     {
-        $this->thankYouMessage = $thankYouMessage;
+        $this->thankyouHeading = $thankyouHeading;
     }
     
     /**

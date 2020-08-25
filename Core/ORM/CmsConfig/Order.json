@@ -24,7 +24,7 @@
     "namespace": "MillenniumFalcon\\Core\\ORM",
     "modelType": 1,
     "dataType": 0,
-    "dataGroups": "[\"5\"]",
+    "dataGroups": "[\"2\"]",
     "listType": 1,
     "numberPerPage": "50",
     "defaultSortBy": "id",

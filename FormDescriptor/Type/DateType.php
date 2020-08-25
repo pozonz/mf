@@ -13,7 +13,7 @@ class DateType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'form_descriptor_date';
+        return 'date_picker';
     }
 
     /**

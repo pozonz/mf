@@ -98,6 +98,12 @@ trait WebCoreAssetTrait
             throw new NotFoundHttpException();
         }
 
+        $cachedKey = AssetService::getCacheKey($asset, $assetSizeCode ?: 1);
+        $cachedFolder = AssetService::getImageCachePath();
+        if (!file_exists($cachedFolder)) {
+            mkdir($cachedFolder, 0777, true);
+        }
+
         $uploadPath = AssetService::getUploadPath();
         if (!file_exists($uploadPath)) {
             mkdir($uploadPath, 0777, true);
@@ -116,6 +122,7 @@ trait WebCoreAssetTrait
         if ($fileType == 'image/svg+xml') {
             $assetSizeCode = null;
         }
+
 
 //        if ($fileType ==  'application/pdf') {
 //            //1. build a url for the pdf
@@ -147,18 +154,16 @@ trait WebCoreAssetTrait
 //
 //        }
 
+
+
         if ($asset->getIsImage()) {
+            $thumbnail = $fileLocation;
+
             if ($assetSizeCode) {
                 $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
                 $assetSize = $fullClass::getByField($this->connection, 'code', $assetSizeCode);
                 if (!$assetSize) {
                     throw new NotFoundHttpException();
-                }
-
-                $cachedKey = AssetService::getCacheKey($asset, $assetSize);
-                $cachedFolder = AssetService::getImageCachePath();
-                if (!file_exists($cachedFolder)) {
-                    mkdir($cachedFolder, 0777, true);
                 }
 
                 $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
@@ -169,7 +174,6 @@ trait WebCoreAssetTrait
                     'oneOrNull' => 1,
                 ));
 
-
                 $thumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
                 $resizeCmd = "-resize {$assetSize->getWidth()}";
                 $qualityCmd = "-quality 95";
@@ -179,10 +183,8 @@ trait WebCoreAssetTrait
                     $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
                 }
                 $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} $thumbnail";
-
-            } else {
-                $thumbnail = $fileLocation;
             }
+
         } else {
             if ('application/pdf' == $fileType) {
                 //TODO: implement pdf thumbnail
@@ -238,6 +240,7 @@ trait WebCoreAssetTrait
             "last-modified" => $saveDate,
             "etag" => '"' . sprintf("%x-%x", $date->getTimestamp(), $fileSize) . '"',
         ], true, null, false, true);
+
         return $response;
     }
 }

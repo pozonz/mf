@@ -22,7 +22,7 @@
         <textarea {{ block('widget_attributes') }} style="display: none;">{{ value ?: '[]' }}</textarea>
         <textarea class="js-blocks" style="display: none;">{{ utils.blockDropdownOptions|json_encode }}</textarea>
         <textarea class="js-tags" style="display: none;">{{ model.active('FragmentTag')|json_encode }}</textarea>
-        <textarea class="js-default" style="display: none;">{{ model.active('FragmentDefault',{whereSql:'m.title = ? AND attr = ?',params:[ormModel.className, id|replace({'orm_': ''})],oneOrNull:1})|json_encode }}</textarea>
+        <textarea class="js-default" style="display: none;">{{ model.active('FragmentDefault',{whereSql:'m.title = ? AND attr = ?',params:[ormModel.className, id|replace({'orm_': ''})],oneOrNull:1,orm:0})|json_encode }}</textarea>
 
         <script id="{{ id }}_section" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.fragment-section.twig' %}</script>
         <script id="{{ id }}_block" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.fragment-block.twig' %}</script>
