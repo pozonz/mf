@@ -83,7 +83,7 @@ trait WebCoreTrait
     public function getRawData()
     {
         $request = Request::createFromGlobals();
-        $previewPageToken = $request->get('__preview_Page');
+        $previewPageToken = $request->get('__preview_page');
 
         $nodes = [];
         $pages = [];

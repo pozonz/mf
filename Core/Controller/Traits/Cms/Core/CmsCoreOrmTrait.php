@@ -162,7 +162,7 @@ trait CmsCoreOrmTrait
 
             if ($submitButtonValue == 'Preview') {
                 $orm->savePreview();
-                throw new RedirectException($orm->getFrontendUrl() . "?__preview_{$model->getClassName()}=" . $orm->getVersionUuid());
+                throw new RedirectException($orm->getFrontendUrl() . "?__preview_" . strtolower($model->getClassName()) . "=" . $orm->getVersionUuid());
             }
 
             $isNew = $orm->getId() ? 0 : 1;

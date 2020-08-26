@@ -17,6 +17,11 @@ class AssetBinary extends Base
     private $content;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $oldId;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -46,6 +51,22 @@ class AssetBinary extends Base
     public function setContent($content)
     {
         $this->content = $content;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getOldId()
+    {
+        return $this->oldId;
+    }
+    
+    /**
+     * @param mixed oldId
+     */
+    public function setOldId($oldId)
+    {
+        $this->oldId = $oldId;
     }
     
 }

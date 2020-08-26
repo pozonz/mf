@@ -1,5 +1,5 @@
 {% extends 'cms/base.twig' %}
-{% block extraBodyClass %}page-orm{% endblock %}
+{% block extraBodyClass %}page-orm {% if versionOrm %}page-restore{% endif %}{% endblock %}
 
 {% form_theme form 'cms/form.twig' %}
 
@@ -112,7 +112,7 @@
 						{% endif %}
 
 						{% if versionOrm %}
-							<button class="js-orm-restore submit button restore" name='submit' value='Restore'>Confirm</button>
+							<button class="js-orm-restore submit button restore" name='submit' value='Restore'>Restore</button>
 							{% set versionUrlFragment = '/version/' ~ versionOrm.versionUuid %}
 							<a href="{{ app.request.uri|replace({(versionUrlFragment):''}) }}" class="js-orm-restore-cancel submit button cancel">Cancel</a>
 						{% else %}

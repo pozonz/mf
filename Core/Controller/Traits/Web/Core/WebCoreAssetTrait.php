@@ -154,8 +154,6 @@ trait WebCoreAssetTrait
 //
 //        }
 
-
-
         if ($asset->getIsImage()) {
             $thumbnail = $fileLocation;
 
@@ -174,7 +172,12 @@ trait WebCoreAssetTrait
                     'oneOrNull' => 1,
                 ));
 
-                $thumbnail = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
+                $ext = $asset->getFileExtension();
+                if ($useWebp && strtolower($ext) == 'gif') {
+                    $ext = 'jpg';
+                }
+
+                $thumbnail = "{$cachedFolder}{$cachedKey}.$ext";
                 $resizeCmd = "-resize {$assetSize->getWidth()}";
                 $qualityCmd = "-quality 95";
                 $colorCmd = '-colorspace sRGB';
@@ -182,7 +185,7 @@ trait WebCoreAssetTrait
                 if ($assetCrop) {
                     $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
                 }
-                $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} $thumbnail";
+                $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip $thumbnail";
             }
 
         } else {
@@ -222,7 +225,7 @@ trait WebCoreAssetTrait
         }
 
         if ($useWebp && $assetSizeCode) {
-            $webpThumbnail = "{$cachedFolder}webp-{$cachedKey}.webp";
+            $webpThumbnail = "{$cachedFolder}{$cachedKey}.webp";
             if (!file_exists($webpThumbnail)) {
                 $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
                 $returnValue = AssetService::generateOutput($command);
@@ -230,7 +233,7 @@ trait WebCoreAssetTrait
             $thumbnail = $webpThumbnail;
             $fileType = 'image/webp';
         }
-
+//var_dump($command);exit;
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));
         $saveDate = $date->setTimezone(new \DateTimeZone("GMT"))->format("D, d M y H:i:s T");
         $response = BinaryFileResponse::create($thumbnail, Response::HTTP_OK, [

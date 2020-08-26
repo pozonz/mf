@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Db\Traits;
 
+use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Pattern\Version\VersionInterface;
 
 trait BaseVersionTrait
@@ -26,9 +27,10 @@ trait BaseVersionTrait
      */
     public function getFrontendUrl()
     {
+        /** @var _Model $model */
         $model = $this->getModel();
-        if (!$model) {
-            $frontendUrl = $model->getFrontendUrl();
+        if ($model) {
+            $frontendUrl = $model->getSiteMapUrl();
             return $this->getFrontendUrlByCustomUrl($frontendUrl);
         }
         return null;

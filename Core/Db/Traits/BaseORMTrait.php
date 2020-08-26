@@ -134,7 +134,7 @@ trait BaseORMTrait
             $path = explode('\\', $myClass);
             $className = array_pop($path);
             $request = $options['request'] ?? Request::createFromGlobals();
-            $previewOrmToken = $request->get('__preview_' . $className);
+            $previewOrmToken = $request->get('__preview_' . strtolower($className));
             if ($previewOrmToken) {
                 $options['whereSql'] = 'm.versionUuid = ?';
                 $options['params'] = [$previewOrmToken];

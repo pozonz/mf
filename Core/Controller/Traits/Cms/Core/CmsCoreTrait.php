@@ -107,6 +107,20 @@ trait CmsCoreTrait
                 'whereSql' => 'm.category LIKE ? AND (m.hideFromCMSNav IS NULL OR m.hideFromCMSNav != 1)',
                 'params' => ['%' . $pageCategory->getId() . '%'],
             ]);
+
+            $startRank = -1;
+            $toBeSorted = [];
+            $catAttr = 'cat' . $pageCategory->getId();
+
+            foreach ($pages as $page) {
+                $jsonRank = json_decode($page->getCategoryRank() ?: '[]');
+                $rank = $jsonRank->$catAttr ?? $startRank;
+                $toBeSorted[$rank] = $page;
+                $startRank--;
+            }
+            ksort($toBeSorted);
+            $pages = array_values($toBeSorted);
+
             $toBeMergedNodes = array_merge($toBeMergedNodes, array_map(function ($itm) use ($dataGroup, $dataGroupClass, $pageCategory, $fullClass) {
                 $categoryParent = (object)json_decode($itm->getCategoryParent() ?: '[]');
                 $categoryParentAttr = "cat{$pageCategory->getId()}";

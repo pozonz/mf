@@ -41,7 +41,7 @@ trait AssetTrait
      */
     public function save($doNotSaveVersion = false, $options = [])
     {
-        if (!$this->getId()) {
+        if (!$this->getCode()) {
             do {
                 $code = UtilsService::generateHex(4);
                 $orm = static::getByField($this->getPdo(), 'code', $code);
