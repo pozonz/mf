@@ -197,6 +197,8 @@ class FormDescriptorService
                     $submission->setUniqueId($code);
                     $submission->save();
 
+                    $formDescriptor->setFormSubmission($submission);
+
                     $messageBody = $this->environment->render('cms/emails/form_submission.twig', array(
                         'submission' => $submission,
                     ));
