@@ -13,7 +13,11 @@
 				<div class="asset-path">
 					Path:
 					{% for itm in path %}
-						<a href="/manage/files?currentFolderId={{ itm.id }}">{{ itm.title }}</a>{% if not loop.last %} / {% endif %}
+						{% if not loop.last %}
+							<a href="/manage/files?currentFolderId={{ itm.id }}">{{ itm.title }}</a> /
+						{% else %}
+							{{ itm.title }}
+						{% endif %}
 					{% endfor %}
 				</div>
 			</h1>

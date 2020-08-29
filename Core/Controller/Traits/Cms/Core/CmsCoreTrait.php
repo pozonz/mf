@@ -230,9 +230,18 @@ trait CmsCoreTrait
             'status' => 1,
         ]);
         $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'User', '/manage/admin');
+        $nodes[] = (array)new RawData([
+            'id' => uniqid(),
+            'parent' => $dataGroupClass . $dataGroup->getId(),
+            'title' => 'My account',
+            'url' => '/manage/current-user',
+            'template' => 'cms/orms/orm.twig',
+            'status' => 1,
+        ]);
         $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'DataGroup', '/manage/admin');
 
         $nodes = $this->_getDataGroupNodes($nodes, $dataGroup, '/manage/admin');
+
         return $nodes;
     }
 

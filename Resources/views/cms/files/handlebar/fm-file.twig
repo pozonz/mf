@@ -13,7 +13,7 @@
 
             <div class="asset-controls">
                 <a href="#" class="icon approve js-orm-status" data-status="{{ file.status }}"><img src="/cms/images/dot{{#compare 1 file.status operator="=="}}Green{{/compare}}{{#compare 0 file.status operator="=="}}Red{{/compare}}.gif" alt="" border="0"></a>
-                {{#compare 0 mode operator="=="}}<a class="icon" href="/manage/orms/Asset/{{file.id}}?returnUrl=%2Fmanage%2Ffiles" title="{{file.title}}"><img src="/cms/images/editIcon.gif" alt="Edit record" title="Edit record" border="0"></a>{{/compare}}
+                {{#compare 0 mode operator="=="}}<a class="icon" href="/manage/orms/Asset/{{file.id}}?returnUrl={{url}}" title="{{file.title}}"><img src="/cms/images/editIcon.gif" alt="Edit record" title="Edit record" border="0"></a>{{/compare}}
                 <a class="icon js-orm-delete" href="#"><img src="/cms/images/binIcon.gif" alt="" border="0"></a>
 
                 <div class="doc-code-meta {{#compare 2 mode operator="=="}}doc-code-meta-files{{/compare}}">

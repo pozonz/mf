@@ -1,5 +1,8 @@
 <div id="popup-container">
     <input type="hidden" id="currentFolderId" value="{{ app.request.get('currentFolderId') != null ? app.request.get('currentFolderId') : (app.request.session.get('currentFolderId') ?: 0) }}"/>
+    <input type="hidden" id="currentKeyword" value="{{ app.request.get('keyword') != null ? app.request.get('keyword') : '' }}"/>
+    <input type="hidden" id="currentPageNum" value="{{ app.request.get('pageNum') != null ? app.request.get('pageNum') : '' }}"/>
+
     <div class="row">
         <div class="col-lg-12" style="padding: 0">
             <div class="ibox">
@@ -13,8 +16,15 @@
         <div class="col-lg-3">
             <div id="js-folders"></div>
         </div>
-        <div id="js-files" class="col-lg-9">
+        <div class="col-lg-9">
+            <div id="js-files">
 
+            </div>
+
+            <div class="js-files-pagination">
+                <ul class="nav pagination" style="border-top: none;">
+                </ul>
+            </div>
         </div>
     </div>
     <div class="extra-stuff js-extra-stuff" style="display: none;">

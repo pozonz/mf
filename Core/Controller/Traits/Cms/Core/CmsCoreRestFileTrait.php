@@ -128,20 +128,42 @@ trait CmsCoreRestFileTrait
     {
         $keyword = $request->get('keyword') ?: '';
         $currentFolderId = $request->get('currentFolderId') ?: 0;
+        $pageNum = $request->get('pageNum') ?: 1;
+        $total = 0;
 
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
         $fullClass = ModelService::fullClass($this->connection, 'Asset');
         if ($keyword) {
+            $limit = 24;
+
             $data = $fullClass::data($this->connection, array(
-                'whereSql' => 'm.isFolder = 0 AND m.title LIKE ?',
-                'params' => array("%$keyword%"),
+                'whereSql' => 'm.isFolder = 0 AND (m.title LIKE ? OR m.code LIKE ?)',
+                'params' => array("%$keyword%", "%$keyword%"),
+                'page' => $pageNum,
+                'limit' => $limit,
             ));
+            $total = $fullClass::data($this->connection, array(
+                'whereSql' => 'm.isFolder = 0 AND (m.title LIKE ? OR m.code LIKE ?)',
+                'params' => array("%$keyword%", "%$keyword%"),
+                'count' => 1,
+            ));
+
         } else {
+            $limit = 23;
+
             $data = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.isFolder = 0 AND m.parentId = ?',
                 'params' => array($currentFolderId),
+                'page' => $pageNum,
+                'limit' => $limit,
+            ));
+            $total = $fullClass::data($this->connection, array(
+                'whereSql' => 'm.isFolder = 0 AND m.parentId = ?',
+                'params' => array($currentFolderId),
+                'count' => 1,
             ));
         }
+        $total = ceil($total['count'] / $limit);
 
         $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
         $modelName = $request->get('modelName');
@@ -166,6 +188,8 @@ trait CmsCoreRestFileTrait
 
         return new JsonResponse(array(
             'files' => $data,
+            'pageNum' => $pageNum,
+            'total' => $total,
         ));
     }
 

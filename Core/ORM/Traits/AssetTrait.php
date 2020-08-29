@@ -24,8 +24,7 @@ trait AssetTrait
         $parent = $this;
         do {
             $path[] = $parent;
-            $parent = static::getById($this->getPdo(), $parent->getParentId());
-        } while ($parent);
+        } while ($parent = static::getById($this->getPdo(), $parent->getParentId()));
         $path[] = [
             'id' => 0,
             'title' => 'Home',
