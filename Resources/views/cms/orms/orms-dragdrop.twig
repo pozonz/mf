@@ -3,11 +3,33 @@
 {% block tableHead %}
     <tbody>
         <tr>
-            <td class="tableHead" width="40px">ID</td>
+            <td class="tableHead" width="100px">Modified</td>
             <td class="tableHead">Title</td>
+            <td class="tableHead" width="100px">Added</td>
             <td class="tableHead" width="120px" align="right">Action</td>
         </tr>
     </tbody>
+{% endblock %}
+
+{% block tableRow %}
+    <tr id="{{ itm.id }}" class="js-orm-info">
+        <td>{{ itm.modified|date('d M y') }}</td>
+        <td title="{{ itm.title }}">
+            {% set frontendUrl = itm.getFrontendUrlByCustomUrl(ormModel.siteMapUrl) %}
+            {% if frontendUrl and itm.status == 1 %}
+                <a target="_blank" href="{{ frontendUrl }}">{{ itm.title|length > limit ? (itm.title|slice(0, limit) ~ '&hellip;')|raw : itm.title }}</a>
+            {% else %}
+                {{ itm.title|length > limit ? (itm.title|slice(0, limit) ~ '&hellip;')|raw : itm.title }}
+            {% endif %}
+        </td>
+        <td>{{ itm.added|date('d M y') }}</td>
+        <td class="iconCell" align="right">
+            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
+            <a href="{{ theNode.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
+            <a href="{{ theNode.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
+            <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+        </td>
+    </tr>
 {% endblock %}
 
 {% block extraColumns %}class="js-sort-column"{% endblock %}
