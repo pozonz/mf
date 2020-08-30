@@ -108,18 +108,20 @@ trait CmsCoreTrait
                 'params' => ['%' . $pageCategory->getId() . '%'],
             ]);
 
-            $startRank = -1;
             $toBeSorted = [];
             $catAttr = 'cat' . $pageCategory->getId();
 
             foreach ($pages as $page) {
                 $jsonRank = json_decode($page->getCategoryRank() ?: '[]');
-                $rank = $jsonRank->$catAttr ?? $startRank;
-                $toBeSorted[$rank] = $page;
-                $startRank--;
+                $rank = $jsonRank->$catAttr ?? -1;
+                $toBeSorted[] = [$page, $rank];
             }
-            ksort($toBeSorted);
-            $pages = array_values($toBeSorted);
+            usort($toBeSorted, function ($a, $b) {
+                return $a[1] - $b[1] >= 0 ? true : false;
+            });
+            $pages = array_map(function ($itm) {
+                return $itm[0];
+            }, $toBeSorted);
 
             $toBeMergedNodes = array_merge($toBeMergedNodes, array_map(function ($itm) use ($dataGroup, $dataGroupClass, $pageCategory, $fullClass) {
                 $categoryParent = (object)json_decode($itm->getCategoryParent() ?: '[]');
@@ -156,6 +158,10 @@ trait CmsCoreTrait
             }
         }
 
+//        ini_set('xdebug.var_display_max_depth', '10');
+//        ini_set('xdebug.var_display_max_children', '256');
+//        ini_set('xdebug.var_display_max_data', '1024');
+//        var_dump($nodes);exit;
         return $nodes;
     }
 

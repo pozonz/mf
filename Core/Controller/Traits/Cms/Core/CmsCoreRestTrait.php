@@ -55,7 +55,7 @@ trait CmsCoreRestTrait
                 $orm->setRank($idx);
                 $orm->save(true);
                 if ($className == '_Model') {
-                    $fullClass::setGenereatedFile($orm, $this->container);
+                    $fullClass::setGenereatedFile($orm, $this->kernel);
                 }
             }
         }

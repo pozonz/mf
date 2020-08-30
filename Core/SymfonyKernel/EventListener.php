@@ -83,6 +83,14 @@ class EventListener
     {
         $exception = $event->getException();
 
+        if ($exception instanceof RedirectException) {
+            $event->setResponse(
+                new RedirectResponse($exception->getUrl())
+            );
+            return;
+        }
+
+
         if (!($exception instanceof NotFoundHttpException)) {
             $exception = $exception->getPrevious();
         }
