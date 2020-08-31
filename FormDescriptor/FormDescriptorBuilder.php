@@ -56,6 +56,8 @@ class FormDescriptorBuilder extends AbstractType
             $builder->add($field->id, $widgetClassName, $this->getOptionsForField($field));
         }
 
+        $this->buildEventListeners($formDescriptor, $builder);
+
         $countryInfo = $this->session->get(UtilsService::COUNTRY_SESSION_KEY);
         if (!$countryInfo) {
             $request = Request::createFromGlobals();
@@ -79,6 +81,8 @@ class FormDescriptorBuilder extends AbstractType
 
         $this->formDescriptor = $formDescriptor;
     }
+
+    public function buildEventListeners(&$formDescriptor, &$builder) {}
 
     public function getName()
     {
