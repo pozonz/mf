@@ -49,6 +49,13 @@ class FormDescriptorService
     protected $mailer;
 
     /**
+     * @var string
+     */
+    protected $formBuilderClass;
+
+    const FORM_DESCRIPTOR_BUILDER = FormDescriptorBuilder::class;
+
+    /**
      * Shop constructor.
      * @param Container $container
      */
@@ -58,14 +65,15 @@ class FormDescriptorService
         FormFactoryInterface $formFactory,
         SessionInterface $session,
         Environment $environment,
-        \Swift_Mailer $mailer)
-    {
+        \Swift_Mailer $mailer
+    ) {
         $this->connection = $connection;
         $this->kernel = $kernel;
         $this->formFactory = $formFactory;
         $this->session = $session;
         $this->environment = $environment;
         $this->mailer = $mailer;
+        $this->formBuilderClass = static::FORM_DESCRIPTOR_BUILDER;
     }
 
     /**
@@ -95,7 +103,7 @@ class FormDescriptorService
         /** @var \Symfony\Component\Form\Form $form */
         $form = $formFactory->createNamedBuilder(
             'form_' . $formDescriptor->getCode(),
-            FormDescriptorBuilder::class,
+            $this->formBuilderClass,
             null,
             array(
                 'formDescriptor' => $formDescriptor,
