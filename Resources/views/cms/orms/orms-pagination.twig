@@ -58,7 +58,7 @@
         </table>
     {% endblock %}
 
-    {% block dataPagination %}
+    {% block dataPaginationBottom %}
         {% if totalPages is defined and totalPages > 1 %}
             {% include 'cms/includes/pagination.twig' %}
         {% endif %}

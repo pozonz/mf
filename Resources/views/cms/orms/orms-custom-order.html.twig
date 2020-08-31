@@ -6,12 +6,24 @@
         {#<a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>#}
     </div>
 
+    {% block ormModelExtra %}{% endblock %}
+
+    {% block dataPaginationTop %}
+        {% if totalPages is defined and totalPages > 1 %}
+            {% include 'cms/includes/pagination.twig' %}
+        {% endif %}
+    {% endblock %}
+
+    {% if total is defined %}
+        <h4>{{ total }} item(s) found</h4>
+    {% endif %}
+
     <table class="table table-striped table-bordered table-hover table-middle">
         {% block tableHead %}
             <tbody>
                 <tr>
-                    <td class="tableHead" width="40px"><a href="{{ app.request.pathInfo }}?sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
-                    <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Title</a></td>
+{#                    <td class="tableHead" width="40px"><a href="{{ app.request.pathInfo }}?sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>#}
+                    <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
                     <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=billingFirstName&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Name</a></td>
                     <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=added&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Date</a></td>
                     <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=total&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Price</a></td>
@@ -25,19 +37,17 @@
             <tbody {% block extraColumns %}{% endblock %}>
                 {% for itm in orms %}
                     <tr id="{{ itm.id }}" class="js-orm-info">
-                        <td>{{ itm.id }}</td>
+{#                        <td>{{ itm.id }}</td>#}
                         <td>{{ itm.title }}</td>
-                        <td>{{ itm.billingFirstName }} {{ itm.billingLastName }}</td>
+                        <td>{{ itm.shippingFirstname }} {{ itm.shippingLastName }}</td>
                         <td>{{ itm.submittedDate|date('d M y H:i:s') }}</td>
                         <td>${{ itm.total|number_format(2) }}</td>
                         <td>
                             {% if itm.category == 2 %}PAID{% else %}UNPAID{% endif %}
                         </td>
                         <td class="iconCell" align="right">
-                            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
-                            <a href="{{ node.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/develop/images/search.png" alt="Edit Record" title="Edit Record" border="0"></a>
-                            {#<a href="{{ node.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>#}
-                            {#<a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>#}
+{#                            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>#}
+                            <a href="{{ theNode.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/develop/images/search.png" alt="Edit Record" title="Edit Record" border="0"></a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -45,8 +55,8 @@
         {% endblock %}
     </table>
 
-    {% block dataPagination %}
-        {% if totalPages > 1 %}
+    {% block dataPaginationBottom %}
+        {% if totalPages is defined and totalPages > 1 %}
             {% include 'cms/includes/pagination.twig' %}
         {% endif %}
     {% endblock %}

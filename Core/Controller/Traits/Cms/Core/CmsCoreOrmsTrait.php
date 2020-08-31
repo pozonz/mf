@@ -32,6 +32,140 @@ trait CmsCoreOrmsTrait
     }
 
     /**
+     * @Route("/manage/orms/Redirect")
+     * @param Request $request
+     * @return Response
+     */
+    public function redirects(Request $request)
+    {
+        $params = $this->getCmsTemplateParams($request);
+
+        $model = _Model::getByField($this->connection, 'className', 'Redirect');
+        $params['ormModel'] = $model;
+
+        $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
+
+        $pageNum = $request->get('pageNum') ?: 1;
+        $sort = $request->get('sort') ?: $model->getDefaultSortBy();
+        $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
+        $keyword = $request->get('keyword') ?: '';
+        $status = $request->get('status') ?: 0;
+
+        $params['filterStatus'] = $status;
+        $params['filterKeyword'] = $keyword;
+
+        $sqlWhere = '';
+        $sqlParams = [];
+
+        if ($status != 0) {
+            $sqlWhere .= ($sqlWhere ? ' AND ' : '') . '(m.status = ?)';
+            $sqlParams = array_merge($sqlParams, [
+                $status == 1 ? 1 : 0
+            ]);
+        }
+
+        if ($keyword) {
+            $sqlWhere .= ($sqlWhere ? ' AND ' : '') . '(m.title LIKE ? OR m.to LIKE ?)';
+            $sqlParams = array_merge($sqlParams, [
+                "%$keyword%", "%$keyword%"
+            ]);
+        }
+
+        $orms = $fullClass::data($this->connection, [
+            "whereSql" => $sqlWhere,
+            "params" => $sqlParams,
+            "page" => $pageNum,
+            "limit" => $model->getNumberPerPage(),
+            "sort" => $sort,
+            "order" => $order,
+        ]);
+
+        $total = $fullClass::data($this->connection, [
+            "whereSql" => $sqlWhere,
+            "params" => $sqlParams,
+            "count" => 1,
+        ]);
+
+        $params['total'] = $total['count'];
+        $params['totalPages'] = ceil($total['count'] / $model->getNumberPerPage());
+        $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order";
+        $params['urlNoSort'] = $request->getPathInfo();
+        $params['pageNum'] = $pageNum;
+        $params['sort'] = $sort;
+        $params['order'] = $order;
+        $params['orms'] = $orms;
+
+        return $this->render($params['theNode']->template, $params);
+    }
+
+    /**
+     * @Route("/manage/orms/Order")
+     * @param Request $request
+     * @return Response
+     */
+    public function orders(Request $request)
+    {
+        $params = $this->getCmsTemplateParams($request);
+
+        $model = _Model::getByField($this->connection, 'className', 'Order');
+        $params['ormModel'] = $model;
+
+        $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
+
+        $pageNum = $request->get('pageNum') ?: 1;
+        $sort = $request->get('sort') ?: $model->getDefaultSortBy();
+        $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
+        $keyword = $request->get('keyword') ?: '';
+        $status = $request->get('status') ?: 0;
+
+//        $params['filterStatus'] = $status;
+//        $params['filterKeyword'] = $keyword;
+
+        $sqlWhere = 'm.category != ?';
+        $sqlParams = [0];
+
+//        if ($status != 0) {
+//            $sqlWhere .= ($sqlWhere ? ' AND ' : '') . '(m.status = ?)';
+//            $sqlParams = array_merge($sqlParams, [
+//                $status == 1 ? 1 : 0
+//            ]);
+//        }
+//
+//        if ($keyword) {
+//            $sqlWhere .= ($sqlWhere ? ' AND ' : '') . '(m.title LIKE ? OR m.to LIKE ?)';
+//            $sqlParams = array_merge($sqlParams, [
+//                "%$keyword%", "%$keyword%"
+//            ]);
+//        }
+
+        $orms = $fullClass::data($this->connection, [
+            "whereSql" => $sqlWhere,
+            "params" => $sqlParams,
+            "page" => $pageNum,
+            "limit" => $model->getNumberPerPage(),
+            "sort" => $sort,
+            "order" => $order,
+        ]);
+
+        $total = $fullClass::data($this->connection, [
+            "whereSql" => $sqlWhere,
+            "params" => $sqlParams,
+            "count" => 1,
+        ]);
+
+        $params['total'] = $total['count'];
+        $params['totalPages'] = ceil($total['count'] / $model->getNumberPerPage());
+        $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order";
+        $params['urlNoSort'] = $request->getPathInfo();
+        $params['pageNum'] = $pageNum;
+        $params['sort'] = $sort;
+        $params['order'] = $order;
+        $params['orms'] = $orms;
+
+        return $this->render($params['theNode']->template, $params);
+    }
+
+    /**
      * @route("/manage/orms/{className}")
      * @route("/manage/admin/orms/{className}")
      * @route("/manage/pages/orms/{className}")
