@@ -199,7 +199,7 @@ trait WebCoreAssetTrait
                 $qualityCmd = "-quality 95";
                 $colorCmd = '-colorspace sRGB';
                 $cropCmd = '';
-                if ($assetCrop) {
+                if ($assetCrop AND $assetSizeCode !== 'cms_small') {
                     $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
                 }
                 $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip $thumbnail";
