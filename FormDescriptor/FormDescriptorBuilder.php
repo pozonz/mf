@@ -185,7 +185,11 @@ class FormDescriptorBuilder extends AbstractType
         }
 
         if (isset($field->required) && $field->required) {
-            $validations[] = new Assert\NotBlank();
+            $notBlank = new Assert\NotBlank();
+            if (isset($field->errorMessage) && $field->errorMessage) {
+                $notBlank->message = $field->errorMessage;
+            }
+            $validations[] = $notBlank;
         }
 
         return $validations;
