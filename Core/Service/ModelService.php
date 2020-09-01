@@ -95,5 +95,7 @@ class ModelService
         } elseif (class_exists($cmsClass)) {
             return $cmsClass;
         }
+
+//        throw new \Exception($className . ' can not be found');
     }
 }

@@ -302,6 +302,10 @@ trait CmsCoreTrait
 
         $modelId = $parentId . $modelClassName;
         $fullClass = ModelService::fullClass($this->connection, $modelClassName);
+        if (!$fullClass) {
+            return [];
+        }
+
         $nodes[] = (array)new RawData([
             'id' => $modelId,
             'parent' => $parentId,

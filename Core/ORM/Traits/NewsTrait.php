@@ -7,14 +7,6 @@ use MillenniumFalcon\Core\Service\ModelService;
 trait NewsTrait
 {
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-    
-    /**
      * @return array
      * @throws \Exception
      */

@@ -79,7 +79,7 @@ trait CmsCoreModelTrait
                 $model->setRank(_Model::lastRank($this->connection));
             }
             $model->save(false, [
-                'doNotUpdateModified' => true,
+                'doNotUpdateModified' => 1,
             ]);
 
             $fullClassname::sync($this->connection);

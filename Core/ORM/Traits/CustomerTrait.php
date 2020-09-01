@@ -12,14 +12,6 @@ trait CustomerTrait
     protected $membership;
 
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-    
-    /**
      * @return array|null
      */
     public function objMembership()

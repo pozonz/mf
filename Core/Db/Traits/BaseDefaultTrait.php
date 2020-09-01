@@ -52,27 +52,27 @@ trait BaseDefaultTrait
     private $publishTo;
 
     /**
-     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     * #pz text COLLATE utf8mb4_unicode_ci NULL
      */
     private $metaTitle;
 
     /**
-     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     * #pz text COLLATE utf8mb4_unicode_ci NULL
      */
     private $metaDescription;
 
     /**
-     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     * #pz text COLLATE utf8mb4_unicode_ci NULL
      */
     private $ogTitle;
 
     /**
-     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     * #pz text COLLATE utf8mb4_unicode_ci NULL
      */
     private $ogDescription;
 
     /**
-     * #pz varchar(256) COLLATE utf8mb4_unicode_ci NULL
+     * #pz text COLLATE utf8mb4_unicode_ci NULL
      */
     private $ogImage;
 
@@ -115,6 +115,11 @@ trait BaseDefaultTrait
      * #pz int(11) DEFAULT NULL
      */
     private $versionId;
+
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $oldId;
 
     /**
      * @return Connection
@@ -466,5 +471,21 @@ trait BaseDefaultTrait
     public function setVersionId($versionId)
     {
         $this->versionId = $versionId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOldId()
+    {
+        return $this->oldId;
+    }
+
+    /**
+     * @param mixed $oldId
+     */
+    public function setOldId($oldId)
+    {
+        $this->oldId = $oldId;
     }
 }

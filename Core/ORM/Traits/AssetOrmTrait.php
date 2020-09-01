@@ -7,14 +7,6 @@ use MillenniumFalcon\Core\Service\ModelService;
 trait AssetOrmTrait
 {
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-
-    /**
      * @return mixed
      * @throws \Exception
      */

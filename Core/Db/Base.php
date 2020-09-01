@@ -52,9 +52,19 @@ abstract class Base implements \JsonSerializable
     {
         $tableName = static::getTableName();
 
+        $response = 0;
         $db = new Sql($pdo, $tableName);
-        $db->create();
-        $db->sync(static::getFields());
+        if (!$db->exists()) {
+            $response = 1;
+            $db->create();
+        }
+        
+        $syncResponse = $db->sync(static::getFields());
+        if ($response === 1) {
+            return $response;
+        } else {
+            return $syncResponse;
+        }
     }
 
     /**

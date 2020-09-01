@@ -10,14 +10,6 @@ trait OrderItemTrait
     protected $variant;
 
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-
-    /**
      * @return mixed
      * @throws \Exception
      */

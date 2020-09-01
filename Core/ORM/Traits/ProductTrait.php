@@ -8,14 +8,6 @@ use MillenniumFalcon\Core\Service\ModelService;
 trait ProductTrait
 {
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-
-    /**
      * @return string
      */
     static public function getCmsOrmsTwig()

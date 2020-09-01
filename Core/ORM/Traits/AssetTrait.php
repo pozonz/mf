@@ -8,14 +8,6 @@ use MillenniumFalcon\Core\Service\UtilsService;
 trait AssetTrait
 {
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-
-    /**
      * @return array
      */
     public function getFolderPath()

@@ -81,17 +81,21 @@ class Sql
      */
     public function sync($ormFields)
     {
+        $syncResponse = 3;
+
         $tableFields = $this->getFields();
         $tableColumns = array_keys($tableFields);
         $ormColumns = array_keys($ormFields);
 
         $newColumns = array_diff($ormColumns, $tableColumns);
         $oldColumns = array_diff($tableColumns, $ormColumns);
+
 //var_dump($newColumns, $oldColumns);exit;
         foreach ($newColumns as $newColumn) {
             $lastColumnName = $this->getLastColumn($newColumn, $tableColumns);
             $this->addColumn($newColumn, $ormFields[$newColumn], $lastColumnName);
             $tableColumns[] = $newColumn;
+            $syncResponse = 2;
         }
 
         foreach ($oldColumns as $oldColumn) {
@@ -102,7 +106,10 @@ class Sql
             $lastColumnName = $this->getLastColumn($oldColumn, $tableColumns);
             $this->renameColumn($oldColumn, $trashColumnName, $tableFields[$oldColumn], $lastColumnName);
             $tableColumns[] = $trashColumnName;
+            $syncResponse = 2;
         }
+
+        return $syncResponse;
     }
 
     /**

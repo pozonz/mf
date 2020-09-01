@@ -57,6 +57,7 @@ class EventListener
 
         if (
             strpos($requestUri, '/manage') === 0
+            || strpos($requestUri, '/install') === 0
             || strpos($requestUri, '/import') === 0
         ) {
             return;

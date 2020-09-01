@@ -23,26 +23,47 @@ trait BaseModelTrait
     /**
      * @return null|_Model
      */
-    static public function updateModel($pdo)
+    static public function createOrUpdateModel($pdo)
     {
+        $response = 0;
+
         $encodedModel = static::getCmsConfigModel();
         if (gettype($encodedModel) == 'string') {
             $decodedModel = json_decode($encodedModel);
+
+            $response = 3;
+
             $model = _Model::getByField($pdo, 'className', $decodedModel->className);
             if (!$model) {
+                $response = 1;
                 $model = new _Model($pdo);
             }
+
             foreach ($decodedModel as $idx => $itm) {
                 if ($idx === 'id') {
                     continue;
                 }
                 $setMethod = "set" . ucfirst($idx);
-                $model->$setMethod($itm);
+                $getMethod = "get" . ucfirst($idx);
+
+                if ($response === 1) {
+                    $model->$setMethod($itm);
+                } else {
+                    if ($itm != $model->$getMethod()) {
+//                        var_dump($decodedModel->className, $idx, $itm, $model->$getMethod());exit;
+                        $response = 2;
+                        $model->$setMethod($itm);
+                    }
+                }
             }
+
             $model->setPdo($pdo);
-            $model->save(true);
+            $model->save(true, [
+                'doNotUpdateModified' => 1,
+            ]);
         }
-        return null;
+
+        return $response;
     }
 
     /**

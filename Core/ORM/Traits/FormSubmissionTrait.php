@@ -4,11 +4,4 @@ namespace MillenniumFalcon\Core\ORM\Traits;
 
 trait FormSubmissionTrait
 {
-    /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
 }

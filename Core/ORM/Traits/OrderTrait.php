@@ -9,14 +9,6 @@ trait OrderTrait
     protected $orderItems;
 
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-
-    /**
      * @return array
      * @throws \Exception
      */

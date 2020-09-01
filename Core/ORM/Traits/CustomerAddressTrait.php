@@ -9,14 +9,6 @@ trait CustomerAddressTrait
     protected $country;
 
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-    
-    /**
      * @return string
      */
     public function __toString()

@@ -52,7 +52,7 @@ trait FormDescriptorTrait
                 "sql" => ""
             ]
         ]));
-        $orm->setThankYouMessage('Thanks for your enquiry. We will get back to you as soon as we can.');
+        $orm->setThankyouHeading('Thanks for your enquiry. We will get back to you as soon as we can.');
         $orm->save();
     }
     

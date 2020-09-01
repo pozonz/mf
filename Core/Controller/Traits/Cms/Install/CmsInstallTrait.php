@@ -6,25 +6,15 @@ use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
 
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
+use phpDocumentor\Reflection\Types\Static_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 trait CmsInstallTrait
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
-     * @var string[]
-     */
     protected $IGNORE_FOLDERS_UNDER_ORM = [
         '.',
         '..',
@@ -34,7 +24,7 @@ trait CmsInstallTrait
     ];
 
     /**
-     * @Route("/install/init")
+     * @Route("/install/model/init")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function init()
@@ -42,101 +32,134 @@ trait CmsInstallTrait
         ini_set('max_execution_time', 9999);
         ini_set('memory_limit', '9999M');
 
-        $webPath = $this->kernel->getProjectDir();
+        _Model::sync($this->connection);
 
-        $this->populateDb($webPath . '/vendor/pozoltd/mf/Core/ORM', "MillenniumFalcon\\Core\\ORM\\");
-        if (file_exists($webPath . '/src/ORM/')) {
-            $this->populateDb($webPath . '/src/ORM/', "App\\ORM\\");
-        }
-
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/CmsController.php',
+        return new JsonResponse([
+            'models' => json_decode($this->createOrUpdateModelsFromFiles()->getContent()),
+            'tables' => json_decode($this->createOrUpdateTablesFromModels()->getContent()),
+            'data' => json_decode($this->addInitDataToModel()->getContent()),
         ]);
     }
 
     /**
-     * @param $dir
-     * @param $namespace
-     * @throws \Doctrine\DBAL\ConnectionException
+     * @Route("/install/model/models")
      */
-    public function populateDb($dir, $namespace)
+    public function createOrUpdateModelsFromFiles()
     {
-        $files = array_diff(scandir($dir), $this->IGNORE_FOLDERS_UNDER_ORM);
+        ini_set('max_execution_time', 9999);
+        ini_set('memory_limit', '9999M');
 
-        //Create table
-        $this->connection->beginTransaction();
-        foreach ($files as $file) {
-            $className = pathinfo($file, PATHINFO_FILENAME);
-            $fullClass = $namespace . $className;
+        $unknown = [];
+        $added = [];
+        $updated = [];
+        $nochange = [];
 
-            $tableName = $fullClass::getTableName();
-            $created = $this->tableExists($tableName);
-            if (!$created) {
-                $fullClass::sync($this->connection);
-            }
-        }
-        $this->connection->commit();
+        $files = [];
+        $files = array_unique(array_merge($files, array_diff(scandir($this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Core/ORM'), $this->IGNORE_FOLDERS_UNDER_ORM)));
+        $files = array_unique(array_merge($files, array_diff(scandir($this->kernel->getProjectDir() . '/src/ORM/'), $this->IGNORE_FOLDERS_UNDER_ORM)));
 
-        sleep(5);
+        sort($files);
 
-        //Update model
-        $this->connection->beginTransaction();
         foreach ($files as $file) {
             $className = pathinfo($file, PATHINFO_FILENAME);
             if ($className == '_Model') {
                 continue;
             }
-            $fullClass = $namespace . $className;
-            $fullClass::updateModel($this->connection);
-        }
-        $this->connection->commit();
+            $fullClass = ModelService::fullClass($this->connection, $className);
+            $response = $fullClass::createOrUpdateModel($this->connection);
 
-        sleep(5);
-
-//        //Init data
-        $models = _Model::data($this->connection);
-        $this->connection->beginTransaction();
-        foreach ($models as $model) {
-            $fullClass = $namespace . $model->getClassName();
-            $data = $fullClass::data($this->connection);
-            if (!count($data)) {
-                $fullClass::initData($this->connection);
+            if ($response == 0) {
+                $unknown[] = $className;
+            } elseif ($response == 1) {
+                $added[] = $className;
+            } elseif ($response == 2) {
+                $updated[] = $className;
+            } elseif ($response == 3) {
+                $nochange[] = $className;
             }
         }
-        $this->connection->commit();
+
+        return new JsonResponse([
+            'unknown' => $unknown,
+            'added' => $added,
+            'updated' => $updated,
+            'nochange' => $nochange,
+        ]);
     }
 
     /**
-     * @Route("/install/sync")
+     * @Route("/install/model/tables")
      */
-    public function sync()
+    public function createOrUpdateTablesFromModels()
     {
-        ini_set('max_execution_time', 9999);
-        ini_set('memory_limit', '9999M');
-
-        _Model::sync($this->connection);
+        $unknown = [];
+        $added = [];
+        $updated = [];
+        $nochange = [];
 
         /** @var _Model[] $models */
         $models = _Model::data($this->connection);
         foreach ($models as $model) {
             $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
-            $fullClass::sync($this->connection);
+            $response = $fullClass::sync($this->connection);
+
+            if ($response == 0) {
+                $unknown[] = $model->getClassName();
+            } elseif ($response == 1) {
+                $added[] = $model->getClassName();
+            } elseif ($response == 2) {
+                $updated[] = $model->getClassName();
+            } elseif ($response == 3) {
+                $nochange[] = $model->getClassName();
+            }
         }
 
-        return $this->json([
-            'message' => 'Really! Again?',
-            'path' => 'src/Controller/CmsController.php',
+        return new JsonResponse([
+            'unknown' => $unknown,
+            'added' => $added,
+            'updated' => $updated,
+            'nochange' => $nochange,
         ]);
     }
 
+    /**
+     * @Route("/install/model/tables")
+     */
+    public function addInitDataToModel()
+    {
+        $response = [];
+        $models = _Model::data($this->connection);
+        foreach ($models as $model) {
+            $added = 0;
+
+            $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
+            $total = $fullClass::data($this->connection, [
+                'count' => 1,
+            ]);
+            if ($total['count'] == 0) {
+                try {
+                    $method = new \ReflectionMethod($fullClass . '::initData');
+                    $fullClass::initData($this->connection);
+                    $total = $fullClass::data($this->connection, [
+                        'count' => 1,
+                    ]);
+                    $added = $total['count'];
+
+                } catch (\Exception $ex) {
+                }
+            }
+            $response[$model->getClassName()] = $added;
+        }
+
+        return new JsonResponse($response);
+    }
 
     /**
      * @param $tableName
      * @return bool
      * @throws \Doctrine\DBAL\DBALException
      */
-    private function tableExists($tableName)
+    protected function tableExists($tableName)
     {
         $results = $this->connection->query("SHOW TABLES LIKE '$tableName'");
         if (!$results) {

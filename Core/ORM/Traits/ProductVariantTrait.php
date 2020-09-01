@@ -6,11 +6,4 @@ use MillenniumFalcon\Core\Service\ModelService;
 
 trait ProductVariantTrait
 {
-    /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
 }
