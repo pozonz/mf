@@ -116,7 +116,7 @@ trait WebCoreAssetTrait
         $fileLocation = $uploadPath . $asset->getFileLocation();
 
         if ($assetSizeCode == 1) {
-            $assetSizeCode = null;
+            $assetSizeCode = 1;
         }
 
         if ($fileType == 'image/svg+xml') {
@@ -158,19 +158,32 @@ trait WebCoreAssetTrait
             $thumbnail = $fileLocation;
 
             if ($assetSizeCode) {
-                $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
-                $assetSize = $fullClass::getByField($this->connection, 'code', $assetSizeCode);
-                if (!$assetSize) {
-                    throw new NotFoundHttpException();
+
+                if ($assetSizeCode !== 1) {
+                    $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
+                    $assetSize = $fullClass::getByField($this->connection, 'code', $assetSizeCode);
+                    if (!$assetSize) {
+                        throw new NotFoundHttpException();
+                    }
+                } else {
+                    $assetSize = null;
                 }
 
                 $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
                 $assetCrop = $fullClass::data($this->connection, array(
                     'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
-                    'params' => array($asset->getId(), $assetSize->getId()),
+                    'params' => array($asset->getId(), $assetSize ? $assetSize->getId() : null),
                     'limit' => 1,
                     'oneOrNull' => 1,
                 ));
+                if (!$assetCrop) {
+                    $assetCrop = $fullClass::data($this->connection, array(
+                        'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
+                        'params' => array($asset->getId(), 'All sizes'),
+                        'limit' => 1,
+                        'oneOrNull' => 1,
+                    ));
+                }
 
                 $ext = $asset->getFileExtension();
                 if ($useWebp && strtolower($ext) == 'gif') {
@@ -178,7 +191,11 @@ trait WebCoreAssetTrait
                 }
 
                 $thumbnail = "{$cachedFolder}{$cachedKey}.$ext";
-                $resizeCmd = "-resize {$assetSize->getWidth()}";
+                if ($assetSizeCode !== 1) {
+                    $resizeCmd = "-resize {$assetSize->getWidth()}";
+                } else {
+                    $resizeCmd = '';
+                }
                 $qualityCmd = "-quality 95";
                 $colorCmd = '-colorspace sRGB';
                 $cropCmd = '';

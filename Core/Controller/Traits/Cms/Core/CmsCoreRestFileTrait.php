@@ -438,7 +438,7 @@ trait CmsCoreRestFileTrait
         $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
         $assetSize = $fullClass::getById($this->connection, $assetSizeId);
         if (!$assetSize) {
-            throw new NotFoundHttpException();
+//            throw new NotFoundHttpException();
         }
 
         $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
@@ -450,10 +450,23 @@ trait CmsCoreRestFileTrait
         ));
         if (!$orm) {
             $orm = new $fullClass($this->connection);
-            $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . $assetSize->getTitle());
+            $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . ($assetSize ? $assetSize->getTitle() : 'all'));
         }
 
-        AssetService::removeCache($asset, $assetSize);
+        if ($assetSize) {
+            AssetService::removeCache($asset, $assetSize);
+        } else {
+            $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
+            $allAssetSizes = $fullClass::data($this->connection);
+            foreach ($allAssetSizes as $itm) {
+                AssetService::removeCache($asset, $itm);
+            }
+
+            //bite me
+            $allSizeCode = new $fullClass($this->connection);
+            $allSizeCode->setCode(1);
+            AssetService::removeCache($asset, $allSizeCode);
+        }
 
         $orm->setX($x);
         $orm->setY($y);

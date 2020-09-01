@@ -318,7 +318,7 @@ class AssetService
         if (file_exists($cachedFile)) {
             unlink($cachedFile);
         }
-        $cachedFile = "{$cachedFolder}webp-{$cachedKey}.webp";
+        $cachedFile = "{$cachedFolder}{$cachedKey}.webp";
         if (file_exists($cachedFile)) {
             unlink($cachedFile);
         }

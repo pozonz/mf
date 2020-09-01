@@ -8,6 +8,7 @@
                     <section class="image-settings">
                         <label>Choose a size</label>
                         <select id="redactor_image_size">
+                            <option>All sizes</option>
                             {{#each imageSizes}}
                                 <option {{#compare ../size code operator='=='}}selected{{/compare}} value="{{id}}" data-code="{{code}}">{{title}}</option>
                             {{/each}}
