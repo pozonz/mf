@@ -47,7 +47,7 @@ class OrmForm extends AbstractType
             $builder->add($itm->field, $widget, $opts);
         }
 
-        $presetData = $model->getMetadata() ? json_decode($model->getPresetData()) : array();
+        $presetData = json_decode($model->getPresetData() ?: '[]');
         foreach ($presetData as $presetDataItem) {
             $presetDataMap = _Model::presetDataMap;
             if ($presetDataMap[$presetDataItem]) {
@@ -94,7 +94,8 @@ class OrmForm extends AbstractType
      * @param $column
      * @return array
      */
-    private function getOpts($pdo, $column, $orm) {
+    private function getOpts($pdo, $column, $orm)
+    {
         $opts = array(
             'label' => $column->label,
         );
@@ -114,11 +115,18 @@ class OrmForm extends AbstractType
                     $column->sql = str_replace($matches[0], "FROM $tablename", $column->sql);
                 }
 
-                $result= [];
+                $result = [];
                 if ($column->sql) {
                     $stmt = $pdo->prepare($column->sql);
                     $stmt->execute();
                     $result = $stmt->fetchAll(\PDO::FETCH_OBJ);
+
+                    $result = array_filter(array_map(function ($itm) {
+                        if (!isset($itm->value) || !isset($itm->key)) {
+                            return null;
+                        }
+                        return $itm;
+                    }, $result));
                 }
 
                 $opts['choices'] = array();
@@ -147,7 +155,7 @@ class OrmForm extends AbstractType
                     $column->sql = str_replace($matches[0], "FROM $tablename", $column->sql);
                 }
 
-                $result= [];
+                $result = [];
                 if ($column->sql) {
                     $stmt = $pdo->prepare($column->sql);
                     $stmt->execute();
@@ -163,7 +171,8 @@ class OrmForm extends AbstractType
                     ];
                 }
                 $tree = new Tree($nodes, [
-                    'buildwarningcallback' => function () {},
+                    'buildwarningcallback' => function () {
+                    },
                 ]);
                 $opts['choices'] = $tree->getRootNodes();
 //                $opts['required'] = false;
