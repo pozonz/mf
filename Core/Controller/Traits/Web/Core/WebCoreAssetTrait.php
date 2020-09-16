@@ -125,7 +125,6 @@ trait WebCoreAssetTrait
             $isImage = 1;
             $assetSizeCode = null;
         }
-        
 
 //        if ($fileType ==  'application/pdf') {
 //            //1. build a url for the pdf
@@ -157,7 +156,7 @@ trait WebCoreAssetTrait
 //
 //        }
 
-        if ($asset->getIsImage()) {
+        if ($isImage) {
             $thumbnail = $fileLocation;
 
             if ($assetSizeCode) {
