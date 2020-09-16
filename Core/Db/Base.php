@@ -86,7 +86,7 @@ abstract class Base implements \JsonSerializable
 
         foreach ($methods as $method) {
             $methodName = $method->getName();
-            if (strpos($methodName, 'obj') === 0) {
+            if (strpos($methodName, 'objJson') === 0) {
                 $obj->{$methodName} = $this->$methodName();
             }
         }
