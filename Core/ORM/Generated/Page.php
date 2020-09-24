@@ -39,6 +39,11 @@ class Page extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $pageTitle;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $pageHeading;
     
     /**
@@ -190,6 +195,22 @@ class Page extends Base
     public function setTemplateFile($templateFile)
     {
         $this->templateFile = $templateFile;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPageTitle()
+    {
+        return $this->pageTitle;
+    }
+    
+    /**
+     * @param mixed pageTitle
+     */
+    public function setPageTitle($pageTitle)
+    {
+        $this->pageTitle = $pageTitle;
     }
     
     /**
