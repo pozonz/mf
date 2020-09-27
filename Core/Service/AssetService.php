@@ -24,6 +24,37 @@ class AssetService
     }
 
     /**
+     * @param $folderRef
+     */
+    public function getGallery($folderRef)
+    {
+        $fullClass = ModelService::fullClass($this->connection, 'Asset');
+        $folder = $fullClass::data($this->connection, array(
+            'whereSql' => 'm.isFolder = 1 AND m.title = ?',
+            'params' => [$folderRef],
+            'limit' => 1,
+            'oneOrNull' => 1,
+        ));
+        if (!$folder) {
+            $folder = $fullClass::data($this->connection, array(
+                'whereSql' => 'm.isFolder = 1 AND m.title = ?',
+                'params' => [$folderRef],
+                'limit' => 1,
+                'oneOrNull' => 1,
+            ));
+        }
+
+        if ($folder) {
+            return $fullClass::data($this->connection, array(
+                'whereSql' => '(m.isFolder != 1 OR m.isFolder IS NULL) AND m.parentId = ?',
+                'params' => [$folder->getId()]
+            ));
+        }
+
+        return [];
+    }
+
+    /**
      * @return \Pz\Router\InterfaceNode
      */
     public function getRoot()
@@ -57,7 +88,8 @@ class AssetService
         $tree = new Tree($data, [
             'rootId' => 0,
             'jsonserializer' => new HierarchicalTreeJsonSerializer(),
-            'buildwarningcallback' => function () {},
+            'buildwarningcallback' => function () {
+            },
         ]);
 
         $assetRoot = static::getAssetFolderRoot();
