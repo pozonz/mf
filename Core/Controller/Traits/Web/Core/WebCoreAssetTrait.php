@@ -198,7 +198,7 @@ trait WebCoreAssetTrait
                 } else {
                     $resizeCmd = '';
                 }
-                $qualityCmd = "-quality 95";
+                $qualityCmd = "-quality 100%";
                 $colorCmd = '-colorspace sRGB';
                 $cropCmd = '';
                 if ($assetCrop AND $assetSizeCode !== 'cms_small') {
@@ -246,13 +246,13 @@ trait WebCoreAssetTrait
         if ($useWebp && $assetSizeCode) {
             $webpThumbnail = "{$cachedFolder}{$cachedKey}.webp";
             if (!file_exists($webpThumbnail)) {
-                $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
+                $command = getenv('CWEBP_CMD') . " -q 100 $thumbnail -o $webpThumbnail";
                 $returnValue = AssetService::generateOutput($command);
             }
             $thumbnail = $webpThumbnail;
             $fileType = 'image/webp';
         }
-//var_dump($command);exit;
+//var_dump($command, $thumbnail);exit;
         $date = new \DateTimeImmutable('@' . filectime($uploadPath));
         $saveDate = $date->setTimezone(new \DateTimeZone("GMT"))->format("D, d M y H:i:s T");
         $response = BinaryFileResponse::create($thumbnail, Response::HTTP_OK, [
