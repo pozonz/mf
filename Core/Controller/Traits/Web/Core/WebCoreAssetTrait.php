@@ -194,7 +194,11 @@ trait WebCoreAssetTrait
 
                 $thumbnail = "{$cachedFolder}{$cachedKey}.$ext";
                 if ($assetSizeCode !== 1) {
-                    $resizeCmd = "-resize {$assetSize->getWidth()}";
+                    if ($assetSize->getResizeBy() == 1) {
+                        $resizeCmd = "-resize x{$assetSize->getWidth()}";
+                    } else {
+                        $resizeCmd = "-resize {$assetSize->getWidth()}";
+                    }
                 } else {
                     $resizeCmd = '';
                 }

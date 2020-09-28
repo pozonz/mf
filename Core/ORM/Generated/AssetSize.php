@@ -19,6 +19,11 @@ class AssetSize extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $resizeBy;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $width;
     
     /**
@@ -56,6 +61,22 @@ class AssetSize extends Base
     public function setCode($code)
     {
         $this->code = $code;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getResizeBy()
+    {
+        return $this->resizeBy;
+    }
+    
+    /**
+     * @param mixed resizeBy
+     */
+    public function setResizeBy($resizeBy)
+    {
+        $this->resizeBy = $resizeBy;
     }
     
     /**
