@@ -26,7 +26,7 @@ class AssetService
     /**
      * @param $folderRef
      */
-    public function getGallery($folderRef)
+    public function getGallery($folderRef, $options = [])
     {
         $fullClass = ModelService::fullClass($this->connection, 'Asset');
         $folder = $fullClass::data($this->connection, array(
@@ -45,10 +45,10 @@ class AssetService
         }
 
         if ($folder) {
-            return $fullClass::data($this->connection, array(
+            return $fullClass::data($this->connection, array_merge([
                 'whereSql' => '(m.isFolder != 1 OR m.isFolder IS NULL) AND m.parentId = ?',
                 'params' => [$folder->getId()]
-            ));
+            ], $options));
         }
 
         return [];
@@ -334,6 +334,22 @@ class AssetService
         $fullClass = ModelService::fullClass($pdo, 'AssetSize');
         $assetSizes = $fullClass::data($pdo);
         foreach ($assetSizes as $assetSize) {
+            static::removeCache($asset, $assetSize);
+        }
+    }
+
+    /**
+     * @param $pdo
+     * @param $asset
+     * @throws \Exception
+     */
+    static public function removeCachesByAssetSize($pdo, $assetSize)
+    {
+        $fullClass = ModelService::fullClass($pdo, 'Asset');
+        $assets = $fullClass::data($pdo, [
+            'whereSql' => 'm.isFolder != 1 OR m.isFolder IS NULL',
+        ]);
+        foreach ($assets as $asset) {
             static::removeCache($asset, $assetSize);
         }
     }
