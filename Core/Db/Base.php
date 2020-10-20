@@ -13,6 +13,7 @@ use MillenniumFalcon\Core\Db\Traits\BaseVersionTrait;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Version\VersionInterface;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class Base implements \JsonSerializable
@@ -37,7 +38,7 @@ abstract class Base implements \JsonSerializable
     {
         $this->pdo = $pdo;
 
-        $this->uniqid = uniqid();
+        $this->uniqid = Uuid::uuid4();
         $this->rank = 0;
         $this->added = date('Y-m-d H:i:s');
         $this->modified = date('Y-m-d H:i:s');

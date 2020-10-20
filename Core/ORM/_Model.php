@@ -340,6 +340,7 @@ EOD;
             'Choice multi json tree' => '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceMultiJsonTree',
             'Date picker' => '\\MillenniumFalcon\\Core\\Form\\Type\\DatePicker',
             'Date time picker' => '\\MillenniumFalcon\\Core\\Form\\Type\\DateTimePicker',
+            'Time picker' => '\\MillenniumFalcon\\Core\\Form\\Type\\TimePicker',
             'Wysiwyg' => '\\MillenniumFalcon\\Core\\Form\\Type\\Wysiwyg',
             'Content blocks' => '\\MillenniumFalcon\\Core\\Form\\Type\\ContentBlock',
             'Checkbox' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType',
