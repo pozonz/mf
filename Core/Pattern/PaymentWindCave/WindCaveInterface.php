@@ -20,6 +20,8 @@ interface WindCaveInterface
 
     public function getFinaliseUrl(Request $request);
 
+    public function getPrintTemplate();
+
     public function getPaymentToken();
 
     public function setPaymentStatus($paymentStatus);
