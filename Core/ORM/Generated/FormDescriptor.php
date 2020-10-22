@@ -65,16 +65,11 @@ class FormDescriptor extends Base
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $thankYouEmailText;
-
+    
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $oldId;
-
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $formSubmission;
     
     /**
      * @return mixed
@@ -267,7 +262,7 @@ class FormDescriptor extends Base
     {
         $this->thankYouEmailText = $thankYouEmailText;
     }
-
+    
     /**
      * @return mixed
      */
@@ -275,7 +270,7 @@ class FormDescriptor extends Base
     {
         return $this->oldId;
     }
-
+    
     /**
      * @param mixed oldId
      */
@@ -283,20 +278,5 @@ class FormDescriptor extends Base
     {
         $this->oldId = $oldId;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFormSubmission()
-    {
-        return $this->formSubmission;
-    }
-
-    /**
-     * @param mixed formSubmission
-     */
-    public function setFormSubmission($formSubmission)
-    {
-        $this->formSubmission = $formSubmission;
-    }
+    
 }
