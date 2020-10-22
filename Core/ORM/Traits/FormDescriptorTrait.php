@@ -4,6 +4,8 @@ namespace MillenniumFalcon\Core\ORM\Traits;
 
 trait FormDescriptorTrait
 {
+    private $formSubmission;
+
     /**
      * @param $pdo
      */
@@ -12,7 +14,7 @@ trait FormDescriptorTrait
         $orm = new static($pdo);
         $orm->setTitle('Contact');
         $orm->setCode('contact');
-        $orm->setFromAddress('noreply@send.final.nz');
+        $orm->setFromAddress('noreply@send.hhcode.com');
         $orm->setRecipients('pozoltd@gmail.com');
         $orm->setCode('contact');
         $orm->setFormFields(json_encode([
@@ -61,6 +63,22 @@ trait FormDescriptorTrait
      */
     static public function getCmsOrmTwig() {
         return 'cms/orms/orm-custom-formdescriptor.html.twig';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormSubmission()
+    {
+        return $this->formSubmission;
+    }
+
+    /**
+     * @param mixed $formSubmission
+     */
+    public function setFormSubmission($formSubmission)
+    {
+        $this->formSubmission = $formSubmission;
     }
 
 }
