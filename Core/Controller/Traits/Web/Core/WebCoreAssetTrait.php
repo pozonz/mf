@@ -156,9 +156,9 @@ trait WebCoreAssetTrait
 //
 //        }
 
-        if ($isImage) {
-            $thumbnail = $fileLocation;
+        $thumbnail = $fileLocation;
 
+        if ($isImage) {
             if ($assetSizeCode) {
 
                 if ($assetSizeCode !== 1) {
@@ -211,7 +211,7 @@ trait WebCoreAssetTrait
                 $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip $thumbnail";
             }
 
-        } else {
+        } elseif ($assetSizeCode && $assetSizeCode != 1) {
             if ('application/pdf' == $fileType) {
                 //TODO: implement pdf thumbnail
 
