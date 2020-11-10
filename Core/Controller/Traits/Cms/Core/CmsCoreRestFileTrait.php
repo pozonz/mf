@@ -466,6 +466,15 @@ trait CmsCoreRestFileTrait
             $allSizeCode = new $fullClass($this->connection);
             $allSizeCode->setCode(1);
             AssetService::removeCache($asset, $allSizeCode);
+
+            $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
+            $result = $fullClass::data($this->connection, [
+                'whereSql' => 'm.assetId = ? AND assetSizeId != ?',
+                'params' => [$asset->getId(), 'All sizes'],
+            ]);
+            foreach ($result as $itm) {
+                $itm->delete();
+            }
         }
 
         $orm->setX($x);

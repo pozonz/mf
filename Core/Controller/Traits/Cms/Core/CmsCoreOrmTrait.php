@@ -209,13 +209,23 @@ trait CmsCoreOrmTrait
     {
         $objColumnJson = json_decode($model->getColumnsJson());
         foreach ($objColumnJson as $columnJson) {
+            $setMethod = 'set' . ucfirst($columnJson->field);
+            $getMethod = 'get' . ucfirst($columnJson->field);
+
             if (isset($formats[$columnJson->widget])) {
-                $getMethod = 'get' . ucfirst($columnJson->field);
                 $dateStr = $orm->$getMethod();
                 if ($dateStr) {
                     $format = $formats[$columnJson->widget];
-                    $setMethod = 'set' . ucfirst($columnJson->field);
                     $orm->$setMethod(date($format, strtotime($dateStr)));
+                }
+            }
+
+            if ($columnJson->widget == '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceSortable') {
+                $value = $orm->$getMethod();
+                if ($value) {
+                    $orm->$setMethod(json_encode(explode(',', $value)));
+                } else {
+                    $orm->$setMethod(null);
                 }
             }
         }

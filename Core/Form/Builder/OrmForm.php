@@ -36,10 +36,22 @@ class OrmForm extends AbstractType
 
         $columnsJson = json_decode($model->getColumnsJson());
         foreach ($columnsJson as $itm) {
+            $getMethod = 'get' . ucfirst($itm->field);
+            $setMethod = 'set' . ucfirst($itm->field);
+
+            if ($orm && !method_exists($orm, $getMethod)) {
+                continue;
+            }
+
             if ($itm->widget == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType') {
-                $getMethod = 'get' . ucfirst($itm->field);
-                $setMethod = 'set' . ucfirst($itm->field);
                 $orm->$setMethod($orm->$getMethod() ? true : false);
+            }
+
+            if ($itm->widget == '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceSortable') {
+                $value = $orm->$getMethod();
+                if ($value) {
+                    $orm->$setMethod(implode(',', json_decode($value)));
+                }
             }
 
             $widget = $itm->widget;
@@ -103,6 +115,7 @@ class OrmForm extends AbstractType
         switch ($column->widget) {
             case '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType':
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceMultiJson':
+            case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceSortable':
                 $slugify = new Slugify(['trim' => false]);
                 preg_match('/\bfrom\b\s*(\w+)/i', $column->sql, $matches);
                 if (count($matches) == 2) {
