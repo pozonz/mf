@@ -152,7 +152,7 @@ class Extension extends AbstractExtension
         if (!isset($block->status) || !$block->status || $block->status == 0) {
             return '';
         }
-        if ($this->file_exists("{$this->kernel->getProjectDir()}/templates/fragments/{$block->twig}")) {
+        if (file_exists("{$this->kernel->getProjectDir()}/templates/fragments/{$block->twig}")) {
             return $this->environment->render("fragments/{$block->twig}", (array)$block->values);
         }
         return '';
