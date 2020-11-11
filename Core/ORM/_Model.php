@@ -344,6 +344,7 @@ EOD;
             'Wysiwyg' => '\\MillenniumFalcon\\Core\\Form\\Type\\Wysiwyg',
             'Content blocks' => '\\MillenniumFalcon\\Core\\Form\\Type\\ContentBlock',
             'Checkbox' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType',
+            'Choice sortable' => '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceSortable',
             'Choice' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType',
             'Email' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\EmailType',
             'Password' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\PasswordType',

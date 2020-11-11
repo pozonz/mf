@@ -1,5 +1,5 @@
 {% set isFragment = app.request.get('fragment') == 1 ? 1 : 0 %}
-{% set version = 3 %}
+{% set version = 4 %}
 
 <!DOCTYPE html>
 
@@ -224,5 +224,7 @@
         {% block externalFooter %}{% endblock %}
     {% endblock %}
 </div>
+
+<input id="var_wysiwyg_no_image_video_buttons" value="{{ getenv('WYSIWYG_NO_IMAGE_VIDEO_BUTTONS') }}" type="hidden">
 </body>
 </html>

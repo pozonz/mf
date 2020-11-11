@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
 use MillenniumFalcon\Core\Service\ModelService;
+use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use MillenniumFalcon\Core\Tree\RawData;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Tree\TreeUtils;
@@ -38,6 +39,25 @@ trait CmsCoreTrait
         $params['theDataGroup'] = $theDataGroup;
         $params['rootNodes'] = $this->_tree->getRootNodes();
 
+
+        $theNode = $params['theNode'];
+        if ($theNode->extra2 == 'sectionNode') {
+            $url = null;
+            $children = $theNode->getChildren();
+            foreach ($children as $child) {
+                if ($child->status != 1) {
+                    continue;
+                }
+                $url = $child->url;
+                if ($url) {
+                    break;
+                }
+            }
+            if ($url) {
+                throw new RedirectException($url);
+            }
+        }
+
         //Check permission
 //        if (!$params['verticalMenuRoot']) {
 //            throw new NotFoundHttpException();
@@ -70,6 +90,7 @@ trait CmsCoreTrait
                 'url' => '/manage/' . ($itm->getBuiltInSection() ? $itm->getBuiltInSectionCode() : 'section/' . $itm->getId()),
                 'template' => $itm->getBuiltInSection() ? str_replace('.html.twig', '.twig', $itm->getBuiltInSectionTemplate()) : 'cms/admin.twig',
                 'status' => 1,
+                'extra2' => 'sectionNode',
                 'icon' => $itm->getIcon(),
             ]);
         }, $dataGroups));

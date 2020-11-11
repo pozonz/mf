@@ -45,6 +45,20 @@
     <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d F Y H:i:s') : '' }}"/>
 {%- endblock datetimepicker_widget %}
 
+{%- block choice_sortable_widget -%}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' js-selectize cms_form_text')|trim}) %}
+    {%- set type = type|default('text') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+
+    {% for idx,itm in choices %}
+        <div style="display: none;" class="{{ id }}-choice" data-id="{{ itm }}" data-name="{{ idx }}"></div>
+    {% endfor %}
+{%- endblock choice_sortable_widget -%}
+
 {% block choice_multi_json_widget -%}
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
     <select id="{{ id }}_select" class="js-choice_multi_json" multiple>
