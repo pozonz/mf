@@ -360,13 +360,31 @@ class AssetService
      */
     static public function removeCache($asset, $assetSize)
     {
+        $ext = $asset->getFileExtension();
+
         $cachedFolder = AssetService::getImageCachePath();
         $cachedKey = AssetService::getCacheKey($asset, $assetSize->getCode());
-        $cachedFile = "{$cachedFolder}{$cachedKey}.{$asset->getFileExtension()}";
+        $cachedFile = "{$cachedFolder}{$cachedKey}.{$ext}";
         if (file_exists($cachedFile)) {
             unlink($cachedFile);
         }
-        $cachedFile = "{$cachedFolder}{$cachedKey}.webp";
+
+        $cachedFile = "{$cachedFolder}{$cachedKey}.{$ext}.txt";
+
+        if (file_exists($cachedFile)) {
+            unlink($cachedFile);
+        }
+
+        if (strtolower($ext) == 'gif') {
+            $ext = "jpg";
+        }
+
+        $cachedFile = "{$cachedFolder}{$cachedKey}.{$ext}.webp";
+        if (file_exists($cachedFile)) {
+            unlink($cachedFile);
+        }
+
+        $cachedFile = "{$cachedFolder}{$cachedKey}.{$ext}.webp.txt";
         if (file_exists($cachedFile)) {
             unlink($cachedFile);
         }
