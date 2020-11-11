@@ -245,7 +245,7 @@ trait BaseORMTrait
     static public function getByField(Connection $pdo, $field, $value)
     {
         return static::data($pdo, array(
-            'whereSql' => "m.$field = ?",
+            'whereSql' => "CAST(m.`$field` AS CHAR(255)) = ?",
             'params' => array($value),
             'oneOrNull' => 1,
         ));
