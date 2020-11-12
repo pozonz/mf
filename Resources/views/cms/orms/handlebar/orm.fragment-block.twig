@@ -4,7 +4,7 @@
             <h4 class="block-title">{{block.title}}</h4>
             {{#compare block.status 1 operator="=="}}<a href="#" class="delete-block active-block js-status-toggle" data-status="0" data-type="block" style="background-image: url('/cms/images/dotGreen.gif');"></a>{{/compare}}
             {{#compare block.status 0 operator="=="}}<a href="#" class="delete-block active-block js-status-toggle" data-status="1" data-type="block" style="background-image: url('/cms/images/dotRed.gif');"></a>{{/compare}}
-            <a href="#" class="delete-block edit-block js-edit-block" style="background-image: url('/cms/images/editIcon.gif');"></a>
+            {{!-- <a href="#" class="delete-block edit-block js-edit-block" style="background-image: url('/cms/images/editIcon.gif');"></a> --}}
             <a href="#" class="delete-block js-delete-block"></a>
         </div>
         <div class="clear"></div>
