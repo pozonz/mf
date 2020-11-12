@@ -16,36 +16,13 @@
 {% endblock %}
 
 {% block formWidgets %}
-    <div class="formStyle">
-        {{ form_label(form.title) }}
-        {{ form_widget(form.title) }}
-        {{ form_errors(form.title) }}
-    </div>
-    <div class="formStyle">
-        {{ form_label(form.code) }}
-        {{ form_widget(form.code) }}
-        {{ form_errors(form.code) }}
-    </div>
-    <div class="formStyle">
-        {{ form_label(form.formName) }}
-        {{ form_widget(form.formName) }}
-        {{ form_errors(form.formName) }}
-    </div>
-    <div class="formStyle">
-        {{ form_label(form.fromAddress) }}
-        {{ form_widget(form.fromAddress) }}
-        {{ form_errors(form.fromAddress) }}
-    </div>
-    <div class="formStyle type6">
-        {{ form_label(form.recipients) }}
-        {{ form_widget(form.recipients) }}
-        {{ form_errors(form.recipients) }}
-    </div>
-    <div class="formStyle">
-        {{ form_label(form.antispam) }}
-        {{ form_widget(form.antispam) }}
-        {{ form_errors(form.antispam) }}
-    </div>
+    {{ form_row(form.title) }}
+    {{ form_row(form.code) }}
+    {{ form_row(form.formName) }}
+    {{ form_row(form.fromAddress) }}
+    {{ form_row(form.recipients) }}
+    {{ form_row(form.antispam) }}
+
     <div id="formBuilder" class="formStyle type6">
         {#{{ form_label(form.formFields) }}#}
         {{ form_widget(form.formFields,{attr:{style:'display:none;'}}) }}

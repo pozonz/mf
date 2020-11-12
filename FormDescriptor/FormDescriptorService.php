@@ -212,7 +212,7 @@ class FormDescriptorService
                     ));
 
                     $message = (new \Swift_Message())
-                        ->setSubject("{$submission->getTitle()}")
+                        ->setSubject("{$formDescriptor->getTitle()} {$submission->getTitle()}")
                         ->setFrom(array($formDescriptor->getFromAddress()))
                         ->setTo(array_filter(array_map('trim', explode(',', $formDescriptor->getRecipients()))))
                         ->setBcc(array(getenv('EMAIL_BCC')))
