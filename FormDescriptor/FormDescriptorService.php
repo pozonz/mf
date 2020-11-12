@@ -208,6 +208,7 @@ class FormDescriptorService
                     $formDescriptor->setFormSubmission($submission);
 
                     $messageBody = $this->environment->render('cms/emails/form_submission.twig', array(
+                        'formDescriptor' => $formDescriptor,
                         'submission' => $submission,
                     ));
 
