@@ -132,7 +132,6 @@ trait WebCoreTrait
             return new RedirectResponse($redirectTo);
         }
 
-        var_dump(method_exists($params['theNode']->extraInfo, 'objPageTempalte'), $params['theNode']->extraInfo);exit;
         return $this->render($params['theNode']->extraInfo->objPageTempalte()->getFilename(), $params);
     }
 
