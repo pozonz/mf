@@ -235,6 +235,7 @@
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
 {%- endblock _orm_lastEditedBy_widget %}
 
+
 {% block orm_mkvp_type_row -%}
     <style>
         .orm_mkvp_type .button-galery {
@@ -253,7 +254,6 @@
     {% endapply %}
 {%- endblock orm_mkvp_type_row -%}
 
-
 {% block orm_mkvp_type_widget -%}
     <div class="widget style1 js-mkvp-widget type20 formStyle">
         <textarea {{ block('widget_attributes') }} style="display: none;">{{ value }}</textarea>
@@ -264,3 +264,40 @@
         <div>&nbsp;</div>
     </div>
 {%- endblock orm_mkvp_type_widget -%}
+
+
+{% block orm_abtest_type_row -%}
+    <style>
+        .orm_mkvp_type .button-galery {
+            margin-right: 1.2em;
+            margin-left: -10px;
+        }
+    </style>
+
+    {% apply spaceless %}
+        <div class="box {{ block_prefixes[block_prefixes|length - 2] }}">
+            <div>&nbsp;</div>
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% endapply %}
+{%- endblock orm_abtest_type_row -%}
+
+{% block orm_abtest_type_widget -%}
+    <div class="widget style1 js-abtest-widget type20 formStyle abtest-widget">
+        <textarea {{ block('widget_attributes') }} style="display: none;">{{ value }}</textarea>
+        <textarea id="{{ id }}-choices" class="js-choices" style="display: none;">{{ choices|json_encode }}</textarea>
+
+        <table id="content-block-container" class="table table-striped table-bordered table-hover">
+            <thead>
+                <th>Page</th>
+                <th>Token</th>
+                <th>Chance</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <a href="#" class="insertKVP js-add abtest-add">Add a row</a>
+        <div>&nbsp;</div>
+    </div>
+{%- endblock orm_abtest_type_widget -%}
