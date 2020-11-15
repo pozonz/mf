@@ -262,7 +262,7 @@ trait WebCoreAssetTrait
      */
     private function getTemplateFilePath()
     {
-        return "{$this->kernel->getProjectDir()}Resources/files/";
+        return "{$this->kernel->getProjectDir()}/vendor/pozoltd/mf/Resources/files/";
     }
 
     /**
