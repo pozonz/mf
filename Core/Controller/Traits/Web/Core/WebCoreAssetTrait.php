@@ -73,7 +73,7 @@ trait WebCoreAssetTrait
         if (!$returnOriginalFile && $useWebp && file_exists($webpThumbnail) && file_exists($webpThumbnailHeader)) {
             $header = json_decode(file_get_contents($webpThumbnailHeader));
             if ($header) {
-                return $this->getBinaryFileResponse($webpThumbnail, $webpThumbnailHeader);
+                return $this->getBinaryFileResponse($webpThumbnail, $header);
             }
         }
 
