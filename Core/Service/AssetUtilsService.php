@@ -21,18 +21,8 @@ class AssetUtilsService
         $this->connection = $connection;
     }
 
-    public function getImagePath($assetId, $assetSizeCode)
+    public function getImagePath($assetId, $assetSizeCode, $assetFileName = '')
     {
-        $fullClass = ModelService::fullClass($this->connection, 'Asset');
-        $asset = $fullClass::getByField($this->connection, 'code', $assetId);
-        if (!$asset) {
-            $asset = $fullClass::getById($this->connection, $assetId);
-        }
-
-        if ($asset) {
-            return "/images/assets/{$asset->getId()}/{$assetSizeCode}/{$asset->getFileName()}";
-        }
-
-        return null;
+        return "/images/assets/$assetId/{$assetSizeCode}/{$assetFileName}";
     }
 }
