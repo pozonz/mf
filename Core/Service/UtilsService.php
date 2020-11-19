@@ -193,6 +193,19 @@ class UtilsService
      */
     public function nav($categoryCode)
     {
+        $tree = $this->navTree($categoryCode);
+        if ($tree) {
+            return $tree->getRootNodes();
+        }
+        return null;
+    }
+
+    /**
+     * @param $categoryCode
+     * @return null
+     */
+    public function navTree($categoryCode)
+    {
         $pdo = $this->connection;
 
         $result = null;
@@ -230,14 +243,13 @@ class UtilsService
                 return $a['rank'] >= $b['rank'];
             });
 
-            $tree = new Tree($nodes, [
+            return new Tree($nodes, [
                 'buildwarningcallback' => function () {
                 },
             ]);
-            $result = $tree->getRootNodes();
         }
 
-        return $result;
+        return null;
     }
 
     /**

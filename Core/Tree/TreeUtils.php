@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Tree;
 
+use BlueM\Tree;
 use BlueM\Tree\Node;
 use Cocur\Slugify\Slugify;
 
@@ -35,6 +36,17 @@ class TreeUtils
             }
         }
         return false;
+    }
+
+    /**
+     * @param Node $parentNode
+     * @param Node $childNode
+     * @return bool
+     */
+    static public function containsInTree(Node $parentNode, Node $childNode, Tree $tree)
+    {
+        $childNode = $tree->getNodeById($childNode->getId());
+        return static::contains($parentNode, $childNode);
     }
 
     /**
