@@ -45,8 +45,12 @@ class TreeUtils
      */
     static public function containsInTree(Node $parentNode, Node $childNode, Tree $tree)
     {
-        $childNode = $tree->getNodeById($childNode->getId());
-        return static::contains($parentNode, $childNode);
+        try {
+            $myChildNode = $tree->getNodeById($childNode->getId());
+        } catch (\InvalidArgumentException $ex) {
+            $myChildNode = $childNode;
+        }
+        return static::contains($parentNode, $myChildNode);
     }
 
     /**
