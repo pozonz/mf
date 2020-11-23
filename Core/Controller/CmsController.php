@@ -16,6 +16,7 @@ use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsOrmCartTrait;
 use MillenniumFalcon\Core\RouterController;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Security;
 
 class CmsController extends RouterController
 {
@@ -41,15 +42,21 @@ class CmsController extends RouterController
      * @var KernelInterface
      */
     protected $kernel;
-    
+
+    /**
+     * @var Security
+     */
+    protected $security;
+
     /**
      * CmsController constructor.
      * @param Connection $connection
      * @param KernelInterface $kernel
      */
-    public function __construct(Connection $connection, KernelInterface $kernel)
+    public function __construct(Connection $connection, KernelInterface $kernel, Security $security)
     {
         $this->connection = $connection;
         $this->kernel = $kernel;
+        $this->security = $security;
     }
 }

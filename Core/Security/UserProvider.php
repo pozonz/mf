@@ -90,6 +90,13 @@ class UserProvider implements UserProviderInterface
             );
         }
 
+        $accessibleSections = json_decode($user->getAccessibleSections() ?: '[]');
+        if (count($accessibleSections) === 0) {
+            throw new UnsupportedUserException(
+                sprintf('"%s" does not have any accessible sections.', $username)
+            );
+        }
+
         return $user;
     }
 }

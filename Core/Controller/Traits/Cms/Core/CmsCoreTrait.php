@@ -21,6 +21,7 @@ trait CmsCoreTrait
      * @route("/manage/{page}", requirements={"page" = ".*"})
      * @param Request $request
      * @return mixed
+     * @throws RedirectException
      */
     public function manage(Request $request)
     {
@@ -29,7 +30,9 @@ trait CmsCoreTrait
     }
 
     /**
+     * @param $request
      * @return mixed
+     * @throws RedirectException
      */
     public function getCmsTemplateParams($request)
     {
@@ -38,6 +41,17 @@ trait CmsCoreTrait
         $theDataGroup = TreeUtils::ancestor($params['theNode']);
         $params['theDataGroup'] = $theDataGroup;
         $params['rootNodes'] = $this->_tree->getRootNodes();
+
+        $user = $this->security->getUser();
+        $accessibleSections = json_decode($user->getAccessibleSections() ?: '[]');
+        $params['rootNodes'] = array_filter($params['rootNodes'], function($itm) use ($accessibleSections) {
+            $id = $itm->getId();
+            $id = str_replace('DataGroup', '', $id);
+            if (!in_array($id, $accessibleSections)) {
+                return false;
+            }
+            return true;
+        });
 
 
         $theNode = $params['theNode'];
@@ -58,12 +72,6 @@ trait CmsCoreTrait
             }
         }
 
-        //Check permission
-//        if (!$params['verticalMenuRoot']) {
-//            throw new NotFoundHttpException();
-//        }
-//        $params['verticalMenuItems'] = $params['verticalMenuRoot']->getChildren();
-
         return $params;
     }
 
@@ -82,7 +90,14 @@ trait CmsCoreTrait
         $fullClass = ModelService::fullClass($this->connection, 'DataGroup');
         $dataGroups = $fullClass::active($this->connection);
 
-        $nodes = array_merge($nodes, array_map(function ($itm) {
+        $user = $this->security->getUser();
+        $accessibleSections = json_decode($user->getAccessibleSections() ?: '[]');
+
+        $nodes = array_filter(array_merge($nodes, array_map(function ($itm) use ($accessibleSections) {
+            if (!in_array($itm->getId(), $accessibleSections)) {
+                return null;
+            }
+
             return (array)new RawData([
                 'id' => $this->_getClass($itm) . $itm->getId(),
                 'parent' => null,
@@ -93,9 +108,12 @@ trait CmsCoreTrait
                 'extra2' => 'sectionNode',
                 'icon' => $itm->getIcon(),
             ]);
-        }, $dataGroups));
+        }, $dataGroups)));
 
         foreach ($dataGroups as $dataGroup) {
+            if (!in_array($dataGroup->getId(), $accessibleSections)) {
+                continue;
+            }
             if ($dataGroup->getTitle() == 'Pages') {
                 $nodes = $this->_getDataGroupNodesForPages($nodes, $dataGroup);
             } else if ($dataGroup->getTitle() == 'Admin') {
