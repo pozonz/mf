@@ -108,7 +108,7 @@ class EventListener
 
             $event->setResponse(
                 new Response(
-                    $this->environment->render('404.twig', [
+                    $this->environment->render($page->objPageTemplate()->getFilename(), [
                         'theNode' => new Node(uniqid(), uniqid(), [
                             'extraInfo' => $page,
                         ])
