@@ -102,19 +102,18 @@ class EventListener
             $page404Id = getenv('PAGE_404_ID');
             if ($page404Id) {
                 $page = $fullClass::getById($this->connection, $page404Id);
-            } else {
-                $page = new $fullClass($this->connection);
+                if ($page) {
+                    $event->setResponse(
+                        new Response(
+                            $this->environment->render($page->objPageTemplate()->getFilename(), [
+                                'theNode' => new Node(uniqid(), uniqid(), [
+                                    'extraInfo' => $page,
+                                ])
+                            ])
+                        )
+                    );
+                }
             }
-
-            $event->setResponse(
-                new Response(
-                    $this->environment->render($page->objPageTemplate()->getFilename(), [
-                        'theNode' => new Node(uniqid(), uniqid(), [
-                            'extraInfo' => $page,
-                        ])
-                    ])
-                )
-            );
         }
     }
 }
