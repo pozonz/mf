@@ -50,7 +50,7 @@ trait WebCoreAssetTrait
         $fileSize = $asset->getFileSize();
         $ext = $asset->getFileExtension();
         if ($useWebp && strtolower($ext) == 'gif') {
-            $ext = "jpg";
+//            $ext = "jpg";
         }
 
         $cachedKey = $this->getCacheKey($asset, $assetSizeCode ?: 1);
@@ -201,8 +201,8 @@ trait WebCoreAssetTrait
             unlink($fileLocation);
         }
 
-        if ($useWebp && $assetSizeCode && $assetSizeCode != 1) {
-            $command = getenv('CWEBP_CMD') . " -q 75 $thumbnail -o $webpThumbnail";
+        if ($useWebp && $assetSizeCode && $assetSizeCode != 1 && $fileType != 'image/gif') {
+            $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
             $returnValue = AssetService::generateOutput($command);
 
             $fileSize == filesize($webpThumbnail);
