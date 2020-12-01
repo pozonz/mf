@@ -59,6 +59,7 @@ class EventListener
             strpos($requestUri, '/manage') === 0
             || strpos($requestUri, '/install') === 0
             || strpos($requestUri, '/import') === 0
+            || strpos($requestUri, "/_fragment") === 0
         ) {
             return;
         }
