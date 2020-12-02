@@ -82,7 +82,24 @@
 
         <div id="contentContainer">
             <div id="maincontent">
-                {% if treeUtils.hasActiveChildren(theDataGroup) %}
+                {% if app.request.pathInfo == '/manage/current-user' %}
+                    <div id="verticalMenu">
+                        <div id="cms_sidebarIndex">
+                            <ul class="verticalMenu">
+                                <li class="menuHeading">My account</li>
+                                <li class="selected">
+                                    <div>
+                                        <a href="/manage/current-user">
+                                            Profile
+                                        </a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if treeUtils.hasActiveChildren(theDataGroup) %}
                     <div id="verticalMenu">
                         <div id="cms_sidebarIndex">
                             <ul class="verticalMenu">
@@ -146,8 +163,9 @@
                         </div>
                     </div>
                 {% endif %}
+                {% endif %}
 
-                <div id="bodyContent" {% if not treeUtils.hasActiveChildren(theDataGroup) %}style="padding-left: 9em !important;"{% endif %}>
+                <div id="bodyContent" {% if not treeUtils.hasActiveChildren(theDataGroup) and app.request.pathInfo != '/manage/current-user' %}style="padding-left: 9em !important;"{% endif %}>
                     {% block container %}
                         <div id="h1">
                             <h1>CMS</h1>
