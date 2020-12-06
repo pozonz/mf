@@ -12,4 +12,5 @@ class ConstraintUnique extends Constraint
 	public $orm = null;
     public $field = null;
     public $extraSql = null;
+    public $joins = null;
 }

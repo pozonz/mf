@@ -15,9 +15,12 @@
     {% endblock %}
 
     {% block tableContainer %}
-        {% if total is defined %}
-            <h4>{{ total }} item(s) found</h4>
-        {% endif %}
+        {% block totalItemsFound %}
+            {% if total is defined %}
+                <h4>{{ total }} item(s) found</h4>
+            {% endif %}
+        {% endblock %}
+
         <table class="table table-striped table-bordered table-hover table-middle">
             {% block tableHead %}
                 <tbody>

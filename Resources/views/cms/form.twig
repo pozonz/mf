@@ -275,17 +275,15 @@
             <thead>
                 <tr>
                     <th class="tableHead" title="Variant title">Title</th>
-                    <th class="tableHead" width="10%" title="Stock keeping unit">SKU</th>
-                    <th class="tableHead" width="10%" title="Original price">Retail</th>
-                    <th class="tableHead" width="10%" title="Promotional price">Sale</th>
-                    <th class="tableHead" width="5%" title="Weight">Wgt</th>
-                    <th class="tableHead" width="5%" title="Stock">Stk</th>
-                    <th class="tableHead" width="5%" title="Alert if stock less than">Alt</th>
+                    <th class="tableHead" width="12%" title="Stock keeping unit">SKU</th>
+                    <th class="tableHead" width="12%" title="Original price">Retail</th>
+                    <th class="tableHead" width="12%" title="Promotional price">Sale</th>
+                    <th class="tableHead" width="10%" title="Stock">Stk</th>
                     <th class="tableHead" width="12%"></th>
                 </tr>
             </thead>
         </table>
-        {{ form_widget(form) }}
+        {{ form_widget(form,{attr:{style:'display:none;'}}) }}
         <div>&nbsp;</div>
     </div>
 {%- endblock _orm_productVariants_row -%}

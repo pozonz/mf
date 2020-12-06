@@ -6,102 +6,19 @@ use BlueM\Tree;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Constraints\ConstraintUnique;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
-use MillenniumFalcon\Core\Form\Type\ChoiceTree;
 use MillenniumFalcon\Core\Form\Type\LabelType;
 use MillenniumFalcon\Core\Form\Type\SpliterType;
 use MillenniumFalcon\Core\ORM\_Model;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class OrmForm extends AbstractType
+class OrmProductVariantForm extends OrmForm
 {
-
-    public function getBlockPrefix()
-    {
-        return 'orm';
-    }
-
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        parent::buildForm($builder, $options);
-        $builder->add('uniqid', HiddenType::class);
-
-        $model = isset($options['model']) ? $options['model'] : null;
-        $orm = isset($options['orm']) ? $options['orm'] : null;
-        $pdo = isset($options['pdo']) ? $options['pdo'] : null;
-
-        $columnsJson = json_decode($model->getColumnsJson());
-        foreach ($columnsJson as $itm) {
-            $getMethod = 'get' . ucfirst($itm->field);
-            $setMethod = 'set' . ucfirst($itm->field);
-
-            if ($orm && !method_exists($orm, $getMethod)) {
-                continue;
-            }
-
-            if ($itm->widget == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType') {
-                $orm->$setMethod($orm->$getMethod() ? true : false);
-            }
-
-            if ($itm->widget == '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceSortable') {
-                $value = $orm->$getMethod();
-                if ($value) {
-                    $orm->$setMethod(implode(',', json_decode($value)));
-                }
-            }
-
-            $widget = $itm->widget;
-            $opts = $this->getOpts($pdo, $itm, $orm);
-            $builder->add($itm->field, $widget, $opts);
-        }
-
-        $presetData = json_decode($model->getPresetData() ?: '[]');
-        foreach ($presetData as $presetDataItem) {
-            $presetDataMap = _Model::presetDataMap;
-            if ($presetDataMap[$presetDataItem]) {
-                $builder->add(uniqid(), SpliterType::class, array(
-                    'mapped' => false,
-                ));
-                $presetDataMapItem = $presetDataMap[$presetDataItem];
-                foreach ($presetDataMapItem as $idx => $itm) {
-                    $label = preg_replace('/(?<!^)([A-Z])/', ' \\1', $idx);
-                    $builder->add($idx, $itm, [
-                        'label' => ucfirst(strtolower($label)) . ':'
-                    ]);
-                }
-            }
-        }
-
-        $metadata = $model->getMetadata() ? json_decode($model->getMetadata()) : array();
-        if (count($metadata)) {
-            $builder->add(uniqid(), SpliterType::class, array(
-                'mapped' => false,
-            ));
-        }
-        foreach ($metadata as $itm) {
-            switch ($itm) {
-                case 'parentId':
-                    $column = new \stdClass();
-                    $column->widget = '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceTree';
-                    $column->label = 'Parent:';
-                    $column->sql = 'SELECT t1.id AS `key`, t1.title AS value, t1.parentId AS parentId FROM ProductCategory AS t1 ORDER BY t1.rank';
-                    $column->required = 0;
-                    $column->unique = 0;
-                    $builder->add($itm, ChoiceTree::class, $this->getOpts($pdo, $column, $orm));
-                    break;
-                default:
-                    $label = preg_replace('/(?<!^)([A-Z])/', ' \\1', $itm);
-                    $builder->add($itm, LabelType::class, [
-                        'label' => ucfirst(strtolower($label)) . ':'
-                    ]);
-            }
-        }
-    }
-
     /**
      * @param $column
      * @return array
@@ -204,19 +121,10 @@ class OrmForm extends AbstractType
             $opts['constraints'][] = new ConstraintUnique(array(
                 'orm' => $orm,
                 'field' => $column->field,
+                'joins' => 'RIGHT JOIN product AS p ON p.uniqid = m.productUniqid',
             ));
         }
 
         return $opts;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults(array(
-            'model' => null,
-            'orm' => null,
-            'pdo' => null,
-        ));
     }
 }

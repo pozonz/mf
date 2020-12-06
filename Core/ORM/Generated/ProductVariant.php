@@ -47,11 +47,6 @@ class ProductVariant extends Base
     private $weight;
     
     /**
-     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $content;
-    
-    /**
      * @return mixed
      */
     public function getTitle()
@@ -177,22 +172,6 @@ class ProductVariant extends Base
     public function setWeight($weight)
     {
         $this->weight = $weight;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-    
-    /**
-     * @param mixed content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
     }
     
 }

@@ -13,9 +13,7 @@
             <td>{{itm.sku}}</td>
             <td>{{#formatMoney itm.price 2 '.' ',' '$' }}{{/formatMoney}}</td>
             <td>{{#formatMoney itm.salePrice 2 '.' ',' '$'}}{{/formatMoney}}</td>
-            <td>{{itm.weight}}</td>
             <td>{{itm.stock}}</td>
-            <td>{{itm.alertIfLessThan}}</td>
             <td>
                 <a href="#" class="js-orm-status" data-status="{{itm.status}}"><img src="/cms/images/dot{{#compare itm.status 1}}Green{{/compare}}{{#compare itm.status 0}}Red{{/compare}}.gif" alt="" border="0"></a>
                 <a href="#" class="js-edit-variant"><img alt="Edit Record" title="Edit Record" src="/cms/images/editIcon.gif" border="0"></a>
