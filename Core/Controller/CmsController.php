@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core\Controller;
 
 use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreProductTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Install\CmsInstallTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreModelTrait;
 use MillenniumFalcon\Core\Controller\Traits\Cms\Core\CmsCoreOrmsTrait;
@@ -21,6 +22,8 @@ use Symfony\Component\Security\Core\Security;
 class CmsController extends RouterController
 {
     use
+        CmsCoreProductTrait,
+        
         CmsInstallTrait,
         CmsCoreLoginTrait,
         CmsCoreModelTrait,

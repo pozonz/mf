@@ -14,12 +14,27 @@ class Product extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $sku;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $categories;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $sku;
+    private $brand;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $pageRank;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $relatedProducts;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -34,17 +49,17 @@ class Product extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $pageRank;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
     private $gallery;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $description;
+    
+    /**
+     * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $productVariants;
     
     /**
      * #pz datetime DEFAULT NULL
@@ -60,11 +75,6 @@ class Product extends Base
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $onSale;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $relatedProducts;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -105,6 +115,22 @@ class Product extends Base
     /**
      * @return mixed
      */
+    public function getSku()
+    {
+        return $this->sku;
+    }
+    
+    /**
+     * @param mixed sku
+     */
+    public function setSku($sku)
+    {
+        $this->sku = $sku;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getCategories()
     {
         return $this->categories;
@@ -121,17 +147,49 @@ class Product extends Base
     /**
      * @return mixed
      */
-    public function getSku()
+    public function getBrand()
     {
-        return $this->sku;
+        return $this->brand;
     }
     
     /**
-     * @param mixed sku
+     * @param mixed brand
      */
-    public function setSku($sku)
+    public function setBrand($brand)
     {
-        $this->sku = $sku;
+        $this->brand = $brand;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPageRank()
+    {
+        return $this->pageRank;
+    }
+    
+    /**
+     * @param mixed pageRank
+     */
+    public function setPageRank($pageRank)
+    {
+        $this->pageRank = $pageRank;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getRelatedProducts()
+    {
+        return $this->relatedProducts;
+    }
+    
+    /**
+     * @param mixed relatedProducts
+     */
+    public function setRelatedProducts($relatedProducts)
+    {
+        $this->relatedProducts = $relatedProducts;
     }
     
     /**
@@ -169,22 +227,6 @@ class Product extends Base
     /**
      * @return mixed
      */
-    public function getPageRank()
-    {
-        return $this->pageRank;
-    }
-    
-    /**
-     * @param mixed pageRank
-     */
-    public function setPageRank($pageRank)
-    {
-        $this->pageRank = $pageRank;
-    }
-    
-    /**
-     * @return mixed
-     */
     public function getGallery()
     {
         return $this->gallery;
@@ -212,6 +254,22 @@ class Product extends Base
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getProductVariants()
+    {
+        return $this->productVariants;
+    }
+    
+    /**
+     * @param mixed productVariants
+     */
+    public function setProductVariants($productVariants)
+    {
+        $this->productVariants = $productVariants;
     }
     
     /**
@@ -260,22 +318,6 @@ class Product extends Base
     public function setOnSale($onSale)
     {
         $this->onSale = $onSale;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getRelatedProducts()
-    {
-        return $this->relatedProducts;
-    }
-    
-    /**
-     * @param mixed relatedProducts
-     */
-    public function setRelatedProducts($relatedProducts)
-    {
-        $this->relatedProducts = $relatedProducts;
     }
     
     /**

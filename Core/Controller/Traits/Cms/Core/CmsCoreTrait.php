@@ -302,23 +302,53 @@ trait CmsCoreTrait
     {
         $dataGroupClass = $this->_getClass($dataGroup);
 
-        $toBeMergedNodes = [];
+        if ($dataGroup->getLoadFromConfig()) {
+            $jsonConfig = json_decode($dataGroup->getConfig());
+            foreach ($jsonConfig as $idx => $itm) {
+                if (!$itm) {
+                    $nodes[] = (array)new RawData([
+                        'id' => "{$dataGroupClass}{$dataGroup->getId()}{$idx}",
+                        'parent' => $dataGroupClass . $dataGroup->getId(),
+                        'title' => $idx,
+                        'status' => 1,
+                    ]);
+                } else {
+                    $nodes = $this->_getConfigNodes($nodes, $dataGroupClass . $dataGroup->getId(), $itm, $baseUrl);
+                }
+            }
 
-        foreach ($this->models as $model) {
-            $modelDataGroups = json_decode($model->getDataGroups() ?: '[]');
-            if (in_array($dataGroup->getId(), $modelDataGroups)) {
-                $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $dataGroupClass . $dataGroup->getId(), $model->getClassName(), $baseUrl);
+        } else {
+
+            $toBeMergedNodes = [];
+
+            foreach ($this->models as $model) {
+                $modelDataGroups = json_decode($model->getDataGroups() ?: '[]');
+                if (in_array($dataGroup->getId(), $modelDataGroups)) {
+                    $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $dataGroupClass . $dataGroup->getId(), $model->getClassName(), $baseUrl);
+                }
+            }
+
+            if (count($toBeMergedNodes)) {
+                $nodes[] = (array)new RawData([
+                    'id' => "data{$dataGroup->getId()}",
+                    'parent' => $dataGroupClass . $dataGroup->getId(),
+                    'title' => 'Data',
+                    'status' => 1,
+                ]);
+                $nodes = array_merge($nodes, $toBeMergedNodes);
             }
         }
 
-        if (count($toBeMergedNodes)) {
-            $nodes[] = (array)new RawData([
-                'id' => "data{$dataGroup->getId()}",
-                'parent' => $dataGroupClass . $dataGroup->getId(),
-                'title' => 'Data',
-                'status' => 1,
-            ]);
-            $nodes = array_merge($nodes, $toBeMergedNodes);
+        return $nodes;
+    }
+
+    private function _getConfigNodes($nodes, $parentId, $itm, $baseUrl)
+    {
+        $nodes = $this->_addModelListingToParent($nodes, $parentId, $itm->model, $baseUrl);
+        if (isset($itm->children)) {
+            foreach ($itm->children as $child) {
+                $nodes = $this->_getConfigNodes($nodes, $parentId . $itm->model, $child, $baseUrl);
+            }
         }
 
         return $nodes;
@@ -348,7 +378,7 @@ trait CmsCoreTrait
         }
 
         $nodes[] = (array)new RawData([
-            'id' => $modelId,
+            'id' => "{$parentId}{$modelClassName}",
             'parent' => $parentId,
             'title' => $model->getTitle(),
             'url' => "{$baseUrl}/orms/{$modelClassName}",
@@ -357,7 +387,7 @@ trait CmsCoreTrait
             'allowExtra' => 1,
             'maxParams' => 1,
         ]);
-        return $this->_addModelDetailToParent($nodes, $modelId, $modelClassName, $baseUrl);
+        return $this->_addModelDetailToParent($nodes, "{$parentId}{$modelClassName}", $modelClassName, $baseUrl);
     }
 
     /**

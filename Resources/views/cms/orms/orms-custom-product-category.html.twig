@@ -4,10 +4,10 @@
 {% block container %}
     <div id="h1">
         <h1>{{ ormModel.title }}</h1>
-        <a class="addForm button" href="{{ node.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
+        <a class="addForm button" href="{{ theNode.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
     </div>
 
-    <button class="js-update-category">Update product categories</button>
+{#    <button class="js-update-category">Update product categories</button>#}
     <div>&nbsp;</div>
 
     <div class="nestable-lists js-model-wrapper" data-modelname="{{ ormModel.className }}">

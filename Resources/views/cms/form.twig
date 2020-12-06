@@ -264,3 +264,28 @@
         <div>&nbsp;</div>
     </div>
 {%- endblock orm_mkvp_type_widget -%}
+
+{% block _orm_productVariants_row -%}
+    <div class="variant-container">
+        <div>&nbsp;</div>
+        <a class="button-normal button-galery js-add-variant" style="float: right;"><i class="fas fa-plus"></i> Variant</a>
+        <h2>Product Variants</h2>
+
+        <table class="table table-striped table-bordered table-hover table-middle js-product-variants-table product-variants-table" style="margin-top: .2em">
+            <thead>
+                <tr>
+                    <th class="tableHead" title="Variant title">Title</th>
+                    <th class="tableHead" width="10%" title="Stock keeping unit">SKU</th>
+                    <th class="tableHead" width="10%" title="Original price">Retail</th>
+                    <th class="tableHead" width="10%" title="Promotional price">Sale</th>
+                    <th class="tableHead" width="5%" title="Weight">Wgt</th>
+                    <th class="tableHead" width="5%" title="Stock">Stk</th>
+                    <th class="tableHead" width="5%" title="Alert if stock less than">Alt</th>
+                    <th class="tableHead" width="12%"></th>
+                </tr>
+            </thead>
+        </table>
+        {{ form_widget(form) }}
+        <div>&nbsp;</div>
+    </div>
+{%- endblock _orm_productVariants_row -%}
