@@ -1,5 +1,27 @@
 {% set isFragment = app.request.get('fragment') == 1 ? 1 : 0 %}
-{% set version = 6 %}
+{% set version = 7 %}
+
+{% macro sideNavItem(node, depth, current) %}
+    {% if node.url %}
+        <li {% if treeUtils.contains(node, current) %}class="selected"{% endif %}>
+            <a href="{{ node.url }}">
+                {{ node.title }}
+                {% if treeUtils.hasActiveChildren(node) %}
+                    <button data-target="{{ node.id }}" class="toggle-icon {% if treeUtils.contains(node, current) %}selected{% endif %}">&nbsp;</button>
+                {% endif %}
+            </a>
+            {% if treeUtils.hasActiveChildren(node) %}
+                <ul data-source="{{ node.id }}" class="subcategory sub-{{ depth }}" {% if treeUtils.contains(node, current) %}style="display: block;"{% endif %}>
+                    {% for itm in node.children %}
+                        {{ _self.sideNavItem(itm, depth + 1, current) }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% else %}
+        <li class="menuHeading">{{ node.title }}</li>
+    {% endif %}
+{% endmacro %}
 
 <!DOCTYPE html>
 
@@ -103,6 +125,10 @@
                     <div id="verticalMenu">
                         <div id="cms_sidebarIndex">
                             <ul class="verticalMenu">
+                                {% for child in theDataGroup.children %}
+                                    {{ _self.sideNavItem(child, 1, theNode) }}
+                                {% endfor %}
+                                {#
                                 {% for itmLvl1 in theDataGroup.children %}
                                     {% if itmLvl1.status == 1 %}
                                         {% if itmLvl1.url %}
@@ -159,6 +185,7 @@
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}
+                                #}
                             </ul>
                         </div>
                     </div>

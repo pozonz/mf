@@ -73,7 +73,7 @@ trait WebCoreAssetTrait
         if (!$returnOriginalFile && $useWebp && file_exists($webpThumbnail) && file_exists($webpThumbnailHeader)) {
             $header = json_decode(file_get_contents($webpThumbnailHeader));
             if ($header) {
-                return $this->getBinaryFileResponse($webpThumbnail, $header);
+//                return $this->getBinaryFileResponse($webpThumbnail, $header);
             }
         }
 
@@ -143,9 +143,9 @@ trait WebCoreAssetTrait
             }
             if ($assetSize) {
                 if ($assetSize->getResizeBy() == 1) {
-                    $resizeCmd = "-resize x{$assetSize->getWidth()}";
+                    $resizeCmd = "-resize x{$assetSize->getWidth()}\>";
                 } else {
-                    $resizeCmd = "-resize {$assetSize->getWidth()}";
+                    $resizeCmd = "-resize {$assetSize->getWidth()}\>";
                 }
             }
 

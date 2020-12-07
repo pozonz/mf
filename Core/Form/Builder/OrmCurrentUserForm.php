@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class OrmPageForm extends OrmForm
+class OrmCurrentUserForm extends OrmForm
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -24,13 +24,7 @@ class OrmPageForm extends OrmForm
 //        $builder->remove('type');
 //        $builder->remove('redirectTo');
 
-        $builder->remove('category');
-        $builder->remove('templateFile');
-        $builder->remove('attachedModels');
-        $builder->remove('hideFromCMSNav');
-//        $builder->remove('hideFromWebNav');
-        $builder->remove('allowExtra');
-        $builder->remove('maxParams');
+        $builder->remove('accessibleSections');
 
     }
 }

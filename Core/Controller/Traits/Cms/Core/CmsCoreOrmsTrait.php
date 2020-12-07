@@ -65,6 +65,7 @@ trait CmsCoreOrmsTrait
         $params['filterFormDescriptor'] = $fullClass::getBySlug($this->connection, $request->get('form'));
         $params['filterStart'] = $request->get('start');
         $params['filterEnd'] = $request->get('end');
+        $params['filterFormat'] = $request->get('format') ?: 1;
 
 
         $model = _Model::getByField($this->connection, 'className', 'FormSubmission');
@@ -103,53 +104,90 @@ trait CmsCoreOrmsTrait
             ]);
         }
 
-        $export = $request->get('export');
-        if ($params['filterFormDescriptor'] && $export) {
-            /** @var FormSubmission[] $orms */
-            $orms = $fullClass::data($this->connection, [
-                "whereSql" => $sqlWhere,
-                "params" => $sqlParams,
-                "sort" => $sort,
-                "order" => $order,
-            ]);
 
-            $phpExcel = new Spreadsheet();
-            $sheet = $phpExcel->getActiveSheet();
+        if ($request->isMethod('POST') && $params['filterFormDescriptor']) {
+            $submitValue = $request->get('submit');
+            if ($submitValue == 'Export') {
+                /** @var FormSubmission[] $orms */
+                $orms = $fullClass::data($this->connection, [
+                    "whereSql" => $sqlWhere,
+                    "params" => $sqlParams,
+                    "sort" => $sort,
+                    "order" => $order,
+                ]);
 
-            /** @var FormDescriptor $filterFormDescriptor */
-            $filterFormDescriptor = $params['filterFormDescriptor'];
+                /** @var FormDescriptor $filterFormDescriptor */
+                $filterFormDescriptor = $params['filterFormDescriptor'];
+                $formFileds = json_decode($filterFormDescriptor->getFormFields());
+                $filename = $filterFormDescriptor->getSlug() . '-export-' . date('Y-m-d-H-i-s');
 
-            $formFileds = json_decode($filterFormDescriptor->getFormFields());
+                if ($params['filterFormat'] == 1) {
+                    $data = [];
 
-            $count = 1;
-            $sheet->setCellValue(Coordinate::stringFromColumnIndex(1) . "{$count}", 'Date');
-
-            foreach ($formFileds as $idx => $itm) {
-                $sheet->setCellValue(Coordinate::stringFromColumnIndex($idx + 2) . "{$count}", $itm->label);
-            }
-
-            $count = 2;
-            foreach ($orms as $formSubmission) {
-                $sheet->setCellValue(Coordinate::stringFromColumnIndex(1) . "{$count}", date('d M Y@H:i:s', strtotime($formSubmission->getAdded())));
-
-                $jsonContent = json_decode($formSubmission->getContent());
-                foreach ($jsonContent as $idx => $itm) {
-                    if ($itm[0] == 'antispam') {
-                        continue;
+                    $header = [];
+                    $header[] = 'Date';
+                    foreach ($formFileds as $idx => $itm) {
+                        $header[] = $itm->label;
                     }
-                    if (gettype($itm[1]) == 'array') {
-                        $itm[1] = implode(',', $itm[1]);
+                    $data[] = $header;
+
+                    foreach ($orms as $formSubmission) {
+                        $row = [];
+                        $row[] = date('d M Y@H:i:s', strtotime($formSubmission->getAdded()));
+
+                        $jsonContent = json_decode($formSubmission->getContent());
+                        foreach ($jsonContent as $idx => $itm) {
+                            if ($itm[0] == 'antispam') {
+                                continue;
+                            }
+                            if (gettype($itm[1]) == 'array' || gettype($itm[1]) == 'object') {
+                                $itm[1] = (array)$itm[1];
+                                $itm[1] = implode(',', $itm[1]);
+                            }
+                            $row[] = $itm[1];
+                        }
+                        $data[] = $row;
                     }
-                    $sheet->setCellValue(Coordinate::stringFromColumnIndex($idx + 2) . "{$count}", $itm[1]);
+
+                    $this->download_send_headers($filename . ".csv");
+                    echo $this->array2csv($data);
+                    die();
+
+                } else if ($params['filterFormat'] == 2) {
+
+                    $phpExcel = new Spreadsheet();
+                    $sheet = $phpExcel->getActiveSheet();
+
+                    $count = 1;
+                    $sheet->setCellValue(Coordinate::stringFromColumnIndex(1) . "{$count}", 'Date');
+                    foreach ($formFileds as $idx => $itm) {
+                        $sheet->setCellValue(Coordinate::stringFromColumnIndex($idx + 2) . "{$count}", $itm->label);
+                    }
+
+                    $count = 2;
+                    foreach ($orms as $formSubmission) {
+                        $sheet->setCellValue(Coordinate::stringFromColumnIndex(1) . "{$count}", date('d M Y@H:i:s', strtotime($formSubmission->getAdded())));
+                        $jsonContent = json_decode($formSubmission->getContent());
+                        foreach ($jsonContent as $idx => $itm) {
+                            if ($itm[0] == 'antispam') {
+                                continue;
+                            }
+                            if (gettype($itm[1]) == 'array' || gettype($itm[1]) == 'object') {
+                                $itm[1] = (array)$itm[1];
+                                $itm[1] = implode(',', $itm[1]);
+                            }
+                            $sheet->setCellValue(Coordinate::stringFromColumnIndex($idx + 2) . "{$count}", $itm[1]);
+                        }
+                        $count++;
+                    }
+
+                    $writer = IOFactory::createWriter($phpExcel, 'Xlsx');
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header('Content-Disposition: attachment; filename="' . $filename . '.xlsx' . '"');
+                    $writer->save('php://output');
+                    exit;
                 }
-                $count++;
             }
-
-            $writer = IOFactory::createWriter($phpExcel, 'Xlsx');
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment; filename="' . $filterFormDescriptor->getSlug() . '-export-' . date('Y-m-d-H-i-s') . '.xlsx' . '"');
-            $writer->save('php://output');
-            exit;
         }
 
         $orms = $fullClass::data($this->connection, [
@@ -169,7 +207,7 @@ trait CmsCoreOrmsTrait
 
         $params['total'] = $total['count'];
         $params['totalPages'] = ceil($total['count'] / $model->getNumberPerPage());
-        $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order&form={$request->get('form')}&start={$request->get('start')}&end={$request->get('end')}";
+        $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order&form={$request->get('form')}&start={$request->get('start')}&end={$request->get('end')}&format={$params['filterFormat']}";
         $params['urlNoSort'] = $request->getPathInfo();
         $params['pageNum'] = $pageNum;
         $params['sort'] = $sort;
@@ -178,7 +216,6 @@ trait CmsCoreOrmsTrait
 
         return $this->render($params['theNode']->template, $params);
     }
-
 
     /**
      * @Route("/manage/orms/Redirect")
@@ -388,5 +425,44 @@ trait CmsCoreOrmsTrait
         $params['orms'] = $orms;
 
         return $this->render($params['theNode']->template, $params);
+    }
+
+    /**
+     * @param $filename
+     */
+    protected function download_send_headers($filename) {
+        // disable caching
+        $now = gmdate("D, d M Y H:i:s");
+        header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+        header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+        header("Last-Modified: {$now} GMT");
+
+        // force download
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+
+        // disposition / encoding on response body
+        header("Content-Disposition: attachment;filename={$filename}");
+        header("Content-Transfer-Encoding: binary");
+    }
+
+    /**
+     * @param array $array
+     * @return false|string|null
+     */
+    protected function array2csv(array &$array)
+    {
+        if (count($array) == 0) {
+            return null;
+        }
+        ob_start();
+        $df = fopen("php://output", 'w');
+        fputcsv($df, array_keys(reset($array)));
+        foreach ($array as $row) {
+            fputcsv($df, $row);
+        }
+        fclose($df);
+        return ob_get_clean();
     }
 }

@@ -7,14 +7,21 @@
     </div>
 
     {% block ormModelExtra %}
-        <form method="GET" action="{{ app.request.pathInfo }}" class="edit orms-search" autocomplete="off" novalidate="">
+        <form method="POST" action="{{ app.request.pathInfo }}" class="edit orms-search" autocomplete="off" novalidate="">
             <div class="formStyle" style="width: 36em;">
                 <label for="form">Form (pick a form to export):</label>
-                <select id="form" name="form" onchange="$(this).closest('form').submit();">
+                <select id="form" name="form" onchange="console.log($(this).closest('form'));$(this).closest('form').find('[value=Go]').click();">
                     <option value="0" {% if not filterFormDescriptor %}selected{% endif %}>All</option>
                     {% for itm in formDescriptors %}
                         <option value="{{ itm.slug }}" {% if filterFormDescriptor and filterFormDescriptor.slug == itm.slug %}selected{% endif %}>{{ itm.title }} ({{ itm._count }})</option>
                     {% endfor %}
+                </select>
+            </div>
+            <div class="formStyle" style="width: 8em;">
+                <label for="format">Format:</label>
+                <select id="format" name="format">
+                    <option value="1" {% if filterFormat == 1 %}selected{% endif %}>CSV</option>
+                    <option value="2" {% if filterFormat == 2 %}selected{% endif %}>Excel</option>
                 </select>
             </div>
             <br />
@@ -27,9 +34,9 @@
                 <input type="text" id="end" name="end" value="{{ filterEnd ? filterEnd|date('d F Y') : '' }}" class="hasDatepicker">
             </div>
             <div class="formStyle" style="width: 12em; padding-top: 25px;">
-                <button type="submit" class="button button-grey">Go</button>
+                <input name="submit" type="submit" class="button button-grey" value="Go">
                 {% if filterFormDescriptor %}
-                    <a target="_blank" href="{{ url }}&export=1" type="submit" class="button button-grey" style="background: green;">Export</a>
+                    <input name="submit" type="submit" class="button button-grey" style="background-color: green;" value="Export">
                 {% endif %}
             </div>
         </form>
