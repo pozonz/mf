@@ -10,7 +10,7 @@
         <form method="POST" action="{{ app.request.pathInfo }}" class="edit orms-search" autocomplete="off" novalidate="">
             <div class="formStyle" style="width: 36em;">
                 <label for="form">Form (pick a form to export):</label>
-                <select id="form" name="form" onchange="console.log($(this).closest('form'));$(this).closest('form').find('[value=Go]').click();">
+                <select id="form" name="form" onchange="$(this).closest('form').find('[value=Go]').click();">
                     <option value="0" {% if not filterFormDescriptor %}selected{% endif %}>All</option>
                     {% for itm in formDescriptors %}
                         <option value="{{ itm.slug }}" {% if filterFormDescriptor and filterFormDescriptor.slug == itm.slug %}selected{% endif %}>{{ itm.title }} ({{ itm._count }})</option>
