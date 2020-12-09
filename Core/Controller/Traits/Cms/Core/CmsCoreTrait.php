@@ -21,6 +21,7 @@ trait CmsCoreTrait
      * @route("/manage/{page}", requirements={"page" = ".*"})
      * @param Request $request
      * @return mixed
+     * @throws RedirectException
      */
     public function manage(Request $request)
     {
@@ -29,7 +30,9 @@ trait CmsCoreTrait
     }
 
     /**
+     * @param $request
      * @return mixed
+     * @throws RedirectException
      */
     public function getCmsTemplateParams($request)
     {
@@ -38,6 +41,17 @@ trait CmsCoreTrait
         $theDataGroup = TreeUtils::ancestor($params['theNode']);
         $params['theDataGroup'] = $theDataGroup;
         $params['rootNodes'] = $this->_tree->getRootNodes();
+
+        $user = $this->security->getUser();
+        $accessibleSections = json_decode($user->getAccessibleSections() ?: '[]');
+        $params['rootNodes'] = array_filter($params['rootNodes'], function($itm) use ($accessibleSections) {
+            $id = $itm->getId();
+            $id = str_replace('DataGroup', '', $id);
+            if (!in_array($id, $accessibleSections)) {
+                return false;
+            }
+            return true;
+        });
 
 
         $theNode = $params['theNode'];
@@ -58,12 +72,6 @@ trait CmsCoreTrait
             }
         }
 
-        //Check permission
-//        if (!$params['verticalMenuRoot']) {
-//            throw new NotFoundHttpException();
-//        }
-//        $params['verticalMenuItems'] = $params['verticalMenuRoot']->getChildren();
-
         return $params;
     }
 
@@ -79,10 +87,26 @@ trait CmsCoreTrait
         }
 
         $nodes = [];
+        $nodes[] = (array)new RawData([
+            'id' => uniqid(),
+            'parent' => null,
+            'title' => 'My account',
+            'url' => '/manage/current-user',
+            'template' => 'cms/orms/orm.twig',
+            'status' => 1,
+        ]);
+
         $fullClass = ModelService::fullClass($this->connection, 'DataGroup');
         $dataGroups = $fullClass::active($this->connection);
 
-        $nodes = array_merge($nodes, array_map(function ($itm) {
+        $user = $this->security->getUser();
+        $accessibleSections = json_decode($user->getAccessibleSections() ?: '[]');
+
+        $nodes = array_filter(array_merge($nodes, array_map(function ($itm) use ($accessibleSections) {
+            if (!in_array($itm->getId(), $accessibleSections)) {
+                return null;
+            }
+
             return (array)new RawData([
                 'id' => $this->_getClass($itm) . $itm->getId(),
                 'parent' => null,
@@ -93,9 +117,12 @@ trait CmsCoreTrait
                 'extra2' => 'sectionNode',
                 'icon' => $itm->getIcon(),
             ]);
-        }, $dataGroups));
+        }, $dataGroups)));
 
         foreach ($dataGroups as $dataGroup) {
+            if (!in_array($dataGroup->getId(), $accessibleSections)) {
+                continue;
+            }
             if ($dataGroup->getTitle() == 'Pages') {
                 $nodes = $this->_getDataGroupNodesForPages($nodes, $dataGroup);
             } else if ($dataGroup->getTitle() == 'Admin') {
@@ -257,14 +284,7 @@ trait CmsCoreTrait
             'status' => 1,
         ]);
         $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'User', '/manage/admin');
-        $nodes[] = (array)new RawData([
-            'id' => uniqid(),
-            'parent' => $dataGroupClass . $dataGroup->getId(),
-            'title' => 'My account',
-            'url' => '/manage/current-user',
-            'template' => 'cms/orms/orm.twig',
-            'status' => 1,
-        ]);
+
         $nodes = $this->_addModelListingToParent($nodes, $dataGroupClass . $dataGroup->getId(), 'DataGroup', '/manage/admin');
 
         $nodes = $this->_getDataGroupNodes($nodes, $dataGroup, '/manage/admin');
@@ -282,23 +302,53 @@ trait CmsCoreTrait
     {
         $dataGroupClass = $this->_getClass($dataGroup);
 
-        $toBeMergedNodes = [];
+        if ($dataGroup->getLoadFromConfig()) {
+            $jsonConfig = json_decode($dataGroup->getConfig());
+            foreach ($jsonConfig as $idx => $itm) {
+                if (!$itm) {
+                    $nodes[] = (array)new RawData([
+                        'id' => "{$dataGroupClass}{$dataGroup->getId()}{$idx}",
+                        'parent' => $dataGroupClass . $dataGroup->getId(),
+                        'title' => $idx,
+                        'status' => 1,
+                    ]);
+                } else {
+                    $nodes = $this->_getConfigNodes($nodes, $dataGroupClass . $dataGroup->getId(), $itm, $baseUrl);
+                }
+            }
 
-        foreach ($this->models as $model) {
-            $modelDataGroups = json_decode($model->getDataGroups() ?: '[]');
-            if (in_array($dataGroup->getId(), $modelDataGroups)) {
-                $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $dataGroupClass . $dataGroup->getId(), $model->getClassName(), $baseUrl);
+        } else {
+
+            $toBeMergedNodes = [];
+
+            foreach ($this->models as $model) {
+                $modelDataGroups = json_decode($model->getDataGroups() ?: '[]');
+                if (in_array($dataGroup->getId(), $modelDataGroups)) {
+                    $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $dataGroupClass . $dataGroup->getId(), $model->getClassName(), $baseUrl);
+                }
+            }
+
+            if (count($toBeMergedNodes)) {
+                $nodes[] = (array)new RawData([
+                    'id' => "data{$dataGroup->getId()}",
+                    'parent' => $dataGroupClass . $dataGroup->getId(),
+                    'title' => 'Data',
+                    'status' => 1,
+                ]);
+                $nodes = array_merge($nodes, $toBeMergedNodes);
             }
         }
 
-        if (count($toBeMergedNodes)) {
-            $nodes[] = (array)new RawData([
-                'id' => "data{$dataGroup->getId()}",
-                'parent' => $dataGroupClass . $dataGroup->getId(),
-                'title' => 'Data',
-                'status' => 1,
-            ]);
-            $nodes = array_merge($nodes, $toBeMergedNodes);
+        return $nodes;
+    }
+
+    private function _getConfigNodes($nodes, $parentId, $itm, $baseUrl)
+    {
+        $nodes = $this->_addModelListingToParent($nodes, $parentId, $itm->model, $baseUrl);
+        if (isset($itm->children)) {
+            foreach ($itm->children as $child) {
+                $nodes = $this->_getConfigNodes($nodes, $parentId . $itm->model, $child, $baseUrl);
+            }
         }
 
         return $nodes;
@@ -328,7 +378,7 @@ trait CmsCoreTrait
         }
 
         $nodes[] = (array)new RawData([
-            'id' => $modelId,
+            'id' => "{$parentId}{$modelClassName}",
             'parent' => $parentId,
             'title' => $model->getTitle(),
             'url' => "{$baseUrl}/orms/{$modelClassName}",
@@ -337,7 +387,7 @@ trait CmsCoreTrait
             'allowExtra' => 1,
             'maxParams' => 1,
         ]);
-        return $this->_addModelDetailToParent($nodes, $modelId, $modelClassName, $baseUrl);
+        return $this->_addModelDetailToParent($nodes, "{$parentId}{$modelClassName}", $modelClassName, $baseUrl);
     }
 
     /**

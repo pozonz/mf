@@ -130,7 +130,7 @@ trait BaseORMTrait
         $fields = array_keys(static::getFields());
         $implementedInterfaces = class_implements($myClass);
 
-        if (in_array('MillenniumFalcon\\Core\\Version\\VersionInterface', $implementedInterfaces)) {
+        if (in_array('MillenniumFalcon\\Core\\Pattern\\Version\\VersionInterface', $implementedInterfaces)) {
             $path = explode('\\', $myClass);
             $className = array_pop($path);
             $request = $options['request'] ?? Request::createFromGlobals();

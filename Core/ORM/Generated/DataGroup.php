@@ -19,6 +19,16 @@ class DataGroup extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $loadFromConfig;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $config;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $builtInSectionCode;
     
     /**
@@ -30,16 +40,6 @@ class DataGroup extends Base
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $builtInSection;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $loadFromConfig;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $config;
     
     /**
      * @return mixed
@@ -71,6 +71,38 @@ class DataGroup extends Base
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getLoadFromConfig()
+    {
+        return $this->loadFromConfig;
+    }
+    
+    /**
+     * @param mixed loadFromConfig
+     */
+    public function setLoadFromConfig($loadFromConfig)
+    {
+        $this->loadFromConfig = $loadFromConfig;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+    
+    /**
+     * @param mixed config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
     }
     
     /**
@@ -119,38 +151,6 @@ class DataGroup extends Base
     public function setBuiltInSection($builtInSection)
     {
         $this->builtInSection = $builtInSection;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getLoadFromConfig()
-    {
-        return $this->loadFromConfig;
-    }
-    
-    /**
-     * @param mixed loadFromConfig
-     */
-    public function setLoadFromConfig($loadFromConfig)
-    {
-        $this->loadFromConfig = $loadFromConfig;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-    
-    /**
-     * @param mixed config
-     */
-    public function setConfig($config)
-    {
-        $this->config = $config;
     }
     
 }

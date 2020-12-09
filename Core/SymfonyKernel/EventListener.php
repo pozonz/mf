@@ -50,27 +50,29 @@ class EventListener
         $request = $event->getRequest();
         $requestUri = $request->getRequestUri();
         $pathInfo = $request->getPathInfo();
+        $queryString = $request->getQueryString();
         $session = $event->getRequest()->getSession();
         if (in_array($pathInfo, static::ALLOWED_URIS)) {
             $session->set(static::LAST_URI, $requestUri);
         }
 
         if (
-            strpos($requestUri, '/manage') === 0
-            || strpos($requestUri, '/install') === 0
-            || strpos($requestUri, '/import') === 0
+            strpos($pathInfo, '/manage') === 0
+            || strpos($pathInfo, '/install') === 0
+            || strpos($pathInfo, '/import') === 0
+            || strpos($pathInfo, "/_fragment") === 0
         ) {
             return;
         }
 
         $redirectRequired = false;
-        if (strtolower($requestUri) !== $requestUri) {
-            $requestUri = strtolower($requestUri);
+        if (strtolower($pathInfo) !== $pathInfo) {
+            $pathInfo = strtolower($pathInfo);
             $redirectRequired = true;
         }
 
         if ($redirectRequired) {
-            $event->setResponse(new RedirectResponse($requestUri));
+            $event->setResponse(new RedirectResponse($pathInfo . ($queryString ? '?' . $queryString : '')));
         }
 
         $fullClass = ModelService::fullClass($this->connection, 'Redirect');
@@ -84,6 +86,10 @@ class EventListener
     {
         $exception = $event->getException();
 
+        if (!($exception instanceof RedirectException) && !($exception instanceof NotFoundHttpException)) {
+            $exception = $exception->getPrevious();
+        }
+
         if ($exception instanceof RedirectException) {
             $event->setResponse(
                 new RedirectResponse($exception->getUrl())
@@ -91,30 +97,34 @@ class EventListener
             return;
         }
 
-
-        if (!($exception instanceof NotFoundHttpException)) {
-            $exception = $exception->getPrevious();
-        }
-
         if ($exception instanceof NotFoundHttpException) {
-            $fullClass = ModelService::fullClass($this->connection, 'Page');
+            $request = $event->getRequest();
+            $pathInfo = $request->getPathInfo();
+            if (
+                strpos($pathInfo, '/manage') === 0
+            ) {
+                $event->setResponse(
+                    new RedirectResponse('/manage/after-login')
+                );
+                return;
+            }
 
+            $fullClass = ModelService::fullClass($this->connection, 'Page');
             $page404Id = getenv('PAGE_404_ID');
             if ($page404Id) {
                 $page = $fullClass::getById($this->connection, $page404Id);
-            } else {
-                $page = new $fullClass($this->connection);
+                if ($page) {
+                    $event->setResponse(
+                        new Response(
+                            $this->environment->render($page->objPageTemplate()->getFilename(), [
+                                'theNode' => new Node(uniqid(), uniqid(), [
+                                    'extraInfo' => $page,
+                                ])
+                            ])
+                        )
+                    );
+                }
             }
-
-            $event->setResponse(
-                new Response(
-                    $this->environment->render('404.twig', [
-                        'theNode' => new Node(uniqid(), uniqid(), [
-                            'extraInfo' => $page,
-                        ])
-                    ])
-                )
-            );
         }
     }
 }

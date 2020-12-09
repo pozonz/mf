@@ -5,19 +5,7 @@ namespace MillenniumFalcon\Core\Pattern\Cart;
 Interface CartProductVariantInterface
 {
     //ORM
-    public function getNoPromoDiscount();
-
-    public function getNoMemberDiscount();
-
-    public function getSalePrice();
-
     public function getPrice();
-
-    public function getSaleStart();
-
-    public function getSaleEnd();
-
-    public function getOnSale();
 
     public function getSku();
 
@@ -37,10 +25,6 @@ Interface CartProductVariantInterface
     public function objOutOfStock();
 
     public function objProduct();
-
-    public function objTitle();
-
-    public function objOnSaleActive();
 
     public function objImageUrl();
 

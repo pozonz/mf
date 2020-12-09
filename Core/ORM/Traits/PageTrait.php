@@ -193,6 +193,15 @@ trait PageTrait
     }
 
     /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function objPageTemplate()
+    {
+        return $this->objPageTempalte();
+    }
+
+    /**
      * @return string
      */
     static public function getCmsOrmsTwig()

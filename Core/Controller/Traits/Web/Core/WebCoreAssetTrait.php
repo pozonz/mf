@@ -50,7 +50,7 @@ trait WebCoreAssetTrait
         $fileSize = $asset->getFileSize();
         $ext = $asset->getFileExtension();
         if ($useWebp && strtolower($ext) == 'gif') {
-            $ext = "jpg";
+//            $ext = "jpg";
         }
 
         $cachedKey = $this->getCacheKey($asset, $assetSizeCode ?: 1);
@@ -73,7 +73,7 @@ trait WebCoreAssetTrait
         if (!$returnOriginalFile && $useWebp && file_exists($webpThumbnail) && file_exists($webpThumbnailHeader)) {
             $header = json_decode(file_get_contents($webpThumbnailHeader));
             if ($header) {
-                return $this->getBinaryFileResponse($webpThumbnail, $webpThumbnailHeader);
+                return $this->getBinaryFileResponse($webpThumbnail, $header);
             }
         }
 
@@ -143,9 +143,9 @@ trait WebCoreAssetTrait
             }
             if ($assetSize) {
                 if ($assetSize->getResizeBy() == 1) {
-                    $resizeCmd = "-resize x{$assetSize->getWidth()}";
+                    $resizeCmd = "-resize x{$assetSize->getWidth()}\>";
                 } else {
-                    $resizeCmd = "-resize {$assetSize->getWidth()}";
+                    $resizeCmd = "-resize {$assetSize->getWidth()}\>";
                 }
             }
 
@@ -181,7 +181,7 @@ trait WebCoreAssetTrait
             file_put_contents($fileLocation, $assetBinary->getContent());
         }
 
-        if ($assetSizeCode) {
+        if ($assetSizeCode && $assetSizeCode != 1) {
             $returnValue = AssetService::generateOutput($command);
             $fileSize == filesize($thumbnail);
         } else {
@@ -201,8 +201,8 @@ trait WebCoreAssetTrait
             unlink($fileLocation);
         }
 
-        if ($useWebp && $assetSizeCode && $assetSizeCode != 1) {
-            $command = getenv('CWEBP_CMD') . " -q 75 $thumbnail -o $webpThumbnail";
+        if ($useWebp && $assetSizeCode && $assetSizeCode != 1 && $fileType != 'image/gif') {
+            $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
             $returnValue = AssetService::generateOutput($command);
 
             $fileSize == filesize($webpThumbnail);
@@ -262,7 +262,7 @@ trait WebCoreAssetTrait
      */
     private function getTemplateFilePath()
     {
-        return "{$this->kernel->getProjectDir()}Resources/files/";
+        return "{$this->kernel->getProjectDir()}/vendor/pozoltd/mf/Resources/files/";
     }
 
     /**

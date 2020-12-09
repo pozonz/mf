@@ -107,7 +107,7 @@ class OrmForm extends AbstractType
      * @param $column
      * @return array
      */
-    private function getOpts($pdo, $column, $orm)
+    protected function getOpts($pdo, $column, $orm)
     {
         $opts = array(
             'label' => $column->label,

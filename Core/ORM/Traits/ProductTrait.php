@@ -10,16 +10,16 @@ trait ProductTrait
     /**
      * @return string
      */
-    static public function getCmsOrmsTwig()
+    static public function getCmsOrmTwig()
     {
-        return 'cms/orms/orms-custom-product.html.twig';
+        return 'cms/orms/orm-custom-product.twig';
     }
 
     /**
      * @return string
      */
-    static public function getCmsOrmTwig()
+    static public function getCmsOrmsTwig()
     {
-        return 'cms/orms/orm-custom-product.html.twig';
+        return 'cms/orms/orms-custom-product.html.twig';
     }
 }

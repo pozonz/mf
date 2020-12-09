@@ -65,7 +65,7 @@ trait CmsCoreOrmTrait
         $className = 'User';
         $ormId = $cmsUser->getId();
         $orm = $this->_orm($request, $className, $ormId);
-        return $this->_ormPageWithForm($request, $className, $orm, 'OrmForm', function() {
+        return $this->_ormPageWithForm($request, $className, $orm, 'OrmCurrentUserForm', function() {
             throw new RedirectException('/manage/current-user');
         });
     }

@@ -1,5 +1,29 @@
 {% set isFragment = app.request.get('fragment') == 1 ? 1 : 0 %}
-{% set version = 6 %}
+{% set version = 7 %}
+
+{% macro sideNavItem(node, depth, current) %}
+    {% if node.status == 1 %}
+        {% if node.url %}
+            <li {% if treeUtils.contains(node, current) %}class="selected"{% endif %}>
+                <a href="{{ node.url }}">
+                    {{ node.title }}
+                    {% if treeUtils.hasActiveChildren(node) %}
+                        <button data-target="{{ node.id }}" class="toggle-icon {% if treeUtils.contains(node, current) %}selected{% endif %}">&nbsp;</button>
+                    {% endif %}
+                </a>
+                {% if treeUtils.hasActiveChildren(node) %}
+                    <ul data-source="{{ node.id }}" class="subcategory sub-{{ depth }}" {% if treeUtils.contains(node, current) %}style="display: block;"{% endif %}>
+                        {% for itm in node.children %}
+                            {{ _self.sideNavItem(itm, depth + 1, current) }}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% else %}
+            <li class="menuHeading">{{ node.title }}</li>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
 
 <!DOCTYPE html>
 
@@ -44,14 +68,14 @@
 </head>
 
 
-<body {% block extraBody %}{% endblock %} class="{% if isFragment %}fragment-base{% endif %} {% block extraBodyClass %}{% endblock %}">
+<body {% block extraBody %}{% endblock %} class="{% if theDataGroup is defined and treeUtils.hasActiveChildren(theDataGroup) %}has-sidebar{% else %}has-no-sidebar{% endif %} {% if isFragment %}fragment-base{% endif %} {% block extraBodyClass %}{% endblock %}">
 <div class="">
     {% block bodyContainer %}
         <!--[if lt IE 10]>
         <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
         <![endif]-->
 
-        <div class="header" id="headContainer" {% if treeUtils.contains(theDataGroup, theNode) %}style="padding-left: 25em !important; background: #000;" {% else %}style="padding-left: 10em !important; background: #000;"{% endif %}>
+        <div class="header" id="headContainer">
             <div id="head" style="{% if file_exists('/images/head.jpg') %}background: url('/images/head.jpg') no-repeat #000;{% else %}background: #000;{% endif %}">
                 <a class="logo" href="/" target="_blank" title="View my site &rsaquo;"></a>
             </div>
@@ -82,10 +106,31 @@
 
         <div id="contentContainer">
             <div id="maincontent">
-                {% if treeUtils.hasActiveChildren(theDataGroup) %}
+                {% if app.request.pathInfo == '/manage/current-user' %}
                     <div id="verticalMenu">
                         <div id="cms_sidebarIndex">
                             <ul class="verticalMenu">
+                                <li class="menuHeading">My account</li>
+                                <li class="selected">
+                                    <div>
+                                        <a href="/manage/current-user">
+                                            Profile
+                                        </a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if treeUtils.hasActiveChildren(theDataGroup) %}
+                    <div id="verticalMenu">
+                        <div id="cms_sidebarIndex">
+                            <ul class="verticalMenu">
+                                {% for child in theDataGroup.children %}
+                                    {{ _self.sideNavItem(child, 1, theNode) }}
+                                {% endfor %}
+                                {#
                                 {% for itmLvl1 in theDataGroup.children %}
                                     {% if itmLvl1.status == 1 %}
                                         {% if itmLvl1.url %}
@@ -142,12 +187,14 @@
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}
+                                #}
                             </ul>
                         </div>
                     </div>
                 {% endif %}
+                {% endif %}
 
-                <div id="bodyContent" {% if not treeUtils.hasActiveChildren(theDataGroup) %}style="padding-left: 9em !important;"{% endif %}>
+                <div id="bodyContent" {% if not treeUtils.hasActiveChildren(theDataGroup) and app.request.pathInfo != '/manage/current-user' %}style="padding-left: 9em !important;"{% endif %}>
                     {% block container %}
                         <div id="h1">
                             <h1>CMS</h1>

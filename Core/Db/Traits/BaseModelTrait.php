@@ -50,7 +50,7 @@ trait BaseModelTrait
                     $model->$setMethod($itm);
                 } else {
                     if ($itm != $model->$getMethod()) {
-//                        var_dump($decodedModel->className, $idx, $itm, $model->$getMethod());exit;
+//                        var_dump($decodedModel, $idx, $itm, $model->$getMethod());exit;
                         $response = 2;
                         $model->$setMethod($itm);
                     }

@@ -14,7 +14,7 @@ class ProductCategory extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $count;
+    private $parentId;
     
     /**
      * @return mixed
@@ -35,17 +35,17 @@ class ProductCategory extends Base
     /**
      * @return mixed
      */
-    public function getCount()
+    public function getParentId()
     {
-        return $this->count;
+        return $this->parentId;
     }
     
     /**
-     * @param mixed count
+     * @param mixed parentId
      */
-    public function setCount($count)
+    public function setParentId($parentId)
     {
-        $this->count = $count;
+        $this->parentId = $parentId;
     }
     
 }

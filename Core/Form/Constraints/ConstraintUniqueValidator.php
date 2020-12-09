@@ -12,17 +12,21 @@ class ConstraintUniqueValidator extends ConstraintValidator
         $orm = $constraint->orm;
         $field = $constraint->field;
         $extraSql = $constraint->extraSql;
+        $joins = $constraint->joins;
 
         $fullClass = ModelService::fullClass($orm->getPdo(), $orm->getModel()->getClassName());
         if ($orm->getId()) {
             $data = $fullClass::data($orm->getPdo(), array(
+                'joins' => $joins,
                 'whereSql' => "(m.$field = ? AND m.id != ? AND m.versionId IS NULL)" . ($extraSql ? " AND ($extraSql)" : ''),
                 'params' => array($value, $orm->getId()),
             ));
         } else {
             $data = $fullClass::data($orm->getPdo(), array(
+                'joins' => $joins,
                 'whereSql' => "(m.$field = ? AND m.versionId IS NULL)" . ($extraSql ? " AND ($extraSql)" : ''),
                 'params' => array($value),
+                'debug' => 0,
             ));
         }
         if (count($data)) {

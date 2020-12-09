@@ -25,6 +25,20 @@ trait FragmentDefaultTrait
             ),
         )));
         $orm->save();
+
+        $tagOrm = $tagFullClass::getByField($pdo, 'title', 'Shipping');
+
+        $orm = new static($pdo);
+        $orm->setTitle('ShippingByWeight');
+        $orm->setAttr('content');
+        $orm->setContent(json_encode(array(
+            array(
+                "id" => "content",
+                "title" => "Content:",
+                "tags" => array($tagOrm->getId()),
+            ),
+        )));
+        $orm->save();
     }
     
     /**
