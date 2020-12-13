@@ -10,6 +10,7 @@ use MillenniumFalcon\Core\Form\Type\ChoiceTree;
 use MillenniumFalcon\Core\Form\Type\LabelType;
 use MillenniumFalcon\Core\Form\Type\SpliterType;
 use MillenniumFalcon\Core\ORM\_Model;
+use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -151,6 +152,19 @@ class OrmForm extends AbstractType
                     $opts['placeholder'] = 'Choose an option';
                 }
 
+//                $opts['required'] = false;
+                break;
+            case '\\MillenniumFalcon\\Core\\Form\\Type\\ABTestType':
+                $fullClass = ModelService::fullClass($pdo, 'Page');
+                $data = $fullClass::active($pdo, [
+                    'sort' => 'title',
+                    'whereSql' => '(m.hideFromCMSNav != 1 OR m.hideFromCMSNav IS NULL) AND (m.title != 404)',
+                ]);
+
+                $opts['choices'] = array();
+                foreach ($data as $key => $val) {
+                    $opts['choices']["{$val->getTitle()} ({$val->getUrl()})"] = $val->getId();
+                }
 //                $opts['required'] = false;
                 break;
 

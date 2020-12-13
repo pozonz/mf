@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core;
 
 use BlueM\Tree;
+use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use MillenniumFalcon\Core\Tree\TreeUtils;
 use Psr\Container\ContainerInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class RouterController extends AbstractController
 {
+
     /**
      * @var null
      */
@@ -39,11 +41,11 @@ abstract class RouterController extends AbstractController
      * @return array
      * @throws RedirectException
      */
-    public function getTemplateParams($request)
+    public function getTemplateParams(Request $request, $aBTest = null, $abTestToken= null)
     {
         $requestUri = $request->getPathInfo();
         $requestUri = rtrim($requestUri, '/');
-        return $this->getTemplateParamsByUrl($requestUri);
+        return $this->getTemplateParamsByUrl($requestUri, $aBTest, $abTestToken);
     }
 
     /**
@@ -51,7 +53,7 @@ abstract class RouterController extends AbstractController
      * @return array
      * @throws RedirectException
      */
-    protected function getTemplateParamsByUrl($requestUri)
+    protected function getTemplateParamsByUrl($requestUri, $aBTest = null, $abTestToken= null)
     {
         $tree = $this->getTree();
         $urlFragments = explode('/', trim($requestUri, '/'));
@@ -86,6 +88,16 @@ abstract class RouterController extends AbstractController
         }
 
         $theNode = $tree->getNodeById($rawData->id);
+        if ($aBTest) {
+            $jsonPages = json_decode($aBTest->getPages());
+            foreach ($jsonPages as $jsonPage) {
+                if ($jsonPage->token == $abTestToken) {
+                    $abTestRawData = $this->getRawDataById($jsonPage->page);
+                    $theNode->extraInfo = $abTestRawData->extraInfo;
+                }
+            }
+        }
+
         return [
             'urlParams' => $urlParams,
             'urlFragments' => $urlFragments,
@@ -103,6 +115,22 @@ abstract class RouterController extends AbstractController
         foreach ($nodes as $rawData) {
             $rawData = (object)$rawData;
             if ($rawData->url == $url) {
+                return $rawData;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param $id
+     * @return object|null
+     */
+    protected function getRawDataById($id)
+    {
+        $nodes = $this->getNodes();
+        foreach ($nodes as $rawData) {
+            $rawData = (object)$rawData;
+            if ($rawData->id == $id) {
                 return $rawData;
             }
         }
