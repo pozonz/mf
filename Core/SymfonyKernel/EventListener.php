@@ -18,10 +18,13 @@ use Twig\Environment;
 
 class EventListener
 {
-    const LAST_URI = '__lastUrl';
+    const LAST_URL = '__lastUrl';
 
-    const ALLOWED_URIS = [
-        '/cart',
+    const REDIRET_IGNORED_CONTAINED_PARTS = [
+        '/manage',
+        '/install',
+        '/import',
+        '/_fragment',
     ];
 
     /**
@@ -38,7 +41,6 @@ class EventListener
     {
         $this->connection = $connection;
         $this->environment = $environment;
-
     }
 
     /**
@@ -51,30 +53,17 @@ class EventListener
         $requestUri = $request->getRequestUri();
         $pathInfo = $request->getPathInfo();
         $queryString = $request->getQueryString();
-        $session = $event->getRequest()->getSession();
-        if (in_array($pathInfo, static::ALLOWED_URIS)) {
-            $session->set(static::LAST_URI, $requestUri);
+
+        //redirect to small case
+        if (!$this->isContainPart($pathInfo, static::REDIRET_IGNORED_CONTAINED_PARTS, [ 'isAtStartOnly' => 1, ])) {
+            if (strtolower($pathInfo) !== $pathInfo) {
+                $newPathInfo = strtolower($pathInfo);
+                $event->setResponse(new RedirectResponse($newPathInfo . ($queryString ? '?' . $queryString : '')));
+                return;
+            }
         }
 
-        if (
-            strpos($pathInfo, '/manage') === 0
-            || strpos($pathInfo, '/install') === 0
-            || strpos($pathInfo, '/import') === 0
-            || strpos($pathInfo, "/_fragment") === 0
-        ) {
-            return;
-        }
-
-        $redirectRequired = false;
-        if (strtolower($pathInfo) !== $pathInfo) {
-            $pathInfo = strtolower($pathInfo);
-            $redirectRequired = true;
-        }
-
-        if ($redirectRequired) {
-            $event->setResponse(new RedirectResponse($pathInfo . ($queryString ? '?' . $queryString : '')));
-        }
-
+        //redirect for cms setup
         $fullClass = ModelService::fullClass($this->connection, 'Redirect');
         $redirect = $fullClass::getByField($this->connection, 'title', $pathInfo);
         if ($redirect && $redirect->getStatus() == 1) {
@@ -82,6 +71,12 @@ class EventListener
         }
     }
 
+    /**
+     * @param GetResponseForExceptionEvent $event
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
@@ -126,5 +121,29 @@ class EventListener
                 }
             }
         }
+    }
+
+    /**
+     * @param $toBeCompared
+     * @param $parts
+     * @return bool
+     */
+    protected function isContainPart($toBeCompared, $parts, $options = [])
+    {
+        $isAtStartOnly = $options['isAtStartOnly'] ?? 0;
+
+        foreach ($parts as $itm) {
+            if ($isAtStartOnly) {
+                if (strpos($toBeCompared, $itm) === 0) {
+                    return true;
+                }
+            } else {
+                if (strpos($toBeCompared, $itm) !== false) {
+                    return true;
+                }
+            }
+
+        }
+        return false;
     }
 }

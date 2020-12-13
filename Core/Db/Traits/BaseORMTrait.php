@@ -53,12 +53,11 @@ trait BaseORMTrait
             $this->setModified(date('Y-m-d H:i:s'));
         }
 
-        if (method_exists($this, 'getTitle')) {
+        if (method_exists($this, 'getTitle') ) {
             $slugify = new Slugify(['trim' => false]);
-//            $this->setSlug($slugify->slugify("{$this->getTitle()}-{$this->getId()}", [
-//                'trim' => true,
-//            ]));
-            $this->setSlug($slugify->slugify($this->getTitle()));
+            if (!isset($options['doNotUpdateSlug']) || !$options['doNotUpdateSlug']) {
+                $this->setSlug($slugify->slugify($this->getTitle()));
+            }
         }
 
         if (!$doNotSaveVersion && $this instanceof VersionInterface) {
