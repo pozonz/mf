@@ -61,6 +61,8 @@ class EventListener
                 $event->setResponse(new RedirectResponse($newPathInfo . ($queryString ? '?' . $queryString : '')));
                 return;
             }
+        } else {
+            return;
         }
 
         //redirect for cms setup
