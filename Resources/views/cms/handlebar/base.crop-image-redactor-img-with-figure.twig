@@ -1,0 +1,13 @@
+{% verbatim %}
+    {{#compare url '' operator='!='}}
+        <a href="{{url}}" {{#compare target 1}}target="_blank"{{/compare}}>
+            <img src="{{src}}" alt="{{alt}}">
+        </a>
+        {{#compare caption '' operator='!='}}<figcaption>{{caption}}</figcaption>{{/compare}}
+    {{/compare}}
+
+    {{#compare url '' operator='=='}}
+        <img src="{{src}}" alt="{{alt}}">
+        {{#compare caption '' operator='!='}}<figcaption>{{caption}}</figcaption>{{/compare}}
+    {{/compare}}
+{% endverbatim %}

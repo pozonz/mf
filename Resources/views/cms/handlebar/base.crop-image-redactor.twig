@@ -1,19 +1,50 @@
 {% verbatim %}
-    <header id="redactor_modal_header" style="text-align: center;"><h2>Crop image</h2></header>
+    <header id="redactor_modal_header" style="text-align: center;"><h2>Edit image</h2></header>
     <div id="redactor_modal_inner" class="js-crop-container" data-width="{{width}}" data-height="{{height}}" data-code="{{ code }}">
         <table class="image-cropper">
             <tbody>
             <tr valign="top">
                 <td>
-                    <section class="image-settings">
-                        <label>Choose a size</label>
-                        <select id="redactor_image_size">
-                            <option>All sizes</option>
-                            {{#each imageSizes}}
-                                <option {{#compare ../size code operator='=='}}selected{{/compare}} value="{{id}}" data-code="{{code}}">{{title}}</option>
-                            {{/each}}
-                        </select>
-                    </section>
+                    <form action="" class="redactor-modal-area js-redactor-edit-image">
+                        <section class="image-settings">
+                            <label>Choose a size</label>
+                            <select id="redactor_image_size" name="size">
+                                <option>All sizes</option>
+                                {{#each imageSizes}}
+                                    <option {{#compare ../size code operator='=='}}selected{{/compare}} value="{{id}}" data-code="{{code}}">{{title}}</option>
+                                {{/each}}
+                            </select>
+                        </section>
+
+                        <section class="image-settings alt-settings" style="padding-top: 15px;">
+                            <label>Alt</label>
+                            <input type="text" name="alt" value="{{alt}}">
+                        </section>
+
+                        <section class="image-settings caption-settings" style="padding-top: 15px;">
+                            <label>Caption</label>
+                            <input type="text" name="caption" value="{{caption}}">
+                        </section>
+
+                        <section class="image-settings position-settings" style="padding-top: 15px;">
+                            <label>Position</label>
+                            <select id="redactor_image_size" name="align">
+                                <option value="none">None</option>
+                                <option {{#compare align 'left'}}selected{{/compare}} value="left">Left</option>
+                                <option {{#compare align 'center'}}selected{{/compare}} value="center">Center</option>
+                                <option {{#compare align 'right'}}selected{{/compare}} value="right">Right</option>
+                            </select>
+                        </section>
+
+                        <section class="image-settings link-settings" style="padding-top: 15px;">
+                            <label>Link</label>
+                            <input type="text" name="url" value="{{url}}">
+                        </section>
+
+                        <section class="image-settings link-settings" style="padding-top: 15px;">
+                            <label class="checkbox"><input type="checkbox" name="target" {{#compare target 1}}checked{{/compare}}> Open link in a new tab</label>
+                        </section>
+                    </form>
                 </td>
                 <td width="750">
                     <table>
@@ -54,6 +85,7 @@
         <footer>
             <a href="#" class="button js-crop-close">Close</a>
             <input type="button" name="save" class="redactor_modal_btn js-crop-apply" style="background: #82ad1d;" value="Crop">
+            <input type="button" name="save" class="redactor_modal_btn js-redactor-save" style="background: orange;" value="Save">
         </footer>
     </div>
 {% endverbatim %}

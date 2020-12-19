@@ -135,7 +135,7 @@
 
 {% block externalFooter %}
 	<script id="gallery-file" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.gallery-file.twig' %}</script>
-	<script src="/cms/redactor/redactor.min.js" language="javascript"></script>
+	<script src="/cms/redactor/redactor.js" language="javascript"></script>
     <script src="/cms/redactor/_plugins/video/video.js" language="javascript"></script>
     <script src="/cms/redactor/_plugins/table/table.js" language="javascript"></script>
 
@@ -150,6 +150,7 @@
 		<script src="/js/core/custom_widget.js"></script>
 	{% endif %}
 
+	<script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}"></script>
 	<script src="/cms/develop/js/orm.js?v={{ version }}"></script>
 
     {% if fragmentSubmitted %}
