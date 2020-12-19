@@ -143,9 +143,9 @@ trait WebCoreAssetTrait
             }
             if ($assetSize) {
                 if ($assetSize->getResizeBy() == 1) {
-                    $resizeCmd = "-resize x{$assetSize->getWidth()}\>";
+                    $resizeCmd = "-resize \"x{$assetSize->getWidth()}>\"";
                 } else {
-                    $resizeCmd = "-resize {$assetSize->getWidth()}\>";
+                    $resizeCmd = "-resize \"{$assetSize->getWidth()}>\"";
                 }
             }
 

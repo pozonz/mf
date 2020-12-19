@@ -20,7 +20,9 @@
                 {% endif %}
             </li>
         {% else %}
-            <li class="menuHeading">{{ node.title }}</li>
+            </ul>
+            <strong class="menuHeading">{{ node.title }}</strong>
+            <ul class="verticalMenu">
         {% endif %}
     {% endif %}
 {% endmacro %}
@@ -126,69 +128,11 @@
                     {% if treeUtils.hasActiveChildren(theDataGroup) %}
                     <div id="verticalMenu">
                         <div id="cms_sidebarIndex">
-                            <ul class="verticalMenu">
-                                {% for child in theDataGroup.children %}
-                                    {{ _self.sideNavItem(child, 1, theNode) }}
-                                {% endfor %}
-                                {#
-                                {% for itmLvl1 in theDataGroup.children %}
-                                    {% if itmLvl1.status == 1 %}
-                                        {% if itmLvl1.url %}
-                                            <li {% if treeUtils.contains(itmLvl1, theNode) %}class="selected"{% endif %}>
-                                                <div>
-                                                    <a href="{{ itmLvl1.url }}">
-                                                        {{ itmLvl1.title }}
-                                                        {% if treeUtils.hasActiveChildren(itmLvl1) %}
-                                                            <button data-target="{{ itmLvl1.id }}" class="toggle-icon {% if treeUtils.contains(itmLvl1, theNode) %}selected{% endif %}">&nbsp;</button>
-                                                        {% endif %}
-                                                    </a>
-                                                    {% if treeUtils.hasActiveChildren(itmLvl1) %}
-                                                        <ul data-source="{{ itmLvl1.id }}" class="subcategory sub-1" {% if treeUtils.contains(itmLvl1, theNode) %}style="display: block;"{% endif %}>
-                                                            {% for itmLvl2 in itmLvl1.children %}
-                                                                {% if itmLvl2.status == 1 %}
-                                                                    <li {% if treeUtils.contains(itmLvl2, theNode) %}class="selected-subitm"{% endif %}>
-                                                                        <div>
-                                                                            <a href="{{ itmLvl2.url }}">
-                                                                                {{ itmLvl2.title }}
-                                                                                {% if treeUtils.hasActiveChildren(itmLvl2) %}
-                                                                                    <button class="toggle-icon {% if treeUtils.contains(itmLvl2, theNode) %}selected{% endif %}" data-target="{{ itmLvl2.id }}">&nbsp;</button>
-                                                                                {% endif %}
-                                                                            </a>
-                                                                            {% if treeUtils.hasActiveChildren(itmLvl2) %}
-                                                                                <ul data-source="{{ itmLvl2.id }}" class="subcategory sub-2" {% if treeUtils.contains(itmLvl2, theNode) %}style="display: block;"{% endif %}>
-                                                                                    {% for itmLvl3 in itmLvl2.children %}
-                                                                                        {% if itmLvl2.status == 1 %}
-                                                                                            <li {% if treeUtils.contains(itmLvl3, theNode) %}class="selected-subitm"{% endif %}>
-                                                                                                <div>
-                                                                                                    <a href="{{ itmLvl3.url }}">{{ itmLvl3.title }}</a>
-                                                                                                    <div class="clear"></div>
-                                                                                                </div>
-                                                                                            </li>
-                                                                                        {% endif %}
-                                                                                    {% endfor %}
-                                                                                </ul>
-                                                                            {% endif %}
-                                                                            <div class="clear"></div>
-                                                                        </div>
-                                                                    </li>
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </ul>
-                                                    {% endif %}
-                                                    <div class="clear"></div>
-                                                </div>
-                                            </li>
-                                        {% else %}
-                                            {% if loop.index > 1 %}
-                                                </ul>
-                                                <ul class="verticalMenu">
-                                            {% endif %}
-                                            <li class="menuHeading">{{ itmLvl1.title }}</li>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                #}
-                            </ul>
+                            {% for child in theDataGroup.children %}
+                                {% if loop.first and child.url %}<ul class="verticalMenu">{% endif %}
+                                {{ _self.sideNavItem(child, 1, theNode) }}
+                                {% if loop.last %}</div>{% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 {% endif %}
