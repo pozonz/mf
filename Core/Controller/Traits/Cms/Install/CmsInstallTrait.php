@@ -157,7 +157,7 @@ trait CmsInstallTrait
      */
     public function addInitDataToModel()
     {
-        $response = [];
+        $exist = [];
         $models = _Model::data($this->connection, [
             'sort' => 'title',
         ]);
@@ -168,15 +168,16 @@ trait CmsInstallTrait
             $total = $fullClass::data($this->connection, [
                 'count' => 1,
             ]);
-            $response[$model->getClassName()] = $total['count'];
+            $exist[$model->getClassName()] = $total['count'];
         }
 
+        $response = [];
         $dir = $this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Core/ORM/Init';
         $files = scandir($dir);
         foreach ($files as $file) {
             if (is_file("$dir/$file")) {
                 $jsonData = json_decode(file_get_contents("$dir/$file"));
-                if (isset($response[$jsonData->className]) && $response[$jsonData->className]  == 0) {
+                if (isset($exist[$jsonData->className]) && $exist[$jsonData->className] == 0) {
                     $fullClass = ModelService::fullClass($this->connection, $jsonData->className);
                     $orm = new $fullClass($this->connection);
                     foreach ($jsonData->orm as $key => $val) {
@@ -186,6 +187,11 @@ trait CmsInstallTrait
                     $orm->save(false, [
                         'forceInsert' => 1,
                     ]);
+                    if (!isset($response[$jsonData->className])) {
+                        $response[$jsonData->className] = 0;
+                    }
+                    $response[$jsonData->className] = $response[$jsonData->className] + 1;
+
                 }
             }
         }
