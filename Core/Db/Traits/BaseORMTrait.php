@@ -28,7 +28,7 @@ trait BaseORMTrait
      */
     public function updateBuildInFile()
     {
-        if ($this->getIsBuiltIn() && !$this->getVersionId()) {
+        if ($this->getIsBuiltIn() && !$this->getVersionId() && getenv('ALLOW_CHANGE_INIT_DATA') == 1) {
             $path = explode('\\', get_called_class());
             $className = array_pop($path);
 
@@ -102,7 +102,7 @@ trait BaseORMTrait
 
         $sql = '';
         $params = array();
-        if (!$this->getId()) {
+        if (!$this->getId() || (isset($options['forceInsert']) && $options['forceInsert'] == 1)) {
             $sql = "INSERT INTO `{$tableName}` ";
             $part1 = '(';
             $part2 = ' VALUES (';

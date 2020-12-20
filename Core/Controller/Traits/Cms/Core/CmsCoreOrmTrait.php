@@ -159,6 +159,8 @@ trait CmsCoreOrmTrait
         $params['fragmentSubmitted'] = 0;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $orm->setIsBuiltIn($orm->getIsBuiltIn() ? 1 : 0);
+
             $submitButtonValue = $request->get('submit');
 
             if ($submitButtonValue == 'Preview') {

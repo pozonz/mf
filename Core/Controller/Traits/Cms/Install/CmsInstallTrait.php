@@ -35,7 +35,7 @@ trait CmsInstallTrait
 
         $response = [];
         $models = _Model::data($this->connection, [
-            'sort' => 'title',
+            'sort' => 'className',
         ]);
         foreach ($models as $model) {
             $added = 0;
@@ -168,20 +168,28 @@ trait CmsInstallTrait
             $total = $fullClass::data($this->connection, [
                 'count' => 1,
             ]);
-            if ($total['count'] == 0) {
-                try {
-                    $method = new \ReflectionMethod($fullClass . '::initData');
-                    $fullClass::initData($this->connection);
-                    $total = $fullClass::data($this->connection, [
-                        'count' => 1,
-                    ]);
-                    $added = $total['count'];
+            $response[$model->getClassName()] = $total['count'];
+        }
 
-                } catch (\Exception $ex) {
+        $dir = $this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Core/ORM/Init';
+        $files = scandir($dir);
+        foreach ($files as $file) {
+            if (is_file("$dir/$file")) {
+                $jsonData = json_decode(file_get_contents("$dir/$file"));
+                if (isset($response[$jsonData->className]) && $response[$jsonData->className]  == 0) {
+                    $fullClass = ModelService::fullClass($this->connection, $jsonData->className);
+                    $orm = new $fullClass($this->connection);
+                    foreach ($jsonData->orm as $key => $val) {
+                        $setMethod = "set" . ucfirst($key);
+                        $orm->$setMethod($val);
+                    }
+                    $orm->save(false, [
+                        'forceInsert' => 1,
+                    ]);
                 }
             }
-            $response[$model->getClassName()] = $added;
         }
+
 
         return new JsonResponse($response);
     }
