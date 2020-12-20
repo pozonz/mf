@@ -44,9 +44,9 @@ trait FragmentBlockTrait
         $orm->setItems(json_encode(array(
             array(
                 "widget" => "10",
-                "id" => "countries",
-                "title" => "Countries:",
-                "sql" => "SELECT t1.id AS `key`, t1.title AS value FROM ShippingCountry AS t1 ORDER BY t1.title",
+                "id" => "zones",
+                "title" => "Zones:",
+                "sql" => "SELECT t1.id AS `key`, t1.title AS value, t1.parentId AS parentId FROM ShippingCountry AS t1 ORDER BY t1.title",
             ),
             array(
                 "widget" => "11",

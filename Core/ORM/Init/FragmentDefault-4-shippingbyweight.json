@@ -1,0 +1,31 @@
+{
+    "className": "FragmentDefault",
+    "orm": {
+        "id": "4",
+        "uniqid": "72d1f2ad-99f8-4914-9340-ae0e1cfdf2f3",
+        "slug": "shippingbyweight",
+        "rank": "0",
+        "added": "2020-12-06 21:20:42",
+        "modified": "2020-12-20 17:52:04",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": "1",
+        "title": "ShippingByWeight",
+        "attr": "content",
+        "content": "[{\"id\":\"content\",\"title\":\"Content:\",\"tags\":[\"7\"]}]"
+    }
+}

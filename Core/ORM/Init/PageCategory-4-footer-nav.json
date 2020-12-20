@@ -1,0 +1,30 @@
+{
+    "className": "PageCategory",
+    "orm": {
+        "id": "4",
+        "uniqid": "5efa81b38f89a",
+        "slug": "footer-nav",
+        "rank": "0",
+        "added": "2020-06-30 12:05:07",
+        "modified": "2020-12-20 17:52:23",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": "1",
+        "title": "Footer nav",
+        "code": "footer"
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "className": "FragmentDefault",
+    "orm": {
+        "id": "3",
+        "uniqid": "63d4faee-30c4-4d90-8fcb-2597a2b43991",
+        "slug": "page",
+        "rank": "0",
+        "added": "2020-12-06 21:20:42",
+        "modified": "2020-12-20 17:51:58",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": "1",
+        "title": "Page",
+        "attr": "content",
+        "content": "[{\"id\":\"content\",\"title\":\"Content:\",\"tags\":[\"5\"]}]"
+    }
+}

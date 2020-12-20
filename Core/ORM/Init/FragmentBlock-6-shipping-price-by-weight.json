@@ -1,0 +1,32 @@
+{
+    "className": "FragmentBlock",
+    "orm": {
+        "id": "6",
+        "uniqid": "6d4c4c90-19e1-4714-9c45-6f4ca89bac5d",
+        "slug": "shipping-price-by-weight",
+        "rank": "1",
+        "added": "2020-12-06 21:22:29",
+        "modified": "2020-12-20 17:51:18",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": "1",
+        "title": "Shipping price by weight",
+        "twig": "_",
+        "tags": "[\"7\"]",
+        "items": "[{\"widget\":\"13\",\"id\":\"zones\",\"title\":\"Zones:\",\"sql\":\"SELECT t1.id AS `key`, t1.title AS value, t1.parentId AS parentId FROM ShippingZone AS t1 ORDER BY t1.title\"},{\"widget\":\"11\",\"id\":\"id\",\"title\":\"Title:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"basePrice\",\"title\":\"$ \/ base unit:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"baseWeight\",\"title\":\"Base unit weight:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"extraPrice\",\"title\":\"$ \/ extra unit:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"extraWeight\",\"title\":\"Extra unit weight:\",\"sql\":\"\"}]"
+    }
+}

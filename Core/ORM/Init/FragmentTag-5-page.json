@@ -1,0 +1,29 @@
+{
+    "className": "FragmentTag",
+    "orm": {
+        "id": "5",
+        "uniqid": "5efa81b398946",
+        "slug": "page",
+        "rank": "0",
+        "added": "2020-06-30 12:05:07",
+        "modified": "2020-12-20 17:51:27",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": "1",
+        "title": "Page"
+    }
+}

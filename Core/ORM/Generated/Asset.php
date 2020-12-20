@@ -77,11 +77,6 @@ class Asset extends Base
     private $height;
     
     /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $oldId;
-    
-    /**
      * @return mixed
      */
     public function getTitle()
@@ -303,22 +298,6 @@ class Asset extends Base
     public function setHeight($height)
     {
         $this->height = $height;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getOldId()
-    {
-        return $this->oldId;
-    }
-    
-    /**
-     * @param mixed oldId
-     */
-    public function setOldId($oldId)
-    {
-        $this->oldId = $oldId;
     }
     
 }

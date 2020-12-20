@@ -1,0 +1,32 @@
+{
+    "className": "FragmentBlock",
+    "orm": {
+        "id": "5",
+        "uniqid": "0e2b6d01-3b9b-4ce5-97ee-c02942931ba7",
+        "slug": "heading-content",
+        "rank": "0",
+        "added": "2020-12-06 21:22:29",
+        "modified": "2020-12-20 17:51:11",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": "1",
+        "title": "Heading & Content",
+        "twig": "heading-content.twig",
+        "tags": "[\"5\"]",
+        "items": "[{\"widget\":\"0\",\"id\":\"heading\",\"title\":\"Heading:\",\"sql\":\"\"},{\"widget\":\"5\",\"id\":\"content\",\"title\":\"Content:\",\"sql\":\"\"}]"
+    }
+}

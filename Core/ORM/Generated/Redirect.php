@@ -37,11 +37,6 @@ class Redirect extends Base
     private $referers;
     
     /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $oldId;
-    
-    /**
      * @return mixed
      */
     public function getTitle()
@@ -135,22 +130,6 @@ class Redirect extends Base
     public function setReferers($referers)
     {
         $this->referers = $referers;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getOldId()
-    {
-        return $this->oldId;
-    }
-    
-    /**
-     * @param mixed oldId
-     */
-    public function setOldId($oldId)
-    {
-        $this->oldId = $oldId;
     }
     
 }

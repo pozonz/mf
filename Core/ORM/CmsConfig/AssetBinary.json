@@ -3,7 +3,7 @@
     "slug": "asset-binary",
     "rank": 12,
     "added": "2020-06-24 21:02:11",
-    "modified": "2020-12-18 10:41:46",
+    "modified": "2020-12-20 18:04:08",
     "publishFrom": null,
     "publishTo": null,
     "metaTitle": null,
@@ -20,6 +20,7 @@
     "versionUuid": "",
     "versionId": null,
     "oldId": null,
+    "isBuiltIn": "0",
     "title": "Asset binary",
     "className": "AssetBinary",
     "namespace": "MillenniumFalcon\\Core\\ORM",
@@ -30,7 +31,7 @@
     "numberPerPage": "50",
     "defaultSortBy": "id",
     "defaultOrder": "1",
-    "columnsJson": "[{\"id\":\"z1592989285460\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"SELECT t1.id AS `key`, t1.title AS value FROM Asset AS t1 ORDER BY t1.title\"},{\"id\":\"z1592989326586\",\"column\":\"blob\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Content:\",\"field\":\"content\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1598345199875\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Old ID:\",\"field\":\"oldId\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
+    "columnsJson": "[{\"id\":\"z1592989285460\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"SELECT t1.id AS `key`, t1.title AS value FROM Asset AS t1 ORDER BY t1.title\"},{\"id\":\"z1592989326586\",\"column\":\"blob\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Content:\",\"field\":\"content\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
     "metadata": "[]",
     "presetData": "[]"
 }

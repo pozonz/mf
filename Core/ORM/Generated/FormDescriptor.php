@@ -67,11 +67,6 @@ class FormDescriptor extends Base
     private $thankYouEmailText;
     
     /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $oldId;
-    
-    /**
      * @return mixed
      */
     public function getTitle()
@@ -261,22 +256,6 @@ class FormDescriptor extends Base
     public function setThankYouEmailText($thankYouEmailText)
     {
         $this->thankYouEmailText = $thankYouEmailText;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getOldId()
-    {
-        return $this->oldId;
-    }
-    
-    /**
-     * @param mixed oldId
-     */
-    public function setOldId($oldId)
-    {
-        $this->oldId = $oldId;
     }
     
 }
