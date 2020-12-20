@@ -134,7 +134,22 @@
                 {{#compare widget 12 operator='==' }}
                     <div class="formStyle">
                         <label>{{title}}</label>
-                        <input type="text" disabled="disabled" class="js-elem" id="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}" value="{{#getByKey ../block.values id}}{{/getByKey}}">
+                        <select class="js-elem no-chosen js-after-chosen" id="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}" multiple>
+                            {{#each choices}}
+                                <option {{#getByValueAndCompare ../../block.values ../id this}}selected{{/getByValueAndCompare}} value="{{#myOptionKey this}}{{/myOptionKey}}">{{#myOptionValue this}}{{/myOptionValue}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                {{/compare}}
+
+                {{#compare widget 13 operator='==' }}
+                    <div class="formStyle">
+                        <label>{{title}}</label>
+                        <select class="js-elem no-chosen js-after-chosen" id="{{../id}}@{{../block.id}}@{{id}}" data-id="{{id}}" multiple>
+                            {{#each choices}}
+                                <option {{#getByValueAndCompare ../../block.values ../id this}}selected{{/getByValueAndCompare}} value="{{#myOptionKey this}}{{/myOptionKey}}">{{#myOptionValue this}}{{/myOptionValue}}</option>
+                            {{/each}}
+                        </select>
                     </div>
                 {{/compare}}
             {{/each}}

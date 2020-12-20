@@ -89,6 +89,8 @@ class UtilsService
             9 => 'Choice',
             10 => 'Choice multi json',
             11 => 'Placeholder',
+            12 => 'Choice tree',
+            13 => 'Choice multi json tree',
         );
         asort($widgets);
         return array_flip($widgets);
