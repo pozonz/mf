@@ -24,6 +24,39 @@ trait BaseORMTrait
     }
 
     /**
+     * @return bool
+     */
+    public function updateBuildInFile()
+    {
+        if ($this->getIsBuiltIn() && !$this->getVersionId()) {
+            $path = explode('\\', get_called_class());
+            $className = array_pop($path);
+
+            $dir = __DIR__ . '/../../ORM/Init';
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                if (strpos($file, "{$className}-{$this->getId()}-") !== false) {
+                    unlink("$dir/$file");
+                }
+            }
+
+            $fileName = "{$className}-{$this->getId()}-{$this->getSlug()}.json";
+            file_put_contents("$dir/$fileName", json_encode([
+                'className' => $className,
+                'orm' => $this->jsonSerialize(),
+            ], JSON_PRETTY_PRINT));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return mixed
      */
     public function delete()
@@ -53,7 +86,7 @@ trait BaseORMTrait
             $this->setModified(date('Y-m-d H:i:s'));
         }
 
-        if (method_exists($this, 'getTitle') ) {
+        if (method_exists($this, 'getTitle')) {
             $slugify = new Slugify(['trim' => false]);
             if (!isset($options['doNotUpdateSlug']) || !$options['doNotUpdateSlug']) {
                 $this->setSlug($slugify->slugify($this->getTitle()));

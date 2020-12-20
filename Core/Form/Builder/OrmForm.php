@@ -12,6 +12,7 @@ use MillenniumFalcon\Core\Form\Type\SpliterType;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -85,14 +86,15 @@ class OrmForm extends AbstractType
         }
         foreach ($metadata as $itm) {
             switch ($itm) {
-                case 'parentId':
+                case 'isBuiltIn':
+                    $orm->setIsBuiltIn($orm->getIsBuiltIn() == 1 ? true : false);
+
                     $column = new \stdClass();
-                    $column->widget = '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceTree';
-                    $column->label = 'Parent:';
-                    $column->sql = 'SELECT t1.id AS `key`, t1.title AS value, t1.parentId AS parentId FROM ProductCategory AS t1 ORDER BY t1.rank';
+                    $column->widget = '\\MillenniumFalcon\\Core\\Form\\Type\\CheckboxType';
+                    $column->label = 'Built-in data';
                     $column->required = 0;
                     $column->unique = 0;
-                    $builder->add($itm, ChoiceTree::class, $this->getOpts($pdo, $column, $orm));
+                    $builder->add($itm, CheckboxType::class, $this->getOpts($pdo, $column, $orm));
                     break;
                 default:
                     $label = preg_replace('/(?<!^)([A-Z])/', ' \\1', $itm);

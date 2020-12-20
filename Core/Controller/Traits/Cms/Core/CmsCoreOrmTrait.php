@@ -2,6 +2,7 @@
 
 namespace MillenniumFalcon\Core\Controller\Traits\Cms\Core;
 
+use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Form\Builder\OrmForm;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
@@ -42,7 +43,7 @@ trait CmsCoreOrmTrait
         $className = 'Asset';
 
         $orm = $this->_orm($request, $className, $ormId);
-        return $this->_ormPageWithForm($request, $className, $orm, 'OrmAssetForm', function(Form $form, $orm) {
+        return $this->_ormPageWithForm($request, $className, $orm, 'OrmAssetForm', function (Form $form, $orm) {
             $uploadedFile = $form['file']->getData();
             if ($uploadedFile) {
                 AssetService::processUploadedFileWithAsset($this->connection, $uploadedFile, $orm);
@@ -65,7 +66,7 @@ trait CmsCoreOrmTrait
         $className = 'User';
         $ormId = $cmsUser->getId();
         $orm = $this->_orm($request, $className, $ormId);
-        return $this->_ormPageWithForm($request, $className, $orm, 'OrmCurrentUserForm', function() {
+        return $this->_ormPageWithForm($request, $className, $orm, 'OrmCurrentUserForm', function () {
             throw new RedirectException('/manage/current-user');
         });
     }
@@ -179,6 +180,10 @@ trait CmsCoreOrmTrait
 
             if ($callback) {
                 call_user_func($callback, $form, $orm);
+            }
+
+            if ($orm->getIsBuiltIn()) {
+                $orm->updateBuildInFile();
             }
 
             $baseUrl = str_replace('copy/', '', $params['theNode']->getUrl());

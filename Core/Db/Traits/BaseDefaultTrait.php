@@ -122,6 +122,11 @@ trait BaseDefaultTrait
     private $oldId;
 
     /**
+     * #pz tinyint(1) NULL DEFAULT 0
+     */
+    private $isBuiltIn;
+
+    /**
      * @return Connection
      */
     public function getPdo(): Connection
@@ -487,5 +492,21 @@ trait BaseDefaultTrait
     public function setOldId($oldId)
     {
         $this->oldId = $oldId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsBuiltIn()
+    {
+        return $this->isBuiltIn;
+    }
+
+    /**
+     * @param mixed $isBuiltIn
+     */
+    public function setIsBuiltIn($isBuiltIn): void
+    {
+        $this->isBuiltIn = $isBuiltIn;
     }
 }

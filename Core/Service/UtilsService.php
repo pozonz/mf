@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core\Service;
 
 use BlueM\Tree;
+use BlueM\Tree\Node;
 use Cocur\Slugify\Slugify;
 use MillenniumFalcon\Core\Tree\RawData;
 
@@ -63,12 +64,70 @@ class UtilsService
                             $choices[] = $val['key'] . "-" . $val['value'];
                         }
                     }
+                } else if (($item->widget == 12 || $item->widget == 13) && isset($item->sql)) {
+                    preg_match('/\bfrom\b\s*(\w+)/i', $item->sql, $matches);
+                    if (count($matches) == 2) {
+                        if (substr($matches[1], 0, 1) == '_') {
+                            $tablename = strtolower($matches[1]);
+                        } else {
+                            $tablename = $slugify->slugify($matches[1]);
+                        }
+
+                        $item->sql = str_replace($matches[0], "FROM $tablename", $item->sql);
+                    }
+                    if ($item->sql) {
+                        $stmt = $pdo->prepare($item->sql);
+                        $stmt->execute();
+
+                        $nodes = [];
+                        foreach ($stmt->fetchAll() as $key => $val) {
+                            $nodes[] = (array)new RawData([
+                                'id' => $val['key'],
+                                'parent' => $val['parentId'],
+                                'title' => $val['value'],
+                                'status' => 1,
+                            ]);
+                        }
+                        $tree = new Tree($nodes, [
+                            'rootId' => null,
+                            'buildwarningcallback' => function () {},
+                        ]);
+
+                        $choices = [];
+                        foreach ($tree->getRootNodes() as $itm) {
+                            $choices = array_merge($choices, $this->getChoices($itm, 1));
+                        }
+
+//                        ini_set('xdebug.var_display_max_depth', '100');
+//                        ini_set('xdebug.var_display_max_children', '2560');
+//                        ini_set('xdebug.var_display_max_data', '10240');
+//                        while (@ob_end_clean());
+//                        var_dump($choices);exit;
+                    }
                 }
                 $item->choices = $choices;
             }
             $block->setItems(json_encode($items));
         }
         return $blocks;
+    }
+
+    /**
+     * @param Node $node
+     * @param $level
+     * @return array
+     */
+    private function getChoices(Node $node, $level) {
+        $result = [];
+        $result[] = [
+            'level' => $level,
+            'value' => $node->getId(),
+            'label' => $node->getTitle(),
+        ];
+        foreach ($node->getChildren() as $itm) {
+            $result = array_merge($result, $this->getChoices($itm, $level + 1));
+        }
+        return $result;
     }
 
     /**
