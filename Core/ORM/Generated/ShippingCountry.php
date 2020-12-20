@@ -17,6 +17,11 @@ class ShippingCountry extends Base
     private $code;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $parentId;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -46,6 +51,22 @@ class ShippingCountry extends Base
     public function setCode($code)
     {
         $this->code = $code;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+    
+    /**
+     * @param mixed parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
     }
     
 }
