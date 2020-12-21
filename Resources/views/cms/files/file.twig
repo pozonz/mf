@@ -52,7 +52,8 @@
 			</div>
 
 			<ul class="nav asset-image-meta">
-				<li id="file-download">Download URL: <a target="_blank" href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}">{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}</a></li>
+				<li id="file-download">Preview URL:<br /><a target="_blank" href="{{ app.request.schemeAndHttpHost }}/images/assets/{{ orm.code }}">{{ app.request.schemeAndHttpHost }}/images/assets/{{ orm.code }}</a></li>
+				<li id="file-download">Download URL:<br /><a target="_blank" href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}">{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}</a></li>
 				<li>&nbsp;</li>
 				<li id="file-name" >Original file: <a href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}" target="_blank" class="file-name" title=" ↓ Download original file">{{ orm.fileName }}<i class="icon"></i></a></li>
 				<li>Size: <span id="file-size">{{ orm.formattedSize }}</span><span id="file-size-unit">{{ orm.formattedSizeUnit }}</span></li>
