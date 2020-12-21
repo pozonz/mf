@@ -19,6 +19,11 @@ class Asset extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $alt;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $description;
     
     /**
@@ -106,6 +111,22 @@ class Asset extends Base
     public function setCode($code)
     {
         $this->code = $code;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getAlt()
+    {
+        return $this->alt;
+    }
+    
+    /**
+     * @param mixed alt
+     */
+    public function setAlt($alt)
+    {
+        $this->alt = $alt;
     }
     
     /**
