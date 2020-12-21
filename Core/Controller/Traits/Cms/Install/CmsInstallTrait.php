@@ -131,6 +131,9 @@ trait CmsInstallTrait
         $models = _Model::data($this->connection);
         foreach ($models as $model) {
             $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
+            if (!$fullClass) {
+                continue;
+            }
             $response = $fullClass::sync($this->connection);
 
             if ($response == 0) {
@@ -165,6 +168,9 @@ trait CmsInstallTrait
             $added = 0;
 
             $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
+            if (!$fullClass) {
+                continue;
+            }
             $total = $fullClass::data($this->connection, [
                 'count' => 1,
             ]);
