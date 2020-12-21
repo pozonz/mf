@@ -14,6 +14,11 @@ class ShippingZone extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $code;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $parentId;
     
     /**
@@ -30,6 +35,22 @@ class ShippingZone extends Base
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+    
+    /**
+     * @param mixed code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
     }
     
     /**

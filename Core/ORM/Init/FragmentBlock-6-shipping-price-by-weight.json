@@ -6,7 +6,7 @@
         "slug": "shipping-price-by-weight",
         "rank": "1",
         "added": "2020-12-06 21:22:29",
-        "modified": "2020-12-20 18:24:31",
+        "modified": "2020-12-20 21:45:10",
         "publishFrom": null,
         "publishTo": null,
         "metaTitle": null,
@@ -23,10 +23,10 @@
         "versionUuid": "",
         "versionId": null,
         "oldId": null,
-        "isBuiltIn": "1",
+        "isBuiltIn": 1,
         "title": "Shipping price by weight",
         "twig": "_",
         "tags": "[\"7\"]",
-        "items": "[{\"widget\":\"13\",\"id\":\"zones\",\"title\":\"Zones:\",\"sql\":\"SELECT t1.id AS `key`, t1.title AS value, t1.parentId AS parentId FROM ShippingZone AS t1 ORDER BY t1.title\"},{\"widget\":\"11\",\"id\":\"id\",\"title\":\"Title:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"basePrice\",\"title\":\"$ \/ base unit:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"baseWeight\",\"title\":\"Base unit weight:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"extraPrice\",\"title\":\"$ \/ extra unit:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"extraWeight\",\"title\":\"Extra unit weight:\",\"sql\":\"\"}]"
+        "items": "[{\"widget\":\"13\",\"id\":\"zones\",\"title\":\"Zones:\",\"sql\":\"SELECT t1.id AS `key`, t1.title AS value, t1.parentId AS parentId FROM ShippingZone AS t1 WHERE t1.status = 1  ORDER BY t1.title\"},{\"widget\":\"11\",\"id\":\"id\",\"title\":\"Title:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"basePrice\",\"title\":\"$:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"baseWeight\",\"title\":\"Up to unit(s):\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"extraPrice\",\"title\":\"$:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"extraWeight\",\"title\":\"Per extra unit(s):\",\"sql\":\"\"}]"
     }
 }
