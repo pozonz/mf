@@ -235,7 +235,7 @@ trait CmsInstallTrait
                         $setMethod = "set" . ucfirst($key);
                         $orm->$setMethod($val);
                     }
-                    $orm->save(false, [
+                    $orm->save(0, [
                         'forceInsert' => 1,
                         'doNotUpdateModified' => 1,
                     ]);

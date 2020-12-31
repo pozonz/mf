@@ -53,7 +53,9 @@ trait CmsCoreRestTrait
             $orm = $fullClass::getById($this->connection, $itm);
             if ($orm) {
                 $orm->setRank($idx);
-                $orm->save(true);
+                $orm->save(1, [
+                    'doNotUpdateModified' => 1,
+                ]);
                 if ($className == '_Model') {
                     $fullClass::setGenereatedFile($orm, $this->kernel);
                 }
