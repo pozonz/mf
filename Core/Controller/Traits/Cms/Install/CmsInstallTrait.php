@@ -5,11 +5,13 @@ namespace MillenniumFalcon\Core\Controller\Traits\Cms\Install;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
 
+use MillenniumFalcon\Core\ORM\ShippingZone;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use phpDocumentor\Reflection\Types\Static_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -58,7 +60,7 @@ trait CmsInstallTrait
      * @Route("/install/model/sync")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function init()
+    public function sync()
     {
         ini_set('max_execution_time', 9999);
         ini_set('memory_limit', '9999M');
@@ -70,6 +72,49 @@ trait CmsInstallTrait
             'tables' => json_decode($this->createOrUpdateTablesFromModels()->getContent()),
             'data' => json_decode($this->addInitDataToModel()->getContent()),
         ]);
+    }
+
+    /**
+     * @Route("/install/model/extra/zones")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function extraZones()
+    {
+        ini_set('max_execution_time', 9999);
+        ini_set('memory_limit', '9999M');
+
+        $data = ShippingZone::data($this->connection);
+        foreach ($data as $itm) {
+            $itm->delete();
+        }
+
+        $phpDir = $this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Resources/files/php';
+
+        $countries = require_once "$phpDir/countries.php";
+        $states = require_once "$phpDir/states.php";
+
+        $count = 0;
+        foreach ($countries as $countryIdx => $countryVal) {
+            $ormCountry = new ShippingZone($this->connection);
+            $ormCountry->setTitle($countryVal[0]);
+            $ormCountry->setCode($countryIdx);
+            $ormCountry->setClosed(1);
+            $ormCountry->save();
+            $count++;
+
+            if (isset($states[$countryIdx]) && gettype($states[$countryIdx]) == 'array' && count($states[$countryIdx]) > 0) {
+                foreach ($states[$countryIdx] as $stateIdx => $stateVal) {
+                    $ormState = new ShippingZone($this->connection);
+                    $ormState->setTitle($stateVal[0]);
+                    $ormState->setCode($stateIdx);
+                    $ormState->setParentId($ormCountry->getId());
+                    $ormState->save();
+                    $count++;
+                }
+            }
+        }
+
+        return new Response($count);
     }
 
     /**
