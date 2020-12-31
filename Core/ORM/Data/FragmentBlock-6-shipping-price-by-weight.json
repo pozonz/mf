@@ -23,7 +23,7 @@
         "versionUuid": "",
         "versionId": null,
         "oldId": null,
-        "isBuiltIn": 1,
+        "isBuiltIn": "1",
         "title": "Shipping price by weight",
         "twig": "_",
         "tags": "[\"7\"]",
