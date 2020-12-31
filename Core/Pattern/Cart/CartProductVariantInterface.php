@@ -9,7 +9,7 @@ Interface CartProductVariantInterface
 
     public function getSku();
 
-    public function getWeight();
+    public function getShippingUnits();
 
     public function getStock();
 

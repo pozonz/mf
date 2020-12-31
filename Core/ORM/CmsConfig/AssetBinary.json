@@ -28,7 +28,7 @@
     "dataType": "0",
     "dataGroups": null,
     "listType": "1",
-    "numberPerPage": "50",
+    "numberPerPage": "200",
     "defaultSortBy": "id",
     "defaultOrder": "1",
     "columnsJson": "[{\"id\":\"z1592989285460\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"SELECT t1.id AS `key`, t1.title AS value FROM Asset AS t1 ORDER BY t1.title\"},{\"id\":\"z1592989326586\",\"column\":\"blob\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Content:\",\"field\":\"content\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",

@@ -28,7 +28,7 @@
     "dataType": "0",
     "dataGroups": null,
     "listType": "0",
-    "numberPerPage": "50",
+    "numberPerPage": "200",
     "defaultSortBy": "id",
     "defaultOrder": "1",
     "columnsJson": "[{\"id\":\"z1536050259442\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1536050277193\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Code:\",\"field\":\"code\",\"required\":1,\"unique\":1,\"sql\":\"\"}]",

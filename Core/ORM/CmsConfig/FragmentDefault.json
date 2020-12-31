@@ -28,7 +28,7 @@
     "dataType": "0",
     "dataGroups": null,
     "listType": "0",
-    "numberPerPage": "50",
+    "numberPerPage": "200",
     "defaultSortBy": "id",
     "defaultOrder": "1",
     "columnsJson": "[{\"id\":\"z1539465619132\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\ChoiceType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"SELECT className AS `key`, title AS value FROM _model\"},{\"id\":\"z1539465636326\",\"column\":\"shortdescription\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Field:\",\"field\":\"attr\",\"required\":1,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1539674460103\",\"column\":\"content\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextareaType\",\"label\":\"Content:\",\"field\":\"content\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",

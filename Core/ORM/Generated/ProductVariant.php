@@ -44,7 +44,7 @@ class ProductVariant extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $weight;
+    private $shippingUnits;
     
     /**
      * @return mixed
@@ -161,17 +161,17 @@ class ProductVariant extends Base
     /**
      * @return mixed
      */
-    public function getWeight()
+    public function getShippingUnits()
     {
-        return $this->weight;
+        return $this->shippingUnits;
     }
     
     /**
-     * @param mixed weight
+     * @param mixed shippingUnits
      */
-    public function setWeight($weight)
+    public function setShippingUnits($shippingUnits)
     {
-        $this->weight = $weight;
+        $this->shippingUnits = $shippingUnits;
     }
     
 }

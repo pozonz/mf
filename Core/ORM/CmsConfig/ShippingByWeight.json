@@ -28,7 +28,7 @@
     "dataType": "0",
     "dataGroups": null,
     "listType": "0",
-    "numberPerPage": "50",
+    "numberPerPage": "200",
     "defaultSortBy": "id",
     "defaultOrder": "1",
     "columnsJson": "[{\"id\":\"z1607239110054\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1607239373239\",\"column\":\"content\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\ContentBlock\",\"label\":\"Content:\",\"field\":\"content\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1607239381205\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Information URL heading:\",\"field\":\"infoHeading\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1607239383147\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"information URL:\",\"field\":\"infoUrl\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",

@@ -19,7 +19,7 @@ class PromoCode extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $perc;
+    private $type;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -71,17 +71,17 @@ class PromoCode extends Base
     /**
      * @return mixed
      */
-    public function getPerc()
+    public function getType()
     {
-        return $this->perc;
+        return $this->type;
     }
     
     /**
-     * @param mixed perc
+     * @param mixed type
      */
-    public function setPerc($perc)
+    public function setType($type)
     {
-        $this->perc = $perc;
+        $this->type = $type;
     }
     
     /**

@@ -28,7 +28,7 @@
     "dataType": "0",
     "dataGroups": "[]",
     "listType": "0",
-    "numberPerPage": "50",
+    "numberPerPage": "200",
     "defaultSortBy": "id",
     "defaultOrder": "1",
     "columnsJson": "[{\"id\":\"z1569536753061\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1569536794829\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Discount %:\",\"field\":\"discount\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1569539771202\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\CheckboxType\",\"label\":\"Default:\",\"field\":\"default\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",

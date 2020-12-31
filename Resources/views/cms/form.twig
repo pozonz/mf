@@ -8,7 +8,7 @@
             {{ form_errors(form) }}
         </div>
     {% endapply %}
-{% endblock form_row %}
+{% endblock %}
 
 {% block content_block_row %}
     {% apply spaceless %}
@@ -18,79 +18,79 @@
             {{ form_errors(form) }}
         </div>
     {% endapply %}
-{% endblock content_block_row %}
+{% endblock %}
 
-{%- block form_errors -%}
-    {%- if errors|length > 0 -%}
-        {%- for error in errors -%}
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        {% for error in errors %}
             <div class="error">{{ error.message }}</div>
-        {%- endfor -%}
-    {%- endif -%}
-{%- endblock form_errors -%}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
 
-{% block spliter_row -%}
+{% block spliter_row %}
     <hr />
-{%- endblock spliter_row %}
+{% endblock %}
 
-{% block label_widget -%}
+{% block label_widget %}
     <div>{{ value }}</div>
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
-{%- endblock label_widget %}
+{% endblock %}
 
-{% block datepicker_widget -%}
+{% block datepicker_widget %}
     <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d F Y') : '' }}"/>
-{%- endblock datepicker_widget %}
+{% endblock %}
 
-{% block datetimepicker_widget -%}
+{% block datetimepicker_widget %}
     <input type="text" {{ block('widget_attributes') }} value="{{ value ? value|date('d F Y H:i:s') : '' }}"/>
-{%- endblock datetimepicker_widget %}
+{% endblock %}
 
-{%- block choice_sortable_widget -%}
+{% block choice_sortable_widget %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' js-selectize cms_form_text')|trim}) %}
-    {%- set type = type|default('text') -%}
-    {%- if type == 'range' or type == 'color' -%}
+    {% set type = type|default('text') %}
+    {% if type == 'range' or type == 'color' %}
         {# Attribute "required" is not supported #}
-        {%- set required = false -%}
-    {%- endif -%}
+        {% set required = false %}
+    {% endif %}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 
     {% for idx,itm in choices %}
         <div style="display: none;" class="{{ id }}-choice" data-id="{{ itm }}" data-name="{{ idx }}"></div>
     {% endfor %}
-{%- endblock choice_sortable_widget -%}
+{% endblock %}
 
-{% block choice_multi_json_widget -%}
+{% block choice_multi_json_widget %}
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
     <select id="{{ id }}_select" class="js-choice_multi_json" multiple>
         {% for choice in choices %}
             <option value="{{ choice.value }}" {% if '"' ~ choice.value ~ '"' in value %}selected{% endif %}>{{ choice.label }}</option>
         {% endfor %}
     </select>
-{%- endblock choice_multi_json_widget %}
+{% endblock %}
 
-{% block choice_multi_json_tree_widget -%}
+{% block choice_multi_json_tree_widget %}
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
     <select id="{{ id }}_select" class="js-choice_multi_json" multiple>
         {% for choice in choices %}
             <option style="padding-left: {{ choice.level * 20 }}px" value="{{ choice.value }}" {% if '"' ~ choice.value ~ '"' in value %}selected{% endif %}>{{ choice.label }}</option>
         {% endfor %}
     </select>
-{%- endblock choice_multi_json_tree_widget %}
+{% endblock %}
 
-{% block choice_tree_widget -%}
+{% block choice_tree_widget %}
     <select {{ block('widget_attributes') }} class="js-choice_multi_json">
         <option></option>
         {% for choice in choices %}
             <option style="padding-left: {{ choice.level * 20 }}px" value="{{ choice.value }}" {% if choice.value == value %}selected{% endif %}>{{ choice.label }}</option>
         {% endfor %}
     </select>
-{%- endblock choice_tree_widget %}
+{% endblock %}
 
-{% block wysiwyg_widget -%}
+{% block wysiwyg_widget %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-{%- endblock wysiwyg_widget -%}
+{% endblock %}
 
-{% block assetpicker_widget -%}
+{% block assetpicker_widget %}
     {% set orm = model.getById('Asset', value) %}
     <div class="filePickWrap js-filePickWrap js-orm-info" data-id="{{ value }}">
         <input type="hidden" {{ block('widget_attributes') }} class="js-fileId" value="{{ value }}">
@@ -101,9 +101,9 @@
         <a class="filePickButton js-asset-change" style="display: none">Pick file ›</a>
         <a class="cropImagePickButton js-cropping-options" style="display: none;">Crop ›</a>
     </div>
-{%- endblock assetpicker_widget -%}
+{% endblock %}
 
-{% block assetfolderpicker_row -%}
+{% block assetfolderpicker_row %}
     <hr />
     {% apply spaceless %}
         <div class="box {{ block_prefixes[block_prefixes|length - 2] }}">
@@ -112,42 +112,42 @@
             {{ form_errors(form) }}
         </div>
     {% endapply %}
-{%- endblock assetfolderpicker_row -%}
+{% endblock %}
 
-{%- block assetfolderpicker_label -%}
-    {% if label is not same as(false) -%}
-        {% if not compound -%}
+{% block assetfolderpicker_label %}
+    {% if label is not same as(false) %}
+        {% if not compound %}
             {% set label_attr = label_attr|merge({'for': id}) %}
-        {%- endif -%}
-        {% if required -%}
+        {% endif %}
+        {% if required %}
             {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
-        {%- endif -%}
-        {% if label is empty -%}
-            {%- if label_format is not empty -%}
+        {% endif %}
+        {% if label is empty %}
+            {% if label_format is not empty %}
                 {% set label = label_format|replace({
                     '%name%': name,
                     '%id%': id,
                 }) %}
-            {%- else -%}
+            {% else %}
                 {% set label = name|humanize %}
-            {%- endif -%}
-        {%- endif -%}
+            {% endif %}
+        {% endif %}
         <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}  style="display: inline-block;">
-        {%- if translation_domain is same as(false) -%}
+        {% if translation_domain is same as(false) %}
             {{- label -}}
-        {%- else -%}
+        {% else %}
             {{- label|trans({}, translation_domain) -}}
-        {%- endif -%}
+        {% endif %}
         </{{ element|default('label') }}>
 
         <div style="display: inline-block; margin-left: 10px;">
             <a class="button-normal button-galery change" data-id="#{{ id }}"><i class="fas fa-images"></i> Manage</a>
             <a class="button-red button-galery delete" data-id="#{{ id }}"><i class="far fa-trash-alt"></i> Empty</a>
         </div>
-    {%- endif -%}
-{%- endblock assetfolderpicker_label -%}
+    {% endif %}
+{% endblock %}
 
-{% block assetfolderpicker_widget -%}
+{% block assetfolderpicker_widget %}
     <div class="widget style1 js-gallery-widget ibox" style="padding: 0; margin: 1em 0 0 0;">
         <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" data-attributename="{{ id }}"/>
         <div class="ibox-content" style="border: none">
@@ -167,20 +167,20 @@
             </div>
         </div>
     </div>
-{%- endblock assetfolderpicker_widget -%}
+{% endblock %}
 
-{%- block choice_widget_expanded -%}
+{% block choice_widget_expanded %}
     <div {{ block('widget_container_attributes') }}>
-        {%- for child in form %}
+        {% for child in form %}
             <div>
                 {{- form_widget(child) -}}
                 {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
             </div>
-        {% endfor -%}
+        {% endfor %}
     </div>
-{%- endblock choice_widget_expanded -%}
+{% endblock %}
 
-{% block _orm_templateFile_widget -%}
+{% block _orm_templateFile_widget %}
     <div class="page-template-widget js-page-template-widget">
         {% set values = null %}
         {% if not (value matches '/^\\d+$/') %}
@@ -208,7 +208,7 @@
             </div>
         </div>
     </div>
-{%- endblock _orm_templateFile_widget -%}
+{% endblock %}
 
 {% use 'cms/form-content-block.twig' %}
 
@@ -216,26 +216,25 @@
     {% use 'core/custom-widget/form.twig' %}
 {% endif %}
 
-{% block _orm_added_widget -%}
+{% block _orm_added_widget %}
     <div>{{ value ? value|date('d F Y H:i:s') : '' }}</div>
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
-{%- endblock _orm_added_widget %}
+{% endblock %}
 
-
-{% block _orm_modified_widget -%}
+{% block _orm_modified_widget %}
     <div>{{ value ? value|date('d F Y H:i:s') : '' }}</div>
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
-{%- endblock _orm_modified_widget %}
+{% endblock %}
 
-{% block _orm_lastEditedBy_widget -%}
+{% block _orm_lastEditedBy_widget %}
     {% set user = model.byId('User', value) %}
     {% if user %}
         <div>{{ user.name }}</div>
     {% endif %}
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
-{%- endblock _orm_lastEditedBy_widget %}
+{% endblock %}
 
-{% block orm_mkvp_type_row -%}
+{% block orm_mkvp_type_row %}
     <style>
         .orm_mkvp_type .button-galery {
             margin-right: 1.2em;
@@ -251,10 +250,9 @@
             {{ form_errors(form) }}
         </div>
     {% endapply %}
-{%- endblock orm_mkvp_type_row -%}
+{% endblock %}
 
-
-{% block orm_mkvp_type_widget -%}
+{% block orm_mkvp_type_widget %}
     <div class="widget style1 js-mkvp-widget type20 formStyle">
         <textarea {{ block('widget_attributes') }} style="display: none;">{{ value }}</textarea>
         <table id="content-block-container" class="table table-striped table-bordered table-hover">
@@ -263,9 +261,9 @@
         <a href="#" class="insertKVP js-add mkvp-add">Add a row</a>
         <div>&nbsp;</div>
     </div>
-{%- endblock orm_mkvp_type_widget -%}
+{% endblock %}
 
-{% block _orm_productVariants_row -%}
+{% block _orm_productVariants_row %}
     <div class="variant-container">
         <div>&nbsp;</div>
         <a class="button-normal button-galery js-add-variant" style="float: right;"><i class="fas fa-plus"></i> Variant</a>
@@ -286,9 +284,9 @@
         {{ form_widget(form,{attr:{style:'display:none;'}}) }}
         <div>&nbsp;</div>
     </div>
-{%- endblock _orm_productVariants_row -%}
+{% endblock %}
 
-{% block orm_abtest_type_row -%}
+{% block orm_abtest_type_row %}
     <style>
         .orm_mkvp_type .button-galery {
             margin-right: 1.2em;
@@ -304,9 +302,9 @@
             {{ form_errors(form) }}
         </div>
     {% endapply %}
-{%- endblock orm_abtest_type_row -%}
+{% endblock %}
 
-{% block orm_abtest_type_widget -%}
+{% block orm_abtest_type_widget %}
     <div class="widget style1 js-abtest-widget type20 formStyle abtest-widget">
         <textarea {{ block('widget_attributes') }} style="display: none;">{{ value }}</textarea>
         <textarea id="{{ id }}-choices" class="js-choices" style="display: none;">{{ choices|json_encode }}</textarea>
@@ -322,4 +320,4 @@
         <a href="#" class="insertKVP js-add abtest-add">Add a row</a>
         <div>&nbsp;</div>
     </div>
-{%- endblock orm_abtest_type_widget -%}
+{% endblock %}
