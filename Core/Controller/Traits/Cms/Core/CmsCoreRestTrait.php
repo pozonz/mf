@@ -56,7 +56,7 @@ trait CmsCoreRestTrait
                 $orm->save(1, [
                     'doNotUpdateModified' => 1,
                 ]);
-                if ($className == '_Model') {
+                if ($className == '_Model' && ($orm->getIsBuiltIn() != 1 || getenv('ALLOW_CHANGE_BUILTIN') == 1)) {
                     $fullClass::setGenereatedFile($orm, $this->kernel);
                 }
             }
