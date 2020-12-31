@@ -192,6 +192,7 @@ trait CmsInstallTrait
                     }
                     $orm->save(false, [
                         'forceInsert' => 1,
+                        'doNotUpdateModified' => 1,
                     ]);
                     if (!isset($response[$jsonData->className])) {
                         $response[$jsonData->className] = 0;
@@ -201,7 +202,6 @@ trait CmsInstallTrait
                 }
             }
         }
-
 
         return new JsonResponse($response);
     }
