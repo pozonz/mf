@@ -1,7 +1,17 @@
-{% block content_block_label -%}
-{%- endblock content_block_label -%}
+{% block content_block_row %}
+    {% apply spaceless %}
+        <div class="formStyle {{ block_prefixes[block_prefixes|length - 2] }} type34">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% endapply %}
+{% endblock %}
 
-{% block content_block_widget -%}
+{% block content_block_label %}
+{% endblock content_block_label %}
+
+{% block content_block_widget %}
     {% set fragments = app.request.requestUri|trim('/')|split('/') %}
     {% if '/version' in app.request.pathInfo %}
         {% set ormModel = model.byField('_Model', 'className', fragments[fragments|length - 4]) %}
@@ -30,4 +40,4 @@
         <script id="{{ id }}_modal_section" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.fragment-modal-section.twig' %}</script>
         <script id="{{ id }}_modal_block" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.fragment-modal-block.twig' %}</script>
     </div>
-{%- endblock content_block_widget -%}
+{% endblock content_block_widget %}

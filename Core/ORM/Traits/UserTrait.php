@@ -10,27 +10,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 trait UserTrait
 {
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-        $fullClass = ModelService::fullClass($pdo, 'DataGroup');
-        $result = $fullClass::data($pdo);
-        $dataGroup = array_map(function ($itm) {
-            return $itm->getId();
-        }, $result);
-
-        $password = uniqid();
-        $orm = new static($pdo);
-        $orm->setTitle('weida');
-        $orm->setPasswordInput(20120628);
-        $orm->setName('Weida Xue');
-        $orm->setEmail('luckyweida@gmail.com');
-        $orm->setAccessibleSections(json_encode($dataGroup));
-        $orm->save();
-    }
-
-    /**
      * @return array|mixed
      */
     public function objAccessibleSections()

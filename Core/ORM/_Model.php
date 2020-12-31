@@ -71,14 +71,6 @@ class _Model extends \MillenniumFalcon\Core\ORM\Generated\_Model
     }
 
     /**
-     * @param $pdo
-     */
-    static public function initData($pdo)
-    {
-
-    }
-
-    /**
      * @param _Model $orm
      * @param $container
      */

@@ -12,19 +12,14 @@ class ShippingByWeight extends Base
     private $title;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $type;
+    
+    /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $content;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $infoHeading;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $infoUrl;
     
     /**
      * @return mixed
@@ -45,6 +40,22 @@ class ShippingByWeight extends Base
     /**
      * @return mixed
      */
+    public function getType()
+    {
+        return $this->type;
+    }
+    
+    /**
+     * @param mixed type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getContent()
     {
         return $this->content;
@@ -56,38 +67,6 @@ class ShippingByWeight extends Base
     public function setContent($content)
     {
         $this->content = $content;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getInfoHeading()
-    {
-        return $this->infoHeading;
-    }
-    
-    /**
-     * @param mixed infoHeading
-     */
-    public function setInfoHeading($infoHeading)
-    {
-        $this->infoHeading = $infoHeading;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getInfoUrl()
-    {
-        return $this->infoUrl;
-    }
-    
-    /**
-     * @param mixed infoUrl
-     */
-    public function setInfoUrl($infoUrl)
-    {
-        $this->infoUrl = $infoUrl;
     }
     
 }

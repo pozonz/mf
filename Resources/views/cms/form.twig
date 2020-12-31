@@ -10,16 +10,6 @@
     {% endapply %}
 {% endblock %}
 
-{% block content_block_row %}
-    {% apply spaceless %}
-        <div class="formStyle {{ block_prefixes[block_prefixes|length - 2] }} type34">
-            {{ form_label(form) }}
-            {{ form_widget(form) }}
-            {{ form_errors(form) }}
-        </div>
-    {% endapply %}
-{% endblock %}
-
 {% block form_errors %}
     {% if errors|length > 0 %}
         {% for error in errors %}
@@ -210,12 +200,6 @@
     </div>
 {% endblock %}
 
-{% use 'cms/form-content-block.twig' %}
-
-{% if false %}
-    {% use 'core/custom-widget/form.twig' %}
-{% endif %}
-
 {% block _orm_added_widget %}
     <div>{{ value ? value|date('d F Y H:i:s') : '' }}</div>
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
@@ -232,6 +216,29 @@
         <div>{{ user.name }}</div>
     {% endif %}
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
+{% endblock %}
+
+{% block _orm_productVariants_row %}
+    <div class="variant-container">
+        <div>&nbsp;</div>
+        <a class="button-normal button-galery js-add-variant" style="float: right;"><i class="fas fa-plus"></i> Variant</a>
+        <h2>Product variants</h2>
+
+        <table class="table table-striped table-bordered table-hover table-middle js-product-variants-table product-variants-table" style="margin-top: .2em">
+            <thead>
+            <tr>
+                <th class="tableHead" title="Variant title">Title</th>
+                <th class="tableHead" width="12%" title="Stock keeping unit">SKU</th>
+                <th class="tableHead" width="12%" title="Original price">Retail</th>
+                <th class="tableHead" width="12%" title="Promotional price">Sale</th>
+                <th class="tableHead" width="10%" title="Stock">Stk</th>
+                <th class="tableHead" width="12%"></th>
+            </tr>
+            </thead>
+        </table>
+        {{ form_widget(form,{attr:{style:'display:none;'}}) }}
+        <div>&nbsp;</div>
+    </div>
 {% endblock %}
 
 {% block orm_mkvp_type_row %}
@@ -259,29 +266,6 @@
             <tbody></tbody>
         </table>
         <a href="#" class="insertKVP js-add mkvp-add">Add a row</a>
-        <div>&nbsp;</div>
-    </div>
-{% endblock %}
-
-{% block _orm_productVariants_row %}
-    <div class="variant-container">
-        <div>&nbsp;</div>
-        <a class="button-normal button-galery js-add-variant" style="float: right;"><i class="fas fa-plus"></i> Variant</a>
-        <h2>Product variants</h2>
-
-        <table class="table table-striped table-bordered table-hover table-middle js-product-variants-table product-variants-table" style="margin-top: .2em">
-            <thead>
-                <tr>
-                    <th class="tableHead" title="Variant title">Title</th>
-                    <th class="tableHead" width="12%" title="Stock keeping unit">SKU</th>
-                    <th class="tableHead" width="12%" title="Original price">Retail</th>
-                    <th class="tableHead" width="12%" title="Promotional price">Sale</th>
-                    <th class="tableHead" width="10%" title="Stock">Stk</th>
-                    <th class="tableHead" width="12%"></th>
-                </tr>
-            </thead>
-        </table>
-        {{ form_widget(form,{attr:{style:'display:none;'}}) }}
         <div>&nbsp;</div>
     </div>
 {% endblock %}
@@ -321,3 +305,9 @@
         <div>&nbsp;</div>
     </div>
 {% endblock %}
+
+{% use 'cms/form-content-block.twig' %}
+
+{% if false %}
+    {% use 'core/custom-widget/form.twig' %}
+{% endif %}
