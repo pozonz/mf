@@ -20,7 +20,7 @@ trait CmsInstallTrait
         '..',
         'CmsConfig',
         'Generated',
-        'Init',
+        'Data',
         'Traits',
     ];
 
@@ -178,7 +178,7 @@ trait CmsInstallTrait
         }
 
         $response = [];
-        $dir = $this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Core/ORM/Init';
+        $dir = $this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Core/ORM/Data';
         $files = scandir($dir);
         foreach ($files as $file) {
             if (is_file("$dir/$file")) {

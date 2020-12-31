@@ -32,7 +32,7 @@ trait BaseORMTrait
             $path = explode('\\', get_called_class());
             $className = array_pop($path);
 
-            $dir = __DIR__ . '/../../ORM/Init';
+            $dir = __DIR__ . '/../../ORM/Data';
             if (!file_exists($dir)) {
                 mkdir($dir, 0777, true);
             }
