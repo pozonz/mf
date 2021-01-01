@@ -1,0 +1,85 @@
+{% extends 'cms/form.twig' %}
+
+{% block _orm_shippingCostRates_row %}
+    {% apply spaceless %}
+        <div class="formStyle {{ block_prefixes[block_prefixes|length - 2] }} type34 shipping-cost-rates">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% endapply %}
+{% endblock %}
+
+{% block _orm_shippingCostRates_label %}
+{% endblock _orm_shippingCostRates_label %}
+
+{% block _orm_shippingCostRates_widget %}
+    <h2 class="section-title section-first">
+        <span class="js-title">Shipping cost rates</span>
+    </h2>
+    <div class="section-toolbar">
+        <a href="#" class="js-edit-section section-edit section-edit-button" title="Edit section"><img src="/cms/images/add-plus.png"></a>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="js-blocks section-blocks">
+        <div class="content-block js-block">
+            <div class="block-file js-heading">
+                <h4 class="block-title">By regions</h4>
+                <a href="#" class="delete-block js-delete-block"></a>
+            </div>
+            <section class="block-widgets">
+                <div class="formStyle mb-little">
+                    <label>Shipping regions:</label>
+                    <select class="js-elem js-after-chosen" data-id="zones" multiple>
+                        <option>All regions</option>
+                    </select>
+                </div>
+
+                <section style="display: none;">
+                    <div class="formStyle">
+                        <label>Postal code range from:</label>
+                        <input type="text" class="js-elem" data-id="basePrice" value="">
+                    </div>
+
+                    <div class="formStyle">
+                        <label>to:</label>
+                        <input type="text" class="js-elem" data-id="basePrice" value="">
+                    </div>
+                </section>
+
+                <div class="formStyle mb-little"><label>$ / shipping unit:</label>
+                    <input type="text" class="js-elem" data-id="basePrice" value="">
+                </div>
+
+                <div class="clear"></div>
+
+                <a href="#">Add extra conditions</a>
+
+                <section class="conditions-container">
+                    {% for i in 1..3 %}
+                        <div>
+                            <div class="formStyle">
+                                {% if loop.first %}<label>$:</label>{% endif %}
+                                <input type="text" class="js-elem" data-id="basePrice" value="">
+                            </div>
+
+                            <div class="formStyle">
+                                {% if loop.first %}<label>Shipping unit(s) from:</label>{% endif %}
+                                <input type="text" class="js-elem" data-id="basePrice" value="">
+                            </div>
+
+                            <div class="formStyle">
+                                {% if loop.first %}<label>to:</label>{% endif %}
+                                <input type="text" class="js-elem" data-id="basePrice" value="">
+                            </div>
+                            <a href="#" class=""><img src="/cms/images/binIcon.gif"></a>
+                        </div>
+                    {% endfor %}
+                </section>
+
+                <div>&nbsp;</div>
+            </section>
+            <div class="clear"></div>
+        </div>
+    </div>
+{% endblock _orm_shippingCostRates_widget %}

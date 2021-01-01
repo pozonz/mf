@@ -5,11 +5,12 @@ namespace MillenniumFalcon\Core\ORM\Traits;
 trait FormDescriptorTrait
 {
     private $formSubmission;
-    
+
     /**
      * @return string
      */
-    static public function getCmsOrmTwig() {
+    static public function getCmsOrmTwig()
+    {
         return 'cms/orms/orm-custom-formdescriptor.html.twig';
     }
 

@@ -17,9 +17,14 @@ class ShippingByWeight extends Base
     private $type;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $shortdescription;
+    
+    /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $content;
+    private $shippingCostRates;
     
     /**
      * @return mixed
@@ -56,17 +61,33 @@ class ShippingByWeight extends Base
     /**
      * @return mixed
      */
-    public function getContent()
+    public function getShortdescription()
     {
-        return $this->content;
+        return $this->shortdescription;
     }
     
     /**
-     * @param mixed content
+     * @param mixed shortdescription
      */
-    public function setContent($content)
+    public function setShortdescription($shortdescription)
     {
-        $this->content = $content;
+        $this->shortdescription = $shortdescription;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getShippingCostRates()
+    {
+        return $this->shippingCostRates;
+    }
+    
+    /**
+     * @param mixed shippingCostRates
+     */
+    public function setShippingCostRates($shippingCostRates)
+    {
+        $this->shippingCostRates = $shippingCostRates;
     }
     
 }
