@@ -90,8 +90,8 @@ trait CmsInstallTrait
 
         $phpDir = $this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Resources/files/php';
 
-        $countries = require_once "$phpDir/countries.php";
-        $states = require_once "$phpDir/states.php";
+        $countries = require "$phpDir/countries.php";
+        $states = require "$phpDir/states.php";
 
         $count = 0;
         foreach ($countries as $countryIdx => $countryVal) {

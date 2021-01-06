@@ -17,6 +17,8 @@ class TemplateService
         9 => 'fragment-9-choice.html.txt',
         10 => 'fragment-10-choicemultijson.html.txt',
         11 => 'fragment-11-placeholder.html.txt',
+        12 => 'fragment-12-choice-tree.html.txt',
+        13 => 'fragment-13-choice-multi-json-tree.html.txt',
     );
 
     /**
