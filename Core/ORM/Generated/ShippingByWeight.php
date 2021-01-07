@@ -14,12 +14,12 @@ class ShippingByWeight extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $type;
+    private $shippingCountry;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $shortdescription;
+    private $freeDeliveryIfPriceAbove;
     
     /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -45,33 +45,33 @@ class ShippingByWeight extends Base
     /**
      * @return mixed
      */
-    public function getType()
+    public function getShippingCountry()
     {
-        return $this->type;
+        return $this->shippingCountry;
     }
     
     /**
-     * @param mixed type
+     * @param mixed shippingCountry
      */
-    public function setType($type)
+    public function setShippingCountry($shippingCountry)
     {
-        $this->type = $type;
+        $this->shippingCountry = $shippingCountry;
     }
     
     /**
      * @return mixed
      */
-    public function getShortdescription()
+    public function getFreeDeliveryIfPriceAbove()
     {
-        return $this->shortdescription;
+        return $this->freeDeliveryIfPriceAbove;
     }
     
     /**
-     * @param mixed shortdescription
+     * @param mixed freeDeliveryIfPriceAbove
      */
-    public function setShortdescription($shortdescription)
+    public function setFreeDeliveryIfPriceAbove($freeDeliveryIfPriceAbove)
     {
-        $this->shortdescription = $shortdescription;
+        $this->freeDeliveryIfPriceAbove = $freeDeliveryIfPriceAbove;
     }
     
     /**

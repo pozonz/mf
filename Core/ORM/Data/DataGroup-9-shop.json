@@ -6,7 +6,7 @@
         "slug": "shop",
         "rank": "1",
         "added": "2020-12-05 12:55:47",
-        "modified": "2020-12-31 22:04:42",
+        "modified": "2021-01-01 17:14:03",
         "publishFrom": null,
         "publishTo": null,
         "metaTitle": null,
@@ -23,13 +23,13 @@
         "versionUuid": "",
         "versionId": null,
         "oldId": null,
-        "isBuiltIn": "1",
+        "isBuiltIn": 1,
         "title": "Shop",
         "icon": "cms_viewmode_ecommerce",
-        "loadFromConfig": "1",
-        "config": "{\r\n  \"Data\": null,\r\n  \"Orders\": {\r\n    \"model\": \"Order\"\r\n  },\r\n  \"Customers\": {\r\n    \"model\": \"Customer\"\r\n  },\r\n  \"Discounts\": null,\r\n  \"Promo codes\": {\r\n    \"model\": \"PromoCode\"\r\n  },\r\n  \"Customer membership\": {\r\n    \"model\": \"CustomerMembership\"\r\n  },\r\n  \"Inventory\": null,\r\n  \"Products\": {\r\n    \"model\": \"Product\",\r\n    \"children\": {\r\n      \"Product variants\": {\r\n        \"model\": \"ProductVariant\"\r\n      }\r\n    }\r\n  },\r\n  \"Product categories\": {\r\n    \"model\": \"ProductCategory\"\r\n  },\r\n  \"Product brands\": {\r\n    \"model\": \"ProductBrand\"\r\n  },\r\n  \"Shipping and delivery\": null,\r\n  \"Shpping cost\": {\r\n    \"model\": \"ShippingByWeight\"\r\n  },\r\n  \"Shpping zones\": {\r\n    \"model\": \"ShippingZone\"\r\n  }\r\n}",
+        "loadFromConfig": true,
+        "config": "{\r\n  \"Data\": null,\r\n  \"Orders\": {\r\n    \"model\": \"Order\"\r\n  },\r\n  \"Customers\": {\r\n    \"model\": \"Customer\"\r\n  },\r\n  \"Discounts\": null,\r\n  \"Promo codes\": {\r\n    \"model\": \"PromoCode\"\r\n  },\r\n  \"Customer membership\": {\r\n    \"model\": \"CustomerMembership\"\r\n  },\r\n  \"Inventory\": null,\r\n  \"Products\": {\r\n    \"model\": \"Product\",\r\n    \"children\": {\r\n      \"Product variants\": {\r\n        \"model\": \"ProductVariant\"\r\n      }\r\n    }\r\n  },\r\n  \"Product categories\": {\r\n    \"model\": \"ProductCategory\"\r\n  },\r\n  \"Product brands\": {\r\n    \"model\": \"ProductBrand\"\r\n  },\r\n  \"Shipping and delivery\": null,\r\n  \"Shpping basics\": {\r\n    \"model\": \"ShippingSetup\"\r\n  },\r\n  \"Shpping cost\": {\r\n    \"model\": \"ShippingByWeight\"\r\n  },\r\n  \"Shpping zones\": {\r\n    \"model\": \"ShippingZone\"\r\n  }\r\n}",
         "builtInSectionCode": null,
         "builtInSectionTemplate": null,
-        "builtInSection": ""
+        "builtInSection": false
     }
 }
