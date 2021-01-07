@@ -191,6 +191,9 @@ trait CmsCoreTrait
                 $attachedModelIds = json_decode($itm->getAttachedModels() ?: '[]');
                 foreach ($attachedModelIds as $attachedModelId) {
                     $attachedModel = _Model::getByField($this->connection, 'uniqid', $attachedModelId);
+                    if (!$attachedModel) {
+                        $attachedModel = _Model::getById($this->connection, $attachedModelId);
+                    }
                     $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $this->_getClass($itm) . $itm->getId(), $attachedModel->getClassname(), '/manage/pages');
                 }
             }
