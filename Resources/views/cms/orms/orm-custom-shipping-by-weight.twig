@@ -4,160 +4,307 @@
 {% form_theme form 'cms/form-orm-shipping-by-weight.twig' %}
 
 {% set versionOrm = model.active(ormModel.className, {
-	whereSql: 'm.versionUuid = ?',
-	params: [urlFragments|last],
-	limit: 1,
-	oneOrNull: 1,
-	includePreviousVersion: 1,
+    whereSql: 'm.versionUuid = ?',
+    params: [urlFragments|last],
+    limit: 1,
+    oneOrNull: 1,
+    includePreviousVersion: 1,
 }) %}
 
 {% block externalHead %}
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
-	<link rel="stylesheet" href="/cms/redactor/redactor.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"/>
+    <link rel="stylesheet" href="/cms/redactor/redactor.min.css"/>
 {% endblock %}
 
 {% block container %}
-	<input id="canBePreviewed" value="{{ orm.canBePreviewed ? 1 : 0 }}" type="hidden">
-	<input id="isRestoringFromVersion" value="{{ versionOrm ? 1 : 0 }}" type="hidden">
+    <input id="canBePreviewed" value="{{ orm.canBePreviewed ? 1 : 0 }}" type="hidden">
+    <input id="isRestoringFromVersion" value="{{ versionOrm ? 1 : 0 }}" type="hidden">
 
-	{% block heading %}
-		<div id="h1">
-			{% if orm.id %}
-				{% if versionOrm %}
-					<h1>Restoring from version "{{ versionOrm.added|date('d F Y g:i:sa') }} - {{ versionOrm.title }}&hellip;"</h1>
-				{% else %}
-					<h1>Editing "{{ orm.title ?: '#' ~ orm.id }}"</h1>
-				{% endif %}
-			{% else %}
-				<h1>Creating new record</h1>
-			{% endif %}
-		</div>
-	{% endblock %}
+    {% block heading %}
+        <div id="h1">
+            {% if orm.id %}
+                {% if versionOrm %}
+                    <h1>Restoring from version "{{ versionOrm.added|date('d F Y g:i:sa') }} - {{ versionOrm.title }}&hellip;"</h1>
+                {% else %}
+                    <h1>Editing "{{ orm.title ?: '#' ~ orm.id }}"</h1>
+                {% endif %}
+            {% else %}
+                <h1>Creating new record</h1>
+            {% endif %}
+        </div>
+    {% endblock %}
 
 
     {% block form %}
         {% if not fragmentSubmitted %}
-			<form method="POST" novalidate autocomplete="off" class="edit" enctype="multipart/form-data" data-modelname="{{ ormModel.className }}" data-ormid="{{ orm.uniqid }}">
-				{% block formWidgets %}
-					{{ form_widget(form) }}
-				{% endblock %}
+            <form method="POST" novalidate autocomplete="off" class="edit" enctype="multipart/form-data" data-modelname="{{ ormModel.className }}" data-ormid="{{ orm.uniqid }}">
+                {% block formWidgets %}
+                    {{ form_widget(form) }}
+                {% endblock %}
 
 
-				{% if orm.isVersioned and not versionOrm %}
-					<div class="js-version-container">
-						{% set versions = model.active(ormModel.className, {
-							whereSql: 'm.versionId = ?',
-							params: [orm.id],
-							sort: 'm.id',
-							order: 'DESC',
-							includePreviousVersion: 1,
-							limit: 10,
-						}) %}
-						{% if versions|length %}
-							<label>Last {{ versions|length }} version(s):</label>
-						{% else %}
-							<label>Previous versions:</label>
-						{% endif %}
-						{% if versions|length %}
-							<ul id="versions" class="versions">
-								{% for itm in versions %}
-									<li class="versions__item">
-										{% if itm.canBeRestored %}
-											<div class="versions__info versions-info">
+                {% if orm.isVersioned and not versionOrm %}
+                    <div class="js-version-container">
+                        {% set versions = model.active(ormModel.className, {
+                            whereSql: 'm.versionId = ?',
+                            params: [orm.id],
+                            sort: 'm.id',
+                            order: 'DESC',
+                            includePreviousVersion: 1,
+                            limit: 10,
+                        }) %}
+                        {% if versions|length %}
+                            <label>Last {{ versions|length }} version(s):</label>
+                        {% else %}
+                            <label>Previous versions:</label>
+                        {% endif %}
+                        {% if versions|length %}
+                            <ul id="versions" class="versions">
+                                {% for itm in versions %}
+                                    <li class="versions__item">
+                                        {% if itm.canBeRestored %}
+                                            <div class="versions__info versions-info">
 
-												<div class="versions-info__author">
-													{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
-												</div>
-												<div class="versions-info__time">
-													{{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }}
-												</div>
-
-
-											</div>
-										{% else %}
-											<div class="versions-info__time">
-												{{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }} (Can not be restored)
-											</div>
-
-										{% endif %}
-										<a class="versions__restore" href="{{ app.request.pathInfo }}/version/{{ itm.versionUuid }}{% if app.request.queryString %}?{{ app.request.queryString }}{% endif %}">Restore</a>
-										<a class="js-delete-version versions__delete" href="#versions" data-classname="{{ ormModel.className }}" data-id="{{ itm.id }}" class="js-delete-version" data-idxsec="0" title="Remove version"><img src="/cms/images/binIcon.gif"></a>
-									</li>
-								{% endfor %}
-							</ul>
-						{% else %}
-							<div>No history found</div>
-						{% endif %}
-					</div>
-				{% endif %}
-
-				{% if isFragment %}
-					<div class="submit-area">
-						<button class="back-button button js-closeFragmentWindow" type="button">Close</button>
-						<button class="button-red" style="background: #2281cf;" name='submit' value='Save changes'>Save</button>
-					</div>
-				{% else %}
+                                                <div class="versions-info__author">
+                                                    {{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
+                                                </div>
+                                                <div class="versions-info__time">
+                                                    {{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }}
+                                                </div>
 
 
+                                            </div>
+                                        {% else %}
+                                            <div class="versions-info__time">
+                                                {{ itm.added|date('d F Y') }} @ {{ itm.added|date('h:ia') }} (Can not be restored)
+                                            </div>
 
-					<div class="submit-area">
-						{% if orm.canBePreviewed %}
-							<div class="preview">
-								<button class="js-orm-preview submit button preview" name='submit' value='Preview'>Preview</button>
-							</div>
-						{% endif %}
+                                        {% endif %}
+                                        <a class="versions__restore" href="{{ app.request.pathInfo }}/version/{{ itm.versionUuid }}{% if app.request.queryString %}?{{ app.request.queryString }}{% endif %}">Restore</a>
+                                        <a class="js-delete-version versions__delete" href="#versions" data-classname="{{ ormModel.className }}" data-id="{{ itm.id }}" class="js-delete-version" data-idxsec="0" title="Remove version"><img src="/cms/images/binIcon.gif"></a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div>No history found</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
 
-						{#{{ form_widget(form._token) }}#}
+                {% if isFragment %}
+                    <div class="submit-area">
+                        <button class="back-button button js-closeFragmentWindow" type="button">Close</button>
+                        <button class="button-red" style="background: #2281cf;" name='submit' value='Save changes'>Save</button>
+                    </div>
+                {% else %}
 
-						{% if returnUrl %}
-							<a class="back-button button js-returnUrl" href="{{ returnUrl }}">‹ Back</a>
-						{% endif %}
 
-						{% if versionOrm %}
-							<button class="js-orm-restore submit button restore" name='submit' value='Restore'>Restore</button>
-							{% set versionUrlFragment = '/version/' ~ versionOrm.versionUuid %}
-							<a href="{{ app.request.uri|replace({(versionUrlFragment):''}) }}" class="js-orm-restore-cancel submit button cancel">Cancel</a>
-						{% else %}
-							<button class="js-orm-apply submit button save-content" style="background: #2281cf;" name='submit' value='Apply'>Apply</button>
-							<button class="js-orm-save submit button" name='submit' value='Save'>Save</button>
-						{% endif %}
-					</div>
-				{% endif %}
-			</form>
-		{% endif %}
+
+                    <div class="submit-area">
+                        {% if orm.canBePreviewed %}
+                            <div class="preview">
+                                <button class="js-orm-preview submit button preview" name='submit' value='Preview'>Preview</button>
+                            </div>
+                        {% endif %}
+
+                        {# {{ form_widget(form._token) }} #}
+
+                        {% if returnUrl %}
+                            <a class="back-button button js-returnUrl" href="{{ returnUrl }}">‹ Back</a>
+                        {% endif %}
+
+                        {% if versionOrm %}
+                            <button class="js-orm-restore submit button restore" name='submit' value='Restore'>Restore</button>
+                            {% set versionUrlFragment = '/version/' ~ versionOrm.versionUuid %}
+                            <a href="{{ app.request.uri|replace({(versionUrlFragment):''}) }}" class="js-orm-restore-cancel submit button cancel">Cancel</a>
+                        {% else %}
+                            <button class="js-orm-apply submit button save-content" style="background: #2281cf;" name='submit' value='Apply'>Apply</button>
+                            <button class="js-orm-save submit button" name='submit' value='Save'>Save</button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </form>
+        {% endif %}
     {% endblock %}
 
-	<div id="orm-popup-container" class="wrapper wrapper-content file-manager mode-asset orm-fm js-orm-fm">
-		{% include 'cms/includes/file-manager.html.twig' %}
-	</div>
+    <div id="orm-popup-container" class="wrapper wrapper-content file-manager mode-asset orm-fm js-orm-fm">
+        {% include 'cms/includes/file-manager.html.twig' %}
+    </div>
 {% endblock %}
 
 
 {% block externalFooter %}
-	<script id="gallery-file" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.gallery-file.twig' %}</script>
-	<script src="/cms/redactor/redactor.js" language="javascript"></script>
+    <script id="gallery-file" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.gallery-file.twig' %}</script>
+    <script src="/cms/redactor/redactor.js" language="javascript"></script>
     <script src="/cms/redactor/_plugins/video/video.js" language="javascript"></script>
     <script src="/cms/redactor/_plugins/table/table.js" language="javascript"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
 
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.legacy.min.css" type="text/css" media="screen" />
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.legacy.min.css" type="text/css" media="screen"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
 
-	{% if file_exists('/js/core/custom_widget.js') %}
-		<script src="/js/core/custom_widget.js"></script>
-	{% endif %}
+    {% if file_exists('/js/core/custom_widget.js') %}
+        <script src="/js/core/custom_widget.js"></script>
+    {% endif %}
 
-	<script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}"></script>
-	<script src="/cms/develop/js/orm.js?v={{ version }}"></script>
+    <script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}"></script>
+    <script src="/cms/develop/js/orm.js?v={{ version }}"></script>
+
+    <script id="shipping-by-weight-rate" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.shipping-by-weight-rate.twig' %}</script>
+    <script id="shipping-by-weight-rate-extra" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.shipping-by-weight-rate-extra.twig' %}</script>
+
+    <script>
+        $(function () {
+            var value = $('#orm_shippingCostRates').val();
+            var jsonValue = JSON.parse(value ? value : '[]');
+            if (jsonValue.length === 0) {
+                jsonValue.push(getNewRate());
+                $('#orm_shippingCostRates').val(JSON.stringify(jsonValue));
+            }
+
+            $(document).on('click', '.js-add-rate', function (idx, itm) {
+                value = $('#orm_shippingCostRates').val();
+                jsonValue = JSON.parse(value ? value : '[]');
+                jsonValue.push(getNewRate());
+                $('#orm_shippingCostRates').val(JSON.stringify(jsonValue));
+                renderRates();
+                return false;
+            });
+
+            $(document).on('click', '.js-delete-rate', function (idx, itm) {
+                value = $('#orm_shippingCostRates').val();
+                jsonValue = JSON.parse(value ? value : '[]');
+                var idx = $(this).closest('.js-rate-container').data('idx');
+                jsonValue.splice(idx, 1);
+                $('#orm_shippingCostRates').val(JSON.stringify(jsonValue));
+                renderRates();
+                return false;
+            });
+
+            $(document).on('click', '.js-add-extra', function (idx, itm) {
+                var idx = $(this).closest('.js-rate-container').data('idx');
+
+                value = $('#orm_shippingCostRates').val();
+                jsonValue = JSON.parse(value ? value : '[]');
+                jsonValue[idx].extra.push(getNewRateExtra());
+                $('#orm_shippingCostRates').val(JSON.stringify(jsonValue));
+                renderRate(idx, jsonValue[idx], $('.js-rate-container-' + idx));
+                return false;
+            });
+
+            $(document).on('click', '.js-delete-extra', function (idx, itm) {
+                var idx = $(this).closest('.js-rate-container').data('idx');
+                var extraIdx = $(this).closest('.js-extra-container').data('idx');
+
+                value = $('#orm_shippingCostRates').val();
+                jsonValue = JSON.parse(value ? value : '[]');
+                jsonValue[idx].extra.splice(extraIdx, 1);
+                $('#orm_shippingCostRates').val(JSON.stringify(jsonValue));
+                renderRate(idx, jsonValue[idx], $('.js-rate-container-' + idx));
+                return false;
+            });
+
+            $(document).on('change keyup', '.js-elem', function (idx, itm) {
+                var idx = $(this).closest('.js-rate-container').data('idx');
+                var id = $(this).data('id');
+                value = $('#orm_shippingCostRates').val();
+                jsonValue = JSON.parse(value ? value : '[]');
+                jsonValue[idx][id] = $(this).val();
+                $('#orm_shippingCostRates').val(JSON.stringify(jsonValue));
+            });
+
+            $(document).on('change keyup', '.js-elem-extra', function (idx, itm) {
+                var idx = $(this).closest('.js-rate-container').data('idx');
+                var extraIdx = $(this).closest('.js-extra-container').data('idx');
+                var id = $(this).data('id');
+                value = $('#orm_shippingCostRates').val();
+                jsonValue = JSON.parse(value ? value : '[]');
+                jsonValue[idx].extra[extraIdx][id] = $(this).val();
+                $('#orm_shippingCostRates').val(JSON.stringify(jsonValue));
+            });
+
+            renderRates();
+        });
+
+        function renderRates() {
+            $('.js-rates').empty();
+
+            var value = $('#orm_shippingCostRates').val();
+            var jsonValue = JSON.parse(value ? value : '[]');
+            for (var idx in jsonValue) {
+                var itm = jsonValue[idx];
+                $('.js-rates').append('<div class="js-rate-container js-rate-container-' + idx + '" data-idx="' + idx + '"></div>');
+                renderRate(idx, itm, $('.js-rate-container-' + idx));
+            }
+
+
+
+            // $('.js-rate-container').sortable({
+            //     handle: ".js-heading",
+            // }).disableSelection();
+        };
+
+        function renderRate(idx, itm, container) {
+            var rateTemplate = Handlebars.compile($('#shipping-by-weight-rate').html());
+
+            $(container).html(rateTemplate({
+                mode: {{ getenv('SHIPPING_PRICE_MODE') ?: 1 }},
+                itm: itm,
+            }));
+
+            for (var extraIdx in itm.extra) {
+                var extraItm = itm.extra[extraIdx];
+                console.log(extraItm);
+                $(container).find('.js-extra').append('<div class="js-extra-container js-extra-container-' + idx + '-' + extraIdx + '" data-idx="' + extraIdx + '"></div>');
+                renderRateExtra(extraIdx, extraItm, $('.js-extra-container-' + idx + '-' + extraIdx));
+            }
+
+            if (itm.extra.length === 0) {
+                $(container).find('.js-extra-title').hide();
+            } else {
+                $(container).find('.js-extra-title').show();
+            }
+
+            $(container).find('select:not(.no-chosen)').chosen({
+                allow_single_deselect: true,
+            });
+        };
+
+        function renderRateExtra(idx, itm, container) {
+            var rateExtraTemplate = Handlebars.compile($('#shipping-by-weight-rate-extra').html());
+            $(container).html(rateExtraTemplate({
+                itm: itm,
+            }));
+        };
+
+        function getNewRate() {
+            return {
+                regions: [],
+                zipFrom: '',
+                zipTo: '',
+                price: '',
+                extra: []
+            }
+        };
+
+        function getNewRateExtra() {
+            return {
+                price: '',
+                from: '',
+                to: ''
+            }
+        };
+    </script>
+
 
     {% if fragmentSubmitted %}
-		<script>
-			$(function () {
+        <script>
+            $(function () {
                 parent.$.fancybox.close();
             });
-		</script>
+        </script>
     {% endif %}
 {% endblock %}

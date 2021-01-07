@@ -1,0 +1,62 @@
+{% verbatim %}
+    <div class="js-blocks section-blocks">
+        <div class="content-block js-block">
+            <div class="block-file js-heading" style="cursor: default;">
+                <h4 class="block-title">&nbsp;</h4>
+                <a href="#" class="delete-block js-delete-rate"></a>
+            </div>
+            <section class="block-widgets">
+                <div>
+                    <div class="formStyle mb-little" {{#compare mode 1 operator='!=' }}style="display: none;"{{/compare}}>
+                        <label>Shipping regions:</label>
+                        <select class="js-elem js-after-chosen" data-id="regions" multiple>
+                            <option value="0">All regions</option>
+                            <option value="1">Auckland</option>
+                        </select>
+                    </div>
+
+                    <section {{#compare mode 2 operator='!=' }}style="display: none;"{{/compare}}>
+                        <div class="formStyle">
+                            <label>Postal code range from:</label>
+                            <input type="text" class="js-elem" data-id="zipFrom" value="{{itm.zipFrom}}">
+                        </div>
+
+                        <div class="formStyle">
+                            <label>to:</label>
+                            <input type="text" class="js-elem" data-id="zipTo" value="{{itm.zipTo}}">
+                        </div>
+                    </section>
+
+                    <div class="formStyle mb-little"><label>$ / shipping unit:</label>
+                        <input type="text" class="js-elem" data-id="price" value="{{itm.price}}">
+                    </div>
+
+                    <div class="clear"></div>
+
+                    <a href="#" class="js-add-extra">Add extra conditions</a>
+
+                    <section class="conditions-container">
+                        <div class="js-extra-title">
+                            <div class="formStyle" style="margin-bottom: 0;">
+                                <label>$:</label>
+                            </div>
+
+                            <div class="formStyle" style="margin-bottom: 0;">
+                                <label>Shipping unit(s) from:</label>
+                            </div>
+
+                            <div class="formStyle" style="margin-bottom: 0;">
+                                <label>to:</label>
+                            </div>
+                        </div>
+
+                        <div class="js-extra"></div>
+                    </section>
+
+                    <div>&nbsp;</div>
+                </div>
+            </section>
+            <div class="clear"></div>
+        </div>
+    </div>
+{% endverbatim %}

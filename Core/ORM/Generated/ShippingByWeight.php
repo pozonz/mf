@@ -14,12 +14,12 @@ class ShippingByWeight extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $shippingCountry;
+    private $freeDeliveryIfPriceAbove;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $freeDeliveryIfPriceAbove;
+    private $shippingMethod;
     
     /**
      * #pz mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -45,22 +45,6 @@ class ShippingByWeight extends Base
     /**
      * @return mixed
      */
-    public function getShippingCountry()
-    {
-        return $this->shippingCountry;
-    }
-    
-    /**
-     * @param mixed shippingCountry
-     */
-    public function setShippingCountry($shippingCountry)
-    {
-        $this->shippingCountry = $shippingCountry;
-    }
-    
-    /**
-     * @return mixed
-     */
     public function getFreeDeliveryIfPriceAbove()
     {
         return $this->freeDeliveryIfPriceAbove;
@@ -72,6 +56,22 @@ class ShippingByWeight extends Base
     public function setFreeDeliveryIfPriceAbove($freeDeliveryIfPriceAbove)
     {
         $this->freeDeliveryIfPriceAbove = $freeDeliveryIfPriceAbove;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getShippingMethod()
+    {
+        return $this->shippingMethod;
+    }
+    
+    /**
+     * @param mixed shippingMethod
+     */
+    public function setShippingMethod($shippingMethod)
+    {
+        $this->shippingMethod = $shippingMethod;
     }
     
     /**
