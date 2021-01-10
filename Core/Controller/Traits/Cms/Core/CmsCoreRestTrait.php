@@ -143,4 +143,21 @@ trait CmsCoreRestTrait
         }
         return new Response('OK');
     }
+
+    /**
+     * @route("/manage/rest/shipping/regions")
+     * @return Response
+     */
+    public function cmsRestShippingRegions(Request $request)
+    {
+        $zone = $request->get('zone');
+
+        $fullClass = ModelService::fullClass($this->connection, 'ShippingZone');
+        $orms = $fullClass::active($this->connection, [
+            'whereSql' => 'm.parentId = ?',
+            'params' => [$zone],
+            'sort' => 'm.title'
+        ]);
+        return new JsonResponse($orms);
+    }
 }

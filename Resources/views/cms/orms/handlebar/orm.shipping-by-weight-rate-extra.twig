@@ -1,16 +1,19 @@
 {% verbatim %}
     <div>
         <div class="formStyle">
-            <input type="text" class="js-elem-extra" data-id="price" value="{{itm.price}}">
-        </div>
-
-        <div class="formStyle">
             <input type="text" class="js-elem-extra" data-id="from" value="{{itm.from}}">
         </div>
 
         <div class="formStyle">
             <input type="text" class="js-elem-extra" data-id="to" value="{{itm.to}}">
         </div>
-        <a href="#" class="js-delete-extra"><img src="/cms/images/binIcon.gif"></a>
+
+        <div class="formStyle">
+            <input type="text" class="js-elem-extra" data-id="price" value="{{itm.price}}">
+        </div>
+
+        <div class="deleteExtra">
+            <a href="#" class="js-delete-extra"><img src="/cms/images/binIcon.gif"></a>
+        </div>
     </div>
 {% endverbatim %}

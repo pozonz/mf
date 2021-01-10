@@ -1,8 +1,25 @@
 {% verbatim %}
     <div class="js-blocks section-blocks">
         <div class="content-block js-block">
-            <div class="block-file js-heading" style="cursor: default;">
+            <div class="block-file js-heading">
                 <h4 class="block-title">&nbsp;</h4>
+
+                {{#compare idx 0 operator='==' }}
+                    <a href="#" class="delete-block down right-second js-rate-down"></a>
+                {{/compare}}
+
+                {{#compare idx length operator='==' }}
+                    <a href="#" class="delete-block up right-second js-rate-up"></a>
+                {{/compare}}
+
+
+                {{#compare idx 0 operator='!=' }}
+                    {{#compare idx length operator='!=' }}
+                        <a href="#" class="delete-block up right-third js-rate-up"></a>
+                        <a href="#" class="delete-block down right-second js-rate-down"></a>
+                    {{/compare}}
+                {{/compare}}
+
                 <a href="#" class="delete-block js-delete-rate"></a>
             </div>
             <section class="block-widgets">
@@ -10,8 +27,10 @@
                     <div class="formStyle mb-little" {{#compare mode 1 operator='!=' }}style="display: none;"{{/compare}}>
                         <label>Shipping regions:</label>
                         <select class="js-elem js-after-chosen" data-id="regions" multiple>
-                            <option value="0">All regions</option>
-                            <option value="1">Auckland</option>
+                            <option {{#ifHasIt ../itm.regions 0 }}selected{{/ifHasIt}} value="0">All regions</option>
+                            {{#each regions}}
+                                <option {{#ifHasIt ../itm.regions id }}selected{{/ifHasIt}} value="{{id}}">{{title}}</option>
+                            {{/each}}
                         </select>
                     </div>
 
@@ -36,11 +55,7 @@
                     <a href="#" class="js-add-extra">Add extra conditions</a>
 
                     <section class="conditions-container">
-                        <div class="js-extra-title">
-                            <div class="formStyle" style="margin-bottom: 0;">
-                                <label>$:</label>
-                            </div>
-
+                        <div class="js-extra-title extra-title">
                             <div class="formStyle" style="margin-bottom: 0;">
                                 <label>Shipping unit(s) from:</label>
                             </div>
@@ -48,9 +63,13 @@
                             <div class="formStyle" style="margin-bottom: 0;">
                                 <label>to:</label>
                             </div>
+
+                            <div class="formStyle" style="margin-bottom: 0;">
+                                <label>$:</label>
+                            </div>
                         </div>
 
-                        <div class="js-extra"></div>
+                        <div class="js-extras"></div>
                     </section>
 
                     <div>&nbsp;</div>
