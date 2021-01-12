@@ -153,6 +153,16 @@
                         </select>
                     </div>
                 {{/compare}}
+
+                {{#compare widget 14 operator='==' }}
+                    <div class="formStyle">
+                        <label>{{title}}</label>
+                        <input type="text" value="{{#getByKey ../block.values id}}{{/getByKey}}" id="{{../id}}-{{../block.id}}-{{id}}" data-id="{{id}}" class="js-selectize-block js-elem cms_form_text"/>
+                        {{#each choices}}
+                            <div style="display: none;" class="{{../../id}}-{{../../block.id}}-{{../id}}-choice" data-id="{{#myOptionKey this}}{{/myOptionKey}}" data-name="{{#myOptionValue this}}{{/myOptionValue}}"></div>
+                        {{/each}}
+                    </div>
+                {{/compare}}
             {{/each}}
         </div>
         <div class="clear"></div>
