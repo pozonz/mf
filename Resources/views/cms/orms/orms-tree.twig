@@ -1,13 +1,7 @@
-{% extends 'cms/orms/orms.twig' %}
+{% extends 'cms/orms/orms-pagination.twig' %}
 {% from "cms/includes/nestable.twig" import nest as nest %}
 
-{% block container %}
-    <div id="h1">
-        <h1>{{ ormModel.title }}</h1>
-        <a class="addForm button" href="{{ theNode.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
-    </div>
-
-
+{% block tableContainer %}
     <div class="nestable-lists js-model-wrapper" data-modelname="{{ ormModel.className }}">
         <div class="dd" id="nestable">
             <ol class="dd-list">
@@ -17,8 +11,10 @@
             </ol>
         </div>
     </div>
-
 {% endblock %}
+
+{% block dataPaginationTop %}{% endblock %}
+{% block dataPaginationBottom %}{% endblock %}
 
 {% block externalFooter %}
     {{ parent() }}

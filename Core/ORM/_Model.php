@@ -4,6 +4,7 @@ namespace MillenniumFalcon\Core\ORM;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Db\Base;
+use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -68,6 +69,16 @@ class _Model extends \MillenniumFalcon\Core\ORM\Generated\_Model
         $this->setDefaultSortBy('id');
         $this->setDefaultOrder(1);
         parent::__construct($pdo);
+    }
+
+    public function objNote()
+    {
+        $fullClass = ModelService::fullClass($this->getPdo(), 'ModelNote');
+        $orm = $fullClass::getByField($this->getPdo(), 'title', $this->getClassName());
+        if ($orm) {
+            return $orm->getNote();
+        }
+        return null;
     }
 
     /**
