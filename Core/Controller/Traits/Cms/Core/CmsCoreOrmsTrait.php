@@ -399,12 +399,12 @@ trait CmsCoreOrmsTrait
             $params['order'] = $order;
 
         } elseif ($model->getListType() == 2) {
-            $sort = $request->get('sort') ?: $model->getDefaultSortBy();
-            $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
+//            $sort = $request->get('sort') ?: $model->getDefaultSortBy();
+//            $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
 
             $result = $fullClass::data($this->connection, [
-                "sort" => $sort,
-                "order" => $order,
+//                "sort" => $sort,
+//                "order" => $order,
             ]);
 
             $nodes = [];

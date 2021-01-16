@@ -2,7 +2,16 @@
 
 {% block container %}
     <div id="h1">
-        {% block ormModelTitle %}<h1>{{ ormModel.title }}</h1>{% endblock %}
+        {% block ormModelTitle %}
+            <h1>
+                {{ ormModel.title }}
+                <a href="#" class="js-model-note-button" data-content="{{ ormModel.objNote }}"><img src="/cms/images/editIcon.gif"></a>
+
+                <div class="model-note js-model-note-content" {% if not ormModel.objNote %}style="display: none;"{% endif %}>
+                    {{ ormModel.objNote|nl2br }}
+                </div>
+            </h1>
+        {% endblock %}
         {% block ormModelAdd %}<a class="addForm button" href="{{ theNode.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>{% endblock %}
     </div>
 

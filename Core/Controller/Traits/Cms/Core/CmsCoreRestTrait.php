@@ -18,6 +18,28 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsCoreRestTrait
 {
     /**
+     * @route("/manage/rest/model/note")
+     * @return Response
+     */
+    public function cmsRestModelNote(Request $request)
+    {
+        $className = $request->get('className');
+        $note = $request->get('note');
+
+        $fullClass = ModelService::fullClass($this->connection, 'ModelNote');
+        $orm = $fullClass::getByField($this->connection, 'title', $className);
+        if (!$orm) {
+            $orm = new $fullClass($this->connection);
+            $orm->setTitle($className);
+        }
+
+        $orm->setNote($note);
+        $orm->save();
+
+        return new Response('OK');
+    }
+
+    /**
      * @route("/manage/rest/version/delete")
      * @return Response
      */
