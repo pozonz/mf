@@ -49,13 +49,6 @@ class OrmForm extends AbstractType
                 $orm->$setMethod($orm->$getMethod() ? true : false);
             }
 
-            if ($itm->widget == '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceSortable') {
-                $value = $orm->$getMethod();
-                if ($value) {
-                    $orm->$setMethod(implode(',', json_decode($value)));
-                }
-            }
-
             $widget = $itm->widget;
             $opts = $this->getOpts($pdo, $itm, $orm);
             $builder->add($itm->field, $widget, $opts);

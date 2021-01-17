@@ -226,15 +226,6 @@ trait CmsCoreOrmTrait
                     $orm->$setMethod(date($format, strtotime($dateStr)));
                 }
             }
-
-            if ($columnJson->widget == '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceSortable') {
-                $value = $orm->$getMethod();
-                if ($value) {
-                    $orm->$setMethod(json_encode(explode(',', $value)));
-                } else {
-                    $orm->$setMethod(null);
-                }
-            }
         }
 
         $objPresetDataMap = _Model::presetDataMap;
