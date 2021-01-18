@@ -27,36 +27,6 @@ trait CmsInstallTrait
     ];
 
     /**
-     * @Route("/install/model/data/files")
-     * @return JsonResponse
-     */
-    public function updateInitDataFiles()
-    {
-        ini_set('max_execution_time', 9999);
-        ini_set('memory_limit', '9999M');
-
-        $response = [];
-        $models = _Model::data($this->connection, [
-            'sort' => 'className',
-        ]);
-        foreach ($models as $model) {
-            $added = 0;
-
-            $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
-            $data = $fullClass::data($this->connection);
-            foreach ($data as $itm) {
-                if ($itm->getIsBuiltIn() == 1) {
-                    $itm->updateBuildInFile();
-                    $added++;
-                }
-            }
-            $response[$model->getClassName()] = $added;
-        }
-
-        return new JsonResponse($response);
-    }
-
-    /**
      * @Route("/install/model/sync")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
@@ -88,7 +58,7 @@ trait CmsInstallTrait
             $itm->delete();
         }
 
-        $phpDir = $this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Resources/files/php';
+        $phpDir = $this->kernel->getProjectDir() . '/vendor/pozoltd/mf/Migrations/php';
 
         $countries = require "$phpDir/countries.php";
         $states = require "$phpDir/states.php";
@@ -99,6 +69,7 @@ trait CmsInstallTrait
             $ormCountry->setTitle($countryVal[0]);
             $ormCountry->setCode($countryIdx);
             $ormCountry->setClosed(1);
+            $ormCountry->setRank($count);
             $ormCountry->save();
             $count++;
 
@@ -108,6 +79,7 @@ trait CmsInstallTrait
                     $ormState->setTitle($stateVal[0]);
                     $ormState->setCode($stateIdx);
                     $ormState->setParentId($ormCountry->getId());
+                    $ormState->setRank($count);
                     $ormState->save();
                     $count++;
                 }
@@ -118,9 +90,39 @@ trait CmsInstallTrait
     }
 
     /**
+     * @Route("/install/model/data/files")
      * @return JsonResponse
      */
-    public function createOrUpdateModelsFromFiles()
+    public function updateInitDataFiles()
+    {
+        ini_set('max_execution_time', 9999);
+        ini_set('memory_limit', '9999M');
+
+        $response = [];
+        $models = _Model::data($this->connection, [
+            'sort' => 'className',
+        ]);
+        foreach ($models as $model) {
+            $added = 0;
+
+            $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
+            $data = $fullClass::data($this->connection);
+            foreach ($data as $itm) {
+                if ($itm->getIsBuiltIn() == 1) {
+                    $itm->updateBuildInFile();
+                    $added++;
+                }
+            }
+            $response[$model->getClassName()] = $added;
+        }
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    protected function createOrUpdateModelsFromFiles()
     {
         $unknown = [];
         $added = [];
@@ -165,7 +167,7 @@ trait CmsInstallTrait
     /**
      * @return JsonResponse
      */
-    public function createOrUpdateTablesFromModels()
+    protected function createOrUpdateTablesFromModels()
     {
         $unknown = [];
         $added = [];
@@ -203,7 +205,7 @@ trait CmsInstallTrait
     /**
      * @return JsonResponse
      */
-    public function addInitDataToModel()
+    protected function addInitDataToModel()
     {
         $exist = [];
         $models = _Model::data($this->connection, [
