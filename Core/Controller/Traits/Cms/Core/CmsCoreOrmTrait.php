@@ -191,7 +191,7 @@ trait CmsCoreOrmTrait
                     array_push($pathInfoFragments, $newOrm->getVersionId());
                     $pathInfo = implode('/', $pathInfoFragments);
                 }
-                throw new RedirectException($pathInfo . "/version/" . $newOrm->getVersionUuid());
+                throw new RedirectException($pathInfo . "/version/" . $newOrm->getVersionUuid() . '?returnUrl=' . urlencode($returnUrl));
 
             } elseif ($submitButtonValue == 'Update') {
                 $pathInfo = $request->getPathInfo();
