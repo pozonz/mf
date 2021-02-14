@@ -4,14 +4,84 @@
             <i class="fa fa-info-circle"></i> Content overview
         </div>
         <div class="panel-body scroll-content"></div>
-        <div class="sidebar-preview-area js-sidebar-preview-area" style="display: none;" >
-            <button style="" class="submit button save-content preview">Preview</button>
+
+        <div class="submit-area submit-area-sidebar js-submit-area-sidebar">
+            {{#compare isRestoringFromVersion 1 operator='==' }}
+                {{#compare canBePreviewed 1 operator='==' }}
+                    <div class="preview">
+                        <button class="js-orm-preview submit button preview" name='submit' value='Preview'>Preview</button>
+                    </div>
+                {{/compare}}
+
+                <div class="submit-buttons submit-buttons-bottom">
+
+                    {{#compare isDraft 1 operator='==' }}
+                        <button class="js-orm-restore submit button restore" name='submit' value='Restore'>Publish</button>
+                        <button class="js-orm-update submit button update" name='submit' value='Update'>Update</button>
+                    {{/compare}}
+
+                    {{#compare isDraft 1 operator='!=' }}
+                        <button class="js-orm-restore submit button restore restore-button-only" name='submit' value='Restore'>Restore</button>
+                    {{/compare}}
+
+                    <a href="{{ cancelVersionRestoreUrl }}" class="js-orm-restore-cancel submit button cancel">Back</a>
+                </div>
+            {{/compare}}
+
+            {{#compare isRestoringFromVersion 1 operator='!=' }}
+
+                {{#compare canBePreviewed 1 operator='==' }}
+                    <div class="preview">
+                        <button class="js-orm-preview submit button preview" name='submit' value='Preview'>Preview</button>
+                        <button class="js-orm-draft submit button draft" name='submit' value='Save as draft'>Save as draft</button>
+                    </div>
+                {{/compare}}
+
+                <div class="enabled-status">
+                    <div class="formStyle choice">
+                        <div id="sidebar_submit_area_orm_status">
+                            <div>
+                                <input class="js-sidebar-submit-orm-status" name="sidebar_submit_area_orm_status" type="radio" id="sidebar_submit_area_orm_status_0" value="1">
+                                <label for="sidebar_submit_area_orm_status_0" class="required">Enabled</label>
+                            </div>
+                            <div>
+                                <input class="js-sidebar-submit-orm-status" name="sidebar_submit_area_orm_status" type="radio" id="sidebar_submit_area_orm_status_1" value="0">
+                                <label for="sidebar_submit_area_orm_status_1" class="required">Disabled</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submit-buttons submit-buttons-bottom">
+                    {{#compare returnUrl '' operator='!=' }}
+                        <a class="back-button button js-returnUrl" href="{{ returnUrl }}">‹ Back</a>
+                    {{/compare}}
+
+                    <button class="js-orm-apply submit button save-content {{#compare returnUrl '' operator='==' }}one-button-only{{/compare}}" style="background: #2281cf;" name='submit' value='Apply'>Apply</button>
+
+                    {{#compare returnUrl '' operator='!=' }}
+                        <button class="js-orm-save submit button save" name='submit' value='Save'>Save</button>
+                    {{/compare}}
+                </div>
+
+            {{/compare}}
         </div>
-        <div class="sidebar-submit-area">
-            <input style="display: none;" class="submit button save-content apply" class="bg-blue" style="margin-right: .5em;" type="submit" value="Apply" name="submit" />
-            <input style="display: none;" class="submit button save-content save" class="bg-green" type="submit" value="Save" name="submit" />
-            <input style="display: none;" class="submit button save-content restore" class="bg-restore" type="submit" value="Restore" name="submit" />
-            <a style="display: none;" class="submit button save-content cancel" class="bg-cancel">Cancel</a>
-        </div>
-    </div>
 {% endverbatim %}
+
+{#
+
+<div class="submit-area">
+    <div class="sidebar-preview-area js-sidebar-preview-area preview" style="display: none;" >
+        <button style="" class="submit button save-content preview">Preview</button>
+        <button style="display: none;" class="submit button save-content draft">Save as draft</button>
+    </div>
+
+    <div class="sidebar-submit-area submit-buttons">
+        <input style="display: none;" class="submit button save-content apply" class="bg-blue" style="margin-right: .5em;" type="submit" value="Apply" name="submit" />
+        <input style="display: none;" class="submit button save-content save" class="bg-green" type="submit" value="Save" name="submit" />
+        <input style="display: none;" class="submit button save-content restore" class="bg-restore" type="submit" value="Publish" name="submit" />
+        <a style="display: none;" class="submit button save-content cancel" class="bg-cancel">Back</a>
+    </div>
+</div>
+</div>
+#}

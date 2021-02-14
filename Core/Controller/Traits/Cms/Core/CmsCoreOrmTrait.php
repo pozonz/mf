@@ -11,6 +11,7 @@ use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 trait CmsCoreOrmTrait
@@ -120,7 +121,7 @@ trait CmsCoreOrmTrait
         $orm = $fullClass::getById($this->connection, $ormId);
         if (!$orm) {
             $orm = new $fullClass($this->connection);
-
+            $orm->setStatus(0);
             $fields = array_keys($fullClass::getFields());
             foreach ($fields as $field) {
                 $value = $request->get($field);
@@ -159,16 +160,69 @@ trait CmsCoreOrmTrait
         $params['fragmentSubmitted'] = 0;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $isNew = $orm->getId() ? 0 : 1;
+
             $orm->setIsBuiltIn($orm->getIsBuiltIn() ? 1 : 0);
 
             $submitButtonValue = $request->get('submit');
 
             if ($submitButtonValue == 'Preview') {
-                $orm->savePreview();
-                throw new RedirectException($orm->getFrontendUrl() . "?__preview_" . strtolower($model->getClassName()) . "=" . $orm->getVersionUuid());
+                $user = UtilsService::getUser($this->container);
+
+                $newOrm = $orm->savePreview();
+                $newOrm->setLastEditedBy($user->getId());
+                $newOrm->save();
+                throw new RedirectException($orm->getFrontendUrl() . "?__preview_" . strtolower($model->getClassName()) . "=" . $newOrm->getVersionUuid());
+
+            } elseif ($submitButtonValue == 'Save as draft') {
+                $user = UtilsService::getUser($this->container);
+
+                $newOrm = $orm->saveDraft();
+                $newOrm->setLastEditedBy($user->getId());
+                $newOrm->save();
+
+                $pathInfo = $request->getPathInfo();
+                if ($isNew) {
+                    $orm->setLastEditedBy($user->getId());
+                    $orm->save(true);
+
+                    $pathInfoFragments = explode('/', $pathInfo);
+                    array_pop($pathInfoFragments);
+                    array_push($pathInfoFragments, $newOrm->getVersionId());
+                    $pathInfo = implode('/', $pathInfoFragments);
+                }
+                throw new RedirectException($pathInfo . "/version/" . $newOrm->getVersionUuid());
+
+            } elseif ($submitButtonValue == 'Update') {
+                $pathInfo = $request->getPathInfo();
+                $pathInfoFragments = explode('/', $pathInfo);
+                $pathInfoLastFragment = end($pathInfoFragments);
+
+                $fullClass = ModelService::fullClass($this->connection, $className);
+                $newOrm = $fullClass::data($this->connection, [
+                    'whereSql' => 'm.versionUuid = ?',
+                    'params' => [$pathInfoLastFragment],
+                    'limit' => 1,
+                    'oneOrNull' => 1,
+                    'includePreviousVersion' => 1,
+                ]);
+
+                if (!$newOrm) {
+                    throw new NotFoundHttpException();
+                }
+
+                $orm->setVersionId($newOrm->getVersionId());
+                $orm->setVersionUuid($newOrm->getVersionUuid());
+                $orm->setId($newOrm->getId());
+                $orm->setUniqid($newOrm->getUniqid());
+                $orm->setAdded($newOrm->getAdded());
+                $orm->setModified($newOrm->getModified());
+                $orm->setLastEditedBy($newOrm->getLastEditedBy());
+                $orm->setStatus($newOrm->getStatus());
+                $orm->save(true);
+                throw new RedirectException($request->getRequestUri());
             }
 
-            $isNew = $orm->getId() ? 0 : 1;
             $this->_convertDateValue($orm, $model);
 
             $user = UtilsService::getUser($this->container);
@@ -190,6 +244,26 @@ trait CmsCoreOrmTrait
 
             $baseUrl = str_replace('copy/', '', $params['theNode']->getUrl());
             if ($submitButtonValue == 'Apply' || $submitButtonValue == 'Restore') {
+                if ($submitButtonValue == 'Restore' && $orm->getIsDraft()) {
+                    $pathInfo = $request->getPathInfo();
+                    $pathInfoFragments = explode('/', $pathInfo);
+                    $pathInfoLastFragment = end($pathInfoFragments);
+
+                    $fullClass = ModelService::fullClass($this->connection, $className);
+                    $newOrm = $fullClass::data($this->connection, [
+                        'whereSql' => 'm.versionUuid = ?',
+                        'params' => [$pathInfoLastFragment],
+                        'limit' => 1,
+                        'oneOrNull' => 1,
+                        'includePreviousVersion' => 1,
+                    ]);
+
+                    if (!$newOrm) {
+                        throw new NotFoundHttpException();
+                    }
+
+                    $newOrm->delete();
+                }
                 throw new RedirectException($baseUrl . $orm->getId() . '?returnUrl=' . urlencode($returnUrl));
             } else if ($submitButtonValue == 'Save') {
                 throw new RedirectException($returnUrl);

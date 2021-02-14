@@ -81,6 +81,10 @@ trait BaseORMTrait
      */
     public function save($doNotSaveVersion = false, $options = [])
     {
+        if (!$doNotSaveVersion && $this instanceof VersionInterface) {
+            $this->saveVersion();
+        }
+
         $doNotUpdateModified = $options['doNotUpdateModified'] ?? false;
         if (!$doNotUpdateModified) {
             $this->setModified(date('Y-m-d H:i:s'));
@@ -91,10 +95,6 @@ trait BaseORMTrait
             if (!isset($options['doNotUpdateSlug']) || !$options['doNotUpdateSlug']) {
                 $this->setSlug($slugify->slugify($this->getTitle()));
             }
-        }
-
-        if (!$doNotSaveVersion && $this instanceof VersionInterface) {
-            $this->saveVersion();
         }
 
         $tableName = static::getTableName();

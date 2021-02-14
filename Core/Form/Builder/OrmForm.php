@@ -13,6 +13,7 @@ use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -53,6 +54,14 @@ class OrmForm extends AbstractType
             $opts = $this->getOpts($pdo, $itm, $orm);
             $builder->add($itm->field, $widget, $opts);
         }
+
+        $builder->add('status', ChoiceType::class, [
+            'expanded' => 1,
+            'choices' => [
+                'Enabled' => 1,
+                'Disabled' => 0,
+            ]
+        ]);
 
         $presetData = json_decode($model->getPresetData() ?: '[]');
         foreach ($presetData as $presetDataItem) {
