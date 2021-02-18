@@ -1,11 +1,152 @@
 {% verbatim %}
     <div class="cms_from_various_snippets_container panel panel-info content-block-sidebar {{ className }}">
+
+        <div class="article-state-controls">
+
+            <div class="article-state-controls__toggle-preview">
+                <div class="state-toggle">
+                    <input class="switch-toggle-input visuallyhidden" type="checkbox" id="state-toggle-input" name="state-toggle" value="" checked="">
+                    <label class="switch-toggle-label" for="state-toggle-input">
+                        <div class="switch-toggle__switch"></div>
+                        <div class="switch-toggle__label switch-toggle__label--active">Enabled</div>
+                        <div class="switch-toggle__label switch-toggle__label--inactive">Disabled</div>
+                    </label>
+                </div>
+
+                <a class="page-overview__preview link" href="#">
+                    <i class="icon icon--preview icon--l"></i><span class="button-label">Preview</span>
+                </a>
+            </div>
+
+            <ul class="article-version-list">
+                <li class="article-version-list__active-item">
+                    Current version
+
+                    <ul class="article-version-list__dropdown">
+                        <li class="article-version-list__item">
+                            <h2 class="article-version-list__cat">Current</h2>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link active" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="article-version-list__item">
+                            <h2 class="article-version-list__cat">Drafts</h2>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                        </li>
+                        <li class="article-version-list__item">
+                            <h2 class="article-version-list__cat">Revisions</h2>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                    
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                    
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                    
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                    
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                    
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                    
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                    
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                            <div class="article-version-link-item">
+                                <a class="article-version-link" href="#">
+                                    15/02/2021 @ 09:57am
+                                    <div class="article-version-link__name">John Smith</div>
+                                    
+                                </a>
+                                <button class="icon article-version-link__remove" title="Remove this">Remove</button>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <div class="buttons--article-state">
+                <!-- Drafts -->
+                <button class="button button--article-state button--article-draft" type="button">Save draft</button>
+                <button class="button button--article-state button--article-publish" type="button">Publish draft</button>
+
+                <!-- Current -->
+                <button class="button button--article-state button--article-publish" type="button">Save</button>
+                <button class="button--article-link" type="button">Save as new draft</button>
+
+                <!-- Version -->
+                <button class="button button--article-state button--article-publish" type="button">Restore</button>
+                <button class="button--article-link" type="button">Cancel</button>
+            </div>
+        </div>
+
+
+
         <div class="panel-heading">
             <i class="fa fa-info-circle"></i> Content overview
         </div>
         <div class="panel-body scroll-content"></div>
+{% endverbatim %}
 
-        <div class="submit-area submit-area-sidebar js-submit-area-sidebar">
+
+{#
+<div class="submit-area submit-area-sidebar js-submit-area-sidebar">
             {{#compare isRestoringFromVersion 1 operator='==' }}
                 {{#compare canBePreviewed 1 operator='==' }}
                     <div class="preview">
@@ -66,7 +207,7 @@
 
             {{/compare}}
         </div>
-{% endverbatim %}
+    #}
 
 {#
 
