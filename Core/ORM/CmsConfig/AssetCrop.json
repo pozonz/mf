@@ -1,7 +1,7 @@
 {
     "uniqid": "5cd3ee027174a",
     "slug": "image-cropping-sizes",
-    "rank": 9,
+    "rank": 11,
     "added": "2019-05-09 21:08:18",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "Image cropping sizes",

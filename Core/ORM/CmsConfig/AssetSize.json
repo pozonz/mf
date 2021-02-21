@@ -1,7 +1,7 @@
 {
     "uniqid": "5b8f5a43dd02e",
     "slug": "image-sizes",
-    "rank": 8,
+    "rank": 10,
     "added": "2018-09-03 19:44:02",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "Image sizes",

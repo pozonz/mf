@@ -1,7 +1,7 @@
 {
     "uniqid": "5d8d3b9fa0fcf",
     "slug": "customer-membership",
-    "rank": 28,
+    "rank": 30,
     "added": "2019-09-27 10:28:47",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "Customer membership",

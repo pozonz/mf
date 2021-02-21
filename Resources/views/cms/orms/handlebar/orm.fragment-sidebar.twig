@@ -1,41 +1,92 @@
 {% verbatim %}
     <div class="cms_from_various_snippets_container panel panel-info content-block-sidebar {{ className }}">
-
         <div class="article-state-controls">
 
-            <div class="article-state-controls__toggle-preview">
+            <div class="article-state-controls__toggle-preview js-sidebar-preview-area">
+
                 <div class="state-toggle">
-                    <input class="switch-toggle-input visuallyhidden" type="checkbox" id="state-toggle-input" name="state-toggle" value="" checked="">
-                    <label class="switch-toggle-label" for="state-toggle-input">
-                        <div class="switch-toggle__switch"></div>
-                        <div class="switch-toggle__label switch-toggle__label--active">Enabled</div>
-                        <div class="switch-toggle__label switch-toggle__label--inactive">Disabled</div>
-                    </label>
+                    {{#compare returnUrl '' operator='!=' }}
+                        <input class="switch-toggle-input visuallyhidden" type="checkbox" id="state-toggle-input" name="state-toggle" value="" {{#compare enabled 1 operator='==' }}checked=""{{/compare}}>
+                        <label class="switch-toggle-label" for="state-toggle-input">
+                            <div class="switch-toggle__switch"></div>
+                            <div class="switch-toggle__label switch-toggle__label--active">Enabled</div>
+                            <div class="switch-toggle__label switch-toggle__label--inactive">Disabled</div>
+                        </label>
+                    {{/compare}}
                 </div>
 
-                <a class="page-overview__preview link" href="#">
-                    <i class="icon icon--preview icon--l"></i><span class="button-label">Preview</span>
-                </a>
+                {{#compare canBePreviewed 1 operator='==' }}
+                    <a class="page-overview__preview link js-orm-preview" href="#">
+                        <i class="icon icon--preview icon--l"></i><span class="button-label">Preview</span>
+                    </a>
+                {{/compare}}
             </div>
 
-            <ul class="article-version-list">
+            <ul class="js-article-version-list article-version-list">
                 <li class="article-version-list__active-item">
-                    Current version
+                    {{#compare isRestoringFromVersion 1 operator='!=' }}
+                        Current version
+                    {{/compare}}
+
+                    {{#compare isRestoringFromVersion 1 operator='==' }}
+                        {{#compare isDraft 1 operator='==' }}
+                            Draft
+                        {{/compare}}
+                    {{/compare}}
+
+                    {{#compare isRestoringFromVersion 1 operator='==' }}
+                        {{#compare isDraft 1 operator='!=' }}
+                            Revision
+                        {{/compare}}
+                    {{/compare}}
+
 
                     <ul class="article-version-list__dropdown">
                         <li class="article-version-list__item">
-                            <h2 class="article-version-list__cat">Current</h2>
+                            <h2 class="article-version-list__cat">Current version</h2>
                             <div class="article-version-link-item">
-                                <a class="article-version-link active" href="#">
-                                    15/02/2021 @ 09:57am
-                                    <div class="article-version-link__name">John Smith</div>
+                                <a class="article-version-link {{#compare isRestoringFromVersion 1 operator='!=' }}active{{/compare}}" href="{{ cancelVersionRestoreUrl }}">
+                                    {{ currentOrmDateTime }}
+                                    <div class="article-version-link__name">{{ currentOrmAuthor }}</div>
                                 </a>
                             </div>
                         </li>
+
+                        {{#ifNotEmpty history.drafts}}
+                            <li class="article-version-list__item">
+                                <h2 class="article-version-list__cat">Drafts</h2>
+                                {{#each history.drafts}}
+                                   <div class="article-version-link-item">
+                                        <a class="article-version-link {{#compare deleteId ../versionOrmId operator='==' }}active{{/compare}}" href="{{ url }}">
+                                            {{ datetime }}
+                                            <div class="article-version-link__name">{{ author }}</div>
+                                        </a>
+                                        <button class="js-delete-version icon article-version-link__remove" data-classname="{{ deleteClass}}" data-id="{{ deleteId }}" title="Remove this">Remove</button>
+                                    </div>
+                                {{/each}}
+                            </li>
+                        {{/ifNotEmpty}}
+
+                        {{#ifNotEmpty history.versions}}
+                            <li class="article-version-list__item">
+                                <h2 class="article-version-list__cat">Revisions</h2>
+                                {{#each history.versions}}
+                                   <div class="article-version-link-item">
+                                        <a class="article-version-link {{#compare deleteId ../versionOrmId operator='==' }}active{{/compare}}" href="{{ url }}">
+                                            {{ datetime }}
+                                            <div class="article-version-link__name">{{ author }}</div>
+                                        </a>
+                                        <button class="js-delete-version icon article-version-link__remove" data-classname="{{ deleteClass}}" data-id="{{ deleteId }}" title="Remove this">Remove</button>
+                                    </div>
+                                {{/each}}
+                            </li>
+                        {{/ifNotEmpty}}
+
+                        <!--
                         <li class="article-version-list__item">
                             <h2 class="article-version-list__cat">Drafts</h2>
                             <div class="article-version-link-item">
-                                <a class="article-version-link" href="#">
+                                <a class="article-version-link active" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
                                 </a>
@@ -55,7 +106,7 @@
                                 <a class="article-version-link" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
-                                    
+
                                 </a>
                                 <button class="icon article-version-link__remove" title="Remove this">Remove</button>
                             </div>
@@ -63,7 +114,7 @@
                                 <a class="article-version-link" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
-                                    
+
                                 </a>
                                 <button class="icon article-version-link__remove" title="Remove this">Remove</button>
                             </div>
@@ -71,7 +122,7 @@
                                 <a class="article-version-link" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
-                                    
+
                                 </a>
                                 <button class="icon article-version-link__remove" title="Remove this">Remove</button>
                             </div>
@@ -79,7 +130,7 @@
                                 <a class="article-version-link" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
-                                    
+
                                 </a>
                                 <button class="icon article-version-link__remove" title="Remove this">Remove</button>
                             </div>
@@ -87,7 +138,7 @@
                                 <a class="article-version-link" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
-                                    
+
                                 </a>
                                 <button class="icon article-version-link__remove" title="Remove this">Remove</button>
                             </div>
@@ -95,7 +146,7 @@
                                 <a class="article-version-link" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
-                                    
+
                                 </a>
                                 <button class="icon article-version-link__remove" title="Remove this">Remove</button>
                             </div>
@@ -103,7 +154,7 @@
                                 <a class="article-version-link" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
-                                    
+
                                 </a>
                                 <button class="icon article-version-link__remove" title="Remove this">Remove</button>
                             </div>
@@ -111,37 +162,49 @@
                                 <a class="article-version-link" href="#">
                                     15/02/2021 @ 09:57am
                                     <div class="article-version-link__name">John Smith</div>
-                                    
+
                                 </a>
                                 <button class="icon article-version-link__remove" title="Remove this">Remove</button>
                             </div>
+                            -->
                         </li>
                     </ul>
                 </li>
             </ul>
 
 
-            <div class="buttons--article-state">
+            <div class="buttons--article-state js-submit-area-sidebar">
                 <!-- Drafts -->
-                <button class="button button--article-state button--article-draft" type="button">Save draft</button>
-                <button class="button button--article-state button--article-publish" type="button">Publish draft</button>
+                {{#compare isRestoringFromVersion 1 operator='==' }}
+                    {{#compare isDraft 1 operator='==' }}
+                        <button class="button button--article-state button--article-draft update" type="button">Save draft</button>
+                        <button class="button button--article-state button--article-publish restore" type="button">Publish draft</button>
+                    {{/compare}}
+                {{/compare}}
 
                 <!-- Current -->
-                <button class="button button--article-state button--article-publish" type="button">Save</button>
-                <button class="button--article-link" type="button">Save as new draft</button>
+                {{#compare isRestoringFromVersion 1 operator='!=' }}
+                    <button class="button button--article-state button--article-publish js-orm-apply" type="button" value="Apply">Save</button>
+                    {{#compare canBePreviewed 1 operator='==' }}
+                        <button class="button--article-link js-orm-draft" type="button">Save as new draft</button>
+                    {{/compare}}
+                {{/compare}}
 
                 <!-- Version -->
-                <button class="button button--article-state button--article-publish" type="button">Restore</button>
-                <button class="button--article-link" type="button">Cancel</button>
+                {{#compare isRestoringFromVersion 1 operator='==' }}
+                    {{#compare isDraft 1 operator='!=' }}
+                        <button class="button button--article-state button--article-publish restore" type="button">Restore</button>
+                        <a class="button--article-link" type="button" href="{{ cancelVersionRestoreUrl }}">Cancel</button>
+                    {{/compare}}
+                {{/compare}}
             </div>
         </div>
-
-
 
         <div class="panel-heading">
             <i class="fa fa-info-circle"></i> Content overview
         </div>
         <div class="panel-body scroll-content"></div>
+    </div>
 {% endverbatim %}
 
 

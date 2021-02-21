@@ -71,7 +71,9 @@ trait VersionTrait
         $orm = $this->getCurrentVersion();
         if ($orm) {
             $orm->setIsDraft(0);
-            $orm->save(true);
+            $orm->save(true, [
+                'doNotUpdateModified' => true,
+            ]);
         }
         return $orm;
     }

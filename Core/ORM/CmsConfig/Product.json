@@ -1,7 +1,7 @@
 {
     "uniqid": "5d7f59247451b",
     "slug": "products",
-    "rank": 18,
+    "rank": 19,
     "added": "2019-09-16 21:43:00",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "Products",

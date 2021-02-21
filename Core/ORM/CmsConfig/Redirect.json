@@ -1,7 +1,7 @@
 {
     "uniqid": "5f4afbff2fcef",
     "slug": "redirects",
-    "rank": 15,
+    "rank": 16,
     "added": "2020-08-30 13:08:15",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": "{{title}}",
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "Redirects",

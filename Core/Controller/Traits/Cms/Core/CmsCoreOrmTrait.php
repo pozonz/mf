@@ -272,6 +272,15 @@ trait CmsCoreOrmTrait
             }
         }
 
+        $params['basePathInfo'] = $request->getPathInfo();
+        $params['currentOrm'] = $orm;
+        if (count($params['urlFragments']) > 2 && $params['urlFragments'][count($params['urlFragments']) - 2] == 'version') {
+            $fullClass = ModelService::fullClass($this->connection, $className);
+            $basePathInfoArray = array_splice($params['urlFragments'], 0, count($params['urlFragments']) - 2);
+            $params['basePathInfo'] = '/' . implode('/', $basePathInfoArray);
+            $params['currentOrm'] = $fullClass::getById($this->connection, $orm->getId());
+        }
+
         $params['returnUrl'] = $returnUrl;
         $params['form'] = $form->createView();
         $params['ormModel'] = $model;
