@@ -5,14 +5,12 @@
             <div class="article-state-controls__toggle-preview js-sidebar-preview-area">
 
                 <div class="state-toggle">
-                    {{#compare returnUrl '' operator='!=' }}
-                        <input class="switch-toggle-input visuallyhidden" type="checkbox" id="state-toggle-input" name="state-toggle" value="" {{#compare enabled 1 operator='==' }}checked=""{{/compare}}>
-                        <label class="switch-toggle-label" for="state-toggle-input">
-                            <div class="switch-toggle__switch"></div>
-                            <div class="switch-toggle__label switch-toggle__label--active">Enabled</div>
-                            <div class="switch-toggle__label switch-toggle__label--inactive">Disabled</div>
-                        </label>
-                    {{/compare}}
+                    <input class="switch-toggle-input visuallyhidden" type="checkbox" id="state-toggle-input" name="state-toggle" value="" {{#compare enabled 1 operator='==' }}checked=""{{/compare}}>
+                    <label class="switch-toggle-label" for="state-toggle-input">
+                        <div class="switch-toggle__switch"></div>
+                        <div class="switch-toggle__label switch-toggle__label--active">Enabled</div>
+                        <div class="switch-toggle__label switch-toggle__label--inactive">Disabled</div>
+                    </label>
                 </div>
 
                 {{#compare canBePreviewed 1 operator='==' }}
@@ -24,6 +22,7 @@
 
             <ul class="js-article-version-list article-version-list">
                 <li class="article-version-list__active-item">
+                    <!--
                     {{#compare isRestoringFromVersion 1 operator='!=' }}
                         Current version
                     {{/compare}}
@@ -39,7 +38,9 @@
                             Revision
                         {{/compare}}
                     {{/compare}}
+                    -->
 
+                    Drafts and revisions
 
                     <ul class="article-version-list__dropdown">
                         <li class="article-version-list__item">
@@ -179,6 +180,7 @@
                     {{#compare isDraft 1 operator='==' }}
                         <button class="button button--article-state button--article-draft update" type="button">Save draft</button>
                         <button class="button button--article-state button--article-publish restore" type="button">Publish draft</button>
+                        <a class="button--article-link" type="button" href="{{ cancelVersionRestoreUrl }}">Cancel</a>
                     {{/compare}}
                 {{/compare}}
 
@@ -188,13 +190,18 @@
                     {{#compare canBePreviewed 1 operator='==' }}
                         <button class="button--article-link js-orm-draft" type="button">Save as new draft</button>
                     {{/compare}}
+                    <!--
+                    {{#compare returnUrl '' operator='!=' }}
+                        <a class="button--article-link" type="button" href="{{ returnUrl }}">Cancel</a>
+                    {{/compare}}
+                    -->
                 {{/compare}}
 
                 <!-- Version -->
                 {{#compare isRestoringFromVersion 1 operator='==' }}
                     {{#compare isDraft 1 operator='!=' }}
                         <button class="button button--article-state button--article-publish restore" type="button">Restore</button>
-                        <a class="button--article-link" type="button" href="{{ cancelVersionRestoreUrl }}">Cancel</button>
+                        <a class="button--article-link" type="button" href="{{ cancelVersionRestoreUrl }}">Cancel</a>
                     {{/compare}}
                 {{/compare}}
             </div>
