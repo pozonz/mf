@@ -77,7 +77,7 @@
 
 
 				{% if orm.isVersioned %}
-					<div class="js-version-container version-container" style="display: none2;">
+					<div style="display: none;" class="js-version-container version-container">
 						{% set drafts = model.data(ormModel.className, {
 							whereSql: 'm.versionId = ? AND m.isDraft = 1',
 							params: [orm.id],
@@ -91,24 +91,14 @@
 								<ul id="versions" class="versions">
 									{% for itm in drafts %}
 										<li class="versions__item js-versions__item">
-											{% if itm.canBeRestored %}
-												<div class="versions__info versions-info">
-
-													<div class="versions-info__author js-versions-info__author">
-														{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
-													</div>
-													<div class="versions-info__time js-versions-info__time">
-														{{ itm.modified|date('d F Y') }} @ {{ itm.modified|date('h:ia') }}
-													</div>
-
-
+											<div class="versions__info versions-info">
+												<div class="versions-info__author js-versions-info__author">
+													{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
 												</div>
-											{% else %}
-												<div class="versions-info__time">
-													{{ itm.modified|date('d F Y') }} @ {{ itm.modified|date('h:ia') }} (Can not be restored)
+												<div class="versions-info__time js-versions-info__time">
+													{{ itm.modified|date('d F Y') }} @ {{ itm.modified|date('h:ia') }}
 												</div>
-
-											{% endif %}
+											</div>
 											<a class="versions__restore js-versions__restore" href="{{ basePathInfo }}/version/{{ itm.versionUuid }}{% if app.request.queryString %}?{{ app.request.queryString }}{% endif %}">Edit</a>
 											<a class="js-delete-version versions__delete" href="#versions" data-classname="{{ ormModel.className }}" data-id="{{ itm.id }}" class="js-delete-version" data-idxsec="0" title="Remove version"><img src="/cms/images/binIcon.gif"></a>
 										</li>
@@ -134,24 +124,14 @@
 								<ul id="versions" class="versions">
 									{% for itm in versions %}
 										<li class="versions__item js-versions__item">
-											{% if itm.canBeRestored %}
-												<div class="versions__info versions-info">
-
-													<div class="versions-info__author js-versions-info__author">
-														{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
-													</div>
-													<div class="versions-info__time js-versions-info__time">
-														{{ itm.modified|date('d F Y') }} @ {{ itm.modified|date('h:ia') }}
-													</div>
-
-
+											<div class="versions__info versions-info">
+												<div class="versions-info__author js-versions-info__author">
+													{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
 												</div>
-											{% else %}
-												<div class="versions-info__time">
-													{{ itm.modified|date('d F Y') }} @ {{ itm.modified|date('h:ia') }} (Can not be restored)
+												<div class="versions-info__time js-versions-info__time">
+													{{ itm.modified|date('d F Y') }} @ {{ itm.modified|date('h:ia') }}
 												</div>
-
-											{% endif %}
+											</div>
 											<a class="js-versions__restore versions__restore" href="{{ basePathInfo }}/version/{{ itm.versionUuid }}{% if app.request.queryString %}?{{ app.request.queryString }}{% endif %}">Review</a>
 											<a class="js-delete-version versions__delete" href="#versions" data-classname="{{ ormModel.className }}" data-id="{{ itm.id }}" class="js-delete-version" data-idxsec="0" title="Remove version"><img src="/cms/images/binIcon.gif"></a>
 										</li>
