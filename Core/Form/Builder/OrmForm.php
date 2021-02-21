@@ -81,6 +81,7 @@ class OrmForm extends AbstractType
         }
 
         $metadata = $model->getMetadata() ? json_decode($model->getMetadata()) : array();
+        $metadata = array_diff($metadata, ['added', 'modified', 'lastEditedBy']);
         if (count($metadata)) {
             $builder->add(uniqid(), SpliterType::class, array(
                 'mapped' => false,
