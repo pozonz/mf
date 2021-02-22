@@ -72,7 +72,7 @@
 
                         {{#ifNotEmpty history.versions}}
                             <li class="article-version-list__item">
-                                <h2 class="article-version-list__cat">Revisions</h2>
+                                <h2 class="article-version-list__cat">Recent</h2>
                                 {{#each history.versions}}
                                    <div class="article-version-link-item">
                                         <a class="article-version-link article-version-link--revision {{#compare deleteId ../versionOrmId operator='==' }}active{{/compare}}" href="{{ url }}">

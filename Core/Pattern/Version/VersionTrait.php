@@ -101,12 +101,13 @@ trait VersionTrait
         if (!$this->getId()) {
             $this->save(true);
         }
-        $orm = $this->getCurrentVersion();
-        if ($orm) {
-            $orm->setIsDraft(1);
-            $orm->setAdded(date('Y-m-d H:i:s'));
-            $orm->save(true);
-        }
-        return $orm;
+
+        $this->setVersionId($this->getId());
+        $this->setVersionUuid(Uuid::uuid4());
+        $this->setId(null);
+        $this->setUniqid(Uuid::uuid4());
+        $this->setAdded(date('Y-m-d H:i:s'));
+        $this->save(true);
+        return $this;
     }
 }
