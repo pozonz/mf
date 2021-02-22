@@ -62,7 +62,9 @@
                                             {{ datetime }}
                                             <div class="article-version-link__name">{{ author }}</div>
                                         </a>
-                                        <button class="js-delete-version icon article-version-link__remove" data-classname="{{ deleteClass}}" data-id="{{ deleteId }}" title="Remove this">Remove</button>
+                                        <button class="js-delete-version icon article-version-link__remove" data-classname="{{ deleteClass}}" data-id="{{ deleteId }}" title="Remove this">
+                                            <span class="visuallyhidden">Remove</span>
+                                        </button>
                                     </div>
                                 {{/each}}
                             </li>
@@ -77,7 +79,9 @@
                                             {{ datetime }}
                                             <div class="article-version-link__name">{{ author }}</div>
                                         </a>
-                                        <button class="js-delete-version icon article-version-link__remove" data-classname="{{ deleteClass}}" data-id="{{ deleteId }}" title="Remove this">Remove</button>
+                                        <button class="js-delete-version icon article-version-link__remove" data-classname="{{ deleteClass}}" data-id="{{ deleteId }}" title="Remove this">
+                                            <span class="visuallyhidden">Remove</span>
+                                        </button>
                                     </div>
                                 {{/each}}
                             </li>
@@ -180,7 +184,8 @@
                     {{#compare isDraft 1 operator='==' }}
                         <button class="button button--article-state button--article-draft update" type="button">Save draft</button>
                         <button class="button button--article-state button--article-publish restore" type="button">Publish draft</button>
-                        <a class="button--article-link" type="button" href="{{ cancelVersionRestoreUrl }}">Cancel</a>
+                        <button class="button--article-link button--article-link--delete" type="button"><i class="button--article-link--delete__icon"></i>Delete draft</a>
+
                     {{/compare}}
                 {{/compare}}
 
@@ -192,7 +197,7 @@
                     {{/compare}}
                     <!--
                     {{#compare returnUrl '' operator='!=' }}
-                        <a class="button--article-link" type="button" href="{{ returnUrl }}">Cancel</a>
+                        <a class="button--article-link" href="{{ returnUrl }}">Cancel</a>
                     {{/compare}}
                     -->
                 {{/compare}}
@@ -201,7 +206,7 @@
                 {{#compare isRestoringFromVersion 1 operator='==' }}
                     {{#compare isDraft 1 operator='!=' }}
                         <button class="button button--article-state button--article-publish restore" type="button">Restore</button>
-                        <a class="button--article-link" type="button" href="{{ cancelVersionRestoreUrl }}">Cancel</a>
+                        <a class="button--article-link" href="{{ cancelVersionRestoreUrl }}">Cancel</a>
                     {{/compare}}
                 {{/compare}}
             </div>
