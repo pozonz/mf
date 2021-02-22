@@ -28,16 +28,12 @@
 	<input id="isDraft" value="{{ versionOrm and versionOrm.isDraft ? 1 : 0 }}" type="hidden">
 	<input id="cancelVersionRestoreUrl" value="{{ cancelVersionRestoreUrl }}" type="hidden">
 	<input id="returnUrl" value="{{ returnUrl }}" type="hidden">
-	<input id="currentOrmAuthor" value="{{ currentOrm and currentOrm.objLastEditedBy ? currentOrm.objLastEditedBy.name : 'Unknown' }}" type="hidden">
-	<input id="currentOrmDateTime" value="{{ currentOrm ? (currentOrm.modified|date('d F Y') ~ ' @ ' ~ orm.modified|date('g:ia')) : '' }}" type="hidden">
+	<input id="currentOrmAuthor" value="{{ currentOrm and currentOrm.objLastEditedBy ? currentOrm.objLastEditedBy.name : '' }}" type="hidden">
+	<input id="currentOrmDateTime" value="{{ currentOrm and currentOrm.modified ? (currentOrm.modified|date('d F Y') ~ ' @ ' ~ orm.modified|date('g:ia')) : '' }}" type="hidden">
 
 	{% block heading %}
-        {% if not versionOrm %}
-			{% if returnUrl %}
-				<a class="link-back-to-listing" href="{{ returnUrl }}"><i class="icon icon--back-to-listing icon--l"></i>Back to listing</a>
-			{% endif %}
-		{% else %}
-			<a class="link-back-to-listing" href="{{ cancelVersionRestoreUrl }}"><i class="icon icon--back-to-listing icon--l"></i>Back to current</a>
+        {% if returnUrl %}
+			<a class="link-back-to-listing" href="{{ returnUrl }}"><i class="icon icon--back-to-listing icon--l"></i>Back to listing</a>
         {% endif %}
 
 		<div id="h1">
@@ -50,14 +46,14 @@
 			<div class="article-state-revision">
 				{% if not versionOrm %}
 					<span class="article-state article-state--current">Current</span>
-					<span class="article-revision-label">{{ orm.objLastEditedBy ? orm.objLastEditedBy.name : 'Unknown' }} - {{ orm.modified|date('d F Y') }} @ {{ orm.modified|date('g:ia') }}</span>
+					<span class="article-revision-label">{{ orm.objLastEditedBy ? orm.objLastEditedBy.name ~ ' - ' : '' }}{{ orm.modified ? (orm.modified|date('d F Y') ~ ' @ ' ~ orm.modified|date('g:ia')) : '' }}</span>
                 {% else %}
 					{% if versionOrm.isDraft %}
 						<span class="article-state article-state--draft">Draft</span>
 					{% else %}
-						<span class="article-state article-state--revision">Revision</span>
+						<span class="article-state article-state--revision">Recent</span>
 					{% endif %}
-					<span class="article-revision-label">{{ versionOrm.objLastEditedBy ? versionOrm.objLastEditedBy.name : 'Unknown' }} - {{ versionOrm.modified|date('d F Y') }} @ {{ versionOrm.modified|date('g:ia') }}</span>
+					<span class="article-revision-label">{{ versionOrm.objLastEditedBy ? versionOrm.objLastEditedBy.name ~ ' - ' : '' }}{{ versionOrm.modified ? (versionOrm.modified|date('d F Y') ~ ' @ ' ~ versionOrm.modified|date('g:ia')) : '' }}</span>
                 {% endif %}
 			</div>
 		</div>
@@ -93,7 +89,7 @@
 										<li class="versions__item js-versions__item">
 											<div class="versions__info versions-info">
 												<div class="versions-info__author js-versions-info__author">
-													{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
+													{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : '' }}
 												</div>
 												<div class="versions-info__time js-versions-info__time">
 													{{ itm.modified|date('d F Y') }} @ {{ itm.modified|date('h:ia') }}
@@ -126,7 +122,7 @@
 										<li class="versions__item js-versions__item">
 											<div class="versions__info versions-info">
 												<div class="versions-info__author js-versions-info__author">
-													{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : 'Unknown' }}
+													{{ itm.objLastEditedBy ? itm.objLastEditedBy.name : '' }}
 												</div>
 												<div class="versions-info__time js-versions-info__time">
 													{{ itm.modified|date('d F Y') }} @ {{ itm.modified|date('h:ia') }}

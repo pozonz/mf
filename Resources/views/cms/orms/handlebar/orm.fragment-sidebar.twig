@@ -40,7 +40,7 @@
                     {{/compare}}
                     -->
 
-                    Drafts and revisions
+                    Versions
 
                     <ul class="article-version-list__dropdown">
                         <li class="article-version-list__item">
@@ -182,10 +182,10 @@
                 <!-- Drafts -->
                 {{#compare isRestoringFromVersion 1 operator='==' }}
                     {{#compare isDraft 1 operator='==' }}
-                        <button class="button button--article-state button--article-draft update" type="button">Save draft</button>
-                        <button class="button button--article-state button--article-publish restore" type="button">Publish draft</button>
-                        <button class="button--article-link button--article-link--delete" type="button"><i class="button--article-link--delete__icon"></i>Delete draft</a>
-
+                        <button class="button button--article-state button--article-draft update" type="button">Save draft version</button>
+                        <button class="button button--article-state button--article-publish restore" type="button">Publish draft version</button>
+                        <!-- <button class="button--article-link button--article-link--delete" type="button"><i class="button--article-link--delete__icon"></i>Delete draft</a> -->
+                        <a class="button--article-link" href="{{ cancelVersionRestoreUrl }}">Return to current</a>
                     {{/compare}}
                 {{/compare}}
 
@@ -193,7 +193,7 @@
                 {{#compare isRestoringFromVersion 1 operator='!=' }}
                     <button class="button button--article-state button--article-publish js-orm-apply" type="button" value="Apply">Save</button>
                     {{#compare canBePreviewed 1 operator='==' }}
-                        <button class="button--article-link js-orm-draft" type="button">Save as new draft</button>
+                        <button class="button--article-link js-orm-draft" type="button">Save as new draft version</button>
                     {{/compare}}
                     <!--
                     {{#compare returnUrl '' operator='!=' }}
@@ -206,7 +206,7 @@
                 {{#compare isRestoringFromVersion 1 operator='==' }}
                     {{#compare isDraft 1 operator='!=' }}
                         <button class="button button--article-state button--article-publish restore" type="button">Restore</button>
-                        <a class="button--article-link" href="{{ cancelVersionRestoreUrl }}">Cancel</a>
+                        <a class="button--article-link" href="{{ cancelVersionRestoreUrl }}">Return to current</a>
                     {{/compare}}
                 {{/compare}}
             </div>
