@@ -201,7 +201,7 @@ trait WebCoreAssetTrait
             unlink($fileLocation);
         }
 
-        if ($useWebp && $assetSizeCode && $fileType != 'image/gif') {
+        if ($useWebp && $assetSizeCode && !$returnOriginalFile && $fileType != 'image/gif') {
             $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
             $returnValue = AssetService::generateOutput($command);
 
