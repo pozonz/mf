@@ -36,6 +36,8 @@ trait WebCoreAssetTrait
      */
     public function assetImage(Request $request, $assetCode, $assetSizeCode = null, $fileName = null)
     {
+        ini_set('memory_limit', '512M');
+
         $useWebp = in_array('image/webp', $request->getAcceptableContentTypes());
         $returnOriginalFile = $assetSizeCode && $assetSizeCode != 1 ? 0 : 1;
 
@@ -201,7 +203,7 @@ trait WebCoreAssetTrait
             unlink($fileLocation);
         }
 
-        if ($useWebp && $assetSizeCode && $fileType != 'image/gif') {
+        if ($useWebp && $assetSizeCode && !$returnOriginalFile && $fileType != 'image/gif') {
             $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
             $returnValue = AssetService::generateOutput($command);
 

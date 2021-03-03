@@ -231,7 +231,9 @@ trait CmsCoreOrmTrait
 
             if ($isNew) {
                 $orm->setRank($orm->getId());
-                $orm->save();
+                $orm->save(true, [
+                    'justSaveRank' => 1,
+                ]);
             }
 
             if ($callback) {

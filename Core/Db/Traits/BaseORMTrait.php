@@ -81,11 +81,17 @@ trait BaseORMTrait
      */
     public function save($doNotSaveVersion = false, $options = [])
     {
+        if (isset($options['justSaveRank']) && $options['justSaveRank'] == 1) {
+            $options['doNotUpdateModified'] = 1;
+            $options['doNotUpdateSlug'] = 1;
+            $doNotSaveVersion = 1;
+        }
+
         if (!$doNotSaveVersion && $this instanceof VersionInterface) {
             $this->saveVersion();
         }
 
-        $doNotUpdateModified = $options['doNotUpdateModified'] ?? false;
+        $doNotUpdateModified = $options['doNotUpdateModified'] ?? 0;
         if (!$doNotUpdateModified) {
             $this->setModified(date('Y-m-d H:i:s'));
         }

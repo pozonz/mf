@@ -134,7 +134,7 @@ trait CmsCoreRestFileTrait
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
         $fullClass = ModelService::fullClass($this->connection, 'Asset');
         if ($keyword) {
-            $limit = 24;
+            $limit = 120;
 
             $data = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.isFolder = 0 AND (m.title LIKE ? OR m.code LIKE ?)',
@@ -149,7 +149,7 @@ trait CmsCoreRestFileTrait
             ));
 
         } else {
-            $limit = 23;
+            $limit = 119;
 
             $data = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.isFolder = 0 AND m.parentId = ?',
