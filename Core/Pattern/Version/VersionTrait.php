@@ -107,6 +107,7 @@ trait VersionTrait
         $this->setId(null);
         $this->setUniqid(Uuid::uuid4());
         $this->setAdded(date('Y-m-d H:i:s'));
+        $this->setIsDraft(1);
         $this->save(true);
         return $this;
     }

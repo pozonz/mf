@@ -9,6 +9,7 @@ use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -102,9 +103,14 @@ trait CmsCoreOrmTrait
      */
     public function copyOrm(Request $request, $className, $ormId)
     {
+        $user = UtilsService::getUser($this->container);
+
         $orm = $this->_orm($request, $className, $ormId);
-        $orm->setUniqid(uniqid());
+        $orm->setUniqid(Uuid::uuid4());
         $orm->setId(null);
+        $orm->setLastEditedBy(null);
+        $orm->setModified(date('Y-m-d H:i:s'));
+        $orm->setAdded(date('Y-m-d H:i:s'));
         return $this->_ormPageWithForm($request, $className, $orm);
     }
 
@@ -171,26 +177,35 @@ trait CmsCoreOrmTrait
 
                 $newOrm = $orm->savePreview();
                 $newOrm->setLastEditedBy($user->getId());
-                $newOrm->save();
+                $newOrm->save(true);
                 throw new RedirectException($orm->getFrontendUrl() . "?__preview_" . strtolower($model->getClassName()) . "=" . $newOrm->getVersionUuid());
 
             } elseif ($submitButtonValue == 'Save as draft') {
                 $user = UtilsService::getUser($this->container);
 
-                $newOrm = $orm->saveDraft();
-                $newOrm->setLastEditedBy($user->getId());
-                $newOrm->save();
-
-                $pathInfo = $request->getPathInfo();
                 if ($isNew) {
                     $orm->setLastEditedBy($user->getId());
-                    $orm->save(true);
+                    $orm->save();
+                }
+
+                $newOrm = $orm->saveDraft();
+                $newOrm->setLastEditedBy($user->getId());
+                $newOrm->save(true);
+
+                $pathInfo = $request->getPathInfo();
+
+                if ($isNew) {
+                    $copyIdx = strpos($pathInfo, '/copy/');
+                    if ($copyIdx !== false) {
+                        $pathInfo = substr($pathInfo, 0, $copyIdx) . '/new';
+                    }
 
                     $pathInfoFragments = explode('/', $pathInfo);
                     array_pop($pathInfoFragments);
                     array_push($pathInfoFragments, $newOrm->getVersionId());
                     $pathInfo = implode('/', $pathInfoFragments);
                 }
+
                 throw new RedirectException($pathInfo . "/version/" . $newOrm->getVersionUuid() . '?returnUrl=' . urlencode($returnUrl));
 
             } elseif ($submitButtonValue == 'Update') {
@@ -230,7 +245,7 @@ trait CmsCoreOrmTrait
             $orm->save();
 
             if ($isNew) {
-                $orm->setRank($orm->getId());
+                $orm->setRank(0 - $orm->getId());
                 $orm->save(true, [
                     'justSaveRank' => 1,
                 ]);
