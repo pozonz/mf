@@ -36,6 +36,8 @@ trait WebCoreAssetTrait
      */
     public function assetImage(Request $request, $assetCode, $assetSizeCode = null, $fileName = null)
     {
+        ini_set('memory_limit', '512M');
+
         $useWebp = in_array('image/webp', $request->getAcceptableContentTypes());
         $returnOriginalFile = $assetSizeCode && $assetSizeCode != 1 ? 0 : 1;
 
