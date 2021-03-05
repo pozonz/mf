@@ -68,6 +68,7 @@ trait WebCoreAssetTrait
         if (!$returnOriginalFile && !$useWebp && file_exists($thumbnail) && file_exists($thumbnailHeader)) {
             $header = json_decode(file_get_contents($thumbnailHeader));
             if ($header) {
+                $header = (array)$header;
                 $header['Surrogate-Key'] = 'asset' . $asset->getId();
                 return $this->getBinaryFileResponse($thumbnail, $header);
             }
@@ -76,6 +77,7 @@ trait WebCoreAssetTrait
         if (!$returnOriginalFile && $useWebp && file_exists($webpThumbnail) && file_exists($webpThumbnailHeader)) {
             $header = json_decode(file_get_contents($webpThumbnailHeader));
             if ($header) {
+                $header = (array)$header;
                 $header['Surrogate-Key'] = 'asset' . $asset->getId();
                 return $this->getBinaryFileResponse($webpThumbnail, $header);
             }
