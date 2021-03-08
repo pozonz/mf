@@ -26,6 +26,21 @@ trait ProductTrait
     }
 
     /**
+     * @return mixed
+     */
+    public function objGallery()
+    {
+        $fullClass = ModelService::fullClass($this->getPdo(), 'AssetOrm');
+        return array_filter(array_map(function ($itm) {
+            $fullClass = ModelService::fullClass($this->getPdo(), 'Asset');
+            return $fullClass::getById($this->getPdo(), $itm->getTitle());
+        }, $fullClass::active($this->getPdo(), [
+            'whereSql' => 'm.ormId = ?',
+            'params' => [$this->getUniqid()],
+        ])));
+    }
+
+    /**
      * @param $customer
      * @return float|int
      */
@@ -51,8 +66,7 @@ trait ProductTrait
      */
     public function objVariants()
     {
-        $className = CartService::getProductVariantClassName();
-        $fullClass = ModelService::fullClass($this->getPdo(), $className);
+        $fullClass = ModelService::fullClass($this->getPdo(), 'ProductVariant');
         return $fullClass::active($this->getPdo(), [
             'whereSql' => 'm.productUniqid = ? AND m.status = 1',
             'params' => [$this->getUniqid()],
