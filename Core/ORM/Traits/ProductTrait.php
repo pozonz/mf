@@ -16,7 +16,8 @@ trait ProductTrait
      */
     public function objImageUrl()
     {
-        return '';
+        $gallery = $this->objGallery();
+        return count($gallery) > 0 ? "/images/assets/{$gallery[0]->getId()}/medium" : "/images/assets/" . getenv('PRODUCT_PLACEHOLDER_ID') . "/medium";
     }
 
     /**

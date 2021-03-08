@@ -16,7 +16,7 @@
     "parentId": null,
     "closed": null,
     "extraInfo": null,
-    "siteMapUrl": "\/products\/{{slug}}\/{{id}}",
+    "siteMapUrl": "\/product\/{{slug}}\/{{id}}",
     "versionUuid": "",
     "versionId": null,
     "oldId": null,
