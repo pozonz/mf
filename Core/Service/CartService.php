@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Core\Service;
 
 use Doctrine\DBAL\Connection;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -22,7 +23,7 @@ class CartService
     const CUSTOMER_GOOGLE = 2;
     const CUSTOMER_FACEBOOK = 3;
 
-    const SESSION_ID = 'order_container_id';
+    const SESSION_ID = '__order_container_id';
 
     /**
      * @var Connection
@@ -85,8 +86,6 @@ class CartService
 
                 //created a new order only
                 $order = new $fullClass($this->connection);
-                $order->setCategory(static::STATUS_UNPAID);
-                $order->setBillingSame(1);
                 $order->save();
 
                 //reset the order id
@@ -94,16 +93,17 @@ class CartService
                 $order->save();
 
             } else if ($order->getCategory() != static::STATUS_UNPAID) {
+
                 $oldOrder = clone $order;
 
                 //created a new order and copy the current items over
                 $order->setId(null);
-                $order->setUniqId(uniqid());
+                $order->setUniqId(Uuid::uuid4());
+                $order->setAdded(date('Y-m-d H:i:s'));
+                $order->setModified(date('Y-m-d H:i:s'));
                 $order->setSubmitted(null);
                 $order->setSubmittedDate(null);
                 $order->setCategory(static::STATUS_UNPAID);
-                $order->setAdded(date('Y-m-d H:i:s'));
-                $order->setModified(date('Y-m-d H:i:s'));
                 $order->save();
 
                 //reset the order id
@@ -126,8 +126,8 @@ class CartService
                 $order->setCustomerName($customer->getFirstName() . ' ' . $customer->getLastName());
 
                 //if empty, fill customer's info as default
-                $order->setBillingFirstName($order->getBillingFirstName() ?: $customer->getFirstName());
-                $order->setBillingLastname($order->getBillingLastName() ?: $customer->getLastName());
+                $order->setShippingFirstName($order->getShippingFirstName() ?: $customer->getFirstName());
+                $order->setShippingLastName($order->getShippingLastName() ?: $customer->getLastName());
                 $order->setEmail($order->getEmail() && filter_var($order->getEmail(), FILTER_VALIDATE_EMAIL) ? $order->getEmail() : $customer->getTitle());
             }
 
@@ -149,26 +149,12 @@ class CartService
     {
         foreach ($oldOrder->objOrderItems() as $oi) {
             $oi->setId(null);
-            $oi->setUniqId(uniqid());
+            $oi->setUniqId(Uuid::uuid4());
             $oi->setOrderId($newOrder->getId());
+            $oi->setAdded(date('Y-m-d H:i:s'));
+            $oi->setModified(date('Y-m-d H:i:s'));
             $oi->save();
         }
-    }
-
-    /**
-     * @return array|false|string
-     */
-    static public function getProductClassName()
-    {
-        return getenv('PRODUCT_CLASSNAME') ?: 'Product';
-    }
-
-    /**
-     * @return array|false|string
-     */
-    static public function getProductVariantClassName()
-    {
-        return getenv('PRODUCT_VARIANT_CLASSNAME') ?: 'ProductVariant';
     }
 
     /**

@@ -2,19 +2,19 @@
 //Last updated: 2019-09-27 09:24:36
 namespace MillenniumFalcon\Core\ORM\Traits;
 
+use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\Service\CartService;
 use MillenniumFalcon\Core\Service\ModelService;
 
 trait OrderTrait
 {
     protected $orderItems;
 
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    public function objShippingOptions()
+    public function __construct(Connection $pdo)
     {
-
+        $this->setCategory(CartService::STATUS_UNPAID);
+        $this->setBillingSame(1);
+        parent::__construct($pdo);
     }
 
     /**
@@ -106,6 +106,15 @@ trait OrderTrait
             'limit' => 1,
             'oneOrNull' => 1,
         ));
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function objShippingOptions()
+    {
+
     }
 
     /**

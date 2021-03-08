@@ -6,7 +6,7 @@ use MillenniumFalcon\Core\ORM\Traits\ProductVariantTrait;
 use MillenniumFalcon\Core\Pattern\Cart\CartProductVariantInterface;
 use MillenniumFalcon\Core\Pattern\Cart\CartProductVariantTrait;
 
-class ProductVariant extends \MillenniumFalcon\Core\ORM\Generated\ProductVariant implements CartProductVariantInterface
+class ProductVariant extends \MillenniumFalcon\Core\ORM\Generated\ProductVariant
 {
-    use ProductVariantTrait, CartProductVariantTrait;
+    use ProductVariantTrait;
 }

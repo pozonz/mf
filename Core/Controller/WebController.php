@@ -19,8 +19,6 @@ class WebController extends RouterController
     const AB_TEST_TOKEN_NAME = '_abt';
 
     use
-        WebCartAjaxTrait,
-        WebCartPageTrait,
         WebCoreAssetTrait,
         WebCoreTrait
         ;
