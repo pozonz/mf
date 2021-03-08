@@ -8,6 +8,8 @@ use MillenniumFalcon\Core\Service\ModelService;
 
 trait ProductTrait
 {
+    protected $_gallery;
+
     /**
      * To be overwritten
      * @return string
@@ -30,14 +32,17 @@ trait ProductTrait
      */
     public function objGallery()
     {
-        $fullClass = ModelService::fullClass($this->getPdo(), 'AssetOrm');
-        return array_filter(array_map(function ($itm) {
-            $fullClass = ModelService::fullClass($this->getPdo(), 'Asset');
-            return $fullClass::getById($this->getPdo(), $itm->getTitle());
-        }, $fullClass::active($this->getPdo(), [
-            'whereSql' => 'm.ormId = ?',
-            'params' => [$this->getUniqid()],
-        ])));
+        if (!$this->_gallery) {
+            $fullClass = ModelService::fullClass($this->getPdo(), 'AssetOrm');
+            $this->_gallery = array_filter(array_map(function ($itm) {
+                $fullClass = ModelService::fullClass($this->getPdo(), 'Asset');
+                return $fullClass::getById($this->getPdo(), $itm->getTitle());
+            }, $fullClass::active($this->getPdo(), [
+                'whereSql' => 'm.ormId = ?',
+                'params' => [$this->getUniqid()],
+            ])));
+        }
+        return $this->_gallery;
     }
 
     /**
