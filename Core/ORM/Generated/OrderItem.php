@@ -39,7 +39,7 @@ class OrderItem extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $compareAt;
+    private $compareAtPrice;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -155,17 +155,17 @@ class OrderItem extends Base
     /**
      * @return mixed
      */
-    public function getCompareAt()
+    public function getCompareAtPrice()
     {
-        return $this->compareAt;
+        return $this->compareAtPrice;
     }
     
     /**
-     * @param mixed compareAt
+     * @param mixed compareAtPrice
      */
-    public function setCompareAt($compareAt)
+    public function setCompareAtPrice($compareAtPrice)
     {
-        $this->compareAt = $compareAt;
+        $this->compareAtPrice = $compareAtPrice;
     }
     
     /**

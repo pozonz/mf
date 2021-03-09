@@ -10,6 +10,8 @@ trait ProductTrait
 {
     protected $_gallery;
 
+    protected $_variants;
+
     /**
      * To be overwritten
      * @return string
@@ -17,7 +19,7 @@ trait ProductTrait
     public function objImageUrl()
     {
         $gallery = $this->objGallery();
-        return count($gallery) > 0 ? "/images/assets/{$gallery[0]->getId()}/medium" : "/images/assets/" . getenv('PRODUCT_PLACEHOLDER_ID') . "/medium";
+        return count($gallery) > 0 ? "/images/assets/{$gallery[0]->getId()}/medium" : "/images/assets/" . getenv('PRODUCT_PLACEHOLDER_ID') . "/1";
     }
 
     /**
@@ -47,23 +49,15 @@ trait ProductTrait
     }
 
     /**
-     * @param $customer
-     * @return float|int
+     * @return mixed|null
+     * @throws \Exception
      */
-    public function calculatedSalePrice($customer)
+    public function objVariant()
     {
-        $price = $this->getSalePrice() ?: 0;
-        return CartService::getCalculatedPrice($this, $customer, $price);
-    }
-
-    /**
-     * @param $customer
-     * @return float|int
-     */
-    public function calculatedPrice($customer)
-    {
-        $price = $this->getPrice() ?: 0;
-        return CartService::getCalculatedPrice($this, $customer, $price);
+        if ($this->_variants) {
+            $this->objVariants();
+        }
+        return count($this->_variants) ? array_shift($this->_variants) : null;
     }
 
     /**
@@ -72,11 +66,14 @@ trait ProductTrait
      */
     public function objVariants()
     {
-        $fullClass = ModelService::fullClass($this->getPdo(), 'ProductVariant');
-        return $fullClass::active($this->getPdo(), [
-            'whereSql' => 'm.productUniqid = ? AND m.status = 1',
-            'params' => [$this->getUniqid()],
-        ]);
+        if (!$this->_variants) {
+            $fullClass = ModelService::fullClass($this->getPdo(), 'ProductVariant');
+            $this->_variants = $fullClass::active($this->getPdo(), [
+                'whereSql' => 'm.productUniqid = ? AND m.status = 1',
+                'params' => [$this->getUniqid()],
+            ]);
+        }
+        return $this->_variants;
     }
 
     /**

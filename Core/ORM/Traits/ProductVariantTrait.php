@@ -7,45 +7,20 @@ use MillenniumFalcon\Core\Service\ModelService;
 
 trait ProductVariantTrait
 {
-    protected $product;
+    protected $_product;
 
     /**
      * @return mixed
      */
     public function objProduct()
     {
-        if (!$this->product) {
+        if (!$this->_product) {
             $fullClass = ModelService::fullClass($this->getPdo(), 'Product');
             if ($fullClass) {
-                $this->product = $fullClass::getByField($this->getPdo(), 'uniqid', $this->getProductUniqid());
+                $this->_product = $fullClass::getByField($this->getPdo(), 'uniqid', $this->getProductUniqid());
             }
         }
-        return $this->product;
-    }
-
-    /**
-     * @return string
-     */
-    public function objImageUrl()
-    {
-        $product = $this->objProduct();
-        if ($product) {
-            return $product->objImageUrl();
-        }
-        return '';
-    }
-
-    /**
-     * @return string
-     */
-    public function objProductPageUrl()
-    {
-        $product = $this->objProduct();
-        if ($product) {
-            return $product->objProductPageUrl();
-        }
-
-        return $this->getFrontendUrl();
+        return $this->_product;
     }
 
     /**
@@ -68,37 +43,6 @@ trait ProductVariantTrait
         $product = $this->objProduct();
         $price = $this->getPrice() ?: 0;
         return CartService::getCalculatedPrice($product ?: $this, $customer, $price);
-    }
-
-    /**
-     * @return string
-     * @throws \Exception
-     */
-    public function objTitle()
-    {
-        $product = $this->objProduct();
-        if ($product) {
-            return $product->getTitle() . ' - ' . $this->getTitle();
-        } else {
-            return $this->getTitle();
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function objOnSaleActive()
-    {
-        if (!$this->getOnSale()) {
-            return false;
-        }
-        if ($this->getSaleStart() && strtotime($this->getSaleStart()) > time()) {
-            return false;
-        }
-        if ($this->getSaleEnd() && strtotime($this->getSaleEnd()) < time()) {
-            return false;
-        }
-        return true;
     }
 
     /**

@@ -13,24 +13,13 @@ trait OrderItemTrait
      * @return mixed
      * @throws \Exception
      */
-    public function objProductVariant()
+    public function objVariant()
     {
         if (!$this->variant) {
-            $className = CartService::getProductVariantClassName();
-            $fullClass = ModelService::fullClass($this->getPdo(), $className);
+            $fullClass = ModelService::fullClass($this->getPdo(), 'ProductVariant');
             $this->variant = $fullClass::getById($this->getPdo(), $this->getProductId());
         }
         return $this->variant;
-    }
-
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public function objTitle()
-    {
-        $variant = $this->objProductVariant();
-        return $variant->objTitle();
     }
 
     /**
@@ -43,48 +32,40 @@ trait OrderItemTrait
             return false;
         }
 
-        $variant = $this->objProductVariant();
+        $variant = $this->objVariant();
         if (!$variant || !$variant->getStatus()) {
             $this->delete();
             return false;
         }
 
         $product = $variant->objProduct();
-        if ($product) {
-            $this->setOnSaleActive($product->objOnSaleActive());
-            $this->setNoPromoDiscount($product->getNoPromoDiscount());
-            $this->setImageUrl($product->objImageUrl());
-            $this->setProductPageUrl($product->objProductPageUrl());
-        } else {
-            $this->setOnSaleActive($variant->objOnSaleActive());
-            $this->setNoPromoDiscount($variant->getNoPromoDiscount());
-            $this->setImageUrl($variant->objImageUrl());
-            $this->setProductPageUrl($variant->objProductPageUrl());
+        if (!$product || !$product->getStatus()) {
+            $this->delete();
+            return false;
         }
 
-        if ($this->getOnSaleActive()) {
+        $this->setImageUrl($product->objImageUrl());
+        $this->setProductPageUrl($product->objProductPageUrl());
+        $this->setWeight($variant->getShippingUnits() ?: 0);
+
+        if ($product->objOnSaleActive()) {
             $this->setPrice($variant->calculatedSalePrice($customer));
+            $this->setCompareAtPrice($variant->calculatedPrice($customer));
         } else {
-            $this->setPrice($this->getCompareAtPrice());
+            $this->setPrice($variant->calculatedPrice($customer));
         }
 
-        $this->setWeight($variant->getWeight());
-        $this->setCompareAtPrice($variant->calculatedPrice($customer));
 
         $discountType = $order->getDiscountType();
         $discountValue = $order->getDiscountValue();
 
-        $this->setDiscount(0);
-        if ($discountType == 1 && !$this->getNoPromoDiscount()) {
+        if ($discountType == 1 && !$product->getNoPromoDiscount()) {
+            $this->setCompareAtPrice($this->getCompareAtPrice() ?: $this->getPrice());
             $afterDiscount = $this->getPrice() * (100 - $discountValue) / 100;
             $discountedTotal = $this->getPrice() - $afterDiscount;
             $this->setPrice($afterDiscount);
-            $this->setDiscount($discountedTotal);
         }
 
-        $this->setTotalPrice(($this->getPrice() ?: 0) * $this->getQuantity());
-        $this->setTotalWeight(($this->getWeight() ?: 0) * $this->getQuantity());
-        $this->setTotalDiscount(($this->getDiscount() ?: 0) * $this->getQuantity());
         $this->save();
         return true;
     }

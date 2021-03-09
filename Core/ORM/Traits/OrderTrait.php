@@ -8,7 +8,7 @@ use MillenniumFalcon\Core\Service\ModelService;
 
 trait OrderTrait
 {
-    protected $orderItems;
+    protected $_orderItems;
 
     public function __construct(Connection $pdo)
     {
@@ -46,25 +46,22 @@ trait OrderTrait
 
         $subtotalCompareAtPrice = 0;
         $subtotalPrice = 0;
-        $subtotalDiscount = 0;
         $subtotalWeight = 0;
 
         $orderItems = $this->objOrderItems();
         foreach ($orderItems as $idx => $itm) {
             $itm->update($this, $customer);
 
-            $subtotalCompareAtPrice += $itm->getTotalCompareAtPrice();
-            $subtotalPrice += $itm->getTotalPrice();
-            $subtotalDiscount += $itm->getTotalDiscount();
-            $subtotalWeight += $itm->getTotalWeight();
+            $subtotalCompareAtPrice += ($itm->getCompareAtPrice() ?: $itm->getPrice()) * $itm->getQuantity();
+            $subtotalPrice += $itm->getPrice() * $itm->getQuantity();
+            $subtotalWeight += $itm->getWeight() * $itm->getQuantity();
         }
 
-        $freeDelivery = 0;
+        $subtotalDiscount = $subtotalCompareAtPrice - $subtotalPrice;
 
-        $gst = round(($subtotalPrice * 3) / 23, 2);
-
+        $gst = ($subtotalPrice * 3) / 23;
         $deliveryFee = $this->getShippingCost() ?: 0;
-        $total = $subtotalPrice + max($deliveryFee, 0);
+        $total = $subtotalPrice + $deliveryFee;
 
         $this->setWeight($subtotalWeight);
         $this->setSubtotal($subtotalCompareAtPrice);
@@ -83,14 +80,16 @@ trait OrderTrait
      */
     public function objOrderItems()
     {
-        if (!$this->orderItems) {
+        if (!$this->_orderItems) {
             $fullClass = ModelService::fullClass($this->getPdo(), 'OrderItem');
-            $this->orderItems = $fullClass::active($this->getPdo(), array(
+            $this->_orderItems = $fullClass::active($this->getPdo(), array(
                 'whereSql' => 'm.orderId = ?',
                 'params' => array($this->getId()),
+                'sort' => 'm.id',
+                'order' => 'DESC',
             ));
         }
-        return $this->orderItems;
+        return $this->_orderItems;
     }
 
     /**
