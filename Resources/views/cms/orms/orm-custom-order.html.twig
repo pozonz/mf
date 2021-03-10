@@ -143,7 +143,6 @@
 					<td class="text-right font-weight-bold" colspan="2">After discount:</td>
 					<td class="text-right font-weight-bold">
 						${{ orm.afterDiscount|number_format(2, '.', ',') }}
-						<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
 					</td>
 				</tr>
 			{% else %}
@@ -152,7 +151,6 @@
 					<td class="text-right font-weight-bold" colspan="2">Subtotal:</td>
 					<td class="text-right font-weight-bold">
 						${{ orm.subtotal|number_format(2, '.', ',') }}
-						<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
 					</td>
 				</tr>
 			{% endif %}
@@ -162,13 +160,16 @@
 				<td class="text-right font-weight-bold" colspan="2">Delivery fee:</td>
 				<td class="text-right font-weight-bold">
 					${{ orm.shippingCost|number_format(2, '.', ',') }}
-					<div><small>({{ orm.shippingTitle }})</small></div>
+					{% if orm.shippingTitle %}<div><small>({{ orm.shippingTitle }})</small></div>{% endif %}
 				</td>
 			</tr>
 			<tr>
 				<td style="border: none;"></td>
 				<td class="text-right font-weight-bold" colspan="2">Total:</td>
-				<td class="text-right font-weight-bold">${{ orm.total|number_format(2, '.', ',') }}</td>
+				<td class="text-right font-weight-bold">
+					${{ orm.total|number_format(2, '.', ',') }}
+					<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
+				</td>
 			</tr>
 		</tbody>
 	</table>
