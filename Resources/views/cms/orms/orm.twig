@@ -22,6 +22,7 @@
 {% endblock %}
 
 {% block container %}
+	<input id="isNew" value="{{ orm.id ? 0 : 1 }}" type="hidden">
 	<input id="canBePreviewed" value="{{ orm.canBePreviewed ? 1 : 0 }}" type="hidden">
 	<input id="isRestoringFromVersion" value="{{ versionOrm ? 1 : 0 }}" type="hidden">
 	<input id="versionOrmId" value="{{ versionOrm ? versionOrm.id : '' }}" type="hidden">

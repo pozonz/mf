@@ -108,6 +108,7 @@ trait CmsCoreOrmTrait
         $orm = $this->_orm($request, $className, $ormId);
         $orm->setUniqid(Uuid::uuid4());
         $orm->setId(null);
+        $orm->setStatus(0);
         $orm->setLastEditedBy(null);
         $orm->setModified(date('Y-m-d H:i:s'));
         $orm->setAdded(date('Y-m-d H:i:s'));

@@ -182,8 +182,8 @@
                 <!-- Drafts -->
                 {{#compare isRestoringFromVersion 1 operator='==' }}
                     {{#compare isDraft 1 operator='==' }}
-                        <button class="button button--article-state button--article-draft update" type="button">Save draft version</button>
-                        <button class="button button--article-state button--article-publish restore" type="button">Publish draft version</button>
+                        <button class="button button--article-state button--article-draft update" type="button">Save draft</button>
+                        <button class="button button--article-state button--article-publish restore" type="button">Publish draft</button>
                         <!-- <button class="button--article-link button--article-link--delete" type="button"><i class="button--article-link--delete__icon"></i>Delete draft</a> -->
                         <a class="button--article-link" href="{{ cancelVersionRestoreUrl }}">Return to current</a>
                     {{/compare}}
@@ -193,7 +193,9 @@
                 {{#compare isRestoringFromVersion 1 operator='!=' }}
                     <button class="button button--article-state button--article-publish js-orm-apply" type="button" value="Apply">Save</button>
                     {{#compare canBePreviewed 1 operator='==' }}
-                        <button class="button--article-link js-orm-draft" type="button">Save as new draft version</button>
+                        {{#compare isNew 1 operator='!=' }}
+                            <button class="button--article-link js-orm-draft" type="button">Save as new draft version</button>
+                        {{/compare}}
                     {{/compare}}
                     <!--
                     {{#compare returnUrl '' operator='!=' }}
