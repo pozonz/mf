@@ -7,6 +7,7 @@ use MillenniumFalcon\Core\Form\Builder\ModelForm;
 use MillenniumFalcon\Core\ORM\_Model;
 use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use MillenniumFalcon\Core\Service\ModelService;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -38,6 +39,8 @@ trait CmsCoreModelTrait
         }
 
         $model->setId(null);
+        $model->setSlug(null);
+        $model->setUniqid(Uuid::uuid4());
         return $this->_model($request, $model);
     }
 
