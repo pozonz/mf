@@ -144,6 +144,6 @@ trait ProductTrait
      */
     static public function getCmsOrmsTwig()
     {
-        return 'cms/orms/orms-custom-product.html.twig';
+        return 'cms/orms/orms-custom-product.twig';
     }
 }

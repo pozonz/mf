@@ -107,7 +107,7 @@
 						<small>{{ itm.sku }}</small>
 					</td>
 					<td class="text-right">
-						{% if itm.onSaleActive %}
+						{% if itm.compareAtPrice %}
 							<del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>
 							<small>$</small>
 							{{ itm.price|number_format(2, '.', ',') }}
@@ -117,7 +117,7 @@
 						{% endif %}
 					</td>
 					<td class="text-right">{{ itm.quantity }}</td>
-					<td class="text-right">${{ itm.totalPrice|number_format(2, '.', ',') }}</td>
+					<td class="text-right">${{ (itm.price * itm.quantity)|number_format(2, '.', ',') }}</td>
 				</tr>
 			{% endfor %}
 
