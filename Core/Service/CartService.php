@@ -174,4 +174,20 @@ class CartService
         }
         return $price * ((100 - $customerMembership->getDiscount()) / 100);
     }
+
+    /**
+     * @return array|false|string
+     */
+    static public function getProductClassName()
+    {
+        return getenv('PRODUCT_CLASSNAME') ?: 'Product';
+    }
+
+    /**
+     * @return array|false|string
+     */
+    static public function getProductVariantClassName()
+    {
+        return getenv('PRODUCT_VARIANT_CLASSNAME') ?: 'ProductVariant';
+    }
 }
