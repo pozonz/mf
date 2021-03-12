@@ -38,7 +38,6 @@ class WebController extends RouterController
      */
     protected $cartService;
 
-
     /**
      * WebController constructor.
      * @param Connection $connection
