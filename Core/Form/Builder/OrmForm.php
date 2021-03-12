@@ -122,6 +122,14 @@ class OrmForm extends AbstractType
                     }
 
                     $column->sql = str_replace($matches[0], "FROM $tablename", $column->sql);
+
+                    $model = $orm->getModel();
+                    $fullClass = ModelService::fullClass($pdo, $model->getClassName());
+                    $fields = array_keys($fullClass::getFields());
+                    foreach ($fields as $itm) {
+                        $getMethod = "get" . ucfirst($itm);
+                        $column->sql = str_replace("{{{$itm}}}", "'{$orm->$getMethod()}'", $column->sql);
+                    }
                 }
 
                 $result = [];
