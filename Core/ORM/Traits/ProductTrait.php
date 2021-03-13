@@ -43,6 +43,8 @@ trait ProductTrait
             }, $fullClass::active($this->getPdo(), [
                 'whereSql' => 'm.ormId = ?',
                 'params' => [$this->getUniqid()],
+                'sort' => 'CAST(myRank AS UNSIGNED)',
+                'order' => 'ASC',
             ])));
         }
         return $this->_gallery;

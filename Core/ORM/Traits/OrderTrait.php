@@ -92,6 +92,12 @@ trait OrderTrait
         return $this->_orderItems;
     }
 
+    
+    public function objJsonOrderItems()
+    {
+        return $this->objOrderItems();
+    }
+
     /**
      * @return mixed
      * @throws \Exception
@@ -131,5 +137,4 @@ trait OrderTrait
     {
         return 'cms/orms/orm-custom-order.html.twig';
     }
-
 }
