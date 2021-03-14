@@ -23,50 +23,51 @@ trait OrderTrait
      */
     public function update($customer)
     {
-        $discountType = 0;
-        $discountValue = 0;
-
         $fullClass = ModelService::fullClass($this->getPdo(), 'PromoCode');
         $promoCode = $fullClass::getByField($this->getPdo(), 'code', $this->getPromoCode());
         if ($promoCode && $promoCode->isValid()) {
-            $discountType = $promoCode->getPerc() == 1 ? 1 : 2;
-            $discountValue = $promoCode->getValue();
-            if ($promoCode->getPerc() == 1) {
-                $discountValue = round(($promoCode->getValue() / 100) * $resultPriceToDiscount, 2);
-            }
-
+            $this->setDiscountType($promoCode->getType());
+            $this->setDiscountValue($promoCode->getValue());
             $this->setPromoId($promoCode->getId());
         } else {
-            //invalid promo code
+            $this->setDiscountType(null);
+            $this->setDiscountValue(null);
             $this->setPromoId(null);
         }
 
-        $this->setDiscountType($discountType);
-        $this->setDiscountValue($discountValue);
-
-        $subtotalCompareAtPrice = 0;
-        $subtotalPrice = 0;
-        $subtotalWeight = 0;
+        $subtotal = 0;
+        $weight = 0;
+        $discount = 0;
+        $afterDiscount = 0;
 
         $orderItems = $this->objOrderItems();
         foreach ($orderItems as $idx => $itm) {
             $itm->update($this, $customer);
 
-            $subtotalCompareAtPrice += ($itm->getCompareAtPrice() ?: $itm->getPrice()) * $itm->getQuantity();
-            $subtotalPrice += $itm->getPrice() * $itm->getQuantity();
-            $subtotalWeight += $itm->getWeight() * $itm->getQuantity();
+            $itmSubtotal = $itm->getPrice() * $itm->getQuantity();
+
+            $subtotal += $itmSubtotal;
+            $weight += $itm->getWeight() * $itm->getQuantity();
+
+            if ($this->getDiscountType() == 2) {
+                $discount += round($itmSubtotal * ($this->getDiscountValue() / 100), 2);
+            }
         }
 
-        $subtotalDiscount = $subtotalCompareAtPrice - $subtotalPrice;
 
-        $gst = ($subtotalPrice * 3) / 23;
+        if ($this->getDiscountType() == 1) {
+            $discount = $this->getDiscountValue();
+        }
+
+        $afterDiscount = $subtotal - $discount;
+        $gst = ($afterDiscount * 3) / 23;
         $deliveryFee = $this->getShippingCost() ?: 0;
-        $total = $subtotalPrice + $deliveryFee;
+        $total = $afterDiscount + $deliveryFee;
 
-        $this->setWeight($subtotalWeight);
-        $this->setSubtotal($subtotalCompareAtPrice);
-        $this->setDiscount($subtotalDiscount);
-        $this->setAfterDiscount($subtotalPrice);
+        $this->setWeight($weight);
+        $this->setSubtotal($subtotal);
+        $this->setDiscount($discount);
+        $this->setAfterDiscount($afterDiscount);
         $this->setTax($gst);
         $this->setShippingCost($deliveryFee);
         $this->setTotal($total);
@@ -92,7 +93,7 @@ trait OrderTrait
         return $this->_orderItems;
     }
 
-    
+
     public function objJsonOrderItems()
     {
         return $this->objOrderItems();
