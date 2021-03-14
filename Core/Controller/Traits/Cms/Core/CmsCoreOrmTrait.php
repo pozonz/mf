@@ -9,6 +9,7 @@ use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -94,6 +95,59 @@ trait CmsCoreOrmTrait
     }
 
     /**
+     * @route("/manage/orms/Product/copy/{ormId}")
+     * @route("/manage/admin/orms/Product/copy/{ormId}")
+     * @route("/manage/pages/orms/Product/copy/{ormId}")
+     * @return Response
+     */
+    public function copyOrmProduct(Request $request, $ormId)
+    {
+        $className = 'Product';
+        $orm = $this->_orm($request, $className, $ormId);
+        $oldUniqid = $orm->getUniqid();
+        $variants = $orm->objVariants();
+
+        $orm->setUniqid(Uuid::uuid4());
+        $orm->setId(null);
+        $orm->setAdded(date('Y-m-d H:i:s'));
+        $orm->setModified(date('Y-m-d H:i:s'));
+        $orm->setSku(null);
+
+        $model = $orm->getModel();
+        $columnsJson = json_decode($model->getColumnsJson());
+        foreach ($columnsJson as $itm) {
+            if ($itm->widget == '\\MillenniumFalcon\\Core\\Form\\Type\\AssetFolderPicker') {
+                $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
+                $assetOrms = $fullClass::data($this->connection, [
+                    'whereSql' => 'm.attributeName = ? AND m.ormId = ?',
+                    'params' => ["orm_{$itm->column}", $oldUniqid],
+                ]);
+
+                foreach ($assetOrms as $assetOrm) {
+                    $assetOrm->setUniqid(Uuid::uuid4());
+                    $assetOrm->setId(null);
+                    $assetOrm->setAdded(date('Y-m-d H:i:s'));
+                    $assetOrm->setModified(date('Y-m-d H:i:s'));
+                    $assetOrm->setOrmId($orm->getUniqId());
+                    $assetOrm->save();
+                }
+            }
+        }
+
+        foreach ($variants as $itm) {
+            $itm->setUniqid(Uuid::uuid4());
+            $itm->setId(null);
+            $itm->setAdded(date('Y-m-d H:i:s'));
+            $itm->setModified(date('Y-m-d H:i:s'));
+            $itm->setSku(null);
+            $itm->setProductUniqid($orm->getUniqid());
+            $itm->save();
+        }
+
+        return $this->_ormPageWithForm($request, $className, $orm);
+    }
+
+    /**
      * @route("/manage/orms/{className}/copy/{ormId}")
      * @route("/manage/admin/orms/{className}/copy/{ormId}")
      * @route("/manage/pages/orms/{className}/copy/{ormId}")
@@ -102,8 +156,34 @@ trait CmsCoreOrmTrait
     public function copyOrm(Request $request, $className, $ormId)
     {
         $orm = $this->_orm($request, $className, $ormId);
-        $orm->setUniqid(uniqid());
+        $oldUniqid = $orm->getUniqid();
+
+        $orm->setUniqid(Uuid::uuid4());
         $orm->setId(null);
+        $orm->setAdded(date('Y-m-d H:i:s'));
+        $orm->setModified(date('Y-m-d H:i:s'));
+
+        $model = $orm->getModel();
+        $columnsJson = json_decode($model->getColumnsJson());
+        foreach ($columnsJson as $itm) {
+            if ($itm->widget == '\\MillenniumFalcon\\Core\\Form\\Type\\AssetFolderPicker') {
+                $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
+                $assetOrms = $fullClass::data($this->connection, [
+                    'whereSql' => 'm.attributeName = ? AND m.ormId = ?',
+                    'params' => ["orm_{$itm->column}", $oldUniqid],
+                ]);
+
+                foreach ($assetOrms as $assetOrm) {
+                    $assetOrm->setUniqid(Uuid::uuid4());
+                    $assetOrm->setId(null);
+                    $assetOrm->setAdded(date('Y-m-d H:i:s'));
+                    $assetOrm->setModified(date('Y-m-d H:i:s'));
+                    $assetOrm->setOrmId($orm->getUniqId());
+                    $assetOrm->save();
+                }
+            }
+        }
+
         return $this->_ormPageWithForm($request, $className, $orm);
     }
 

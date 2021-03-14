@@ -41,6 +41,8 @@ trait CmsCoreModelTrait
         $model->setId(null);
         $model->setSlug(null);
         $model->setUniqid(Uuid::uuid4());
+        $model->setAdded(date('Y-m-d H:i:s'));
+        $model->setModified(date('Y-m-d H:i:s'));
         return $this->_model($request, $model);
     }
 

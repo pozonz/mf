@@ -20,6 +20,7 @@ class ConstraintUniqueValidator extends ConstraintValidator
                 'joins' => $joins,
                 'whereSql' => "(m.$field = ? AND m.id != ? AND m.versionId IS NULL)" . ($extraSql ? " AND ($extraSql)" : ''),
                 'params' => array($value, $orm->getId()),
+                'debug' => 0,
             ));
         } else {
             $data = $fullClass::data($orm->getPdo(), array(

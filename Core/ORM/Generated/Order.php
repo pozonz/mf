@@ -247,6 +247,16 @@ class Order extends Base
     private $submittedDate;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $passwordInput;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $createAnAccount;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -1012,6 +1022,38 @@ class Order extends Base
     public function setSubmittedDate($submittedDate)
     {
         $this->submittedDate = $submittedDate;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPasswordInput()
+    {
+        return $this->passwordInput;
+    }
+    
+    /**
+     * @param mixed passwordInput
+     */
+    public function setPasswordInput($passwordInput)
+    {
+        $this->passwordInput = $passwordInput;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCreateAnAccount()
+    {
+        return $this->createAnAccount;
+    }
+    
+    /**
+     * @param mixed createAnAccount
+     */
+    public function setCreateAnAccount($createAnAccount)
+    {
+        $this->createAnAccount = $createAnAccount;
     }
     
 }

@@ -119,6 +119,7 @@ class CartService
             $order->setBillingSame($order->getBillingSame() ? true : false);
             $order->setBillingSave($order->getBillingSave() ? true : false);
             $order->setShippingSave($order->getShippingSave() ? true : false);
+            $order->setCreateAnAccount($order->getCreateAnAccount() ? true : false);
 
             $customer = static::getCustomer();
             if ($customer) {
