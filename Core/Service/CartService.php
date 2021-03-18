@@ -85,7 +85,7 @@ class CartService
                 $order->setTitle(UtilsService::generateHex(4) . '-' . $order->getId());
                 $order->save();
 
-            } else if ($order->getCategory() != static::STATUS_UNPAID) {
+            } else if ($order->getCategory() != $this->getStatusNew()) {
 
                 $oldOrder = clone $order;
 
@@ -104,7 +104,7 @@ class CartService
                 $order->setHummRequestQuery(null);
                 $order->setLogs(null);
 
-                $order->setCategory(static::STATUS_UNPAID);
+                $order->setCategory($this->getStatusNew());
                 $order->save();
 
                 //reset the order id

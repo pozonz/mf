@@ -172,6 +172,11 @@ class Order extends Base
     private $payType;
     
     /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $payDate;
+    
+    /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $emailContent;
@@ -847,6 +852,22 @@ class Order extends Base
     public function setPayType($payType)
     {
         $this->payType = $payType;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPayDate()
+    {
+        return $this->payDate;
+    }
+    
+    /**
+     * @param mixed payDate
+     */
+    public function setPayDate($payDate)
+    {
+        $this->payDate = $payDate;
     }
     
     /**
