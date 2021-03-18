@@ -188,7 +188,7 @@ class CartService
         foreach ($nameSpaces as $nameSpace) {
             $class = "{$nameSpace}Gateway{$paymentMethod}";
             if (class_exists($class)) {
-                return new $class($this->connection);
+                return new $class($this->connection, $this);
             }
         }
         return null;
