@@ -3,7 +3,6 @@
 namespace MillenniumFalcon\Core\ORM\Traits;
 
 use Cocur\Slugify\Slugify;
-use MillenniumFalcon\Core\Service\CartService;
 use MillenniumFalcon\Core\Service\ModelService;
 
 trait ProductTrait

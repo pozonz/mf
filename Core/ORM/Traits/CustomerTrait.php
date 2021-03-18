@@ -2,7 +2,6 @@
 
 namespace MillenniumFalcon\Core\ORM\Traits;
 
-use MillenniumFalcon\Core\Service\CartService;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,21 +20,6 @@ trait CustomerTrait
             $this->membership = $fullClass::getById($this->getPdo(), $this->getMembership());
         }
         return $this->membership;
-    }
-
-    /**
-     * @return int
-     */
-    public function objTotalSpent()
-    {
-        $fullClass = ModelService::fullClass($this->getPdo(), 'Order');
-        $total = Order::active($this->getPdo(), array(
-            'select' => 'SUM(m.total) AS count',
-            'whereSql' => 'm.customerId = ? AND m.category = ?',
-            'params' => [$this->getId(), CartService::STATUS_SUCCESS],
-            'orm' => 0.
-        ));
-        return $total[0]['count'] ?? 0;
     }
 
     /**

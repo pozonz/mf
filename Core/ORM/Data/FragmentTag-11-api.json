@@ -1,0 +1,29 @@
+{
+    "className": "FragmentTag",
+    "orm": {
+        "id": "11",
+        "uniqid": "f54657be-8562-48df-9800-9f77155027ee",
+        "slug": "api",
+        "rank": "11",
+        "added": "2021-03-16 14:11:50",
+        "modified": "2021-03-16 15:30:14",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": 1,
+        "title": "API"
+    }
+}

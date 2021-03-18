@@ -1,0 +1,31 @@
+{
+    "className": "FragmentDefault",
+    "orm": {
+        "id": "7",
+        "uniqid": "1d94b6d0-ad37-4a5a-8da2-4a54b6569d05",
+        "slug": "order",
+        "rank": "7",
+        "added": "2021-03-16 15:02:15",
+        "modified": "2021-03-16 15:03:00",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": 1,
+        "title": "Order",
+        "attr": "logs",
+        "content": "[{\"id\":\"logs\",\"title\":\"Logs:\",\"tags\":[\"11\"]}]"
+    }
+}
