@@ -26,7 +26,8 @@
     "phpoffice/phpspreadsheet": "^1.2",
     "bluem/tree": "^3.1",
     "ramsey/uuid": "^4.0",
-    "symfony/webpack-encore-bundle": "^1.8"
+    "symfony/webpack-encore-bundle": "^1.8",
+    "paypal/paypal-checkout-sdk": "^1.0"
   },
   "require-dev": {
     "symfony/profiler-pack": "^1.0"
