@@ -29,9 +29,8 @@ trait ProductVariantTrait
      */
     public function calculatedSalePrice($customer)
     {
-        $product = $this->objProduct();
         $price = $this->getSalePrice() ?: 0;
-        return CartService::getCalculatedPrice($product ?: $this, $customer, $price);
+        return $this->_getCalculatedPrice($this, $customer, $price);
     }
 
     /**
@@ -40,9 +39,28 @@ trait ProductVariantTrait
      */
     public function calculatedPrice($customer)
     {
-        $product = $this->objProduct();
         $price = $this->getPrice() ?: 0;
-        return CartService::getCalculatedPrice($product ?: $this, $customer, $price);
+        return $this->_getCalculatedPrice($this, $customer, $price);
+    }
+
+    /**
+     * @param $productOrVariant
+     * @param $customer
+     * @param $price
+     * @return float|int
+     */
+    public function _getCalculatedPrice($productOrVariant, $customer, $price)
+    {
+        $product = $this->objProduct();
+        if ($product->getNoMemberDiscount() || !$customer) {
+            return $price;
+        }
+
+        $customerMembership = $customer->objMembership();
+        if (!$customerMembership || !$customerMembership->getDiscount()) {
+            return $price;
+        }
+        return $price * ((100 - $customerMembership->getDiscount()) / 100);
     }
 
     /**

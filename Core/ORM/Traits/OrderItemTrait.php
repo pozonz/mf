@@ -2,7 +2,6 @@
 //Last updated: 2019-09-27 09:55:00
 namespace MillenniumFalcon\Core\ORM\Traits;
 
-use MillenniumFalcon\Core\Service\CartService;
 use MillenniumFalcon\Core\Service\ModelService;
 
 trait OrderItemTrait

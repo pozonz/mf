@@ -3,7 +3,6 @@
 namespace MillenniumFalcon\Core\ORM\Traits;
 
 use Doctrine\DBAL\Connection;
-use MillenniumFalcon\Core\Service\CartService;
 use MillenniumFalcon\Core\Service\ModelService;
 
 trait OrderTrait
@@ -12,7 +11,7 @@ trait OrderTrait
 
     public function __construct(Connection $pdo)
     {
-        $this->setCategory(CartService::STATUS_UNPAID);
+        $this->setCategory(0);
         $this->setBillingSame(1);
         parent::__construct($pdo);
     }
@@ -121,6 +120,14 @@ trait OrderTrait
     public function objShippingOptions()
     {
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function objHummRequestQuery()
+    {
+        return (array)json_decode($this->getHummRequestQuery());
     }
 
     /**

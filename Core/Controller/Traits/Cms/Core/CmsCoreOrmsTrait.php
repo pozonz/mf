@@ -307,8 +307,8 @@ trait CmsCoreOrmsTrait
 //        $params['filterStatus'] = $status;
 //        $params['filterKeyword'] = $keyword;
 
-        $sqlWhere = 'm.category != ?';
-        $sqlParams = [0];
+        $sqlWhere = 'm.category >= ?';
+        $sqlParams = [20];
 
 //        if ($status != 0) {
 //            $sqlWhere .= ($sqlWhere ? ' AND ' : '') . '(m.status = ?)';

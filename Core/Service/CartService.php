@@ -12,13 +12,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class CartService
 {
-    const STATUS_UNPAID = 0;
-    const STATUS_SUBMITTED = 1;
-    const STATUS_SUCCESS = 2;
-
-    const DELIVERY_HIDDEN = 0;
-    const DELIVERY_VISIBLE = 1;
-
     const CUSTOMER_WEBSITE = 1;
     const CUSTOMER_GOOGLE = 2;
     const CUSTOMER_FACEBOOK = 3;
@@ -103,6 +96,14 @@ class CartService
                 $order->setModified(date('Y-m-d H:i:s'));
                 $order->setSubmitted(null);
                 $order->setSubmittedDate(null);
+                $order->setPayStatus(null);
+                $order->setPayToken(null);
+                $order->setPaySecret(null);
+                $order->setPayType(null);
+                $order->setEmailContent(null);
+                $order->setHummRequestQuery(null);
+                $order->setLogs(null);
+
                 $order->setCategory(static::STATUS_UNPAID);
                 $order->save();
 
@@ -159,21 +160,122 @@ class CartService
     }
 
     /**
-     * @param $productOrVariant
-     * @param $customer
-     * @param $price
-     * @return float|int
+     * @return array
      */
-    static public function getCalculatedPrice($productOrVariant, $customer, $price)
+    public function getGatewayClasses()
     {
-        if ($productOrVariant->getNoMemberDiscount() || !$customer) {
-            return $price;
+        $gatewayClasses = [];
+
+        $paymentMethods = explode(',', getenv('PAYMENT_METHODS'));
+        foreach ($paymentMethods as $paymentMethod) {
+            $gatewayClasses[] = $this->getGatewayClass($paymentMethod);
         }
-        $customerMembership = $customer->objMembership();
-        if (!$customerMembership || !$customerMembership->getDiscount()) {
-            return $price;
+        return array_filter($gatewayClasses);
+    }
+
+    /**
+     * @param $code
+     * @return mixed
+     */
+    public function getGatewayClass($code)
+    {
+        $paymentMethod = ucfirst($code);
+
+        $nameSpaces = [
+            '\\App\\Cms\\Cart\\Payment\\',
+            '\\MillenniumFalcon\\Cart\\Payment\\',
+        ];
+        foreach ($nameSpaces as $nameSpace) {
+            $class = "{$nameSpace}Gateway{$paymentMethod}";
+            if (class_exists($class)) {
+                return new $class($this->connection);
+            }
         }
-        return $price * ((100 - $customerMembership->getDiscount()) / 100);
+        return null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusNew()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCreated()
+    {
+        return 10;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusGatewaySent()
+    {
+        return 20;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusAccepted()
+    {
+        return 30;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusDeclined()
+    {
+        return 40;
+    }
+
+    /**
+     * @param $type
+     * @param $url
+     * @param $request
+     * @param $response
+     * @param $status
+     * @param string $seconds
+     * @return \stdClass
+     */
+    public function getLogBlock($type, $url, $request, $response, $status, $seconds = '')
+    {
+        $block = new \stdClass();
+        $block->id = Uuid::uuid4();
+        $block->title = 'Booking log';
+        $block->status = 1;
+        $block->block = "13";
+        $block->twig = "_";
+        $block->values = new \stdClass();
+        $block->values->type = $type;
+        $block->values->status = $status;
+        $block->values->url = $url;
+        $block->values->date = date('d M Y H:i:s');
+        $block->values->secondsUsed = $seconds;
+        $block->values->request = $request;
+        $block->values->response = $response;
+        return $block;
+    }
+
+    /**
+     * @param $sections
+     * @return \stdClass[]
+     */
+    public function getLogBlankSections($sections)
+    {
+        $section = new \stdClass();
+        $section->id = Uuid::uuid4();
+        $section->title = 'Logs';
+        $section->attr = 'logs';
+        $section->status = 1;
+        $section->tags = ["11"];
+        $section->blocks = [];
+        return [$section];
     }
 
     /**
