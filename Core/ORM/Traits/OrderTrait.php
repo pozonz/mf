@@ -12,7 +12,12 @@ trait OrderTrait
     public function __construct(Connection $pdo)
     {
         $this->setCategory(0);
+        $this->setCreateAnAccount(0);
         $this->setBillingSame(1);
+        $this->setBillingSave(1);
+        $this->setBillingUseExisting(0);
+        $this->setShippingSave(1);
+        $this->setShippingUseExisting(0);
         parent::__construct($pdo);
     }
 
