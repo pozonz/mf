@@ -3,7 +3,7 @@
 {% block formWidgets %}
 	<h2>Order Detail</h2>
 	<div class="formStyle textarea">
-		<label>Status:</label> {% if orm.category == 0 %}NEW{% elseif orm.category == cart.statusAccepted %}PAID{% else %}UNPAID{% endif %}
+		<label>Status:</label> {% if orm.category == 0 %}NEW{% elseif orm.category == cartService.statusAccepted %}PAID{% else %}UNPAID{% endif %}
 	</div>
 	<div class="formStyle textarea">
 		<label>ID:</label> {{ orm.title }}
