@@ -68,6 +68,9 @@ trait ProductVariantTrait
      */
     public function objLowStock()
     {
+        if (!$this->getStockEnabled()) {
+            return 0;
+        }
         if ($this->getAlertIfLessThan() > 0 && $this->getAlertIfLessThan() > $this->getStock()) {
             return 1;
         }
@@ -77,7 +80,11 @@ trait ProductVariantTrait
     /**
      * @return int
      */
-    public function objOutOfStock() {
+    public function objOutOfStock()
+    {
+        if (!$this->getStockEnabled()) {
+            return 0;
+        }
         if ($this->getStock() > 0) {
             return 0;
         }

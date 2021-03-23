@@ -43,11 +43,11 @@ trait OrderItemTrait
             return false;
         }
 
-        $this->setImageUrl($product->objImageUrl());
+        $this->setImageUrl('/images/assets/' . join('/', $product->objImage()));
         $this->setProductPageUrl($product->objProductPageUrl());
         $this->setWeight($variant->getShippingUnits() ?: 0);
 
-        if ($product->objOnSaleActive()) {
+        if ($product->objOnSaleActive() && $variant->getSalePrice()) {
             $this->setPrice($variant->calculatedSalePrice($customer));
             $this->setCompareAtPrice($variant->calculatedPrice($customer));
         } else {
