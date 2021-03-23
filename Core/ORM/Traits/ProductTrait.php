@@ -22,6 +22,26 @@ trait ProductTrait
     }
 
     /**
+     * To be overwritten
+     * @return string
+     */
+    public function objImage()
+    {
+        $gallery = $this->objGallery();
+        if (count($gallery) > 0) {
+            return [
+                $gallery[0]->getId(),
+                'medium',
+            ];
+        } else {
+            return [
+                getenv('PRODUCT_PLACEHOLDER_ID'),
+                1,
+            ];
+        }
+    }
+
+    /**
      * @return string
      */
     public function objProductPageUrl()
