@@ -2,8 +2,6 @@
 
 namespace MillenniumFalcon\Cart\Payment;
 
-use MillenniumFalcon\Cart\Service\CartService;
-
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Db\Traits\BaseReflectionTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,7 +25,7 @@ abstract class AbstractGateway
      * PaymentInterface constructor.
      * @param Connection $connection
      */
-    public function __construct(Connection $connection, CartService $cartService)
+    public function __construct(Connection $connection, $cartService)
     {
         $this->connection = $connection;
         $this->cartService = $cartService;

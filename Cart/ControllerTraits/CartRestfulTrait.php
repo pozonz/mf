@@ -72,7 +72,7 @@ trait CartRestfulTrait
 
         return new JsonResponse([
             'cart' => $cart,
-            'miniCartHtml' => $environment->render('cms/cart/includes/cart-mini.twig', [
+            'miniCartHtml' => $environment->render('cart-mini.twig', [
                 'cart' => $cart,
             ]),
         ]);
@@ -107,10 +107,10 @@ trait CartRestfulTrait
 
         return new JsonResponse([
             'cart' => $cart,
-            'miniCartHtml' => $environment->render('cms/cart/includes/cart-mini.twig', [
+            'miniCartHtml' => $environment->render('cart-mini.twig', [
                 'cart' => $cart,
             ]),
-            'cartPageSubtotalHtml' => $environment->render('cms/cart/includes/cart-page-subtotal.twig', [
+            'cartPageSubtotalHtml' => $environment->render('cart-page-subtotal.twig', [
                 'cart' => $cart,
             ]),
         ]);
@@ -147,7 +147,7 @@ trait CartRestfulTrait
 
         return new JsonResponse([
             'cart' => $cart,
-            'cartPageSubtotalHtml' => $environment->render('cms/cart/includes/cart-page-subtotal.twig', [
+            'cartPageSubtotalHtml' => $environment->render('cart-page-subtotal.twig', [
                 'cart' => $cart,
             ]),
         ]);
@@ -177,10 +177,10 @@ trait CartRestfulTrait
 
         return new JsonResponse([
             'order' => $order,
-            'cartPageSubtotalHtml' => $environment->render('cms/cart/includes/cart-page-subtotal.twig', [
+            'cartPageSubtotalHtml' => $environment->render('cart-page-subtotal.twig', [
                 'cart' => $order,
             ]),
-            'cartSidebarSubtotalHtml' => $environment->render('cms/cart/includes/cart-sidebar-subtotal.twig', [
+            'cartSidebarSubtotalHtml' => $environment->render('cart-sidebar-subtotal.twig', [
                 'order' => $order,
             ]),
         ]);
