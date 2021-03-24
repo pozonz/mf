@@ -61,7 +61,7 @@ trait OrderTrait
                 $weight += $orderItemWeight;
             }
         }
-
+        $this->_orderItems = null;
 
         if ($this->getDiscountType() == 1) {
             $discount = min($subtotal, $this->getDiscountValue());
