@@ -18,8 +18,10 @@ trait CartPageTrait
 {
     /**
      * @route("/cart")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayCart()
+    public function displayCart(Request $request)
     {
         $fullClass = ModelService::fullClass($this->connection, 'Page');
         $page = new $fullClass($this->connection);
@@ -36,8 +38,10 @@ trait CartPageTrait
 
     /**
      * @route("/checkout")
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function checkout()
+    public function checkout(Request $request)
     {
         $cart = $this->cartService->getCart();
         if ($cart->getCategory() == $this->cartService->getStatusNew()) {
@@ -66,11 +70,13 @@ trait CartPageTrait
 
     /**
      * @route("/checkout/account")
+     * @param Request $request
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws RedirectException
      */
     public function setAccountForCart(Request $request)
     {
         $order = $this->getOrderByRequest($request);
-//        return new RedirectResponse("/checkout/shipping?id={$order->getTitle()}");
 
         $customer = $this->cartService->getCustomer();
         if ($customer) {
@@ -103,6 +109,9 @@ trait CartPageTrait
 
     /**
      * @route("/checkout/shipping")
+     * @param Request $request
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws RedirectException
      */
     public function setShippingForCart(Request $request)
     {
@@ -135,8 +144,11 @@ trait CartPageTrait
 
     /**
      * @route("/checkout/payment")
+     * @param Request $request
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws RedirectException
      */
-    public function setPaymentForCart(Request $request, Environment $environment)
+    public function setPaymentForCart(Request $request)
     {
         $order = $this->getOrderByRequest($request);
 
@@ -181,6 +193,8 @@ trait CartPageTrait
 
     /**
      * @route("/checkout/finalise")
+     * @param Request $request
+     * @return mixed
      */
     public function finaliseCart(Request $request)
     {
@@ -203,6 +217,8 @@ trait CartPageTrait
 
     /**
      * @route("/checkout/accepted")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function displayCartAccepted(Request $request)
     {
@@ -229,6 +245,8 @@ trait CartPageTrait
 
     /**
      * @route("/checkout/declined")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function displayCartDeclined(Request $request)
     {
