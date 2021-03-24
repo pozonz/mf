@@ -43,6 +43,15 @@ trait OrderItemTrait
             return false;
         }
 
+        if ($variant->getStockEnabled()) {
+            $this->setQuantity(min($this->getQuantity(), $variant->getStock()));
+        }
+
+        if (!$this->getQuantity()) {
+            $this->delete();
+            return false;
+        }
+
         $this->setImageUrl('/images/assets/' . join('/', $product->objImage()));
         $this->setProductPageUrl($product->objProductPageUrl());
         $this->setWeight($variant->getShippingUnits() ?: 0);

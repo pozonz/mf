@@ -29,6 +29,8 @@ trait CartRestfulTrait
     {
         $id = $request->get('id');
         $qty = $request->get('qty');
+        $isOutOfStock = 0;
+        $outOfStockMessage = $this->outOfStockMessage ?? '';
 
         $customer = $this->cartService->getCustomer();
         $cart = $this->cartService->getCart();
@@ -50,20 +52,39 @@ trait CartRestfulTrait
         $cartItems = $cart->objOrderItems();
         foreach ($cartItems as $itm) {
             if ($itm->getProductId() == $variant->getId()) {
-                $itm->setQuantity($itm->getQuantity() + $qty);
-                $itm->save();
                 $exist = true;
+
+                if (!$variant->getStockEnabled() || $variant->getStock() >= ($itm->getQuantity() + $qty)) {
+                    $itm->setQuantity($itm->getQuantity() + $qty);
+                    $itm->save();
+                } else {
+                    $isOutOfStock = 1;
+                    $outOfStockMessage = str_replace('{{productName}}', $product->getTitle(), $outOfStockMessage);
+                    $outOfStockMessage = str_replace('{{variantName}}', $variant->getTitle(), $outOfStockMessage);
+                    $outOfStockMessage = str_replace('{{stock}}', $variant->getStock(), $outOfStockMessage);
+                    $outOfStockMessage = str_replace('{{qty}}', $itm->getQuantity() + $qty, $outOfStockMessage);
+                    $outOfStockMessage = str_replace('{{extra}}', " ({$itm->getQuantity()} item" . ($itm->getQuantity() == 1 ? ' is' : 's are') . " already in the cart)", $outOfStockMessage);
+                }
             }
         }
 
         if (!$exist) {
-            $cartItem = new $cartItemFullClass($this->connection);
-            $cartItem->setTitle($product->getTitle() . ' - ' . $variant->getTitle());
-            $cartItem->setSku($variant->getSku());
-            $cartItem->setOrderId($cart->getId());
-            $cartItem->setProductId($variant->getId());
-            $cartItem->setQuantity($qty);
-            $cartItem->save();
+            if (!$variant->getStockEnabled() || $variant->getStock() >= $qty) {
+                $cartItem = new $cartItemFullClass($this->connection);
+                $cartItem->setTitle($product->getTitle() . ' - ' . $variant->getTitle());
+                $cartItem->setSku($variant->getSku());
+                $cartItem->setOrderId($cart->getId());
+                $cartItem->setProductId($variant->getId());
+                $cartItem->setQuantity($qty);
+                $cartItem->save();
+            } else {
+                $isOutOfStock = 1;
+                $outOfStockMessage = str_replace('{{productName}}', $product->getTitle(), $outOfStockMessage);
+                $outOfStockMessage = str_replace('{{variantName}}', $variant->getTitle(), $outOfStockMessage);
+                $outOfStockMessage = str_replace('{{stock}}', $variant->getStock(), $outOfStockMessage);
+                $outOfStockMessage = str_replace('{{qty}}', $itm->getQuantity() + $qty, $outOfStockMessage);
+                $outOfStockMessage = str_replace('{{extra}}', "", $outOfStockMessage);
+            }
         }
 
         $fullClass = ModelService::fullClass($this->connection, 'Order');
@@ -71,6 +92,8 @@ trait CartRestfulTrait
         $cart->update($customer);
 
         return new JsonResponse([
+            'isOutOfStock' => $isOutOfStock,
+            'outOfStockMessage' => $outOfStockMessage,
             'cart' => $cart,
             'miniCartHtml' => $environment->render('includes/cart-mini.twig', [
                 'cart' => $cart,
@@ -113,6 +136,9 @@ trait CartRestfulTrait
             'miniCartSubtotalHtml' => $environment->render('includes/cart-mini-subtotal.twig', [
                 'cart' => $cart,
             ]),
+            'cartHtml' => $environment->render('includes/cart.twig', [
+                'cart' => $cart,
+            ]),
             'cartSubtotalHtml' => $environment->render('includes/cart-subtotal.twig', [
                 'cart' => $cart,
             ]),
@@ -132,6 +158,8 @@ trait CartRestfulTrait
     {
         $id = $request->get('id');
         $qty = $request->get('qty');
+        $isOutOfStock = 0;
+        $outOfStockMessage = $this->outOfStockMessage ?? '';
 
         $customer = $this->cartService->getCustomer();
         $cart = $this->cartService->getCart();
@@ -139,8 +167,27 @@ trait CartRestfulTrait
         $cartItems = $cart->objOrderItems();
         foreach ($cartItems as $itm) {
             if ($itm->getId() == $id) {
-                $itm->setQuantity($qty);
-                $itm->save();
+                $variant = $itm->objVariant();
+                if (!$variant || !$variant->getStatus()) {
+                    throw new NotFoundHttpException('Variant not found');
+                }
+
+                $product = $variant->objProduct();
+                if (!$product || !$product->getStatus()) {
+                    throw new NotFoundHttpException('Product not found');
+                }
+
+                if (!$variant->getStockEnabled() || $variant->getStock() >= $qty) {
+                    $itm->setQuantity($qty);
+                    $itm->save();
+                } else {
+                    $isOutOfStock = 1;
+                    $outOfStockMessage = str_replace('{{productName}}', $product->getTitle(), $outOfStockMessage);
+                    $outOfStockMessage = str_replace('{{variantName}}', $variant->getTitle(), $outOfStockMessage);
+                    $outOfStockMessage = str_replace('{{stock}}', $variant->getStock(), $outOfStockMessage);
+                    $outOfStockMessage = str_replace('{{qty}}', $qty, $outOfStockMessage);
+                    $outOfStockMessage = str_replace('{{extra}}', "", $outOfStockMessage);
+                }
             }
         }
 
@@ -149,8 +196,16 @@ trait CartRestfulTrait
         $cart->update($customer);
 
         return new JsonResponse([
+            'isOutOfStock' => $isOutOfStock,
+            'outOfStockMessage' => $outOfStockMessage,
             'cart' => $cart,
+            'miniCartHtml' => $environment->render('includes/cart-mini.twig', [
+                'cart' => $cart,
+            ]),
             'miniCartSubtotalHtml' => $environment->render('includes/cart-mini-subtotal.twig', [
+                'cart' => $cart,
+            ]),
+            'cartHtml' => $environment->render('includes/cart.twig', [
                 'cart' => $cart,
             ]),
             'cartSubtotalHtml' => $environment->render('includes/cart-subtotal.twig', [

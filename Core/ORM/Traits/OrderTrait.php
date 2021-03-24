@@ -48,21 +48,23 @@ trait OrderTrait
 
         $orderItems = $this->objOrderItems();
         foreach ($orderItems as $idx => $itm) {
-            $itm->update($this, $customer);
+            $result = $itm->update($this, $customer);
+            if ($result) {
+                $orderItemSubtotal = $itm->getPrice() * $itm->getQuantity();
+                $orderItemWeight = $itm->getWeight() * $itm->getQuantity();
 
-            $itmSubtotal = $itm->getPrice() * $itm->getQuantity();
+                $subtotal += $orderItemSubtotal;
+                if ($this->getDiscountType() == 2 && !$itm->objVariant()->objProduct()->getNoPromoDiscount()) {
+                    $discount += round($orderItemSubtotal * ($this->getDiscountValue() / 100), 2);
+                }
 
-            $subtotal += $itmSubtotal;
-            $weight += $itm->getWeight() * $itm->getQuantity();
-
-            if ($this->getDiscountType() == 2) {
-                $discount += round($itmSubtotal * ($this->getDiscountValue() / 100), 2);
+                $weight += $orderItemWeight;
             }
         }
 
 
         if ($this->getDiscountType() == 1) {
-            $discount = $this->getDiscountValue();
+            $discount = min($subtotal, $this->getDiscountValue());
         }
 
         $afterDiscount = $subtotal - $discount;
