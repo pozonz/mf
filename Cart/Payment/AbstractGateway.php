@@ -129,9 +129,14 @@ abstract class AbstractGateway
     protected function finaliseOrderAndRedirect($order, $status)
     {
         if ($status == 1) {
-            $order->setPayStatus(1);
-            $order->setCategory($this->cartService->getStatusAccepted());
-            $order->save();
+            if ($order->getCategory() != $this->cartService->getStatusAccepted()) {
+                $order->setPayStatus(1);
+                $order->setCategory($this->cartService->getStatusAccepted());
+                $order->save();
+
+                $this->cartService->sendEmailInvoice($order);
+            }
+
             return new RedirectResponse('/checkout/accepted?id=' . $order->getTitle());
 
         } else {

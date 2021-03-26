@@ -269,6 +269,9 @@ trait CartPageTrait
         if (!$order) {
             throw new RedirectException("/checkout");
         }
+        if ($order->getCategory() == $this->cartService->getStatusAccepted()) {
+            throw new RedirectException("/checkout");
+        }
         $order = $this->cartService->setBooleanValues($order);
 
         return $order;

@@ -24,6 +24,57 @@ trait OrderTrait
     }
 
     /**
+     * @return mixed|string
+     */
+    public function objShippingAddress()
+    {
+        $address = $this->getShippingAddress();
+        if ($this->getShippingApartmentNo()) {
+            $address = $this->getShippingApartmentNo() . ', ' . $address;
+        }
+        if ($this->getShippingAddress2()) {
+            $address = $address . ', ' . $this->getShippingAddress2();
+        }
+        if ($this->getShippingCity()) {
+            $address = $address . ', ' . $this->getShippingCity();
+        }
+        if ($this->getShippingPostcode()) {
+            $address = $address . ' ' . $this->getShippingPostcode();
+        }
+        if ($this->getShippingCountry()) {
+            $address = $address . ', ' . $this->getShippingCountry();
+        }
+        return $address;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function objBillingAddress()
+    {
+        if ($this->getBillingSame()) {
+            return $this->objShippingAddress();
+        }
+        $address = $this->getBillingAddress();
+        if ($this->getBillingApartmentNo()) {
+            $address = $this->getBillingApartmentNo() . ', ' . $address;
+        }
+        if ($this->getBillingAddress2()) {
+            $address = $address . ', ' . $this->getBillingAddress2();
+        }
+        if ($this->getBillingCity()) {
+            $address = $address . ', ' . $this->getBillingCity();
+        }
+        if ($this->getBillingPostcode()) {
+            $address = $address . ' ' . $this->getBillingPostcode();
+        }
+        if ($this->getBillingCountry()) {
+            $address = $address . ', ' . $this->getBillingCountry();
+        }
+        return $address;
+    }
+
+    /**
      * @param $orderItems
      */
     public function setOrderItems($orderItems)

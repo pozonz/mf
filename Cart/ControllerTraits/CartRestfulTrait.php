@@ -334,10 +334,13 @@ trait CartRestfulTrait
     /**
      * @Route("/checkout/post/order/send-to-payment-gateway")
      * @param Request $request
+     * @param Environment $environment
      * @return JsonResponse
-     * @throws RedirectException
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
-    public function sendToPaymentGateway(Request $request)
+    public function sendToPaymentGateway(Request $request, Environment $environment)
     {
         $type = $request->get('type');
         $note = $request->get('note');
@@ -355,6 +358,9 @@ trait CartRestfulTrait
 
         return new JsonResponse([
             'order' => $order,
+            'checkoutSidebarHtml' => $environment->render('includes/checkout-sidebar.twig', [
+                'order' => $order,
+            ]),
         ]);
     }
 }

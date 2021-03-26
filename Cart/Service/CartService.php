@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Twig\Environment;
 
 class CartService
 {
@@ -36,6 +37,16 @@ class CartService
     protected $tokenStorage;
 
     /**
+     * @var Environment
+     */
+    protected $environment;
+
+    /**
+     * @var \Swift_Mailer
+     */
+    protected $mailer;
+
+    /**
      * @var null
      */
     protected $_cart = null;
@@ -44,11 +55,13 @@ class CartService
      * CartService constructor.
      * @param Connection $container
      */
-    public function __construct(Connection $connection, SessionInterface $session, TokenStorageInterface $tokenStorage)
+    public function __construct(Connection $connection, SessionInterface $session, TokenStorageInterface $tokenStorage, Environment $environment, \Swift_Mailer $mailer)
     {
         $this->connection = $connection;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
+        $this->environment = $environment;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -304,6 +317,26 @@ class CartService
 
         $orderItem->save();
         return true;
+    }
+
+    /**
+     * @param $order
+     * @return mixed
+     */
+    public function sendEmailInvoice($order)
+    {
+        $messageBody = $this->environment->render('email-invoice.twig', array(
+            'order' => $order,
+        ));
+        $message = (new \Swift_Message())
+            ->setSubject("Invoice {$order->getTitle()}")
+            ->setFrom(getenv('EMAIL_FROM'))
+            ->setTo([$order->getEmail()])
+            ->setBcc(array_filter(explode(',', getenv('EMAIL_BCC_ORDER'))))
+            ->setBody(
+                $messageBody, 'text/html'
+            );
+        return $this->mailer->send($message);
     }
 
     /**
