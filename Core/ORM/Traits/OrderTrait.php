@@ -18,69 +18,17 @@ trait OrderTrait
         $this->setBillingUseExisting(0);
         $this->setShippingSave(1);
         $this->setShippingUseExisting(0);
-        $this->setIsPickup(2);
+        $this->setIsPickup(null);
 
         parent::__construct($pdo);
     }
 
     /**
-     * @return bool
-     * @throws \Exception
+     * @param $orderItems
      */
-    public function update($customer)
+    public function setOrderItems($orderItems)
     {
-        $fullClass = ModelService::fullClass($this->getPdo(), 'PromoCode');
-        $promoCode = $fullClass::getByField($this->getPdo(), 'code', $this->getPromoCode());
-        if ($promoCode && $promoCode->isValid()) {
-            $this->setDiscountType($promoCode->getType());
-            $this->setDiscountValue($promoCode->getValue());
-            $this->setPromoId($promoCode->getId());
-        } else {
-            $this->setDiscountType(null);
-            $this->setDiscountValue(null);
-            $this->setPromoId(null);
-        }
-
-        $subtotal = 0;
-        $weight = 0;
-        $discount = 0;
-        $afterDiscount = 0;
-
-        $orderItems = $this->objOrderItems();
-        foreach ($orderItems as $idx => $itm) {
-            $result = $itm->update($this, $customer);
-            if ($result) {
-                $orderItemSubtotal = $itm->getPrice() * $itm->getQuantity();
-                $orderItemWeight = $itm->getWeight() * $itm->getQuantity();
-
-                $subtotal += $orderItemSubtotal;
-                if ($this->getDiscountType() == 2 && !$itm->objVariant()->objProduct()->getNoPromoDiscount()) {
-                    $discount += round($orderItemSubtotal * ($this->getDiscountValue() / 100), 2);
-                }
-
-                $weight += $orderItemWeight;
-            }
-        }
-        $this->_orderItems = null;
-
-        if ($this->getDiscountType() == 1) {
-            $discount = min($subtotal, $this->getDiscountValue());
-        }
-
-        $afterDiscount = $subtotal - $discount;
-        $gst = ($afterDiscount * 3) / 23;
-        $deliveryFee = $this->getShippingCost() ?: 0;
-        $total = $afterDiscount + $deliveryFee;
-
-        $this->setWeight($weight);
-        $this->setSubtotal($subtotal);
-        $this->setDiscount($discount);
-        $this->setAfterDiscount($afterDiscount);
-        $this->setTax($gst);
-        $this->setShippingCost($deliveryFee);
-        $this->setTotal($total);
-        $this->save();
-        return true;
+        $this->_orderItems = $orderItems;
     }
 
     /**
@@ -101,7 +49,10 @@ trait OrderTrait
         return $this->_orderItems;
     }
 
-
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function objJsonOrderItems()
     {
         return $this->objOrderItems();
@@ -147,11 +98,11 @@ trait OrderTrait
         return 'cms/orms/orms-custom-order.html.twig';
     }
 
-    /**
-     * @return string
-     */
-    static public function getCmsOrmTwig()
-    {
-        return 'cms/orms/orm-custom-order.html.twig';
-    }
+//    /**
+//     * @return string
+//     */
+//    static public function getCmsOrmTwig()
+//    {
+//        return 'cms/orms/orm-custom-order.html.twig';
+//    }
 }

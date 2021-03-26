@@ -51,18 +51,6 @@ trait CartPageTrait
             $cart->save();
         }
 
-        //Test
-        $cart->setTotal(100);
-        $cart->setEmail('weida@gravitate.co.nz');
-        $cart->setShippingFirstName('Weida');
-        $cart->setShippingLastName('Xue');
-//        $cart->setShippingPhone('021123456');
-//        $cart->setShippingAddress('123 Queen Street');
-//        $cart->setShippingPostcode('2016');
-//        $cart->setShippingCity('Auckland');
-//        $cart->setShippingCountry('NZ');
-
-
         $cart->save();
 
         return new RedirectResponse("/checkout/account?id={$cart->getTitle()}");
@@ -77,6 +65,7 @@ trait CartPageTrait
     public function setAccountForCart(Request $request)
     {
         $order = $this->getOrderByRequest($request);
+        $this->cartService->updateOrder($order);
 
         $customer = $this->cartService->getCustomer();
         if ($customer) {
@@ -116,6 +105,7 @@ trait CartPageTrait
     public function setShippingForCart(Request $request)
     {
         $order = $this->getOrderByRequest($request);
+        $this->cartService->updateOrder($order);
 
         $form = $this->container->get('form.factory')->create(CheckoutShippingForm::class, $order, [
             'request' => $request,
@@ -151,14 +141,9 @@ trait CartPageTrait
     public function setPaymentForCart(Request $request)
     {
         $order = $this->getOrderByRequest($request);
+        $this->cartService->updateOrder($order);
 
-        $gatewayClasses = $this->cartService->getGatewayClasses();
-        foreach ($gatewayClasses as $idx => $gatewayClass) {
-            if ($idx == 0 && !$order->getPayType()) {
-                $order->setPayType($gatewayClass->getId());
-            }
-            $gatewayClass->initialise($request, $order);
-        }
+        $this->initialiasePaymentGateways($request, $order);
 
         $form = $this->container->get('form.factory')->create(CheckoutPaymentForm::class, $order);
         $form->handleRequest($request);
@@ -287,5 +272,20 @@ trait CartPageTrait
         $order = $this->cartService->setBooleanValues($order);
 
         return $order;
+    }
+
+    /**
+     * @param $request
+     * @param $order
+     */
+    protected function initialiasePaymentGateways($request, $order)
+    {
+        $gatewayClasses = $this->cartService->getGatewayClasses();
+        foreach ($gatewayClasses as $idx => $gatewayClass) {
+            if ($idx == 0 && !$order->getPayType()) {
+                $order->setPayType($gatewayClass->getId());
+            }
+            $gatewayClass->initialise($request, $order);
+        }
     }
 }

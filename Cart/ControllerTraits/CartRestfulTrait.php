@@ -32,7 +32,6 @@ trait CartRestfulTrait
         $isOutOfStock = 0;
         $outOfStockMessage = $this->outOfStockMessage ?? '';
 
-        $customer = $this->cartService->getCustomer();
         $cart = $this->cartService->getCart();
 
         $productVariantFullClass = ModelService::fullClass($this->connection, 'ProductVariant');
@@ -76,6 +75,7 @@ trait CartRestfulTrait
                 $cartItem->setOrderId($cart->getId());
                 $cartItem->setProductId($variant->getId());
                 $cartItem->setQuantity($qty);
+                $this->cartService->setCustomOrderItem($cartItem, $variant);
                 $cartItem->save();
             } else {
                 $isOutOfStock = 1;
@@ -89,7 +89,7 @@ trait CartRestfulTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Order');
         $cart = $fullClass::getById($this->connection, $cart->getId());
-        $cart->update($customer);
+        $this->cartService->updateOrder($cart);
 
         return new JsonResponse([
             'isOutOfStock' => $isOutOfStock,
@@ -114,7 +114,6 @@ trait CartRestfulTrait
     {
         $id = $request->get('id');
 
-        $customer = $this->cartService->getCustomer();
         $cart = $this->cartService->getCart();
 
         $cartItems = $cart->objOrderItems();
@@ -126,7 +125,7 @@ trait CartRestfulTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Order');
         $cart = $fullClass::getById($this->connection, $cart->getId());
-        $cart->update($customer);
+        $this->cartService->updateOrder($cart);
 
         return new JsonResponse([
             'cart' => $cart,
@@ -161,7 +160,6 @@ trait CartRestfulTrait
         $isOutOfStock = 0;
         $outOfStockMessage = $this->outOfStockMessage ?? '';
 
-        $customer = $this->cartService->getCustomer();
         $cart = $this->cartService->getCart();
 
         $cartItems = $cart->objOrderItems();
@@ -193,7 +191,7 @@ trait CartRestfulTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Order');
         $cart = $fullClass::getById($this->connection, $cart->getId());
-        $cart->update($customer);
+        $this->cartService->updateOrder($cart);
 
         return new JsonResponse([
             'isOutOfStock' => $isOutOfStock,
@@ -227,20 +225,83 @@ trait CartRestfulTrait
     {
         $code = $request->get('code');
 
-        $customer = $this->cartService->getCustomer();
         $order = $this->getOrderByRequest($request);
-
         $order->setPromoCode($code);
+        $order->setPayToken(null);
+        $order->setPaySecret(null);
+        $order->setHummRequestQuery(null);
         $order->save();
 
         $order = $this->getOrderByRequest($request);
-        $order->update($customer);
+        $this->cartService->updateOrder($order);
+
+        $this->initialiasePaymentGateways($request, $order);
 
         return new JsonResponse([
             'order' => $order,
             'cartSubtotalHtml' => $environment->render('includes/cart-subtotal.twig', [
                 'cart' => $order,
             ]),
+            'checkoutSidebarSubtotalHtml' => $environment->render('includes/checkout-sidebar-subtotal.twig', [
+                'order' => $order,
+            ]),
+            'checkoutPaymentMethodsHtml' => $environment->render('includes/checkout-payment-methods.twig', [
+                'gateways' => $this->cartService->getGatewayClasses(),
+                'order' => $order,
+            ]),
+        ]);
+    }
+
+    /**
+     * @Route("/checkout/post/order/is-pickup")
+     * @param Request $request
+     * @param Environment $environment
+     * @return JsonResponse
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function setIsPickup(Request $request, Environment $environment)
+    {
+        $pickup = $request->get('pickup');
+
+        $order = $this->getOrderByRequest($request);
+        $order->setIsPickup($pickup);
+        $order->save();
+
+        $order = $this->getOrderByRequest($request);
+        $this->cartService->updateOrder($order);
+
+        return new JsonResponse([
+            'order' => $order,
+            'checkoutSidebarSubtotalHtml' => $environment->render('includes/checkout-sidebar-subtotal.twig', [
+                'order' => $order,
+            ]),
+        ]);
+    }
+
+    /**
+     * @Route("/checkout/post/order/delivery-option")
+     * @param Request $request
+     * @param Environment $environment
+     * @return JsonResponse
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function chooseDeliveryOption(Request $request, Environment $environment)
+    {
+        $shipping = $request->get('shipping');
+
+        $order = $this->getOrderByRequest($request);
+        $order->setShippingId($shipping);
+        $order->save();
+
+        $order = $this->getOrderByRequest($request);
+        $this->cartService->updateOrder($order);
+
+        return new JsonResponse([
+            'order' => $order,
             'checkoutSidebarSubtotalHtml' => $environment->render('includes/checkout-sidebar-subtotal.twig', [
                 'order' => $order,
             ]),

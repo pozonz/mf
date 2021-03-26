@@ -132,14 +132,29 @@ class CartService
                 $cart->setEmail($cart->getEmail() && filter_var($cart->getEmail(), FILTER_VALIDATE_EMAIL) ? $cart->getEmail() : $customer->getTitle());
             }
 
-            //update order
-            $cart->update($customer);
+            $this->updateOrder($cart, $customer);
 
             //you know...
             $this->_cart = $cart;
         }
 
         return $this->_cart;
+    }
+
+    /**
+     * @param $newOrder
+     * @param $oldOrder
+     */
+    public function copyOrderItems($newOrder, $oldOrder)
+    {
+        foreach ($oldOrder->objOrderItems() as $oi) {
+            $oi->setId(null);
+            $oi->setUniqId(Uuid::uuid4());
+            $oi->setOrderId($newOrder->getId());
+            $oi->setAdded(date('Y-m-d H:i:s'));
+            $oi->setModified(date('Y-m-d H:i:s'));
+            $oi->save();
+        }
     }
 
     /**
@@ -153,6 +168,160 @@ class CartService
         $cart->setShippingSave($cart->getShippingSave() ? true : false);
         $cart->setCreateAnAccount($cart->getCreateAnAccount() ? true : false);
         return $cart;
+    }
+
+    /**
+     * @param $order
+     * @return bool
+     */
+    public function updateOrder($order)
+    {
+        $customer = $this->getCustomer();
+        $fullClass = ModelService::fullClass($this->connection, 'PromoCode');
+        $promoCode = $fullClass::getByField($this->connection, 'code', $order->getPromoCode());
+        if ($promoCode && $promoCode->isValid()) {
+            $order->setDiscountType($promoCode->getType());
+            $order->setDiscountValue($promoCode->getValue());
+            $order->setPromoId($promoCode->getId());
+        } else {
+            $order->setDiscountType(null);
+            $order->setDiscountValue(null);
+            $order->setPromoId(null);
+        }
+
+        $subtotal = 0;
+        $weight = 0;
+        $discount = 0;
+        $afterDiscount = 0;
+
+        $orderItems = $order->objOrderItems();
+        foreach ($orderItems as $idx => $itm) {
+            $result = $this->updateOrderItem($order, $itm, $customer);
+            if ($result) {
+                $orderItemSubtotal = $itm->getPrice() * $itm->getQuantity();
+                $orderItemWeight = $itm->getWeight() * $itm->getQuantity();
+
+                $subtotal += $orderItemSubtotal;
+                if ($order->getDiscountType() == 2 && !$itm->objVariant()->objProduct()->getNoPromoDiscount()) {
+                    $discount += round($orderItemSubtotal * ($order->getDiscountValue() / 100), 2);
+                }
+
+                $weight += $orderItemWeight;
+            }
+        }
+        $order->setOrderitems(null);
+
+        if ($order->getDiscountType() == 1) {
+            $discount = min($subtotal, $order->getDiscountValue());
+        }
+
+        $afterDiscount = $subtotal - $discount;
+
+        if ($order->getIsPickup() == 2) {
+            $deliveryOption = $this->getDeliveryOption($order);
+            if ($deliveryOption) {
+                $order->setShippingTitle($deliveryOption->getTitle());
+                $order->setShippingCost($this->getDeliveryFee($deliveryOption));
+            } else {
+                $order->setShippingId(null);
+                $order->setShippingTitle(null);
+                $order->setShippingCost(null);
+            }
+        } else {
+            $order->setShippingCost(null);
+        }
+
+        $deliveryFee = $order->getShippingCost() ?: 0;
+        $total = $afterDiscount + $deliveryFee;
+        $gst = ($total * 3) / 23;
+
+        $order->setWeight($weight);
+        $order->setSubtotal($subtotal);
+        $order->setDiscount($discount);
+        $order->setAfterDiscount($afterDiscount);
+        $order->setTax($gst);
+        $order->setShippingCost($deliveryFee);
+        $order->setTotal($total);
+        $order->save();
+        return true;
+    }
+
+    /**
+     * @param $order
+     * @param $orderItem
+     * @param $customer
+     * @return bool
+     */
+    public function updateOrderItem($order, $orderItem, $customer)
+    {
+        if ($orderItem->getQuantity() <= 0) {
+            $orderItem->delete();
+            return false;
+        }
+
+        $variant = $orderItem->objVariant();
+        if (!$variant || !$variant->getStatus()) {
+            $orderItem->delete();
+            return false;
+        }
+
+        $product = $variant->objProduct();
+        if (!$product || !$product->getStatus()) {
+            $orderItem->delete();
+            return false;
+        }
+
+        if ($variant->getStockEnabled()) {
+            $orderItem->setQuantity(min($orderItem->getQuantity(), $variant->getStock()));
+        }
+
+        if (!$orderItem->getQuantity()) {
+            $orderItem->delete();
+            return false;
+        }
+
+        $orderItem->setImageUrl('/images/assets/' . join('/', $product->objImage()));
+        $orderItem->setProductPageUrl($product->objProductPageUrl());
+        $orderItem->setWeight($variant->getShippingUnits() ?: 0);
+
+        if ($product->objOnSaleActive() && $variant->getSalePrice()) {
+            $orderItem->setPrice($variant->calculatedSalePrice($customer));
+            $orderItem->setCompareAtPrice($variant->calculatedPrice($customer));
+        } else {
+            $orderItem->setPrice($variant->calculatedPrice($customer));
+        }
+
+
+        $discountType = $order->getDiscountType();
+        $discountValue = $order->getDiscountValue();
+
+        if ($discountType == 1 && !$product->getNoPromoDiscount()) {
+            $orderItem->setCompareAtPrice($orderItem->getCompareAtPrice() ?: $orderItem->getPrice());
+            $afterDiscount = $orderItem->getPrice() * (100 - $discountValue) / 100;
+            $discountedTotal = $orderItem->getPrice() - $afterDiscount;
+            $orderItem->setPrice($afterDiscount);
+        }
+
+        $orderItem->save();
+        return true;
+    }
+
+    /**
+     * @param $order
+     * @return int
+     */
+    public function getDeliveryOption($order)
+    {
+        return null;
+    }
+
+    /**
+     * @param $deliveryOption
+     * @return int
+     */
+    public function getDeliveryFee($deliveryOption)
+    {
+        return 0;
     }
 
     /**
@@ -186,62 +355,6 @@ class CartService
             }
         }
         return null;
-    }
-
-    /**
-     * @param $newOrder
-     * @param $oldOrder
-     */
-    public function copyOrderItems($newOrder, $oldOrder)
-    {
-        foreach ($oldOrder->objOrderItems() as $oi) {
-            $oi->setId(null);
-            $oi->setUniqId(Uuid::uuid4());
-            $oi->setOrderId($newOrder->getId());
-            $oi->setAdded(date('Y-m-d H:i:s'));
-            $oi->setModified(date('Y-m-d H:i:s'));
-            $oi->save();
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusNew()
-    {
-        return 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusCreated()
-    {
-        return 10;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusGatewaySent()
-    {
-        return 20;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusAccepted()
-    {
-        return 30;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusDeclined()
-    {
-        return 40;
     }
 
     /**
@@ -289,6 +402,46 @@ class CartService
     }
 
     /**
+     * @return int
+     */
+    public function getStatusNew()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCreated()
+    {
+        return 10;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusGatewaySent()
+    {
+        return 20;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusAccepted()
+    {
+        return 30;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusDeclined()
+    {
+        return 40;
+    }
+
+    /**
      * @return array|false|string
      */
     static public function getProductClassName()
@@ -302,5 +455,14 @@ class CartService
     static public function getProductVariantClassName()
     {
         return getenv('PRODUCT_VARIANT_CLASSNAME') ?: 'ProductVariant';
+    }
+
+    /**
+     * @param $cartItem
+     * @param $variant
+     */
+    public function setCustomOrderItem($cartItem, $variant)
+    {
+
     }
 }
