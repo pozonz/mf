@@ -354,6 +354,14 @@ class CartService
     }
 
     /**
+     *
+     */
+    public function clearCart()
+    {
+        $this->session->set(static::SESSION_ID, null);
+    }
+
+    /**
      * @param $order
      * @return int
      */

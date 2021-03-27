@@ -279,6 +279,9 @@ trait CartPageTrait
             throw new RedirectException("/checkout");
         }
         $order = $this->cartService->setBooleanValues($order);
+        if (!count($order->objOrderItems())) {
+            throw new RedirectException("/");
+        }
 
         return $order;
     }
