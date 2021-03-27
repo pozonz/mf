@@ -341,6 +341,20 @@ class CartService
 
     /**
      * @param $order
+     */
+    public function updateStock($order)
+    {
+        foreach ($order->objOrderItems() as $orderItem) {
+            $variant = $orderItem->objVariant();
+            if ($variant) {
+                $variant->setStock($variant->getStock() - $orderItem->getQuantity());
+                $variant->save();
+            }
+        }
+    }
+
+    /**
+     * @param $order
      * @return int
      */
     public function getDeliveryOption($order)

@@ -135,6 +135,7 @@ abstract class AbstractGateway
                 $order->save();
 
                 $this->cartService->sendEmailInvoice($order);
+                $this->cartService->updateStock($order);
             }
 
             return new RedirectResponse('/checkout/accepted?id=' . $order->getTitle());

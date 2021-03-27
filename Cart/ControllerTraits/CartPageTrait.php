@@ -25,6 +25,7 @@ trait CartPageTrait
     {
         $fullClass = ModelService::fullClass($this->connection, 'Page');
         $page = new $fullClass($this->connection);
+        $page->setTitle('Cart');
         return $this->render('cart.twig', [
             'urlParams' => null,
             'urlFragments' => null,
@@ -83,6 +84,7 @@ trait CartPageTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Page');
         $page = new $fullClass($this->connection);
+        $page->setTitle('Checkout');
         return $this->render('checkout-account.twig', [
             'urlParams' => null,
             'urlFragments' => null,
@@ -119,6 +121,7 @@ trait CartPageTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Page');
         $page = new $fullClass($this->connection);
+        $page->setTitle('Checkout');
         return $this->render('checkout-shipping.twig', [
             'urlParams' => null,
             'urlFragments' => null,
@@ -162,6 +165,7 @@ trait CartPageTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Page');
         $page = new $fullClass($this->connection);
+        $page->setTitle('Checkout');
         return $this->render('checkout-payment.twig', [
             'urlParams' => null,
             'urlFragments' => null,
@@ -216,6 +220,7 @@ trait CartPageTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Page');
         $page = new $fullClass($this->connection);
+        $page->setTitle('Confirmation');
         return $this->render('checkout-confirm.twig', [
             'urlParams' => null,
             'urlFragments' => null,
@@ -244,6 +249,7 @@ trait CartPageTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Page');
         $page = new $fullClass($this->connection);
+        $page->setTitle('Confirmation');
         return $this->render('checkout-declined.twig', [
             'urlParams' => null,
             'urlFragments' => null,
