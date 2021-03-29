@@ -10,6 +10,14 @@ trait ProductVariantTrait
     protected $_product;
 
     /**
+     * @param $product
+     */
+    public function setObjProduct($product)
+    {
+        $this->_product = $product;
+    }
+
+    /**
      * @return mixed
      */
     public function objProduct()

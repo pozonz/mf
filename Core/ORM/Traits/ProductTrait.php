@@ -12,6 +12,17 @@ trait ProductTrait
     protected $_variants;
 
     /**
+     * @param $variant
+     */
+    public function addVariant($variant)
+    {
+        if (gettype($this->_variants) != 'array') {
+            $this->_variants = [];
+        }
+        $this->_variants[] = $variant;
+    }
+
+    /**
      * To be overwritten
      * @return string
      */
@@ -122,6 +133,15 @@ trait ProductTrait
      */
     public function save($doNotSaveVersion = false, $options = [])
     {
+        $this->_saveProductCachedData();
+        return parent::save($doNotSaveVersion, $options);
+    }
+
+    /**
+     * @param array $options
+     */
+    public function _saveProductCachedData($options = [])
+    {
         $fullClass = ModelService::fullClass($this->getPdo(), 'ProductVariant');
         $data = $fullClass::active($this->getPdo(), [
             'whereSql' => 'm.productUniqid = ?',
@@ -129,27 +149,27 @@ trait ProductTrait
         ]);
 
         $lowStock = 0;
-        $outOfStock = 1;
+        $outOfStock = 0;
 
         foreach ($data as $itm) {
-            if ($itm->objLowStock() == 1) {
-                $lowStock = 1;
+            if (!$itm->objOutOfStock() && $itm->objLowStock() == 1) {
+                $lowStock++;
             }
 
-            if ($itm->objOutOfStock() == 0) {
-                $outOfStock = 0;
+            if ($itm->objOutOfStock() == 1) {
+                $outOfStock++;
             }
 
-            if ($this->getPrice() == null || $this->getPrice() > $itm->getPrice()) {
-                $this->setPrice($itm->getPrice());
-                $this->setSalePrice($itm->getSalePrice());
+            if (!isset($options['doNotUpdatePrice']) || $options['doNotUpdatePrice'] != 1) {
+                if ($this->getPrice() == null || $this->getPrice() > $itm->getPrice()) {
+                    $this->setPrice($itm->getPrice());
+                    $this->setSalePrice($itm->getSalePrice());
+                }
             }
         }
 
-        $this->setLowStock($lowStock);
-        $this->setOutOfStock($outOfStock);
-
-        return parent::save($doNotSaveVersion, $options);
+        $this->setLowStock($lowStock > 0 ? (count($data) == $lowStock ? 1 : 2) : 0);
+        $this->setOutOfStock($outOfStock > 0 ? (count($data) == $outOfStock ? 1 : 2) : 0);
     }
 
     /**

@@ -49,7 +49,7 @@
                             <tr id="{{ itm.id }}" class="js-orm-info">
                                 <td>{{ itm.id }}</td>
                                 <td>
-                                    {% set frontendUrl = itm.getFrontendUrlByCustomUrl(ormModel.siteMapUrl) %}
+                                    {% set frontendUrl = itm.frontendUrlByCustomUrl(ormModel.siteMapUrl) %}
                                     {% if frontendUrl and itm.status == 1 %}
                                         <a target="_blank" href="{{ frontendUrl }}">{{ itm.title|length > limit ? (itm.title|slice(0, limit) ~ '&hellip;')|raw : itm.title }}</a>
                                     {% else %}

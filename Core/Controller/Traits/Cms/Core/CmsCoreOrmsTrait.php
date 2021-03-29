@@ -6,6 +6,7 @@ use App\ORM\Order;
 use App\ORM\OrderItem;
 use BlueM\Tree;
 use MillenniumFalcon\Core\ORM\_Model;
+use MillenniumFalcon\Core\ORM\Asset;
 use MillenniumFalcon\Core\ORM\FormDescriptor;
 use MillenniumFalcon\Core\ORM\FormSubmission;
 use MillenniumFalcon\Core\Service\ModelService;
@@ -349,6 +350,205 @@ trait CmsCoreOrmsTrait
         $params['orms'] = $orms;
 
         return $this->render($params['theNode']->template, $params);
+    }
+
+    /**
+     * @route("/manage/orms/Product")
+     * @route("/manage/admin/orms/Product")
+     * @route("/manage/pages/orms/Product")
+     * @return Response
+     */
+    public function products(Request $request)
+    {
+        $className = 'Product';
+        $params = $this->getCmsTemplateParams($request);
+
+        $model = _Model::getByField($this->connection, 'className', $className);
+        $params['ormModel'] = $model;
+
+        $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
+        $pageNum = $request->get('pageNum') ?: 1;
+        $sort = $request->get('sort') ?: $model->getDefaultSortBy();
+        $order = $request->get('order') ?: ($model->getDefaultOrder() == 0 ? 'ASC' : 'DESC');
+
+        $assetOrms = [];
+        $assetORMFullClass = ModelService::fullClass($this->connection, 'AssetOrm');
+        $result = $assetORMFullClass::active($this->connection, [
+            'whereSql' => 'm.modelName = ? AND m.attributeName = ?',
+            'params' => [$className, 'orm_gallery'],
+        ]);
+        foreach ($result as $itm) {
+            if (!isset($assetOrms[$itm->getOrmId()])) {
+                $assetOrms[$itm->getOrmId()] = 0;
+            }
+            $assetOrms[$itm->getOrmId()]++;
+        }
+
+        $productVariantFullClass = ModelService::fullClass($this->connection, 'ProductVariant');
+        $productVariants = [];
+        $result = $productVariantFullClass::active($this->connection, [
+            "select" => 'm.productUniqid, COUNT(m.productUniqid) AS count',
+            'orm' => 0,
+            'groupby' => 'm.productUniqid',
+        ]);
+        foreach ($result as $itm) {
+            $productVariants[$itm['productUniqid']] = $itm['count'];
+        }
+        $productVariantsDis = [];
+        $result = $productVariantFullClass::data($this->connection, [
+            "whereSql" => 'm.status IS NULL OR m.status != 1',
+            "select" => 'm.productUniqid, COUNT(m.productUniqid) AS count',
+            'orm' => 0,
+            'groupby' => 'm.productUniqid',
+        ]);
+        foreach ($result as $itm) {
+            $productVariantsDis[$itm['productUniqid']] = $itm['count'];
+        }
+
+        $productCategories = [];
+        $productCategoryFullClass = ModelService::fullClass($this->connection, 'ProductCategory');
+        $result = $productCategoryFullClass::data($this->connection);
+        foreach ($result as $itm) {
+            $productCategories[$itm->getId()] = $itm;
+        }
+
+        $productCategoryFullClass = ModelService::fullClass($this->connection, 'ProductCategory');
+        $productBrandFullClass = ModelService::fullClass($this->connection, 'ProductBrand');
+        $params['categories'] = $productCategoryFullClass::data($this->connection, [
+            'whereSql' => 'm.code != "sale" OR m.code IS NULL',
+        ]);
+        $params['brands'] = $productBrandFullClass::data($this->connection, [
+            'sort' => 'm.title',
+        ]);
+
+        $filterStatus = $request->get('status') === null ? 'all' : $request->get('status');
+        $filterKeyword = $request->get('keyword');
+        $filterCategories = $request->get('category') ?: [];
+        $filterBrands = $request->get('brand') ?: [];
+        $filterType = $request->get('type');
+        $filterDateStart = $request->get('dateStart');
+        $filterDateEnd = $request->get('dateEnd');
+        $params['filterStatus'] = $filterStatus;
+        $params['filterKeyword'] = $filterKeyword;
+        $params['filterCategories'] = $filterCategories;
+        $params['filterBrands'] = $filterBrands;
+        $params['filterType'] = $filterType;
+        $params['filterDateStart'] = $filterDateStart;
+        $params['filterDateEnd'] = $filterDateEnd;
+
+        $filterSql = '';
+        $filterParams = [];
+
+        if ($filterStatus !== 'all') {
+            if ($filterStatus === '0') {
+                $filterSql .= ($filterSql ? ' AND ' : '') . '(m.status = 0 OR m.status IS NULL)';
+            } else {
+                $filterSql .= ($filterSql ? ' AND ' : '') . '(m.status = 1)';
+            }
+        }
+
+        if ($filterKeyword) {
+            $filterSql .= ($filterSql ? ' AND ' : '') . '(m.title LIKE ?)';
+            $filterParams[] = '%' . $filterKeyword . '%';
+        }
+
+        if (count($filterCategories)) {
+            $s = '';
+            $p = [];
+
+            foreach ($filterCategories as $filterCategory) {
+                $ormCategory = $productCategoryFullClass::getBySlug($this->connection, $filterCategory);
+                if ($ormCategory) {
+                    $s .= ($s ? ' OR ' : '') .  'm.categories LIKE ?';
+                    $p[] = '%"' . $ormCategory->getId() . '"%';
+                }
+            }
+            $filterSql .= ($filterSql ? ' AND ' : '') . "($s)";
+            $filterParams = array_merge($filterParams, $p);
+        }
+
+        if (count($filterBrands)) {
+            $s = '';
+            $p = [];
+
+            foreach ($filterBrands as $filterBrand) {
+                $ormBrand = $productBrandFullClass::getBySlug($this->connection, $filterBrand);
+                if ($ormBrand) {
+                    $s .= ($s ? ' OR ' : '') .  'm.brand = ?';
+                    $p[] = $ormBrand->getId();
+                }
+            }
+            $filterSql .= ($filterSql ? ' AND ' : '') . "($s)";
+            $filterParams = array_merge($filterParams, $p);
+        }
+
+        if ($filterDateStart) {
+            $filterSql .= ($filterSql ? ' AND ' : '') . '(m.added >= ?)';
+            $filterParams[] = date('Y-m-d 00:00:00', strtotime($filterDateStart));
+        }
+
+        if ($filterDateEnd) {
+            $filterSql .= ($filterSql ? ' AND ' : '') . '(m.added <= ?)';
+            $filterParams[] = date('Y-m-d 23:59:59', strtotime($filterDateEnd));
+        }
+
+        if ($filterType == 1) {
+            $filterSql .= ($filterSql ? ' AND ' : '') . '(m.outOfStock > 0)';
+        }
+
+        if ($filterType == 2) {
+            $filterSql .= ($filterSql ? ' AND ' : '') . '(m.lowStock > 0)';
+        }
+
+        if ($filterType == 3) {
+            $filterSql .= ($filterSql ? ' AND ' : '') . '(m.thumbnail IS NULL)';
+        }
+
+//        $limit = $model->getNumberPerPage();
+        $limit = 20;
+
+        $orms = $fullClass::data($this->connection, [
+            "whereSql" => $filterSql,
+            "params" => $filterParams,
+            "page" => $pageNum,
+            "limit" => $limit,
+            "sort" => $sort,
+            "order" => $order,
+//            "debug" => 1,
+        ]);
+
+        foreach ($orms as $orm) {
+            $orm->_pv = $productVariants[$orm->getUniqid()] ?? 0;
+            $orm->_pvDis = $productVariantsDis[$orm->getUniqid()] ?? 0;
+
+            $orm->_img = $assetOrms[$orm->getUniqid()] ?? 0;
+
+            $orm->_cats = array_filter(array_map(function ($itm) use ($productCategories) {
+                return $productCategories[$itm] ?? null;
+            }, json_decode($orm->getCategories() ?: '[]')));
+        }
+
+        $total = $fullClass::data($this->connection, [
+            "whereSql" => $filterSql,
+            "params" => $filterParams,
+            "count" => 1,
+        ]);
+
+        parse_str($request->getQueryString(), $parsedUrl);
+        unset($parsedUrl['sort']);
+        unset($parsedUrl['order']);
+        $parsedUrl = http_build_query($parsedUrl);
+
+        $params['total'] = $total['count'];
+        $params['totalPages'] = ceil($total['count'] / $limit);
+        $params['url'] = $request->getPathInfo() . "?sort=$sort&order=$order" . ($parsedUrl ? ('&' . $parsedUrl) : '');
+        $params['urlNoSort'] = $request->getPathInfo() . ($parsedUrl ? ('?' . $parsedUrl) : '');
+        $params['pageNum'] = $pageNum;
+        $params['sort'] = $sort;
+        $params['order'] = $order;
+        $params['orms'] = $orms;
+
+        return $this->render('cms/orms/orms-custom-product.twig', $params);
     }
 
     /**
