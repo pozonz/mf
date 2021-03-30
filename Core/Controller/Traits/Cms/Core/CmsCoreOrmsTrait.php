@@ -504,8 +504,7 @@ trait CmsCoreOrmsTrait
             $filterSql .= ($filterSql ? ' AND ' : '') . '(m.thumbnail IS NULL)';
         }
 
-//        $limit = $model->getNumberPerPage();
-        $limit = 20;
+        $limit = $model->getNumberPerPage();
 
         $orms = $fullClass::data($this->connection, [
             "whereSql" => $filterSql,
@@ -548,7 +547,7 @@ trait CmsCoreOrmsTrait
         $params['order'] = $order;
         $params['orms'] = $orms;
 
-        return $this->render('cms/orms/orms-custom-product.twig', $params);
+        return $this->render($params['theNode']->template, $params);
     }
 
     /**
