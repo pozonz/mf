@@ -197,7 +197,7 @@ trait CartPageTrait
         }
 
         if (!$order) {
-            throw new NotFoundHttpException();
+            return new RedirectResponse('/checkout');
         }
 
         $gatewayClass = $this->cartService->getGatewayClass($order->getPayType());
