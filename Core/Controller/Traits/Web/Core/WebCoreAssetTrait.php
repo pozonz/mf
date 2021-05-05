@@ -68,6 +68,8 @@ trait WebCoreAssetTrait
         if (!$returnOriginalFile && !$useWebp && file_exists($thumbnail) && file_exists($thumbnailHeader)) {
             $header = json_decode(file_get_contents($thumbnailHeader));
             if ($header) {
+                $header = (array)$header;
+                $header['Surrogate-Key'] = 'asset' . $asset->getId();
                 return $this->getBinaryFileResponse($thumbnail, $header);
             }
         }
@@ -75,6 +77,8 @@ trait WebCoreAssetTrait
         if (!$returnOriginalFile && $useWebp && file_exists($webpThumbnail) && file_exists($webpThumbnailHeader)) {
             $header = json_decode(file_get_contents($webpThumbnailHeader));
             if ($header) {
+                $header = (array)$header;
+                $header['Surrogate-Key'] = 'asset' . $asset->getId();
                 return $this->getBinaryFileResponse($webpThumbnail, $header);
             }
         }
@@ -126,6 +130,7 @@ trait WebCoreAssetTrait
                 "content-type" => 'image/jpeg',
                 "last-modified" => $saveDate,
                 "etag" => '"' . sprintf("%x-%x", $date->getTimestamp(), $fileSize) . '"',
+                "Surrogate-Key" => 'asset' . $asset->getId(),
             ]);
         }
 
@@ -196,6 +201,7 @@ trait WebCoreAssetTrait
             "content-type" => $fileType,
             "last-modified" => $saveDate,
             "etag" => '"' . sprintf("%x-%x", $date->getTimestamp(), $fileSize) . '"',
+            "Surrogate-Key" => 'asset' . $asset->getId(),
         ];
         file_put_contents($thumbnailHeader, json_encode($thumbnailHeaderContent));
 
@@ -216,6 +222,7 @@ trait WebCoreAssetTrait
                 "content-type" => $fileType,
                 "last-modified" => $saveDate,
                 "etag" => '"' . sprintf("%x-%x", $date->getTimestamp(), $fileSize) . '"',
+                "Surrogate-Key" => 'asset' . $asset->getId(),
             ];
             file_put_contents($webpThumbnailHeader, json_encode($webpThumbnailHeaderContent));
 

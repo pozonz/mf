@@ -13,10 +13,28 @@
             <td>{{itm.sku}}</td>
             <td>{{#formatMoney itm.price 2 '.' ',' '$' }}{{/formatMoney}}</td>
             <td>{{#formatMoney itm.salePrice 2 '.' ',' '$'}}{{/formatMoney}}</td>
-            <td>{{itm.stock}}</td>
+            <td class="{{#compare itm.stockEnabled 1 operator="=="}}
+                    {{#compare itm.stock 0 operator="<="}}out-of-stock{{/compare}}
+                {{/compare}}
+
+                {{#compare itm.stockEnabled 1 operator="=="}}
+                    {{#compare itm.stock 0 operator=">"}}
+                        {{#compare itm.stock itm.alertIfLessThan operator="<"}}
+                            low-stock
+                        {{/compare}}
+                    {{/compare}}
+                {{/compare}}">
+
+                {{#compare itm.stockEnabled 1 operator="!="}}-{{/compare}}
+                {{#compare itm.stockEnabled 1 operator="=="}}
+                    {{#compare itm.stock 0 operator="<="}}Out&nbsp;of&nbsp;stock{{/compare}}
+                    {{#compare itm.stock 0 operator=">"}}{{itm.stock}} {{#compare itm.stock itm.alertIfLessThan operator="<"}}(Low){{/compare}}{{/compare}}
+                {{/compare}}
+            </td>
             <td>
                 <a href="#" class="js-orm-status" data-status="{{itm.status}}"><img src="/cms/images/dot{{#compare itm.status 1}}Green{{/compare}}{{#compare itm.status 0}}Red{{/compare}}.gif" alt="" border="0"></a>
                 <a href="#" class="js-edit-variant"><img alt="Edit Record" title="Edit Record" src="/cms/images/editIcon.gif" border="0"></a>
+                <a href="#" class="js-copy-variant"><img alt="Edit Record" title="Edit Record" src="/cms/images/cloneIcon.gif" border="0"></a>
                 <a href="#" class="js-rm-field js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
             </td>
         </tr>

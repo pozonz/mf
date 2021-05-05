@@ -34,6 +34,11 @@ class ProductVariant extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $stockEnabled;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $stock;
     
     /**
@@ -124,6 +129,22 @@ class ProductVariant extends Base
     public function setSalePrice($salePrice)
     {
         $this->salePrice = $salePrice;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getStockEnabled()
+    {
+        return $this->stockEnabled;
+    }
+    
+    /**
+     * @param mixed stockEnabled
+     */
+    public function setStockEnabled($stockEnabled)
+    {
+        $this->stockEnabled = $stockEnabled;
     }
     
     /**

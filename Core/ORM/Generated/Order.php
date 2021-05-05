@@ -39,6 +39,11 @@ class Order extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $shippingApartmentNo;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $shippingAddress;
     
     /**
@@ -54,7 +59,7 @@ class Order extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $shippingPostcode;
+    private $shippingCountry;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -64,7 +69,7 @@ class Order extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $shippingCountry;
+    private $shippingPostcode;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -94,6 +99,11 @@ class Order extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $billingApartmentNo;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $billingAddress;
     
     /**
@@ -109,7 +119,7 @@ class Order extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $billingPostcode;
+    private $billingCountry;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -119,7 +129,7 @@ class Order extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $billingCountry;
+    private $billingPostcode;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -150,6 +160,16 @@ class Order extends Base
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $payToken;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $paySecret;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $payType;
     
     /**
      * #pz datetime DEFAULT NULL
@@ -245,6 +265,66 @@ class Order extends Base
      * #pz datetime DEFAULT NULL
      */
     private $submittedDate;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $logs;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $isPickup;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $pickupFirstName;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $pickupLastName;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $pickupPhone;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $passwordInput;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $createAnAccount;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $shippingUseExisting;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $billingUseExisting;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $hummRequestQuery;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $gatewaySent;
+    
+    /**
+     * #pz datetime DEFAULT NULL
+     */
+    private $gatewaySentDate;
     
     /**
      * @return mixed
@@ -345,6 +425,22 @@ class Order extends Base
     /**
      * @return mixed
      */
+    public function getShippingApartmentNo()
+    {
+        return $this->shippingApartmentNo;
+    }
+    
+    /**
+     * @param mixed shippingApartmentNo
+     */
+    public function setShippingApartmentNo($shippingApartmentNo)
+    {
+        $this->shippingApartmentNo = $shippingApartmentNo;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getShippingAddress()
     {
         return $this->shippingAddress;
@@ -393,17 +489,17 @@ class Order extends Base
     /**
      * @return mixed
      */
-    public function getShippingPostcode()
+    public function getShippingCountry()
     {
-        return $this->shippingPostcode;
+        return $this->shippingCountry;
     }
     
     /**
-     * @param mixed shippingPostcode
+     * @param mixed shippingCountry
      */
-    public function setShippingPostcode($shippingPostcode)
+    public function setShippingCountry($shippingCountry)
     {
-        $this->shippingPostcode = $shippingPostcode;
+        $this->shippingCountry = $shippingCountry;
     }
     
     /**
@@ -425,17 +521,17 @@ class Order extends Base
     /**
      * @return mixed
      */
-    public function getShippingCountry()
+    public function getShippingPostcode()
     {
-        return $this->shippingCountry;
+        return $this->shippingPostcode;
     }
     
     /**
-     * @param mixed shippingCountry
+     * @param mixed shippingPostcode
      */
-    public function setShippingCountry($shippingCountry)
+    public function setShippingPostcode($shippingPostcode)
     {
-        $this->shippingCountry = $shippingCountry;
+        $this->shippingPostcode = $shippingPostcode;
     }
     
     /**
@@ -521,6 +617,22 @@ class Order extends Base
     /**
      * @return mixed
      */
+    public function getBillingApartmentNo()
+    {
+        return $this->billingApartmentNo;
+    }
+    
+    /**
+     * @param mixed billingApartmentNo
+     */
+    public function setBillingApartmentNo($billingApartmentNo)
+    {
+        $this->billingApartmentNo = $billingApartmentNo;
+    }
+    
+    /**
+     * @return mixed
+     */
     public function getBillingAddress()
     {
         return $this->billingAddress;
@@ -569,17 +681,17 @@ class Order extends Base
     /**
      * @return mixed
      */
-    public function getBillingPostcode()
+    public function getBillingCountry()
     {
-        return $this->billingPostcode;
+        return $this->billingCountry;
     }
     
     /**
-     * @param mixed billingPostcode
+     * @param mixed billingCountry
      */
-    public function setBillingPostcode($billingPostcode)
+    public function setBillingCountry($billingCountry)
     {
-        $this->billingPostcode = $billingPostcode;
+        $this->billingCountry = $billingCountry;
     }
     
     /**
@@ -601,17 +713,17 @@ class Order extends Base
     /**
      * @return mixed
      */
-    public function getBillingCountry()
+    public function getBillingPostcode()
     {
-        return $this->billingCountry;
+        return $this->billingPostcode;
     }
     
     /**
-     * @param mixed billingCountry
+     * @param mixed billingPostcode
      */
-    public function setBillingCountry($billingCountry)
+    public function setBillingPostcode($billingPostcode)
     {
-        $this->billingCountry = $billingCountry;
+        $this->billingPostcode = $billingPostcode;
     }
     
     /**
@@ -708,6 +820,38 @@ class Order extends Base
     public function setPayToken($payToken)
     {
         $this->payToken = $payToken;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPaySecret()
+    {
+        return $this->paySecret;
+    }
+    
+    /**
+     * @param mixed paySecret
+     */
+    public function setPaySecret($paySecret)
+    {
+        $this->paySecret = $paySecret;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPayType()
+    {
+        return $this->payType;
+    }
+    
+    /**
+     * @param mixed payType
+     */
+    public function setPayType($payType)
+    {
+        $this->payType = $payType;
     }
     
     /**
@@ -1012,6 +1156,198 @@ class Order extends Base
     public function setSubmittedDate($submittedDate)
     {
         $this->submittedDate = $submittedDate;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+    
+    /**
+     * @param mixed logs
+     */
+    public function setLogs($logs)
+    {
+        $this->logs = $logs;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getIsPickup()
+    {
+        return $this->isPickup;
+    }
+    
+    /**
+     * @param mixed isPickup
+     */
+    public function setIsPickup($isPickup)
+    {
+        $this->isPickup = $isPickup;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPickupFirstName()
+    {
+        return $this->pickupFirstName;
+    }
+    
+    /**
+     * @param mixed pickupFirstName
+     */
+    public function setPickupFirstName($pickupFirstName)
+    {
+        $this->pickupFirstName = $pickupFirstName;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPickupLastName()
+    {
+        return $this->pickupLastName;
+    }
+    
+    /**
+     * @param mixed pickupLastName
+     */
+    public function setPickupLastName($pickupLastName)
+    {
+        $this->pickupLastName = $pickupLastName;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPickupPhone()
+    {
+        return $this->pickupPhone;
+    }
+    
+    /**
+     * @param mixed pickupPhone
+     */
+    public function setPickupPhone($pickupPhone)
+    {
+        $this->pickupPhone = $pickupPhone;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getPasswordInput()
+    {
+        return $this->passwordInput;
+    }
+    
+    /**
+     * @param mixed passwordInput
+     */
+    public function setPasswordInput($passwordInput)
+    {
+        $this->passwordInput = $passwordInput;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCreateAnAccount()
+    {
+        return $this->createAnAccount;
+    }
+    
+    /**
+     * @param mixed createAnAccount
+     */
+    public function setCreateAnAccount($createAnAccount)
+    {
+        $this->createAnAccount = $createAnAccount;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getShippingUseExisting()
+    {
+        return $this->shippingUseExisting;
+    }
+    
+    /**
+     * @param mixed shippingUseExisting
+     */
+    public function setShippingUseExisting($shippingUseExisting)
+    {
+        $this->shippingUseExisting = $shippingUseExisting;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getBillingUseExisting()
+    {
+        return $this->billingUseExisting;
+    }
+    
+    /**
+     * @param mixed billingUseExisting
+     */
+    public function setBillingUseExisting($billingUseExisting)
+    {
+        $this->billingUseExisting = $billingUseExisting;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getHummRequestQuery()
+    {
+        return $this->hummRequestQuery;
+    }
+    
+    /**
+     * @param mixed hummRequestQuery
+     */
+    public function setHummRequestQuery($hummRequestQuery)
+    {
+        $this->hummRequestQuery = $hummRequestQuery;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getGatewaySent()
+    {
+        return $this->gatewaySent;
+    }
+    
+    /**
+     * @param mixed gatewaySent
+     */
+    public function setGatewaySent($gatewaySent)
+    {
+        $this->gatewaySent = $gatewaySent;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getGatewaySentDate()
+    {
+        return $this->gatewaySentDate;
+    }
+    
+    /**
+     * @param mixed gatewaySentDate
+     */
+    public function setGatewaySentDate($gatewaySentDate)
+    {
+        $this->gatewaySentDate = $gatewaySentDate;
     }
     
 }

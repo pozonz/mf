@@ -34,27 +34,7 @@ class OrderItem extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
-    private $onSaleActive;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $noMemberDiscount;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $noPromoDiscount;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
     private $price;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $discount;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -65,26 +45,6 @@ class OrderItem extends Base
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $weight;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $totalPrice;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $totalWeight;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $totalDiscount;
-    
-    /**
-     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-     */
-    private $totalCompareAtPrice;
     
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -179,54 +139,6 @@ class OrderItem extends Base
     /**
      * @return mixed
      */
-    public function getOnSaleActive()
-    {
-        return $this->onSaleActive;
-    }
-    
-    /**
-     * @param mixed onSaleActive
-     */
-    public function setOnSaleActive($onSaleActive)
-    {
-        $this->onSaleActive = $onSaleActive;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getNoMemberDiscount()
-    {
-        return $this->noMemberDiscount;
-    }
-    
-    /**
-     * @param mixed noMemberDiscount
-     */
-    public function setNoMemberDiscount($noMemberDiscount)
-    {
-        $this->noMemberDiscount = $noMemberDiscount;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getNoPromoDiscount()
-    {
-        return $this->noPromoDiscount;
-    }
-    
-    /**
-     * @param mixed noPromoDiscount
-     */
-    public function setNoPromoDiscount($noPromoDiscount)
-    {
-        $this->noPromoDiscount = $noPromoDiscount;
-    }
-    
-    /**
-     * @return mixed
-     */
     public function getPrice()
     {
         return $this->price;
@@ -238,22 +150,6 @@ class OrderItem extends Base
     public function setPrice($price)
     {
         $this->price = $price;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getDiscount()
-    {
-        return $this->discount;
-    }
-    
-    /**
-     * @param mixed discount
-     */
-    public function setDiscount($discount)
-    {
-        $this->discount = $discount;
     }
     
     /**
@@ -286,70 +182,6 @@ class OrderItem extends Base
     public function setWeight($weight)
     {
         $this->weight = $weight;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getTotalPrice()
-    {
-        return $this->totalPrice;
-    }
-    
-    /**
-     * @param mixed totalPrice
-     */
-    public function setTotalPrice($totalPrice)
-    {
-        $this->totalPrice = $totalPrice;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getTotalWeight()
-    {
-        return $this->totalWeight;
-    }
-    
-    /**
-     * @param mixed totalWeight
-     */
-    public function setTotalWeight($totalWeight)
-    {
-        $this->totalWeight = $totalWeight;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getTotalDiscount()
-    {
-        return $this->totalDiscount;
-    }
-    
-    /**
-     * @param mixed totalDiscount
-     */
-    public function setTotalDiscount($totalDiscount)
-    {
-        $this->totalDiscount = $totalDiscount;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getTotalCompareAtPrice()
-    {
-        return $this->totalCompareAtPrice;
-    }
-    
-    /**
-     * @param mixed totalCompareAtPrice
-     */
-    public function setTotalCompareAtPrice($totalCompareAtPrice)
-    {
-        $this->totalCompareAtPrice = $totalCompareAtPrice;
     }
     
     /**

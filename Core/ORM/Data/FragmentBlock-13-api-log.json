@@ -1,0 +1,32 @@
+{
+    "className": "FragmentBlock",
+    "orm": {
+        "id": "13",
+        "uniqid": "73b31647-d1de-4366-b2d5-1347cbed8a66",
+        "slug": "api-log",
+        "rank": "13",
+        "added": "2021-03-16 15:00:57",
+        "modified": "2021-04-06 20:19:03",
+        "publishFrom": null,
+        "publishTo": null,
+        "metaTitle": null,
+        "metaDescription": null,
+        "ogTitle": null,
+        "ogDescription": null,
+        "ogImage": null,
+        "lastEditedBy": "2",
+        "status": "1",
+        "parentId": null,
+        "closed": null,
+        "extraInfo": null,
+        "siteMapUrl": null,
+        "versionUuid": "",
+        "versionId": null,
+        "oldId": null,
+        "isBuiltIn": 1,
+        "title": "API log",
+        "twig": "_",
+        "tags": "[\"11\"]",
+        "items": "[{\"widget\":\"0\",\"id\":\"type\",\"title\":\"Type:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"status\",\"title\":\"Status:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"url\",\"title\":\"URL:\",\"sql\":\"\"},{\"widget\":\"7\",\"id\":\"date\",\"title\":\"Date:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"secondsUsed\",\"title\":\"Seconds used:\",\"sql\":\"\"},{\"widget\":\"0\",\"id\":\"user\",\"title\":\"User:\",\"sql\":\"\"},{\"widget\":\"1\",\"id\":\"request\",\"title\":\"Request:\",\"sql\":\"\"},{\"widget\":\"1\",\"id\":\"response\",\"title\":\"Response:\",\"sql\":\"\"}]"
+    }
+}

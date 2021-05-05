@@ -25,7 +25,7 @@
 {#                    <td class="tableHead" width="40px"><a href="{{ app.request.pathInfo }}?sort=id&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>#}
                     <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">ID</a></td>
                     <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=shippingFirstName&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Name</a></td>
-                    <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=added&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Date</a></td>
+                    <td class="tableHead" width="150px"><a href="{{ app.request.pathInfo }}?sort=added&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Date</a></td>
                     <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=total&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Price</a></td>
                     <td class="tableHead"><a href="{{ app.request.pathInfo }}?sort=category&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}">Status</a></td>
                     <td class="tableHead" width="120px" align="right">Action</td>
@@ -40,10 +40,10 @@
 {#                        <td>{{ itm.id }}</td>#}
                         <td>{{ itm.title }}</td>
                         <td>{{ itm.shippingFirstname }} {{ itm.shippingLastName }}</td>
-                        <td>{{ itm.submittedDate|date('d M y H:i:s') }}</td>
+                        <td>{{ itm.submittedDate|date('d M y H:i') }}</td>
                         <td>${{ itm.total|number_format(2) }}</td>
                         <td>
-                            {% if itm.category == 2 %}PAID{% else %}UNPAID{% endif %}
+                            {% if itm.category == cartService.statusAccepted %}PAID{% else %}UNPAID{% endif %}
                         </td>
                         <td class="iconCell" align="right">
 {#                            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>#}

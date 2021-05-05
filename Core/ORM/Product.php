@@ -6,16 +6,7 @@ use MillenniumFalcon\Core\ORM\Traits\ProductTrait;
 use MillenniumFalcon\Core\Pattern\Cart\CartProductInterface;
 use MillenniumFalcon\Core\Pattern\Cart\CartProductTrait;
 
-class Product extends \MillenniumFalcon\Core\ORM\Generated\Product implements CartProductInterface
+class Product extends \MillenniumFalcon\Core\ORM\Generated\Product
 {
-    use ProductTrait, CartProductTrait;
-
-    /**
-     * To be overwritten
-     * @return string
-     */
-    public function objImageUrl()
-    {
-        return '';
-    }
+    use ProductTrait;
 }

@@ -2,79 +2,84 @@
 //Last updated: 2019-09-27 09:24:36
 namespace MillenniumFalcon\Core\ORM\Traits;
 
+use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Service\ModelService;
 
 trait OrderTrait
 {
-    protected $orderItems;
+    protected $_orderItems;
 
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    public function objShippingOptions()
+    public function __construct(Connection $pdo)
     {
+        $this->setCategory(0);
+        $this->setCreateAnAccount(0);
+        $this->setBillingSame(1);
+        $this->setBillingSave(1);
+        $this->setBillingUseExisting(0);
+        $this->setShippingSave(1);
+        $this->setShippingUseExisting(0);
+        $this->setIsPickup(null);
 
+        parent::__construct($pdo);
     }
 
     /**
-     * @return bool
-     * @throws \Exception
+     * @return mixed|string
      */
-    public function update($customer)
+    public function objShippingAddress()
     {
-        $discountType = 0;
-        $discountValue = 0;
-
-        $fullClass = ModelService::fullClass($this->getPdo(), 'PromoCode');
-        $promoCode = $fullClass::getByField($this->getPdo(), 'code', $this->getPromoCode());
-        if ($promoCode && $promoCode->isValid()) {
-            $discountType = $promoCode->getPerc() == 1 ? 1 : 2;
-            $discountValue = $promoCode->getValue();
-            if ($promoCode->getPerc() == 1) {
-                $discountValue = round(($promoCode->getValue() / 100) * $resultPriceToDiscount, 2);
-            }
-
-            $this->setPromoId($promoCode->getId());
-        } else {
-            //invalid promo code
-            $this->setPromoId(null);
+        $address = $this->getShippingAddress();
+        if ($this->getShippingApartmentNo()) {
+            $address = $this->getShippingApartmentNo() . ', ' . $address;
         }
-
-        $this->setDiscountType($discountType);
-        $this->setDiscountValue($discountValue);
-
-        $subtotalCompareAtPrice = 0;
-        $subtotalPrice = 0;
-        $subtotalDiscount = 0;
-        $subtotalWeight = 0;
-
-        $orderItems = $this->objOrderItems();
-        foreach ($orderItems as $idx => $itm) {
-            $itm->update($this, $customer);
-
-            $subtotalCompareAtPrice += $itm->getTotalCompareAtPrice();
-            $subtotalPrice += $itm->getTotalPrice();
-            $subtotalDiscount += $itm->getTotalDiscount();
-            $subtotalWeight += $itm->getTotalWeight();
+        if ($this->getShippingAddress2()) {
+            $address = $address . ', ' . $this->getShippingAddress2();
         }
+        if ($this->getShippingCity()) {
+            $address = $address . ', ' . $this->getShippingCity();
+        }
+        if ($this->getShippingPostcode()) {
+            $address = $address . ' ' . $this->getShippingPostcode();
+        }
+        if ($this->getShippingCountry()) {
+            $address = $address . ', ' . $this->getShippingCountry();
+        }
+        return $address;
+    }
 
-        $freeDelivery = 0;
+    /**
+     * @return mixed|string
+     */
+    public function objBillingAddress()
+    {
+        if ($this->getBillingSame()) {
+            return $this->objShippingAddress();
+        }
+        $address = $this->getBillingAddress();
+        if ($this->getBillingApartmentNo()) {
+            $address = $this->getBillingApartmentNo() . ', ' . $address;
+        }
+        if ($this->getBillingAddress2()) {
+            $address = $address . ', ' . $this->getBillingAddress2();
+        }
+        if ($this->getBillingCity()) {
+            $address = $address . ', ' . $this->getBillingCity();
+        }
+        if ($this->getBillingPostcode()) {
+            $address = $address . ' ' . $this->getBillingPostcode();
+        }
+        if ($this->getBillingCountry()) {
+            $address = $address . ', ' . $this->getBillingCountry();
+        }
+        return $address;
+    }
 
-        $gst = round(($subtotalPrice * 3) / 23, 2);
-
-        $deliveryFee = $this->getShippingCost() ?: 0;
-        $total = $subtotalPrice + max($deliveryFee, 0);
-
-        $this->setWeight($subtotalWeight);
-        $this->setSubtotal($subtotalCompareAtPrice);
-        $this->setDiscount($subtotalDiscount);
-        $this->setAfterDiscount($subtotalPrice);
-        $this->setTax($gst);
-        $this->setShippingCost($deliveryFee);
-        $this->setTotal($total);
-        $this->save();
-        return true;
+    /**
+     * @param $orderItems
+     */
+    public function setOrderItems($orderItems)
+    {
+        $this->_orderItems = $orderItems;
     }
 
     /**
@@ -83,14 +88,25 @@ trait OrderTrait
      */
     public function objOrderItems()
     {
-        if (!$this->orderItems) {
+        if (!$this->_orderItems) {
             $fullClass = ModelService::fullClass($this->getPdo(), 'OrderItem');
-            $this->orderItems = $fullClass::active($this->getPdo(), array(
+            $this->_orderItems = $fullClass::active($this->getPdo(), array(
                 'whereSql' => 'm.orderId = ?',
                 'params' => array($this->getId()),
+                'sort' => 'm.id',
+                'order' => 'DESC',
             ));
         }
-        return $this->orderItems;
+        return $this->_orderItems;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function objJsonOrderItems()
+    {
+        return $this->objOrderItems();
     }
 
     /**
@@ -109,6 +125,23 @@ trait OrderTrait
     }
 
     /**
+     * @return array
+     * @throws \Exception
+     */
+    public function objShippingOptions()
+    {
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function objHummRequestQuery()
+    {
+        return (array)json_decode($this->getHummRequestQuery());
+    }
+
+    /**
      * @return string
      */
     static public function getCmsOrmsTwig()
@@ -116,12 +149,11 @@ trait OrderTrait
         return 'cms/orms/orms-custom-order.html.twig';
     }
 
-    /**
-     * @return string
-     */
-    static public function getCmsOrmTwig()
-    {
-        return 'cms/orms/orm-custom-order.html.twig';
-    }
-
+//    /**
+//     * @return string
+//     */
+//    static public function getCmsOrmTwig()
+//    {
+//        return 'cms/orms/orm-custom-order.html.twig';
+//    }
 }

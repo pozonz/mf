@@ -177,14 +177,16 @@ class FormDescriptorBuilder extends AbstractType
 
         $validations = [];
 
-        if ($field->widget == 'email') {
-            $validations[] = new Assert\Email();
+        if ($field->widget == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\EmailType') {
+            $validations[] = new Assert\Email([
+                'mode' => 'html5',
+            ]);
         }
 
-        if ($field->widget == 'repeated') {
+        if ($field->widget == '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\RepeatedType') {
             $validations[] = new Assert\Length(array(
-                'min' => 8,
-                'max' => 32,
+                'min' => 6,
+                'max' => 128,
             ));
         }
 

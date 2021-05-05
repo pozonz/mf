@@ -2,6 +2,8 @@
 
 namespace MillenniumFalcon\Core\ORM\Traits;
 
+use GuzzleHttp\Client;
+use MillenniumFalcon\Core\ORM\FastlyRequest;
 use MillenniumFalcon\Core\Service\AssetService;
 use MillenniumFalcon\Core\Service\UtilsService;
 
@@ -39,6 +41,32 @@ trait AssetTrait
             } while ($orm);
             $this->setCode($code);
         }
+
+        if ($this->getId()) {
+            if (getenv('FASTLY_API_KEY') && getenv('FASTLY_SERVICE_ID')) {
+                $clientParams = [
+                    'base_uri' => 'https://api.fastly.com',
+                    'headers' => [
+                        'Fastly-Key' => getenv('FASTLY_API_KEY'),
+                        'Accept' => 'application/json',
+                    ]
+                ];
+                $url = "/service/" . getenv('FASTLY_SERVICE_ID') . "/purge/asset" . $this->getId();
+
+                $client = new Client($clientParams);
+                $response = $client->request('POST', $url);
+                $content = $response->getBody()->getContents();
+
+                $fastlyRequest = new FastlyRequest($this->getPdo());
+                $fastlyRequest->setTitle($this->getId() . ' / ' . $this->getCode());
+                $fastlyRequest->setUrl($url);
+                $fastlyRequest->setClientParams(json_encode($clientParams, JSON_PRETTY_PRINT));
+                $fastlyRequest->setResponse($content);
+                $fastlyRequest->save();
+            }
+
+        }
+
         return parent::save($doNotSaveVersion, $options);
     }
 

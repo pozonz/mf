@@ -3,7 +3,7 @@
 {% block formWidgets %}
 	<h2>Order Detail</h2>
 	<div class="formStyle textarea">
-		<label>Status:</label> {% if orm.category == 0 %}NEW{% elseif orm.category == 2 %}PAID{% else %}UNPAID{% endif %}
+		<label>Status:</label> {% if orm.category == 0 %}NEW{% elseif orm.category == cartService.statusAccepted %}PAID{% else %}UNPAID{% endif %}
 	</div>
 	<div class="formStyle textarea">
 		<label>ID:</label> {{ orm.title }}
@@ -26,19 +26,22 @@
 			<label>Phone:</label> {{ orm.shippingPhone }}
 		</div>
 		<div class="formStyle textarea">
+			<label>Apartment No.:</label> {{ orm.shippingApartmentNo }}
+		</div>
+		<div class="formStyle textarea">
 			<label>Address:</label> {{ orm.shippingAddress }}
 		</div>
 		<div class="formStyle textarea">
 			<label>Address2:</label> {{ orm.shippingAddress2 }}
 		</div>
 		<div class="formStyle textarea">
-			<label>Suburb:</label> {{ orm.shippingState }}
-		</div>
-		<div class="formStyle textarea">
 			<label>City:</label> {{ orm.shippingCity }}
 		</div>
 		<div class="formStyle textarea">
 			<label>Postcode:</label> {{ orm.shippingPostcode }}
+		</div>
+		<div class="formStyle textarea">
+			<label>Region:</label> {{ orm.shippingState }}
 		</div>
 		<div label="formStyle textarea">
 			<label>Country:</label> {{ orm.shippingCountry }}
@@ -65,19 +68,22 @@
 				<label>Phone:</label> {{ orm.billingPhone }}
 			</div>
 			<div class="formStyle textarea">
+				<label>Apartment No.:</label> {{ orm.billingApartmentNo }}
+			</div>
+			<div class="formStyle textarea">
 				<label>Address:</label> {{ orm.billingAddress }}
 			</div>
 			<div class="formStyle textarea">
 				<label>Address2:</label> {{ orm.billingAddress2 }}
 			</div>
 			<div class="formStyle textarea">
-				<label>Suburb:</label> {{ orm.billingState }}
-			</div>
-			<div class="formStyle textarea">
 				<label>City:</label> {{ orm.billingCity }}
 			</div>
 			<div class="formStyle textarea">
 				<label>Postcode:</label> {{ orm.billingPostcode }}
+			</div>
+			<div class="formStyle textarea">
+				<label>Region:</label> {{ orm.billingState }}
 			</div>
 			<div label="formStyle textarea">
 				<label>Country:</label> {{ orm.billingCountry }}
@@ -107,7 +113,7 @@
 						<small>{{ itm.sku }}</small>
 					</td>
 					<td class="text-right">
-						{% if itm.onSaleActive %}
+						{% if itm.compareAtPrice %}
 							<del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>
 							<small>$</small>
 							{{ itm.price|number_format(2, '.', ',') }}
@@ -117,7 +123,7 @@
 						{% endif %}
 					</td>
 					<td class="text-right">{{ itm.quantity }}</td>
-					<td class="text-right">${{ itm.totalPrice|number_format(2, '.', ',') }}</td>
+					<td class="text-right">${{ (itm.price * itm.quantity)|number_format(2, '.', ',') }}</td>
 				</tr>
 			{% endfor %}
 
@@ -143,7 +149,6 @@
 					<td class="text-right font-weight-bold" colspan="2">After discount:</td>
 					<td class="text-right font-weight-bold">
 						${{ orm.afterDiscount|number_format(2, '.', ',') }}
-						<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
 					</td>
 				</tr>
 			{% else %}
@@ -152,7 +157,6 @@
 					<td class="text-right font-weight-bold" colspan="2">Subtotal:</td>
 					<td class="text-right font-weight-bold">
 						${{ orm.subtotal|number_format(2, '.', ',') }}
-						<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
 					</td>
 				</tr>
 			{% endif %}
@@ -162,13 +166,16 @@
 				<td class="text-right font-weight-bold" colspan="2">Delivery fee:</td>
 				<td class="text-right font-weight-bold">
 					${{ orm.shippingCost|number_format(2, '.', ',') }}
-					<div><small>({{ orm.shippingTitle }})</small></div>
+					{% if orm.shippingTitle %}<div><small>({{ orm.shippingTitle }})</small></div>{% endif %}
 				</td>
 			</tr>
 			<tr>
 				<td style="border: none;"></td>
 				<td class="text-right font-weight-bold" colspan="2">Total:</td>
-				<td class="text-right font-weight-bold">${{ orm.total|number_format(2, '.', ',') }}</td>
+				<td class="text-right font-weight-bold">
+					${{ orm.total|number_format(2, '.', ',') }}
+					<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
+				</td>
 			</tr>
 		</tbody>
 	</table>
