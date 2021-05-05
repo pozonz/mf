@@ -230,7 +230,7 @@ trait CmsInstallTrait
         foreach ($files as $file) {
             if (is_file("$dir/$file")) {
                 $jsonData = json_decode(file_get_contents("$dir/$file"));
-                if (isset($exist[$jsonData->className])) {
+                if (isset($exist[$jsonData->className]) && $exist[$jsonData->className] == 0) {
                     $fullClass = ModelService::fullClass($this->connection, $jsonData->className);
                     $orm = new $fullClass($this->connection);
                     foreach ($jsonData->orm as $key => $val) {

@@ -239,16 +239,78 @@ trait CmsCoreOrmTrait
         $params['fragmentSubmitted'] = 0;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $isNew = $orm->getId() ? 0 : 1;
+
             $orm->setIsBuiltIn($orm->getIsBuiltIn() ? 1 : 0);
 
             $submitButtonValue = $request->get('submit');
 
             if ($submitButtonValue == 'Preview') {
-                $orm->savePreview();
-                throw new RedirectException($orm->getFrontendUrl() . "?__preview_" . strtolower($model->getClassName()) . "=" . $orm->getVersionUuid());
+                $user = UtilsService::getUser($this->container);
+
+                $newOrm = $orm->savePreview();
+                $newOrm->setLastEditedBy($user->getId());
+                $newOrm->save(true);
+                throw new RedirectException($orm->getFrontendUrl() . "?__preview_" . strtolower($model->getClassName()) . "=" . $newOrm->getVersionUuid());
+
+            } elseif ($submitButtonValue == 'Save as draft') {
+                $user = UtilsService::getUser($this->container);
+
+                if ($isNew) {
+                    $orm->setLastEditedBy($user->getId());
+                    $orm->save();
+                }
+
+                $newOrm = $orm->saveDraft();
+                $newOrm->setLastEditedBy($user->getId());
+                $newOrm->save(true);
+
+                $pathInfo = $request->getPathInfo();
+
+                if ($isNew) {
+                    $copyIdx = strpos($pathInfo, '/copy/');
+                    if ($copyIdx !== false) {
+                        $pathInfo = substr($pathInfo, 0, $copyIdx) . '/new';
+                    }
+
+                    $pathInfoFragments = explode('/', $pathInfo);
+                    array_pop($pathInfoFragments);
+                    array_push($pathInfoFragments, $newOrm->getVersionId());
+                    $pathInfo = implode('/', $pathInfoFragments);
+                }
+
+                throw new RedirectException($pathInfo . "/version/" . $newOrm->getVersionUuid() . '?returnUrl=' . urlencode($returnUrl));
+
+            } elseif ($submitButtonValue == 'Update') {
+                $pathInfo = $request->getPathInfo();
+                $pathInfoFragments = explode('/', $pathInfo);
+                $pathInfoLastFragment = end($pathInfoFragments);
+
+                $fullClass = ModelService::fullClass($this->connection, $className);
+                $newOrm = $fullClass::data($this->connection, [
+                    'whereSql' => 'm.versionUuid = ?',
+                    'params' => [$pathInfoLastFragment],
+                    'limit' => 1,
+                    'oneOrNull' => 1,
+                    'includePreviousVersion' => 1,
+                ]);
+
+                if (!$newOrm) {
+                    throw new NotFoundHttpException();
+                }
+
+                $orm->setVersionId($newOrm->getVersionId());
+                $orm->setVersionUuid($newOrm->getVersionUuid());
+                $orm->setId($newOrm->getId());
+                $orm->setUniqid($newOrm->getUniqid());
+                $orm->setAdded($newOrm->getAdded());
+                $orm->setModified($newOrm->getModified());
+                $orm->setLastEditedBy($newOrm->getLastEditedBy());
+                $orm->setStatus($newOrm->getStatus());
+                $orm->save(true);
+                throw new RedirectException($request->getRequestUri());
             }
 
-            $isNew = $orm->getId() ? 0 : 1;
             $this->_convertDateValue($orm, $model);
 
             $user = UtilsService::getUser($this->container);
@@ -256,7 +318,7 @@ trait CmsCoreOrmTrait
             $orm->save();
 
             if ($isNew) {
-                $orm->setRank($orm->getId());
+                $orm->setRank(0 - $orm->getId());
                 $orm->save(true, [
                     'justSaveRank' => 1,
                 ]);
@@ -272,12 +334,41 @@ trait CmsCoreOrmTrait
 
             $baseUrl = str_replace('copy/', '', $params['theNode']->getUrl());
             if ($submitButtonValue == 'Apply' || $submitButtonValue == 'Restore') {
+                if ($submitButtonValue == 'Restore' && $orm->getIsDraft()) {
+                    $pathInfo = $request->getPathInfo();
+                    $pathInfoFragments = explode('/', $pathInfo);
+                    $pathInfoLastFragment = end($pathInfoFragments);
+
+                    $fullClass = ModelService::fullClass($this->connection, $className);
+                    $newOrm = $fullClass::data($this->connection, [
+                        'whereSql' => 'm.versionUuid = ?',
+                        'params' => [$pathInfoLastFragment],
+                        'limit' => 1,
+                        'oneOrNull' => 1,
+                        'includePreviousVersion' => 1,
+                    ]);
+
+                    if (!$newOrm) {
+                        throw new NotFoundHttpException();
+                    }
+
+                    $newOrm->delete();
+                }
                 throw new RedirectException($baseUrl . $orm->getId() . '?returnUrl=' . urlencode($returnUrl));
             } else if ($submitButtonValue == 'Save') {
                 throw new RedirectException($returnUrl);
             } else if ($submitButtonValue == 'Save changes') {
                 $params['fragmentSubmitted'] = 1;
             }
+        }
+
+        $params['basePathInfo'] = $request->getPathInfo();
+        $params['currentOrm'] = $orm;
+        if (count($params['urlFragments']) > 2 && $params['urlFragments'][count($params['urlFragments']) - 2] == 'version') {
+            $fullClass = ModelService::fullClass($this->connection, $className);
+            $basePathInfoArray = array_splice($params['urlFragments'], 0, count($params['urlFragments']) - 2);
+            $params['basePathInfo'] = '/' . implode('/', $basePathInfoArray);
+            $params['currentOrm'] = $fullClass::getById($this->connection, $orm->getId());
         }
 
         $params['returnUrl'] = $returnUrl;
