@@ -1,7 +1,7 @@
 {
     "uniqid": "6b52f45e-90e5-47d8-8802-d3494a7b3e44",
     "slug": "a-b-tests",
-    "rank": 27,
+    "rank": 29,
     "added": "2020-11-15 17:19:34",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "A\/B tests",

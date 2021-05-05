@@ -117,6 +117,11 @@ trait BaseDefaultTrait
     private $versionId;
 
     /**
+     * #pz tinyint(1) NULL DEFAULT 0
+     */
+    private $isDraft;
+
+    /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
     private $oldId;
@@ -508,5 +513,21 @@ trait BaseDefaultTrait
     public function setIsBuiltIn($isBuiltIn): void
     {
         $this->isBuiltIn = $isBuiltIn;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsDraft()
+    {
+        return $this->isDraft;
+    }
+
+    /**
+     * @param mixed $isDraft
+     */
+    public function setIsDraft($isDraft): void
+    {
+        $this->isDraft = $isDraft;
     }
 }

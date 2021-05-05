@@ -1,7 +1,7 @@
 {
     "uniqid": "5d8d3e0ec562f",
     "slug": "customer-addresses",
-    "rank": 30,
+    "rank": 32,
     "added": "2019-09-27 10:39:10",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "Customer addresses",

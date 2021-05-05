@@ -151,7 +151,7 @@ trait CmsCoreTrait
         foreach ($pageCategories as $pageCategory) {
             $toBeMergedNodes = [];
             $fullClass = ModelService::fullClass($this->connection, 'Page');
-            $pages = $fullClass::active($this->connection, [
+            $pages = $fullClass::data($this->connection, [
                 'whereSql' => 'm.category LIKE ? AND (m.hideFromCMSNav IS NULL OR m.hideFromCMSNav != 1)',
                 'params' => ['%' . $pageCategory->getId() . '%'],
             ]);

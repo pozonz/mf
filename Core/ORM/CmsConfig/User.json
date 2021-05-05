@@ -1,7 +1,7 @@
 {
     "uniqid": "5b8f4a68a1768",
     "slug": "users",
-    "rank": 1,
+    "rank": 3,
     "added": "2018-08-25 19:21:03",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "Users",

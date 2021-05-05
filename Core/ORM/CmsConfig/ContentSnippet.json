@@ -1,7 +1,7 @@
 {
     "uniqid": "5d4667102e2a8",
     "slug": "content-snippets",
-    "rank": 14,
+    "rank": 15,
     "added": "2019-08-04 17:03:12",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -19,6 +19,7 @@
     "siteMapUrl": null,
     "versionUuid": "",
     "versionId": null,
+    "isDraft": "0",
     "oldId": null,
     "isBuiltIn": "0",
     "title": "Content snippets",
