@@ -242,6 +242,7 @@ trait CmsCoreOrmTrait
             $isNew = $orm->getId() ? 0 : 1;
 
             $orm->setIsBuiltIn($orm->getIsBuiltIn() ? 1 : 0);
+            $this->_convertDateValue($orm, $model);
 
             $submitButtonValue = $request->get('submit');
 
@@ -311,7 +312,6 @@ trait CmsCoreOrmTrait
                 throw new RedirectException($request->getRequestUri());
             }
 
-            $this->_convertDateValue($orm, $model);
 
             $user = UtilsService::getUser($this->container);
             $orm->setLastEditedBy($user->getId());
