@@ -61,7 +61,7 @@ class FormDescriptorBuilder extends AbstractType
         $countryInfo = $this->session->get(UtilsService::COUNTRY_SESSION_KEY);
         if (!$countryInfo) {
             $request = Request::createFromGlobals();
-            $countryInfo = UtilsService::ip_info(getenv('TEST_CLIENT_IP') ?: $request->getClientIp());
+            $countryInfo = UtilsService::ip_info($request);
             $countryInfo = $countryInfo ?: [];
             $this->session->set(UtilsService::COUNTRY_SESSION_KEY, $countryInfo);
         }
