@@ -355,10 +355,6 @@ class UtilsService
                 } catch (AddressNotFoundException $addressNotFoundException){}
             }
         }
-        return [
-            'name' => null,
-            'country_code' => null,
-            'geonameId' => null
-        ];
+        return null;
     }
 }
