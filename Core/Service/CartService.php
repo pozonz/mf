@@ -12,6 +12,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class CartService
 {
+    const STATUS_UNPAID = 0;
+    const STATUS_SUBMITTED = 1;
+    const STATUS_SUCCESS = 2;
+
+    const DELIVERY_HIDDEN = 0;
+    const DELIVERY_VISIBLE = 1;
+
     const CUSTOMER_WEBSITE = 1;
     const CUSTOMER_GOOGLE = 2;
     const CUSTOMER_FACEBOOK = 3;
@@ -276,6 +283,24 @@ class CartService
         $section->tags = ["11"];
         $section->blocks = [];
         return [$section];
+    }
+
+    /**
+     * @param $productOrVariant
+     * @param $customer
+     * @param $price
+     * @return float|int
+     */
+    static public function getCalculatedPrice($productOrVariant, $customer, $price)
+    {
+        if ($productOrVariant->getNoMemberDiscount() || !$customer) {
+            return $price;
+        }
+        $customerMembership = $customer->objMembership();
+        if (!$customerMembership || !$customerMembership->getDiscount()) {
+            return $price;
+        }
+        return $price * ((100 - $customerMembership->getDiscount()) / 100);
     }
 
     /**
