@@ -45,7 +45,7 @@ trait PageTrait
             if ($json) {
                 $templateName = $json->name;
                 $templateFile = preg_replace("/[^a-z0-9\_\-\.]/i", '', $json->file);
-                $templateFile = rtrim($templateFile, '.twig') . '.twig';
+                $templateFile = basename($templateFile, '.twig') . '.twig';
 
                 $fullClass = ModelService::fullClass($this->getPdo(), 'PageTemplate');
                 /** @var \MillenniumFalcon\Core\ORM\PageTemplate $orm */
