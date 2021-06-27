@@ -114,9 +114,9 @@ class Extension extends AbstractExtension
         return array(
             'json_decode' => new TwigFilter('json_decode', array($this, 'json_decode')),
             'ksort' => new TwigFilter('ksort', array($this, 'ksort')),
-            'block' => new TwigFilter('block', array($this, 'block')),
-            'section' => new TwigFilter('section', array($this, 'section')),
-            'sections' => new TwigFilter('sections', array($this, 'sections')),
+            'sections' => new TwigFilter('sections', [$this, 'sections'], ['needs_environment'=> true, 'needs_context' => true]),
+            'section' => new TwigFilter('section', [$this, 'section'], ['needs_environment'=> true, 'needs_context' => true]),
+            'block' => new TwigFilter('block', [$this, 'block'],['needs_environment'=> true, 'needs_context' => true]),
             'nestablePges' => new TwigFilter('nestablePges', array($this, 'nestablePges')),
         );
     }
@@ -147,13 +147,13 @@ class Extension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function block($block)
+    public function block(Environment $env, $context, $block)
     {
         if (!isset($block->status) || !$block->status || $block->status == 0) {
             return '';
         }
         if (file_exists("{$this->kernel->getProjectDir()}/templates/fragments/{$block->twig}")) {
-            return $this->environment->render("fragments/{$block->twig}", (array)$block->values);
+            return $this->environment->render("fragments/{$block->twig}", array_merge($context, (array)$block->values));
         }
         return '';
     }
@@ -165,14 +165,14 @@ class Extension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function section($section)
+    public function section(Environment $env, $context, $section)
     {
         if (!isset($section->status) || !$section->status || $section->status == 0) {
             return '';
         }
         $html = '';
         foreach ($section->blocks as $block) {
-            $html .= $this->block($block);
+            $html .= $this->block($env, $context, $block);
         }
         return $html;
     }
@@ -184,7 +184,7 @@ class Extension extends AbstractExtension
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function sections($sections)
+    public function sections(Environment $env, $context, $sections)
     {
         if (gettype($sections) == 'string') {
             $sections = json_decode($sections);
@@ -192,7 +192,7 @@ class Extension extends AbstractExtension
 
         $html = '';
         foreach ($sections as $section) {
-            $html .= $this->section($section);
+            $html .= $this->section($env, $context, $section);
         }
         return $html;
     }

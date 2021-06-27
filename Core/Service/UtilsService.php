@@ -266,6 +266,25 @@ class UtilsService
     }
 
     /**
+     * @param $nodeId
+     * @param $tree
+     * @return Node|null
+     */
+    public function getNodeInTree($nodeId, $tree)
+    {
+        if (gettype($tree) == 'string') {
+            $tree = $this->navTree($tree);
+        }
+
+        try {
+            return $tree->getNodeById($nodeId);
+        } catch (\InvalidArgumentException $ex) {
+        }
+
+        return null;
+    }
+
+    /**
      * @param $categoryCode
      * @return null
      */
