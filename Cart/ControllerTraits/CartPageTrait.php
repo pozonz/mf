@@ -17,6 +17,20 @@ use Twig\Environment;
 trait CartPageTrait
 {
     /**
+     * @route("/shop")
+     * @param Request $request
+     * @return mixed
+     */
+    public function shop(Request $request)
+    {
+        $params = $this->getTemplateParams($request);
+
+        $fullClass = ModelService::fullClass($this->connection, 'Product');
+        $params['products'] = $fullClass::data($this->connection);
+        return $this->render('products.twig', $params);
+    }
+
+    /**
      * @route("/cart")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response

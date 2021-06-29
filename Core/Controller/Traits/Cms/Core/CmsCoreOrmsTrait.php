@@ -414,9 +414,7 @@ trait CmsCoreOrmsTrait
 
         $productCategoryFullClass = ModelService::fullClass($this->connection, 'ProductCategory');
         $productBrandFullClass = ModelService::fullClass($this->connection, 'ProductBrand');
-        $params['categories'] = $productCategoryFullClass::data($this->connection, [
-            'whereSql' => 'm.code != "sale" OR m.code IS NULL',
-        ]);
+        $params['categories'] = $productCategoryFullClass::data($this->connection);
         $params['brands'] = $productBrandFullClass::data($this->connection, [
             'sort' => 'm.title',
         ]);
