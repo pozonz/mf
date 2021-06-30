@@ -61,6 +61,22 @@ trait ProductTrait
     }
 
     /**
+     *
+     */
+    public function objThumbnail()
+    {
+        $gallery = $this->objGallery();
+        if (count($gallery) > 0) {
+            return $gallery[0];
+        } else {
+            return [
+                'id' => getenv('PRODUCT_PLACEHOLDER_ID'),
+                'code' => null,
+            ];
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function objGallery()
@@ -86,7 +102,7 @@ trait ProductTrait
      */
     public function objVariant()
     {
-        if ($this->_variants) {
+        if (!$this->_variants) {
             $this->objVariants();
         }
         return count($this->_variants) ? array_shift($this->_variants) : null;
@@ -134,7 +150,16 @@ trait ProductTrait
     public function save($doNotSaveVersion = false, $options = [])
     {
         $this->_saveProductCachedData();
-        return parent::save($doNotSaveVersion, $options);
+        $result = parent::save($doNotSaveVersion, $options);
+
+
+        $pdo = $this->getPdo();
+        $tableName = static::getTableName();
+        $sql = "UPDATE `$tableName` SET `slug` = ? WHERE `id` = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->executeQuery([ $this->getSlug() . '-' . $this->getId(), $this->getId() ]);
+
+        return $result;
     }
 
     /**
@@ -170,6 +195,30 @@ trait ProductTrait
 
         $this->setLowStock($lowStock > 0 ? (count($data) == $lowStock ? 1 : 2) : 0);
         $this->setOutOfStock($outOfStock > 0 ? (count($data) == $outOfStock ? 1 : 2) : 0);
+    }
+
+    /**
+     * @param $num
+     * @return array
+     */
+    public function objRelatedProducts($num = 3)
+    {
+        $fullClass = ModelService::fullClass($this->getPdo(), 'Product');
+
+        $objRelatedProducts = explode(',', $this->getRelatedProducts());
+        $objRelatedProducts = array_filter(array_map(function ($itm) use ($fullClass) {
+            return $fullClass::getById($this->getPdo(), $itm);
+        }, $objRelatedProducts));
+
+        if (!count($objRelatedProducts)) {
+            $objRelatedProducts = $fullClass::active($this->getPdo(), [
+                'whereSql' => 'm.id != ?',
+                'params' => [$this->getId()],
+                'limit' => $num,
+                'sort' => 'rand()',
+            ]);
+        }
+        return $objRelatedProducts;
     }
 
     /**

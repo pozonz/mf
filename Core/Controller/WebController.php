@@ -4,8 +4,8 @@ namespace MillenniumFalcon\Core\Controller;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Cart\Service\CartService;
-use MillenniumFalcon\Cart\ControllerTraits\CartAjaxTrait;
 use MillenniumFalcon\Cart\ControllerTraits\CartPageTrait;
+use MillenniumFalcon\Cart\ControllerTraits\CartRestfulTrait;
 use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreAssetTrait;
 use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreTrait;
 use MillenniumFalcon\Core\RouterController;
@@ -20,6 +20,7 @@ class WebController extends RouterController
 
     use
         CartPageTrait,
+        CartRestfulTrait,
         WebCoreAssetTrait,
         WebCoreTrait
 
@@ -44,13 +45,14 @@ class WebController extends RouterController
      * WebController constructor.
      * @param Connection $connection
      * @param KernelInterface $kernel
-     * @param CartService $cartService
      * @param Environment $environment
+     * @param CartService $cartService
      */
-    public function __construct(Connection $connection, KernelInterface $kernel, CartService $cartService)
+    public function __construct(Connection $connection, KernelInterface $kernel, Environment $environment, CartService $cartService)
     {
         $this->connection = $connection;
         $this->kernel = $kernel;
+        $this->environment = $environment;
         $this->cartService = $cartService;
     }
 }

@@ -369,7 +369,7 @@ trait CmsCoreOrmsTrait
         $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
         $pageNum = $request->get('pageNum') ?: 1;
         $sort = $request->get('sort') ?: 'm.pageRank';
-        $order = $request->get('order') ?: 'ASC';
+        $order = $request->get('order') ?: 'DESC';
 
         $assetOrms = [];
         $assetORMFullClass = ModelService::fullClass($this->connection, 'AssetOrm');

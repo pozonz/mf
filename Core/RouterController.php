@@ -53,7 +53,7 @@ abstract class RouterController extends AbstractController
      * @return array
      * @throws RedirectException
      */
-    protected function getTemplateParamsByUrl($requestUri, $aBTest = null, $abTestToken= null)
+    public function getTemplateParamsByUrl($requestUri, $aBTest = null, $abTestToken= null)
     {
         $tree = $this->getTree();
         $urlFragments = explode('/', trim($requestUri, '/'));
