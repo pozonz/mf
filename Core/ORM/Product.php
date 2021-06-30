@@ -8,7 +8,7 @@ use MillenniumFalcon\Core\Pattern\Cart\CartProductTrait;
 use MillenniumFalcon\Core\Pattern\Version\VersionInterface;
 use MillenniumFalcon\Core\Pattern\Version\VersionTrait;
 
-class Product extends \MillenniumFalcon\Core\ORM\Generated\Product implements VersionInterface
+class Product extends \MillenniumFalcon\Core\ORM\Generated\Product
 {
     use ProductTrait, VersionTrait;
 }
