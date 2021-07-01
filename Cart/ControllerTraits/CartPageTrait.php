@@ -58,17 +58,17 @@ trait CartPageTrait
      */
     public function checkout(Request $request)
     {
-        $cart = $this->cartService->getCart();
-        if ($cart->getCategory() == $this->cartService->getStatusNew()) {
-            $cart->setCategory($this->cartService->getStatusCreated());
-            $cart->setSubmitted(1);
-            $cart->setSubmittedDate(date('Y-m-d H:i:s'));
-            $cart->save();
-        }
+//        $cart = $this->cartService->getCart();
+//        if ($cart->getCategory() == $this->cartService->getStatusNew()) {
+//            $cart->setCategory($this->cartService->getStatusCreated());
+//            $cart->setSubmitted(1);
+//            $cart->setSubmittedDate(date('Y-m-d H:i:s'));
+//            $cart->save();
+//        }
+//
+//        $cart->save();
 
-        $cart->save();
-
-        return new RedirectResponse("/checkout/account?id={$cart->getTitle()}");
+        return new RedirectResponse("/checkout/account");
     }
 
     /**
@@ -79,37 +79,7 @@ trait CartPageTrait
      */
     public function setAccountForCart(Request $request)
     {
-        $order = $this->getOrderByRequest($request);
-        $this->cartService->updateOrder($order);
-
-        $customer = $this->cartService->getCustomer();
-        if ($customer) {
-            return new RedirectResponse("/checkout/shipping?id={$order->getTitle()}");
-        }
-
-        $form = $this->container->get('form.factory')->create(CheckoutAccountForm::class, $order, [
-            'request' => $request,
-        ]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $order->save();
-            return new RedirectResponse("/checkout/shipping?id={$order->getTitle()}");
-        }
-
-        $fullClass = ModelService::fullClass($this->connection, 'Page');
-        $page = new $fullClass($this->connection);
-        $page->setTitle('Checkout');
-        return $this->render('checkout-account.twig', [
-            'urlParams' => null,
-            'urlFragments' => null,
-            'theNode' => [
-                'extraInfo' => $page,
-            ],
-            'theDataGroup' => null,
-            'rootNodes' => null,
-            'order' => $order,
-            'formView' => $form->createView(),
-        ]);
+        return new RedirectResponse("/checkout/shipping");
     }
 
     /**
@@ -120,33 +90,7 @@ trait CartPageTrait
      */
     public function setShippingForCart(Request $request)
     {
-        $order = $this->getOrderByRequest($request);
-        $this->cartService->updateOrder($order);
-
-        $form = $this->container->get('form.factory')->create(CheckoutShippingForm::class, $order, [
-            'request' => $request,
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $order->save();
-            return new RedirectResponse("/checkout/payment?id={$order->getTitle()}");
-        }
-
-        $fullClass = ModelService::fullClass($this->connection, 'Page');
-        $page = new $fullClass($this->connection);
-        $page->setTitle('Checkout');
-        return $this->render('checkout-shipping.twig', [
-            'urlParams' => null,
-            'urlFragments' => null,
-            'theNode' => [
-                'extraInfo' => $page,
-            ],
-            'theDataGroup' => null,
-            'rootNodes' => null,
-            'order' => $order,
-            'formView' => $form->createView(),
-        ]);
+        return new RedirectResponse("/checkout/payment");
     }
 
     /**

@@ -33,8 +33,10 @@ class GatewayStripe extends AbstractGateway
      */
     public function initialise(Request $request, $order)
     {
+        $start = time();
+
         if (!$order->getPayToken() || !$order->getPaySecret()) {
-            $start = time();
+
             $query = [
                 'amount' => $order->getTotal() * 100,
                 'currency' => 'nzd',
@@ -62,6 +64,35 @@ class GatewayStripe extends AbstractGateway
             $order->setPaySecret($result->client_secret);
             $order->setPayType($this->getId());
             $order->save();
+
+        } else {
+
+            $query = [
+                'amount' => $order->getTotal() * 100,
+                'currency' => 'nzd',
+            ];
+            try {
+                Stripe::setApiKey(getenv('STRIPE_SERVER_KEY'));
+                $result = PaymentIntent::update($order->getPayToken(), $query);
+            } catch (\Exception $ex) {
+                $result = $ex->getMessage();
+            }
+
+            $end = time();
+            $seconds = $end - $start;
+            $this->addToOrderLog(
+                $order,
+                $this->getId() . ' - ' . __FUNCTION__,
+                '',
+                json_encode($query, JSON_PRETTY_PRINT),
+                json_encode($result, JSON_PRETTY_PRINT),
+                1,
+                $seconds
+            );
+
+            $order->setPayType($this->getId());
+            $order->save();
+            
         }
     }
 
