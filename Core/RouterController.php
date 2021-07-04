@@ -60,6 +60,7 @@ abstract class RouterController extends AbstractController
         $urlParams = [];
 
         $rawData = $this->getRawDataByUrl($requestUri);
+
         if (!$rawData) {
             for ($i = count($urlFragments), $il = 0; $i > $il; $i--) {
                 $parts = array_slice($urlFragments, 0, $i);
@@ -95,6 +96,18 @@ abstract class RouterController extends AbstractController
                     $abTestRawData = $this->getRawDataById($jsonPage->page);
                     $theNode->extraInfo = $abTestRawData->extraInfo;
                 }
+            }
+        }
+
+        $request = Request::createFromGlobals();
+        $previewPageToken = $request->get('__preview_page');
+        if ($previewPageToken) {
+            $fullClass = ModelService::fullClass($theNode->extraInfo->getPdo(), 'Page');
+            $page = $fullClass::data($theNode->extraInfo->getPdo(), [
+                'oneOrNull' => 1,
+            ]);
+            if ($page) {
+                $theNode->extraInfo = $page;
             }
         }
 

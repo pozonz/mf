@@ -139,23 +139,15 @@ trait WebCoreTrait
      */
     public function getRawData()
     {
-        $request = Request::createFromGlobals();
-        $previewPageToken = $request->get('__preview_page');
-
         $nodes = [];
         $pages = [];
 
         try {
             $fullClass = ModelService::fullClass($this->connection, 'Page');
-            if ($previewPageToken) {
-                $pages = $fullClass::data($this->connection, [
-                    'whereSql' => 'm.versionUuid = ?',
-                    'params' => [$previewPageToken],
-                    'includePreviousVersion' => 1,
-                ]);
-            } else {
-                $pages = $fullClass::active($this->connection);
-            }
+            $pages = $fullClass::active($this->connection, [
+                'ignorePreview' => 1,
+            ]);
+
         } catch (\Exception $ex) {
         }
 

@@ -168,7 +168,8 @@ trait BaseORMTrait
         $fields = array_keys(static::getFields());
         $implementedInterfaces = class_implements($myClass);
 
-        if (in_array('MillenniumFalcon\\Core\\Pattern\\Version\\VersionInterface', $implementedInterfaces)) {
+        $options['ignorePreview'] = isset($options['ignorePreview']) ? $options['ignorePreview'] : 0;
+        if (in_array('MillenniumFalcon\\Core\\Pattern\\Version\\VersionInterface', $implementedInterfaces) && $options['ignorePreview'] != 1) {
             $path = explode('\\', $myClass);
             $className = array_pop($path);
             $request = $options['request'] ?? Request::createFromGlobals();

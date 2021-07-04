@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UtilsService
 {
     const COUNTRY_SESSION_KEY = '__form_country';
-    
+
     /**
      * UtilsService constructor.
      * @param \Doctrine\DBAL\Connection $connection
@@ -300,6 +300,7 @@ class UtilsService
             $pages = $fullClass::active($pdo, array(
                 'whereSql' => 'm.category LIKE ? ',
                 'params' => array('%"' . $category->getId() . '"%'),
+                'ignorePreview' => 1,
             ));
 
             $nodes = array();
