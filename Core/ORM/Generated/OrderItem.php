@@ -57,6 +57,11 @@ class OrderItem extends Base
     private $productPageUrl;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $image;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -214,6 +219,22 @@ class OrderItem extends Base
     public function setProductPageUrl($productPageUrl)
     {
         $this->productPageUrl = $productPageUrl;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+    
+    /**
+     * @param mixed image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
     }
     
 }

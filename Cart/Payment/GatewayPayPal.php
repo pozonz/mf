@@ -131,7 +131,7 @@ class GatewayPayPal extends AbstractGateway
             }
         }
 
-        $order->setCategory($this->cartService->getStatusGatewaySent());
+        $order->setCategory($this->cartService->STATUS_GATEWAY_SENT);
         $order->setGatewaySent(1);
         $order->setGatewaySentDate(date('Y-m-d H:i:s'));
         $order->setPayToken($token);

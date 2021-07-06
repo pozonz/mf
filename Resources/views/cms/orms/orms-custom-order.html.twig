@@ -43,7 +43,7 @@
                         <td>{{ itm.submittedDate|date('d M y H:i') }}</td>
                         <td>${{ itm.total|number_format(2) }}</td>
                         <td>
-                            {% if itm.category == cartService.statusAccepted %}PAID{% else %}UNPAID{% endif %}
+                            {% if itm.category == cartService.STATUS_ACCEPTED %}PAID{% else %}UNPAID{% endif %}
                         </td>
                         <td class="iconCell" align="right">
 {#                            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>#}

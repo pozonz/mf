@@ -82,11 +82,16 @@ class OrmForm extends AbstractType
 
         $metadata = $model->getMetadata() ? json_decode($model->getMetadata()) : array();
         $metadata = array_diff($metadata, ['added', 'modified', 'lastEditedBy']);
+        $metadata = array_filter($metadata, function ($itm) {
+            return $itm == 'isBuiltIn' ? 0 : 1;
+        });
+
         if (count($metadata)) {
             $builder->add(uniqid(), SpliterType::class, array(
                 'mapped' => false,
             ));
         }
+
         foreach ($metadata as $itm) {
             switch ($itm) {
                 case 'isBuiltIn':

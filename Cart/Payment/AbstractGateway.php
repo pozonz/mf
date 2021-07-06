@@ -129,9 +129,9 @@ abstract class AbstractGateway
     protected function finaliseOrderAndRedirect($order, $status)
     {
         if ($status == 1) {
-            if ($order->getCategory() != $this->cartService->getStatusAccepted()) {
+            if ($order->getCategory() != $this->cartService->STATUS_ACCEPTED) {
                 $order->setPayStatus(1);
-                $order->setCategory($this->cartService->getStatusAccepted());
+                $order->setCategory($this->cartService->STATUS_ACCEPTED);
                 $order->save();
 
                 $this->cartService->sendEmailInvoice($order);
@@ -143,7 +143,7 @@ abstract class AbstractGateway
 
         } else {
             $order->setPayStatus(0);
-            $order->setCategory($this->cartService->getStatusDeclined());
+            $order->setCategory($this->cartService->STATUS_DECLINED);
             $order->save();
             return new RedirectResponse('/checkout/declined?id=' . $order->getTitle());
         }

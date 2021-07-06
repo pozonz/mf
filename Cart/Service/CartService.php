@@ -3,21 +3,26 @@
 namespace MillenniumFalcon\Cart\Service;
 
 use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\ORM\ShippingByWeight;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
+use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
 class CartService
 {
-    const CUSTOMER_WEBSITE = 1;
-    const CUSTOMER_GOOGLE = 2;
-    const CUSTOMER_FACEBOOK = 3;
+    public $STATUS_NEW = 0;
+    public $STATUS_CREATED = 10;
+    public $STATUS_GATEWAY_SENT = 20;
+    public $STATUS_ACCEPTED = 30;
+    public $STATUS_DECLINED = 40;
 
     const SESSION_ID = '__order_container_id';
 
@@ -45,11 +50,6 @@ class CartService
      * @var \Swift_Mailer
      */
     protected $mailer;
-
-    /**
-     * @var null
-     */
-    protected $_cart = null;
 
     /**
      * CartService constructor.
@@ -80,78 +80,89 @@ class CartService
     }
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    protected function getOrderByRequest($id)
+    {
+        $orderTitle = $id;
+        $fullClass = ModelService::fullClass($this->connection, 'Order');
+        return $fullClass::getByField($this->connection, 'title', $orderTitle);
+    }
+
+    /**
      * @return mixed
      * @throws \Exception
      */
     public function getCart()
     {
-        if (!$this->_cart) {
-            $fullClass = ModelService::fullClass($this->connection, 'Order');
-            $orderId = $this->session->get(static::SESSION_ID);
-            $cart = $fullClass::getById($this->connection, $orderId);
+        $fullClass = ModelService::fullClass($this->connection, 'Order');
+        $orderId = $this->session->get(static::SESSION_ID);
+        $cart = $fullClass::getById($this->connection, $orderId);
 
-            if (!$cart) {
+        if (!$cart) {
 
-                //created a new order only
-                $cart = new $fullClass($this->connection);
-                $cart->save();
+            //created a new order only
+            $cart = new $fullClass($this->connection);
+            $cart->save();
 
-                //reset the order id
-                $cart->setTitle(UtilsService::generateHex(4) . '-' . $cart->getId());
-                $cart->save();
+            //reset the order id
+            $cart->setTitle(UtilsService::generateHex(4) . '-' . $cart->getId());
+            $cart->save();
 
-            } else if ($cart->getCategory() != $this->getStatusNew()) {
+        } else if ($cart->getCategory() != $this->STATUS_NEW) {
 
-                $oldOrder = clone $cart;
+            $oldOrder = clone $cart;
 
-                //created a new order and copy the current items over
-                $cart->setId(null);
-                $cart->setUniqId(Uuid::uuid4());
-                $cart->setAdded(date('Y-m-d H:i:s'));
-                $cart->setModified(date('Y-m-d H:i:s'));
-                $cart->setSubmitted(null);
-                $cart->setSubmittedDate(null);
-                $cart->setPayStatus(null);
-                $cart->setPayToken(null);
-                $cart->setPaySecret(null);
-                $cart->setPayType(null);
-                $cart->setEmailContent(null);
-                $cart->setHummRequestQuery(null);
-                $cart->setLogs(null);
+            //created a new order and copy the current items over
+            $cart->setId(null);
+            $cart->setUniqId(Uuid::uuid4());
+            $cart->setAdded(date('Y-m-d H:i:s'));
+            $cart->setModified(date('Y-m-d H:i:s'));
+            $cart->setSubmitted(null);
+            $cart->setSubmittedDate(null);
+            $cart->setPayStatus(null);
+            $cart->setPayToken(null);
+            $cart->setPaySecret(null);
+            $cart->setPayType(null);
+            $cart->setEmailContent(null);
+            $cart->setHummRequestQuery(null);
+            $cart->setLogs(null);
 
-                $cart->setCategory($this->getStatusNew());
-                $cart->save();
+            $cart->setCategory($this->STATUS_NEW);
+            $cart->save();
 
-                //reset the order id
-                $cart->setTitle(UtilsService::generateHex(4) . '-' . $cart->getId());
-                $cart->save();
+            //reset the order id
+            $cart->setTitle(UtilsService::generateHex(4) . '-' . $cart->getId());
+            $cart->save();
 
-                $this->copyOrderItems($cart, $oldOrder);
-            }
-
-            $this->session->set(static::SESSION_ID, $cart->getId());
-
-            //convert 1/0 to boolean
-            $cart = $this->setBooleanValues($cart);
-
-            $customer = static::getCustomer();
-            if ($customer) {
-                $cart->setCustomerId($customer->getId());
-                $cart->setCustomerName($customer->getFirstName() . ' ' . $customer->getLastName());
-
-                //if empty, fill customer's info as default
-                $cart->setShippingFirstName($cart->getShippingFirstName() ?: $customer->getFirstName());
-                $cart->setShippingLastName($cart->getShippingLastName() ?: $customer->getLastName());
-                $cart->setEmail($cart->getEmail() && filter_var($cart->getEmail(), FILTER_VALIDATE_EMAIL) ? $cart->getEmail() : $customer->getTitle());
-            }
-
-            $this->updateOrder($cart, $customer);
-
-            //you know...
-            $this->_cart = $cart;
+            $this->copyOrderItems($cart, $oldOrder);
         }
 
-        return $this->_cart;
+        $this->session->set(static::SESSION_ID, $cart->getId());
+
+        //convert 1/0 to boolean
+        $cart = $this->setBooleanValues($cart);
+
+        $customer = static::getCustomer();
+        if ($customer) {
+            $cart->setCustomerId($customer->getId());
+            $cart->setCustomerName($customer->getFirstName() . ' ' . $customer->getLastName());
+
+            //if empty, fill customer's info as default
+            $cart->setShippingFirstName($cart->getShippingFirstName() ?: $customer->getFirstName());
+            $cart->setShippingLastName($cart->getShippingLastName() ?: $customer->getLastName());
+            $cart->setEmail($cart->getEmail() && filter_var($cart->getEmail(), FILTER_VALIDATE_EMAIL) ? $cart->getEmail() : $customer->getTitle());
+        }
+
+        if (getenv('SHIPPING_PICKUP_ALLOWED') != 1) {
+            $cart->setIsPickup(2);
+        }
+
+        $this->updateCart($cart);
+
+        //you know...
+        return $cart;
     }
 
     /**
@@ -187,19 +198,19 @@ class CartService
      * @param $order
      * @return bool
      */
-    public function updateOrder($order)
+    public function updateCart($cart)
     {
         $customer = $this->getCustomer();
         $fullClass = ModelService::fullClass($this->connection, 'PromoCode');
-        $promoCode = $fullClass::getByField($this->connection, 'code', $order->getPromoCode());
+        $promoCode = $fullClass::getByField($this->connection, 'code', $cart->getPromoCode());
         if ($promoCode && $promoCode->isValid()) {
-            $order->setDiscountType($promoCode->getType());
-            $order->setDiscountValue($promoCode->getValue());
-            $order->setPromoId($promoCode->getId());
+            $cart->setDiscountType($promoCode->getType());
+            $cart->setDiscountValue($promoCode->getValue());
+            $cart->setPromoId($promoCode->getId());
         } else {
-            $order->setDiscountType(null);
-            $order->setDiscountValue(null);
-            $order->setPromoId(null);
+            $cart->setDiscountType(null);
+            $cart->setDiscountValue(null);
+            $cart->setPromoId(null);
         }
 
         $subtotal = 0;
@@ -207,116 +218,342 @@ class CartService
         $discount = 0;
         $afterDiscount = 0;
 
-        $orderItems = $order->objOrderItems();
-        foreach ($orderItems as $idx => $itm) {
-            $result = $this->updateOrderItem($order, $itm, $customer);
+        $cartItems = $cart->objOrderItems();
+        foreach ($cartItems as $idx => $itm) {
+            $result = $this->updateCartItem($cart, $itm, $customer);
             if ($result) {
-                $orderItemSubtotal = $itm->getPrice() * $itm->getQuantity();
-                $orderItemWeight = $itm->getWeight() * $itm->getQuantity();
+                $cartItemSubtotal = $itm->getPrice() * $itm->getQuantity();
+                $cartItemWeight = $itm->getWeight() * $itm->getQuantity();
 
-                $subtotal += $orderItemSubtotal;
-                if ($order->getDiscountType() == 2 && !$itm->objVariant()->objProduct()->getNoPromoDiscount()) {
-                    $discount += round($orderItemSubtotal * ($order->getDiscountValue() / 100), 2);
+                $subtotal += $cartItemSubtotal;
+                if ($cart->getDiscountType() == 2 && !$itm->objVariant()->objProduct()->getNoPromoDiscount()) {
+                    $discount += round($cartItemSubtotal * ($cart->getDiscountValue() / 100), 2);
                 }
 
-                $weight += $orderItemWeight;
+                $weight += $cartItemWeight;
             }
         }
-        $order->setOrderitems(null);
+        $cart->setOrderitems(null);
 
-        if ($order->getDiscountType() == 1) {
-            $discount = min($subtotal, $order->getDiscountValue());
+        if ($cart->getDiscountType() == 1) {
+            $discount = min($subtotal, $cart->getDiscountValue());
         }
 
         $afterDiscount = $subtotal - $discount;
 
-        if ($order->getIsPickup() == 2) {
-            $deliveryOption = $this->getDeliveryOption($order);
-            if ($deliveryOption) {
-                $order->setShippingTitle($deliveryOption->getTitle());
-                $order->setShippingCost($this->getDeliveryFee($deliveryOption));
-            } else {
-                $order->setShippingId(null);
-                $order->setShippingTitle(null);
-                $order->setShippingCost(null);
+        if ($cart->getIsPickup() == 2) {
+
+            $data = $this->getDeliveryOptions($cart);
+            $data = array_filter(array_map(function ($itm) {
+                return isset($itm['deliveryOption']) && $itm['deliveryOption'] ? $itm['deliveryOption']->getId() : null;
+            }, array_filter($data, function ($itm) {
+                return $itm['valid'] === 1 ? 1 : 0;
+            })));
+
+            if (!in_array($cart->getShippingId(), $data)) {
+                if (count($data) > 0) {
+                    $cart->setShippingId($data[0]);
+                } else {
+                    $cart->setShippingId(null);
+                }
             }
+
+            if ($cart->getShippingId()) {
+                $fullClass = ModelService::fullClass($this->connection, 'ShippingByWeight');
+                $deliveryOption = $fullClass::getById($this->connection, $cart->getShippingId());
+
+                $cart->setShippingTitle($deliveryOption->getTitle());
+                $cart->setShippingCost($this->getDeliveryFee($cart, $deliveryOption));
+            } else {
+                $cart->setShippingTitle(null);
+                $cart->setShippingCost(null);
+            }
+
         } else {
-            $order->setShippingCost(null);
+            $cart->setShippingId(null);
+            $cart->setShippingTitle(null);
+            $cart->setShippingCost(null);
         }
 
-        $deliveryFee = $order->getShippingCost() ?: 0;
+        $deliveryFee = $cart->getShippingCost() ?: 0;
         $total = $afterDiscount + $deliveryFee;
         $gst = ($total * 3) / 23;
 
-        $order->setWeight($weight);
-        $order->setSubtotal($subtotal);
-        $order->setDiscount($discount);
-        $order->setAfterDiscount($afterDiscount);
-        $order->setTax($gst);
-        $order->setShippingCost($deliveryFee);
-        $order->setTotal($total);
-        $order->save();
+        $cart->setWeight($weight);
+        $cart->setSubtotal($subtotal);
+        $cart->setDiscount($discount);
+        $cart->setAfterDiscount($afterDiscount);
+        $cart->setTax($gst);
+        $cart->setShippingCost($deliveryFee);
+        $cart->setTotal($total);
+        $cart->save();
         return true;
     }
 
     /**
-     * @param $order
-     * @param $orderItem
+     * @param $cart
+     * @param $cartItem
      * @param $customer
      * @return bool
      */
-    public function updateOrderItem($order, $orderItem, $customer)
+    public function updateCartItem($cart, $cartItem, $customer)
     {
-        if ($orderItem->getQuantity() <= 0) {
-            $orderItem->delete();
+        if ($cartItem->getQuantity() <= 0) {
+            $cartItem->delete();
             return false;
         }
 
-        $variant = $orderItem->objVariant();
+        $variant = $cartItem->objVariant();
         if (!$variant || !$variant->getStatus()) {
-            $orderItem->delete();
+            $cartItem->delete();
             return false;
         }
 
         $product = $variant->objProduct();
         if (!$product || !$product->getStatus()) {
-            $orderItem->delete();
+            $cartItem->delete();
             return false;
         }
 
         if ($variant->getStockEnabled()) {
-            $orderItem->setQuantity(min($orderItem->getQuantity(), $variant->getStock()));
+            $cartItem->setQuantity(min($cartItem->getQuantity(), $variant->getStock()));
         }
 
-        if (!$orderItem->getQuantity()) {
-            $orderItem->delete();
+        if (!$cartItem->getQuantity()) {
+            $cartItem->delete();
             return false;
         }
 
-        $orderItem->setImageUrl('/images/assets/' . join('/', $product->objImage()));
-        $orderItem->setProductPageUrl($product->objProductPageUrl());
-        $orderItem->setWeight($variant->getShippingUnits() ?: 0);
+        $cartItem->setImageUrl('/images/assets/' . join('/', $product->objImage()));
+        $cartItem->setProductPageUrl($product->objProductPageUrl());
+        $cartItem->setWeight($variant->getShippingUnits() ?: 0);
 
         if ($product->objOnSaleActive() && $variant->getSalePrice()) {
-            $orderItem->setPrice($variant->calculatedSalePrice($customer));
-            $orderItem->setCompareAtPrice($variant->calculatedPrice($customer));
+            $cartItem->setPrice($variant->calculatedSalePrice($customer));
+            $cartItem->setCompareAtPrice($variant->calculatedPrice($customer));
         } else {
-            $orderItem->setPrice($variant->calculatedPrice($customer));
+            $cartItem->setPrice($variant->calculatedPrice($customer));
         }
 
 
-        $discountType = $order->getDiscountType();
-        $discountValue = $order->getDiscountValue();
+        $discountType = $cart->getDiscountType();
+        $discountValue = $cart->getDiscountValue();
 
         if ($discountType == 1 && !$product->getNoPromoDiscount()) {
-            $orderItem->setCompareAtPrice($orderItem->getCompareAtPrice() ?: $orderItem->getPrice());
-            $afterDiscount = $orderItem->getPrice() * (100 - $discountValue) / 100;
-            $discountedTotal = $orderItem->getPrice() - $afterDiscount;
-            $orderItem->setPrice($afterDiscount);
+            $cartItem->setCompareAtPrice($cartItem->getCompareAtPrice() ?: $cartItem->getPrice());
+            $afterDiscount = $cartItem->getPrice() * (100 - $discountValue) / 100;
+            $discountedTotal = $cartItem->getPrice() - $afterDiscount;
+            $cartItem->setPrice($afterDiscount);
         }
 
-        $orderItem->save();
+        $cartItem->save();
         return true;
+    }
+
+    /**
+     * @param $cart
+     * @return array
+     */
+    public function getDeliveryOptions($cart)
+    {
+        $country = $cart->getShippingCountry();
+        $fullClass = ModelService::fullClass($this->connection, 'ShippingZone');
+        $ormCountry = $fullClass::getByField($this->connection, 'title', $country);
+        if (!$ormCountry) {
+            return [];
+        }
+
+        $deliveryOptions = [];
+        $data = ShippingByWeight::active($this->connection, [
+            'whereSql' => 'm.country = ?',
+            'params' => [$ormCountry->getId()],
+        ]);
+
+        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+            $region = $cart->getShippingState();
+            $ormRegion = $fullClass::getByField($this->connection, 'title', $region);
+            $data = array_filter($data, function ($itm) use ($ormRegion) {
+                if (!$ormRegion) {
+                    return 1;
+                }
+                $objShippingCostRates = $itm->objShippingCostRates();
+                foreach ($objShippingCostRates as $objShippingCostRate) {
+                    if (in_array($ormRegion->getId(), $objShippingCostRate->regions) || in_array('all', $objShippingCostRate->regions)) {
+                        return 1;
+                    }
+                }
+                return 0;
+            });
+
+        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+            $postcode = $cart->getShippingPostcode();
+
+            $data = array_filter($data, function ($itm) use ($postcode) {
+                if (!$postcode) {
+                    return 1;
+                }
+                $objShippingCostRates = $itm->objShippingCostRates();
+                foreach ($objShippingCostRates as $objShippingCostRate) {
+                    if ($objShippingCostRate->zipFrom && $objShippingCostRate->zipFrom > $postcode) {
+                        continue;
+                    }
+                    if ($objShippingCostRate->zipTo && $objShippingCostRate->zipTo < $postcode) {
+                        continue;
+                    }
+                    return 1;
+                }
+                return 0;
+            });
+
+        } else {
+            $data = [];
+        }
+
+        foreach ($data as $itm) {
+            $deliveryFee = $this->getDeliveryFee($cart, $itm);
+            $deliveryOptions[] = [
+                'deliveryOption' => $itm,
+                'valid' => $deliveryFee === null ? 0 : 1,
+                'fee' => $deliveryFee,
+            ];
+        }
+        return $deliveryOptions;
+    }
+
+    /**
+     * @param $deliveryOption
+     * @return int
+     */
+    public function getDeliveryFee($cart, $deliveryOption)
+    {
+        $country = $cart->getShippingCountry();
+        $fullClass = ModelService::fullClass($this->connection, 'ShippingZone');
+        $ormCountry = $fullClass::getByField($this->connection, 'title', $country);
+        if (!$ormCountry) {
+            return null;
+        }
+
+        if ($deliveryOption->getCountry() !== $ormCountry->getId()) {
+            return null;
+        }
+
+        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+            $region = $cart->getShippingState();
+            $ormRegion = $fullClass::getByField($this->connection, 'title', $region);
+
+            if (!$ormRegion) {
+                return null;
+            }
+
+            $objShippingCostRates = $deliveryOption->objShippingCostRates();
+            foreach ($objShippingCostRates as $objShippingCostRate) {
+
+                if (in_array($ormRegion->getId(), $objShippingCostRate->regions) || in_array('all', $objShippingCostRate->regions)) {
+
+                    $weight = $cart->getWeight();
+
+                    foreach ($objShippingCostRate->extra as $itm) {
+                        $from = $itm->from ?: 0;
+                        $to = $itm->to ?: 0;
+
+                        if ($weight >= $from && $weight <= $to) {
+                            return $itm->price;
+                        }
+                    }
+
+                    return $objShippingCostRate->price * $weight;
+                }
+            }
+
+        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+            $postcode = $cart->getShippingPostcode();
+
+            $objShippingCostRates = $deliveryOption->objShippingCostRates();
+            foreach ($objShippingCostRates as $objShippingCostRate) {
+                if ($objShippingCostRate->zipFrom && $objShippingCostRate->zipFrom > $postcode) {
+                    continue;
+                }
+                if ($objShippingCostRate->zipTo && $objShippingCostRate->zipTo < $postcode) {
+                    continue;
+                }
+
+                $weight = $cart->getWeight();
+
+                foreach ($objShippingCostRate->extra as $itm) {
+                    $from = $itm->from ?: 0;
+                    $to = $itm->to ?: 0;
+
+                    if ($weight >= $from && $weight <= $to) {
+                        return $itm->price;
+                    }
+                }
+
+                return $objShippingCostRate->price * $weight;
+            }
+        }
+
+
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeliverableCountries()
+    {
+        $data = ShippingByWeight::active($this->connection);
+        return array_filter(array_map(function ($itm) {
+            return $itm->objCountry();
+        }, $data));
+    }
+
+    /**
+     * @param $cart
+     * @return array
+     */
+    public function getDeliverableRegions($cart)
+    {
+        $fullClass = ModelService::fullClass($this->connection, 'ShippingZone');
+        $orm = $fullClass::getByField($this->connection, 'title', $cart->getShippingCountry());
+        if (!$orm) {
+            throw new NotFoundHttpException();
+        }
+
+        $fullClass = ModelService::fullClass($this->connection, 'ShippingByWeight');
+        $data = ShippingByWeight::active($this->connection);
+        $data = array_filter($data, function ($itm) use ($orm) {
+            return $itm->getCountry() == $orm->getId() ? 1 : 0;
+        });
+
+        $regions = [];
+        foreach ($data as $itm) {
+            $objShippingCostRates = $itm->objShippingCostRates();
+            foreach ($objShippingCostRates as $objShippingCostRate) {
+                foreach ($objShippingCostRate->regions as $region) {
+                    if ($region === 'all') {
+                        $regions = array_merge($regions, array_map(function ($itm) use ($orm) {
+                            return $itm->getTitle();
+                        }, $orm->objChildren()));
+                    } else {
+                        $fullClass = ModelService::fullClass($this->connection, 'ShippingZone');
+                        $r = $fullClass::getById($this->connection, $region);
+                        $regions[] = $r ? $r->getTitle() : null;
+                    }
+                }
+            }
+        }
+
+        $regions = array_filter(array_unique($regions));
+        sort($regions);
+        return $regions;
+    }
+
+    /**
+     *
+     */
+    public function clearCart()
+    {
+        $this->session->set(static::SESSION_ID, null);
     }
 
     /**
@@ -325,8 +562,8 @@ class CartService
      */
     public function sendEmailInvoice($order)
     {
-        $messageBody = $this->environment->render('email-invoice.twig', array(
-            'order' => $order,
+        $messageBody = $this->environment->render('/cart/email-invoice.twig', array(
+            'order' => $cart,
         ));
         $message = (new \Swift_Message())
             ->setSubject("Invoice {$order->getTitle()}")
@@ -351,32 +588,6 @@ class CartService
                 $variant->save();
             }
         }
-    }
-
-    /**
-     *
-     */
-    public function clearCart()
-    {
-        $this->session->set(static::SESSION_ID, null);
-    }
-
-    /**
-     * @param $order
-     * @return int
-     */
-    public function getDeliveryOption($order)
-    {
-        return null;
-    }
-
-    /**
-     * @param $deliveryOption
-     * @return int
-     */
-    public function getDeliveryFee($deliveryOption)
-    {
-        return 0;
     }
 
     /**
@@ -454,70 +665,5 @@ class CartService
         $section->tags = ["11"];
         $section->blocks = [];
         return [$section];
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusNew()
-    {
-        return 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusCreated()
-    {
-        return 10;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusGatewaySent()
-    {
-        return 20;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusAccepted()
-    {
-        return 30;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusDeclined()
-    {
-        return 40;
-    }
-
-    /**
-     * @return array|false|string
-     */
-    static public function getProductClassName()
-    {
-        return getenv('PRODUCT_CLASSNAME') ?: 'Product';
-    }
-
-    /**
-     * @return array|false|string
-     */
-    static public function getProductVariantClassName()
-    {
-        return getenv('PRODUCT_VARIANT_CLASSNAME') ?: 'ProductVariant';
-    }
-
-    /**
-     * @param $cartItem
-     * @param $variant
-     */
-    public function setCustomOrderItem($cartItem, $variant)
-    {
-
     }
 }

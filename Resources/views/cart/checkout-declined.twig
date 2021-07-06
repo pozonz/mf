@@ -1,0 +1,20 @@
+{% extends '/cart/base.twig' %}
+
+{% block checkoutMainHeader %}
+    <section class="section-inner--pb--s">
+        <header class="checkout-headings--page grid-row grid-row--nowrap mw-480 items-center">
+
+            <h1 class="checkout-heading--page flex-1">Your order has been declined!</h1>
+        </header>
+
+        <p>
+            Your order reference number is <strong>#{{ order.title }}</strong>
+        </p>
+    </section>
+{% endblock %}
+
+{% block checkoutMainButton %}
+    <section class="">
+        <a class="checkout-button checkout-button--primary" href="/checkout/payment?id={{ order.title }}">Try again</a>
+    </section>
+{% endblock %}

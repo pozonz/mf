@@ -1,0 +1,64 @@
+{% extends 'base.twig' %}
+
+{% set objVariants = orm.objVariants %}
+{% set objGallery = orm.objGallery %}
+{% set objRelatedProducts = orm.objRelatedProducts %}
+
+{% block main %}
+
+    <div>
+
+        <div>
+            <div>
+                {% for itm in objGallery %}
+                    <figure>
+                        <img class="lazy" data-src="/images/assets/{{ itm.id }}/medium" alt="always alt" />
+                    </figure>
+                {% endfor %}
+            </div>
+            <div>
+                <h1>{{ orm.title }}</h1>
+                <div>
+                    <div>Sale!</div>
+                    <div>
+                        <span>$15.00</span>
+                        <span>$10.00</span>
+                    </div>
+                </div>
+                <div class="product-detail__copy">
+                    {{ orm.description|raw }}
+                </div>
+                <div class="product-detail__options flex items-end js-product-cart-wrapper">
+                    <div class="form-field field--choice   ">
+                        <label>Size<span title="This field is required">*</span></label>
+                        <div>
+                            <select class="js-variant">
+                                {% for itm in objVariants %}
+                                    <option value="{{ itm.id }}">{{ itm.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Qty<span title="This field is required">*</span></label>
+                        <input class="js-qty" type="text" value="1">
+                    </div>
+                    <button class="js-add-to-cart" data-id="{{ orm.id }}">Add to cart</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <h2>You might also like...</h2>
+            </div>
+            <ul>
+                {% for itm in objRelatedProducts %}
+                    {% include '/cart/includes/card-product.twig' with { product: itm } %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+
+{% endblock %}

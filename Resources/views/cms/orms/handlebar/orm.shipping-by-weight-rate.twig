@@ -4,14 +4,15 @@
             <div class="block-file js-heading">
                 <h4 class="block-title">&nbsp;</h4>
 
-                {{#compare idx 0 operator='==' }}
-                    <a href="#" class="delete-block down right-second js-rate-down"></a>
-                {{/compare}}
+                {{#compare length 0 operator='>' }}
+                    {{#compare idx 0 operator='==' }}
+                        <a href="#" class="delete-block down right-second js-rate-down"></a>
+                    {{/compare}}
 
-                {{#compare idx length operator='==' }}
-                    <a href="#" class="delete-block up right-second js-rate-up"></a>
+                    {{#compare idx length operator='==' }}
+                        <a href="#" class="delete-block up right-second js-rate-up"></a>
+                    {{/compare}}
                 {{/compare}}
-
 
                 {{#compare idx 0 operator='!=' }}
                     {{#compare idx length operator='!=' }}
@@ -27,7 +28,7 @@
                     <div class="formStyle mb-little" {{#compare mode 1 operator='!=' }}style="display: none;"{{/compare}}>
                         <label>Shipping regions:</label>
                         <select class="js-elem js-after-chosen" data-id="regions" multiple>
-                            <option {{#ifHasIt ../itm.regions 0 }}selected{{/ifHasIt}} value="0">All regions</option>
+                            <option {{#ifHasIt itm.regions 'all' }}selected{{/ifHasIt}} value="all">All regions</option>
                             {{#each regions}}
                                 <option {{#ifHasIt ../itm.regions id }}selected{{/ifHasIt}} value="{{id}}">{{title}}</option>
                             {{/each}}
@@ -36,7 +37,7 @@
 
                     <section {{#compare mode 2 operator='!=' }}style="display: none;"{{/compare}}>
                         <div class="formStyle">
-                            <label>Postal code range from:</label>
+                            <label>Postcode from:</label>
                             <input type="text" class="js-elem" data-id="zipFrom" value="{{itm.zipFrom}}">
                         </div>
 
@@ -46,7 +47,7 @@
                         </div>
                     </section>
 
-                    <div class="formStyle mb-little"><label>$ / shipping unit:</label>
+                    <div class="formStyle mb-little"><label>$ / unit:</label>
                         <input type="text" class="js-elem" data-id="price" value="{{itm.price}}">
                     </div>
 
@@ -57,7 +58,7 @@
                     <section class="conditions-container">
                         <div class="js-extra-title extra-title">
                             <div class="formStyle" style="margin-bottom: 0;">
-                                <label>Shipping unit(s) from:</label>
+                                <label>Units from:</label>
                             </div>
 
                             <div class="formStyle" style="margin-bottom: 0;">

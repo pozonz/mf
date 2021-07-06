@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{{ getenv('INVOICE_COMPANY_TITLE') }} - Your Invoice</title>
+
+    <style type="text/css">
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        a:link, a:visited, a:hover, a:active {
+            color: #59a2d7;
+        }
+    </style>
+</head>
+
+<body marginheight="0" marginwidth="0" style="line-height: 18px;">
+
+
+<font face="Helvetica, Arial, sans-serif" size="-1" color="#003876" style="font-size: 12px;">
+    <table width="100%" cellspacing="0" cellpadding="0" bgcolor="white">
+        <tr>
+            <td align="center">
+                <table width="600" bgcolor="#ffffff" align="left" border="0" cellpadding="10" cellspacing="0">
+                    <tr>
+                        <td style="text-align:left;">
+
+
+                            <!-- Header -->
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10" bgcolor="#005eb8" style="background-color:#005eb8;" height="10">
+                                <tr>
+                                    <td align="center"><img src="{{ app.request.schemeAndHttpHost }}/images/logo-email.jpg" alt="{{ getenv('INVOICE_COMPANY_TITLE') }}" width="230" height="64"/></td>
+                                </tr>
+                            </table>
+                            <!-- Header -->
+
+
+                            <!-- Sub-head -->
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                                <tr>
+                                    <td>
+                                        <font color="#999999"><strong>Purchase ID:</strong> {{ order.title }}</font>
+                                    </td>
+                                    <td align="right">
+                                        <font color="#999999"><strong>Date:</strong> {{ order.added|date("d/m/Y") }}</font>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- Sub-head -->
+
+                            <hr noshade="noshade" size="1" style="border-top: 1px solid #ccc;"/>
+
+
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                                <tr>
+                                    <td>
+                                        <font color="#999999">
+                                            <b>{{ getenv('INVOICE_COMPANY_TITLE') }}</b><br/>
+
+                                            <br/>
+                                            <a href="mailto:{{ getenv('INVOICE_COMPANY_EMAIL') }}">{{ getenv('INVOICE_COMPANY_EMAIL') }}</a>
+                                        </font>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- Sub-head -->
+
+
+                            <!-- Sub-head -->
+
+                            <!-- Sub-head -->
+
+                            <hr noshade="noshade" size="1" style="border-top: 1px solid #ccc;"/>
+
+                            <!-- Copy -->
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                                <tr>
+                                    <td colspan="3">
+                                        <p style="font-size: 16px;"><strong>Hi {{ order.shippingFirstName }}</strong></p>
+
+                                        <p style="font-size: 16px;">Thanks for your order with <b>{{ order.isPickup == 1 ? (order.objPickupStore.title ?? '') : (order.objDeliveryStore.title ?? '') }} Bedpost</b>{% if order.category == cartService.STATUS_ACCEPTED %}, your payment has been received successfully{% endif %}.</p>
+
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- Copy -->
+
+
+                            <hr noshade="noshade" size="1" style="border-top: 1px solid #ccc;"/>
+
+
+                            <!-- Details -->
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                                {% for oi in order.objOrderItems %}
+                                    <tr>
+                                        <td valign="top" width="55%">
+                                            {{ oi.title }}
+                                        </td>
+                                        <td width="35%">Qty:&nbsp;{{ oi.quantity }}</td>
+                                        <td valign="top" align="right" width="25%">
+                                            ${{ (oi.quantity * oi.price)|number_format(2) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                {% if order.discount %}
+                                    <tr>
+                                        <td valign="top">&nbsp;</td>
+                                        <td class="">Discount <small>({{ order.promoCode }})</small></td>
+                                        <td class="" align="right">-${{ order.discount|number_format(2) }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td valign="top">&nbsp;</td>
+                                        <td class="">After discount</td>
+                                        <td class="" align="right">${{ order.afterDiscount|number_format(2) }}</td>
+                                    </tr>
+                                {% endif %}
+
+                                {% if order.isPickup == 1 %}
+                                    <tr>
+                                        <td valign="top">&nbsp;</td>
+                                        <td>Pickup</td>
+                                        <td align="right">Free</td>
+                                    </tr>
+                                {% else %}
+                                    {% if order.shippingId %}
+                                        <tr>
+                                            <td valign="top">&nbsp;</td>
+                                            <td>Shipping <small>({{ order.shippingTitle }})</small></td>
+                                            <td align="right">{% if order.shippingCost == 0 %}Free{% else %}${{ order.shippingCost|number_format(2) }}{% endif %}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td valign="top">&nbsp;</td>
+                                            <td>Shipping</td>
+                                            <td align="right">{% block shippingValue %}Calculated at next step{% endblock %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
+                                <tr>
+                                    <td valign="top">&nbsp;</td>
+                                    <td valign="top"><strong>Total:</strong></td>
+                                    <td align="right">${{ order.total|number_format(2) }}</td>
+                                </tr>
+                            </table>
+
+                            <hr noshade="noshade" size="1" style="border-top: 1px solid #ccc;"/>
+
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
+                                <tr>
+                                    <td width="50%" valign="top">
+
+                                        {% if order.isPickup == 1 %}
+                                            <p><strong>Pickup:</strong></p>
+                                            <strong>First name:</strong> {{ order.pickupFirstName }}<br/>
+                                            <strong>Last name:</strong> {{ order.pickupLastName }}<br/>
+                                            {% if order.pickupPhone %}<strong>Phone:</strong> {{ order.pickupPhone }}<br/>{% endif %}
+                                            <strong>Pickup date:</strong> {{ order.pickupDate|date('d F Y') }}<br/>
+
+                                        {% elseif order.isPickup == 2 %}
+
+                                            <p><strong>Delivery:</strong></p>
+                                            <strong>First name:</strong> {{ order.shippingFirstName }}<br/>
+                                            <strong>Last name:</strong> {{ order.shippingLastName }}<br/>
+                                            {% if order.shippingPhone %}<strong>Phone:</strong> {{ order.shippingPhone }}<br/>{% endif %}
+                                            <strong>Address:</strong> {{ order.objShippingAddress }}<br/>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td width="50%" valign="top">
+                                        <p><strong>Email:</strong> {{ order.email }}<br/></p>
+
+                                        {% if order.note %}
+                                            <strong>Note:</strong> {{ order.note|nl2br }}<br/>
+                                        {% endif %}
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Details -->
+
+
+                            <br/><br/>
+
+
+                            <!-- Foot -->
+                            <table width="100%" border="0" cellspacing="0" cellpadding="10" bgcolor="#deecf7">
+                                <tr>
+                                    <td align="center">
+                                        <font color="#003876" size="-1" style="font-size: 12px;">
+                                            Bedpost &copy; {{ 'now'|date("Y") }}
+                                        </font>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- Foot -->
+
+
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+            </td>
+        </tr>
+    </table>
+</font>
+</body>
+</html>
+
+

@@ -18,7 +18,6 @@ trait OrderTrait
         $this->setBillingUseExisting(0);
         $this->setShippingSave(1);
         $this->setShippingUseExisting(0);
-        $this->setIsPickup(null);
 
         parent::__construct($pdo);
     }
@@ -149,11 +148,11 @@ trait OrderTrait
         return 'cms/orms/orms-custom-order.html.twig';
     }
 
-//    /**
-//     * @return string
-//     */
-//    static public function getCmsOrmTwig()
-//    {
-//        return 'cms/orms/orm-custom-order.html.twig';
-//    }
+    /**
+     * @return string
+     */
+    static public function getCmsOrmTwig()
+    {
+        return 'cms/orms/orm-custom-order.html.twig';
+    }
 }

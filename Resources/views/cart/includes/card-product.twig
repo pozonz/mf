@@ -1,0 +1,17 @@
+<li>
+    <a href="/product/{{ product.slug }}">
+        {% if product.objOnSaleActive %}<div>Sale!</div>{% endif %}
+        {% set objThumbnail = product.objThumbnail %}
+        <img class="lazy" src="/images/assets/{{ objThumbnail.id }}/medium" alt="{{ product.title }}"/>
+        <div>{{ product.title }}</div>
+        {% set objVariant = product.objVariant %}
+        <div>
+            {% if product.objOnSaleActive and objVariant.salePrice %}
+                <span><strike>${{ objVariant.price|number_format(2) }}</strike></span>
+                <span>${{ objVariant.salePrice|number_format(2) }}</span>
+            {% else %}
+                <span>${{ objVariant.price|number_format(2) }}</span>
+            {% endif %}
+        </div>
+    </a>
+</li>

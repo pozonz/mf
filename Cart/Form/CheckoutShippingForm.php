@@ -3,6 +3,7 @@
 namespace MillenniumFalcon\Cart\Form;
 
 use MillenniumFalcon\Cart\Form\Constraints\NotBlankIfRequired;
+use MillenniumFalcon\Cart\Service\CartService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -28,19 +29,27 @@ class CheckoutShippingForm extends AbstractType
         parent::buildForm($builder, $options);
 
         $request = $options['request'];
+        $connection = $options['connection'];
+        /** @var CartService $cartService */
+        $cartService = $options['cartService'];
+
+        $countries = array_filter(array_map(function ($itm) {
+            return $itm ? $itm->getTitle() : null;
+        }, $cartService->getDeliverableCountries()));
+        $countries = array_combine(array_values($countries), array_values($countries));
 
         $builder
-//            ->add('email', EmailType::class, [
-//                'label' => 'Email address',
-//                'required' => true,
-//                'constraints' => [
-//                    new Assert\NotBlank(),
-//                    new Assert\Email(),
-//                ]
-//            ])
+            ->add('email', EmailType::class, [
+                'label' => 'Your email address',
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Email(),
+                ]
+            ])
             ->add('isPickup', ChoiceType::class, [
                 'required' => true,
-//                'expanded' => true,
+                'expanded' => true,
                 'choices' => [
                     'Pick-up' => 1,
                     'Delivery' => 2,
@@ -77,9 +86,15 @@ class CheckoutShippingForm extends AbstractType
             ])
             ->add('pickupPhone', TelType::class, [
                 'label' => 'Mobile',
-                'required' => false,
+                'required' => true,
                 'constraints' => [
-
+                    new NotBlankIfRequired([
+                        'callback' => function ($request) {
+                            $data = $request->get($this->getBlockPrefix());
+                            return isset($data['isPickup']) && $data['isPickup'] == 1 ? 1 : 0;
+                        },
+                        'request' => $request,
+                    ]),
                 ]
             ])
             ->add('shippingFirstName', TextType::class, [
@@ -110,14 +125,20 @@ class CheckoutShippingForm extends AbstractType
             ])
             ->add('shippingPhone', TelType::class, [
                 'label' => 'Mobile',
-                'required' => false,
+                'required' => true,
                 'constraints' => [
-
+                    new NotBlankIfRequired([
+                        'callback' => function ($request) {
+                            $data = $request->get($this->getBlockPrefix());
+                            return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
+                        },
+                        'request' => $request,
+                    ]),
                 ]
             ])
             ->add('shippingApartmentNo', TextType::class, [
                 'label' => 'Apartment No.',
-                'required' => false,
+                'required' => true,
                 'constraints' => [
                 ]
             ])
@@ -159,13 +180,59 @@ class CheckoutShippingForm extends AbstractType
                         'request' => $request,
                     ]),
                 ]
-            ])
-            ->add('shippingCountry', ChoiceType::class, [
-                'label' => 'Country',
+            ]);
+
+        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+            $builder
+                ->add('shippingState', TextType::class, [
+                    'label' => 'Region',
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlankIfRequired([
+                            'callback' => function ($request) {
+                                $data = $request->get($this->getBlockPrefix());
+                                return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
+                            },
+                            'request' => $request,
+                        ]),
+                    ]
+                ])
+                ->add('shippingCountry', ChoiceType::class, [
+                    'label' => 'Country',
+                    'required' => true,
+                    'choices' => $countries,
+                    'constraints' => [
+                        new NotBlankIfRequired([
+                            'callback' => function ($request) {
+                                $data = $request->get($this->getBlockPrefix());
+                                return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
+                            },
+                            'request' => $request,
+                        ]),
+                    ]
+                ]);
+        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+            $builder
+                ->add('shippingCountry', ChoiceType::class, [
+                    'label' => 'Country',
+                    'required' => true,
+                    'choices' => $countries,
+                    'constraints' => [
+                        new NotBlankIfRequired([
+                            'callback' => function ($request) {
+                                $data = $request->get($this->getBlockPrefix());
+                                return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
+                            },
+                            'request' => $request,
+                        ]),
+                    ]
+                ]);
+        }
+
+        $builder
+            ->add('shippingId', TextType::class, [
+                'label' => 'Delivery options',
                 'required' => true,
-                'choices' => [
-                    'New Zealand' => 'NZ',
-                ],
                 'constraints' => [
                     new NotBlankIfRequired([
                         'callback' => function ($request) {
@@ -176,23 +243,6 @@ class CheckoutShippingForm extends AbstractType
                     ]),
                 ]
             ]);
-
-        $builder->add('shippingState', ChoiceType::class, [
-            'label' => 'Region',
-            'required' => true,
-            'choices' => [
-                'Auckland' => 'Auckland',
-            ],
-            'constraints' => [
-                new NotBlankIfRequired([
-                    'callback' => function ($request) {
-                        $data = $request->get($this->getBlockPrefix());
-                        return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
-                    },
-                    'request' => $request,
-                ]),
-            ]
-        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -200,6 +250,8 @@ class CheckoutShippingForm extends AbstractType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'request' => null,
+            'connection' => null,
+            'cartService' => null,
         ]);
     }
 }

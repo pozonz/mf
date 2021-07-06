@@ -1,0 +1,11 @@
+{% extends 'base.twig' %}
+
+{% block main %}
+
+    <ul>
+        {% for itm in orms %}
+            {% include '/cart/includes/card-product.twig' with { product: itm } %}
+        {% endfor %}
+    </ul>
+
+{% endblock %}

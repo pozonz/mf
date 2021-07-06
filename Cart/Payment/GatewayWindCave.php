@@ -99,11 +99,11 @@ class GatewayWindCave extends AbstractGateway
 
         if ($status == 1) {
             $order->setPayStatus(1);
-            $order->setCategory($this->cartService->getStatusAccepted());
+            $order->setCategory($this->cartService->STATUS_ACCEPTED);
             $order->save();
         } else {
             $order->setPayStatus(0);
-            $order->setCategory($this->cartService->getStatusDeclined());
+            $order->setCategory($this->cartService->STATUS_DECLINED);
             $order->save();
         }
 
@@ -165,7 +165,7 @@ class GatewayWindCave extends AbstractGateway
         $xmlResponse = new \SimpleXMLElement($result);
         $paymentUrl = $xmlResponse->URI->__toString();
 
-        $order->setCategory($this->cartService->getStatusGatewaySent());
+        $order->setCategory($this->cartService->STATUS_GATEWAY_SENT);
         $order->setGatewaySent(1);
         $order->setGatewaySentDate(date('Y-m-d H:i:s'));
         $order->setPayToken(null);
@@ -182,7 +182,7 @@ class GatewayWindCave extends AbstractGateway
      */
     public function finalise(Request $request, $order)
     {
-        return $this->finaliseOrderAndRedirect($order, $order->getCategory() == $this->cartService->getStatusAccepted() ? 1 : 0);
+        return $this->finaliseOrderAndRedirect($order, $order->getCategory() == $this->cartService->STATUS_ACCEPTED ? 1 : 0);
     }
 
     /**

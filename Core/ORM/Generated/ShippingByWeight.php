@@ -14,6 +14,11 @@ class ShippingByWeight extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $country;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $freeDeliveryIfPriceAbove;
     
     /**
@@ -40,6 +45,22 @@ class ShippingByWeight extends Base
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+    
+    /**
+     * @param mixed country
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
     }
     
     /**

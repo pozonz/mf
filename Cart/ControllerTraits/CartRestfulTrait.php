@@ -6,6 +6,7 @@ use MillenniumFalcon\Cart\Form\CheckoutAccountForm;
 use MillenniumFalcon\Cart\Form\CheckoutPaymentForm;
 use MillenniumFalcon\Cart\Form\CheckoutShippingForm;
 use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
+use PhpParser\Node\Expr\BinaryOp\Mod;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,27 @@ use Twig\Environment;
 
 trait CartRestfulTrait
 {
+    /**
+     * @Route("/cart/get")
+     * @param Request $request
+     * @param Environment $environment
+     * @return JsonResponse
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function getCart(Request $request, Environment $environment)
+    {
+        $cart = $this->cartService->getCart();
+
+        return new JsonResponse([
+            'cart' => $cart,
+            'miniCartHtml' => $environment->render('/cart/cart-mini.twig', [
+                'cart' => $cart,
+            ]),
+        ]);
+    }
+
     /**
      * @Route("/cart/post/cart-item/add")
      * @param Request $request
@@ -69,13 +91,14 @@ trait CartRestfulTrait
 
         if (!$exist) {
             if (!$variant->getStockEnabled() || $variant->getStock() >= $qty) {
+                /** @var OrderItem $cartItem */
                 $cartItem = new $cartItemFullClass($this->connection);
                 $cartItem->setTitle($product->getTitle() . ' - ' . $variant->getTitle());
                 $cartItem->setSku($variant->getSku());
                 $cartItem->setOrderId($cart->getId());
                 $cartItem->setProductId($variant->getId());
                 $cartItem->setQuantity($qty);
-                $this->cartService->setCustomOrderItem($cartItem, $variant);
+                $cartItem->setImage($product->objThumbnail()->getId());
                 $cartItem->save();
             } else {
                 $isOutOfStock = 1;
@@ -89,13 +112,13 @@ trait CartRestfulTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Order');
         $cart = $fullClass::getById($this->connection, $cart->getId());
-        $this->cartService->updateOrder($cart);
+        $this->cartService->updateCart($cart);
 
         return new JsonResponse([
             'isOutOfStock' => $isOutOfStock,
             'outOfStockMessage' => $outOfStockMessage,
             'cart' => $cart,
-            'miniCartHtml' => $environment->render('includes/cart-mini.twig', [
+            'miniCartHtml' => $environment->render('/cart/cart-mini.twig', [
                 'cart' => $cart,
             ]),
         ]);
@@ -125,20 +148,17 @@ trait CartRestfulTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Order');
         $cart = $fullClass::getById($this->connection, $cart->getId());
-        $this->cartService->updateOrder($cart);
+        $this->cartService->updateCart($cart);
 
         return new JsonResponse([
             'cart' => $cart,
-            'miniCartHtml' => $environment->render('includes/cart-mini.twig', [
+            'miniCartHtml' => $environment->render('/cart/cart-mini.twig', [
                 'cart' => $cart,
             ]),
-            'miniCartSubtotalHtml' => $environment->render('includes/cart-mini-subtotal.twig', [
+            'miniCartSubtotalHtml' => $environment->render('/cart/includes/cart-mini-subtotal.twig', [
                 'cart' => $cart,
             ]),
-            'cartHtml' => $environment->render('includes/cart.twig', [
-                'cart' => $cart,
-            ]),
-            'cartSubtotalHtml' => $environment->render('includes/cart-subtotal.twig', [
+            'cartSubtotalHtml' => $environment->render('/cart/includes/cart-subtotal.twig', [
                 'cart' => $cart,
             ]),
         ]);
@@ -159,6 +179,7 @@ trait CartRestfulTrait
         $qty = $request->get('qty');
         $isOutOfStock = 0;
         $outOfStockMessage = $this->outOfStockMessage ?? '';
+        $stock = 0;
 
         $cart = $this->cartService->getCart();
 
@@ -174,6 +195,8 @@ trait CartRestfulTrait
                 if (!$product || !$product->getStatus()) {
                     throw new NotFoundHttpException('Product not found');
                 }
+
+                $stock = $variant->getStock();
 
                 if (!$variant->getStockEnabled() || $variant->getStock() >= $qty) {
                     $itm->setQuantity($qty);
@@ -191,22 +214,20 @@ trait CartRestfulTrait
 
         $fullClass = ModelService::fullClass($this->connection, 'Order');
         $cart = $fullClass::getById($this->connection, $cart->getId());
-        $this->cartService->updateOrder($cart);
+        $this->cartService->updateCart($cart);
 
         return new JsonResponse([
             'isOutOfStock' => $isOutOfStock,
             'outOfStockMessage' => $outOfStockMessage,
+            'stock' => $stock,
             'cart' => $cart,
-            'miniCartHtml' => $environment->render('includes/cart-mini.twig', [
+            'miniCartHtml' => $environment->render('/cart/cart-mini.twig', [
                 'cart' => $cart,
             ]),
-            'miniCartSubtotalHtml' => $environment->render('includes/cart-mini-subtotal.twig', [
+            'miniCartSubtotalHtml' => $environment->render('/cart/includes/cart-mini-subtotal.twig', [
                 'cart' => $cart,
             ]),
-            'cartHtml' => $environment->render('includes/cart.twig', [
-                'cart' => $cart,
-            ]),
-            'cartSubtotalHtml' => $environment->render('includes/cart-subtotal.twig', [
+            'cartSubtotalHtml' => $environment->render('/cart/includes/cart-subtotal.twig', [
                 'cart' => $cart,
             ]),
         ]);
@@ -225,29 +246,16 @@ trait CartRestfulTrait
     {
         $code = $request->get('code');
 
-        $order = $this->getOrderByRequest($request);
-        $order->setPromoCode($code);
-        $order->setPayToken(null);
-        $order->setPaySecret(null);
-        $order->setHummRequestQuery(null);
-        $order->save();
+        $cart = $this->cartService->getCart();
+        $cart->setPromoCode($code);
+        $cart->save();
 
-        $order = $this->getOrderByRequest($request);
-        $this->cartService->updateOrder($order);
-
-        $this->initialiasePaymentGateways($request, $order);
+        $cart = $this->cartService->getCart();
 
         return new JsonResponse([
-            'order' => $order,
-            'cartSubtotalHtml' => $environment->render('includes/cart-subtotal.twig', [
-                'cart' => $order,
-            ]),
-            'checkoutSidebarSubtotalHtml' => $environment->render('includes/checkout-sidebar-subtotal.twig', [
-                'order' => $order,
-            ]),
-            'checkoutPaymentMethodsHtml' => $environment->render('includes/checkout-payment-methods.twig', [
-                'gateways' => $this->cartService->getGatewayClasses(),
-                'order' => $order,
+            'cart' => $cart,
+            'checkoutSidebarSubtotalHtml' => $environment->render('/cart/includes/checkout-sidebar-subtotal.twig', [
+                'cart' => $cart,
             ]),
         ]);
     }
@@ -265,45 +273,16 @@ trait CartRestfulTrait
     {
         $pickup = $request->get('pickup');
 
-        $order = $this->getOrderByRequest($request);
-        $order->setIsPickup($pickup);
-        $order->save();
+        $cart = $this->cartService->getCart();
+        $cart->setIsPickup($pickup);
+        $cart->save();
 
-        $order = $this->getOrderByRequest($request);
-        $this->cartService->updateOrder($order);
-
-        return new JsonResponse([
-            'order' => $order,
-            'checkoutSidebarSubtotalHtml' => $environment->render('includes/checkout-sidebar-subtotal.twig', [
-                'order' => $order,
-            ]),
-        ]);
-    }
-
-    /**
-     * @Route("/checkout/post/order/delivery-option")
-     * @param Request $request
-     * @param Environment $environment
-     * @return JsonResponse
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function chooseDeliveryOption(Request $request, Environment $environment)
-    {
-        $shipping = $request->get('shipping');
-
-        $order = $this->getOrderByRequest($request);
-        $order->setShippingId($shipping);
-        $order->save();
-
-        $order = $this->getOrderByRequest($request);
-        $this->cartService->updateOrder($order);
+        $this->cartService->updateCart($cart);
 
         return new JsonResponse([
-            'order' => $order,
-            'checkoutSidebarSubtotalHtml' => $environment->render('includes/checkout-sidebar-subtotal.twig', [
-                'order' => $order,
+            'cart' => $cart,
+            'checkoutSidebarSubtotalHtml' => $environment->render('/cart/includes/checkout-sidebar-subtotal.twig', [
+                'cart' => $cart,
             ]),
         ]);
     }
@@ -317,8 +296,8 @@ trait CartRestfulTrait
     public function changeOrderPayType(Request $request)
     {
         $type = $request->get('type');
-
-        $order = $this->getOrderByRequest($request);
+        $id = $request->get('id');
+        $order = $this->cartService->getOrderById($id);
         if (!$order) {
             throw new NotFoundHttpException();
         }
@@ -344,12 +323,13 @@ trait CartRestfulTrait
     {
         $type = $request->get('type');
         $note = $request->get('note');
-        $order = $this->getOrderByRequest($request);
+        $id = $request->get('id');
+        $order = $this->cartService->getOrderById($id);
         if (!$order) {
             throw new NotFoundHttpException();
         }
 
-        $order->setCategory($this->cartService->getStatusGatewaySent());
+        $order->setCategory($this->cartService->STATUS_GATEWAY_SENT);
         $order->setGatewaySent(1);
         $order->setGatewaySentDate(date('Y-m-d H:i:s'));
         $order->setPayType($type);
@@ -358,8 +338,65 @@ trait CartRestfulTrait
 
         return new JsonResponse([
             'order' => $order,
-            'checkoutSidebarHtml' => $environment->render('includes/checkout-sidebar.twig', [
+            'checkoutSidebarHtml' => $environment->render('/cart/includes/checkout-sidebar.twig', [
                 'order' => $order,
+            ]),
+        ]);
+    }
+
+    /**
+     * @Route("/checkout/post/order/shipping")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateShippingOptions(Request $request)
+    {
+        $country = $request->get('country');
+        $region = $request->get('region');
+        $postcode = $request->get('postcode');
+
+        $cart = $this->cartService->getCart();
+        $cart->setShippingState($region);
+        $cart->setShippingCountry($country);
+        $cart->setShippingPostcode($postcode);
+        $cart->save();
+
+        $this->cartService->updateCart($cart);
+
+        $regions = $this->cartService->getDeliverableRegions($cart);
+        $deliveryOptions = $this->cartService->getDeliveryOptions($cart);
+        return new JsonResponse([
+            'cart' => $cart,
+            'regions' => $regions,
+            'deliveryOptions' => $deliveryOptions,
+            'checkoutSidebarSubtotalHtml' => $this->environment->render('/cart/includes/checkout-sidebar-subtotal.twig', [
+                'cart' => $cart,
+            ]),
+        ]);
+    }
+
+    /**
+     * @Route("/checkout/post/order/delivery")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateDeliveryOption(Request $request)
+    {
+        $shipping = $request->get('shipping');
+
+        $cart = $this->cartService->getCart();
+        $cart->setShippingId($shipping);
+        $cart->save();
+
+        $this->cartService->updateCart($cart);
+
+        $regions = $this->cartService->getDeliverableRegions($cart);
+        $deliveryOptions = $this->cartService->getDeliveryOptions($cart);
+        return new JsonResponse([
+            'regions' => $regions,
+            'deliveryOptions' => $deliveryOptions,
+            'checkoutSidebarSubtotalHtml' => $this->environment->render('/cart/includes/checkout-sidebar-subtotal.twig', [
+                'cart' => $cart,
             ]),
         ]);
     }
