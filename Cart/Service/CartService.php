@@ -83,7 +83,7 @@ class CartService
      * @param $id
      * @return mixed
      */
-    protected function getOrderByRequest($id)
+    public function getOrderById($id)
     {
         $orderTitle = $id;
         $fullClass = ModelService::fullClass($this->connection, 'Order');
@@ -563,7 +563,7 @@ class CartService
     public function sendEmailInvoice($order)
     {
         $messageBody = $this->environment->render('/cart/email-invoice.twig', array(
-            'order' => $cart,
+            'order' => $order,
         ));
         $message = (new \Swift_Message())
             ->setSubject("Invoice {$order->getTitle()}")

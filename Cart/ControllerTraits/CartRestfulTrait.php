@@ -261,33 +261,6 @@ trait CartRestfulTrait
     }
 
     /**
-     * @Route("/checkout/post/order/is-pickup")
-     * @param Request $request
-     * @param Environment $environment
-     * @return JsonResponse
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function setIsPickup(Request $request, Environment $environment)
-    {
-        $pickup = $request->get('pickup');
-
-        $cart = $this->cartService->getCart();
-        $cart->setIsPickup($pickup);
-        $cart->save();
-
-        $this->cartService->updateCart($cart);
-
-        return new JsonResponse([
-            'cart' => $cart,
-            'checkoutSidebarSubtotalHtml' => $environment->render('/cart/includes/checkout-sidebar-subtotal.twig', [
-                'cart' => $cart,
-            ]),
-        ]);
-    }
-
-    /**
      * @Route("/checkout/post/order/change-pay-type")
      * @param Request $request
      * @return JsonResponse
@@ -339,7 +312,7 @@ trait CartRestfulTrait
         return new JsonResponse([
             'order' => $order,
             'checkoutSidebarHtml' => $environment->render('/cart/includes/checkout-sidebar.twig', [
-                'order' => $order,
+                'cart' => $order,
             ]),
         ]);
     }
@@ -351,14 +324,20 @@ trait CartRestfulTrait
      */
     public function updateShippingOptions(Request $request)
     {
+        $address = $request->get('address');
+        $city = $request->get('city');
         $country = $request->get('country');
         $region = $request->get('region');
         $postcode = $request->get('postcode');
+        $pickup = $request->get('pickup');
 
         $cart = $this->cartService->getCart();
+        $cart->setShippingAddress($address);
+        $cart->setShippingCity($city);
         $cart->setShippingState($region);
         $cart->setShippingCountry($country);
         $cart->setShippingPostcode($postcode);
+        $cart->setIsPickup($pickup);
         $cart->save();
 
         $this->cartService->updateCart($cart);

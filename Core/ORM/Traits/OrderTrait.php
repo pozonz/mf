@@ -148,11 +148,11 @@ trait OrderTrait
         return 'cms/orms/orms-custom-order.html.twig';
     }
 
-    /**
-     * @return string
-     */
-    static public function getCmsOrmTwig()
-    {
-        return 'cms/orms/orm-custom-order.html.twig';
-    }
+//    /**
+//     * @return string
+//     */
+//    static public function getCmsOrmTwig()
+//    {
+//        return 'cms/orms/orm-custom-order.html.twig';
+//    }
 }

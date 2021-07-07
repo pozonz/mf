@@ -5,7 +5,7 @@
 
 {% block promoBlock %}
     <aside id="order-summary" class="checkout-aside js-checkout-aside section-inner--s section-inner--py grid-col l-5">
-        {% include '/cart/includes/checkout-sidebar.twig' with { order: order, showpromo: false } %}
+        {% include '/cart/includes/checkout-sidebar.twig' with { cart: order, showpromo: false } %}
     </aside>
 {% endblock %}
 
