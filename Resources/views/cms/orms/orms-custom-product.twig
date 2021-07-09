@@ -26,10 +26,17 @@
             </div>
 
             <div class="formStyle">
+                {% macro catOpt(node, selects, depth) %}
+                    <option style="padding-left: {{ (depth * 20) + 10 }}px;" {% if node.slug in selects %}selected{% endif%} value="{{ node.slug }}">{{ node.title }}</option>
+                    {% for itm in node.children %}
+                        {{ _self.catOpt(itm, selects, depth + 1) }}
+                    {% endfor %}
+                {% endmacro %}
+
                 <label style="font-weight: bold; color: black">Category:</label>
                 <select name="category[]" class="js-choice_multi_json" multiple>
-                    {% for itm in categories %}
-                        <option {% if itm.slug in filterCategories %}selected{% endif%} value="{{ itm.slug }}">{{ itm.title }}</option>
+                    {% for itm in categories.rootNodes %}
+                        {{ _self.catOpt(itm, filterCategories, 0) }}
                     {% endfor %}
                 </select>
             </div>
@@ -42,7 +49,6 @@
                     {% endfor %}
                 </select>
             </div>
-
 
             <div class="formStyle datepicker">
                 <label style="font-weight: bold; color: black">Created date:</label>
@@ -79,7 +85,7 @@
             <tbody>
             <tr>
                 <td class="tableHead" width="100px"><a href="{{ urlNoSort }}?sort=added&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}" title="Product added date">Added</a></td>
-                <td class="tableHead" width="160px"><a href="{{ urlNoSort }}?sort=categories&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}" title="Product categories">Categories</a></td>
+                <td class="tableHead" width="200px"><a href="{{ urlNoSort }}?sort=categories&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}" title="Product categories">Categories</a></td>
                 <td class="tableHead"><a href="{{ urlNoSort }}?sort=title&order={{ order == 'ASC' ? 'DESC' : 'ASC' }}" title="Proudct title">Title</a></td>
                 <td class="tableHead" width="40px" title="Product variants">VAR</td>
                 <td class="tableHead" width="40px" title="Product images">IMG</td>

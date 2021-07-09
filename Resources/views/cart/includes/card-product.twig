@@ -1,17 +1,32 @@
-<li>
-    <a href="/product/{{ product.slug }}">
-        {% if product.objOnSaleActive %}<div>Sale!</div>{% endif %}
-        {% set objThumbnail = product.objThumbnail %}
-        <img class="lazy" src="/images/assets/{{ objThumbnail.id }}/medium" alt="{{ product.title }}"/>
-        <div>{{ product.title }}</div>
-        {% set objVariant = product.objVariant %}
-        <div>
-            {% if product.objOnSaleActive and objVariant.salePrice %}
-                <span><strike>${{ objVariant.price|number_format(2) }}</strike></span>
-                <span>${{ objVariant.salePrice|number_format(2) }}</span>
-            {% else %}
-                <span>${{ objVariant.price|number_format(2) }}</span>
+<div class="c-prod-card js-product-card">
+    <a href="/product/{{ product.slug }}" class="c-prod-card__link">
+        <figure class="c-prod-card__media">
+            <div class="img-resizer"></div>
+
+            <img data-src="/images/assets/{{ product.objImage|join('/') }}" alt="" class="lazy object-fit">
+            <div class="content-placeholder content-placeholder--media"></div>
+        </figure>
+        <div class="c-prod-card__text">
+            <h3 class="c-prod-card__heading heading--block">{{ product.title }}</h3>
+            {% if product.objBrand %}
+                <div class="c-prod-card__brand">By {{ product.objBrand.title }}</div>
             {% endif %}
         </div>
     </a>
-</li>
+
+    <div class="c-prod-card__options">
+        {% set variant = product.objVariant %}
+        <div class="c-prod-card__size-output js-variant-content js-variant-content-{{ variant.id }}">
+            <div class="c-prod-card__size-info">
+                <div class="c-prod-card__size-info-text" >
+                    {% if product.objOnSaleActive and variant.salePrice %}
+                        <span class="c-prod-card__size-info-price">${{ variant.calculatedSalePrice(app.user)|number_format(0) }}</span>
+                        <span class="c-prod-card__size-info-original-price">${{ variant.calculatedPrice(app.user)|number_format(0) }}</span>
+                    {% else %}
+                        <span class="c-prod-card__size-info-price">${{ variant.calculatedPrice(app.user)|number_format(0) }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

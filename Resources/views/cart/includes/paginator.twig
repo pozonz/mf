@@ -1,0 +1,38 @@
+
+
+{% if pageTotal > 1 %}
+    {% set pageRange = 9 %}
+
+    {% if pageNum in [1, 2] and pageTotal > 5 %}
+        {% set maxPages = 5 %}
+    {% else %}
+        {% set maxPages = pageNum + pageRange > pageTotal ? pageTotal : pageNum + pageRange %}
+    {% endif %}
+    {% set minPages = pageNum - pageRange < 1 ? 1 : pageNum - pageRange %}
+
+
+    <nav class="pagination js-pagination">
+        <ul class="list-reset">
+            <li class="pagination-item item prev col-xl-1">
+                <a class="js-pagination-anchor pagination-next-prev{% if pageNum - 1 < 1 %} disabled{% endif %}" data-page="{{ max(pageNum - 1, 1) }}" href="#" title="Previous page">
+                    {% include "/cart/svg/icon--arrow.svg" %}
+                    <span class="label visuallyhidden">Previous page</span>
+                </a>
+            </li>
+
+            {% for i in minPages..maxPages %}
+                <li class="pagination-item item {{ i == pageNum ? 'is-active' }}">
+                    <a data-anchor={{ i }} data-page={{ i }} class="js-pagination-anchor pagination-page {{ i == pageNum ? 'active' }}" data-page="{{ i }}" href="#" title="Page {{ i }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+
+            <li class="pagination-item item next">
+                <a class="js-pagination-anchor pagination-next-prev{{ pageNum + 1 > pageTotal ? 'disabled' }}" data-page="{{ min(pageNum + 1, pageTotal) }}" href="#" title="Next page">
+                    <span class="label visuallyhidden">Next page</span>
+                    {% include "/cart/svg/icon--arrow.svg" %}
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+{% endif %}

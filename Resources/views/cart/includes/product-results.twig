@@ -1,0 +1,43 @@
+<div class="products-toolbar js-products-toolbar {% if total.count == 0 %}hidden{% endif %}">
+    <div class="products-toolbar__results">
+        <strong class="js-total">{{ total.count }}</strong> results
+    </div>
+    <div class="products-toolbar__sorting">
+        <div class="products-toolbar__sorting-label">
+            Sort by
+        </div>
+        <div class="products-toolbar__sorting-dropdown">
+            <select class="js-sort">
+                {% set sorts = {
+                    'most-popular': 'Most popular',
+                    'price-high-to-low': 'Price high to low',
+                    'price-low-to-high': 'Price low to high',
+                    'newest': 'Newest',
+                    'oldest': 'Oldest'
+                } %}
+                {% for idx, itm in sorts %}
+                    <option {% if sortby == idx %}selected{% endif %} value="{{ idx }}">{{ itm }}</option>
+                {% endfor %}
+            </select>
+            <i class="icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="5" fill="currentColor" viewBox="0 0 8 5">
+                    <path d="M0 0v.469l3.589 4.137h.822L8 .469V0h-.743L3.99 3.234h-.023L.73 0H0z"/>
+                </svg>
+            </i>
+        </div>
+    </div>
+</div>
+
+<div class="products-grid {% if orms|length == 0 %}hidden{% endif %}">
+    {% for itm in orms %}
+        {% include '/cart/includes/card-product.twig' with { product: itm } %}
+    {% endfor %}
+</div>
+
+<div class="products-no-results js-product-no-results {% if orms|length > 0 %}hidden{% endif %}">
+    <h2 class="heading--section headings--block">No results found</h2>
+    <p>Try altering some of your filters or <a href="{{ app.request.pathInfo }}">resetting them altogether</a>.</p>
+    <img src="/images-checkout/icon--no-results.svg" alt="" aria-hidden="true">
+</div>
+
+{% include '/cart/includes/paginator.twig' %}

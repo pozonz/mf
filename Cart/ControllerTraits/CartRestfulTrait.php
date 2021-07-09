@@ -17,6 +17,28 @@ use Twig\Environment;
 
 trait CartRestfulTrait
 {
+
+    /**
+     * @route("/products/filter/shop")
+     * @route("/products/filter/shop/{categories}", requirements={"categories" = ".*"})
+     * @param Request $request
+     * @return JsonResponse
+     * @throws RedirectException
+     */
+    public function productsFilter(Request $request, $categories = null)
+    {
+        $category = null;
+        if ($categories) {
+            $categories = explode('/', $categories);
+            $category = array_pop($categories);
+        }
+        $params = $this->filterProductResult($request, $category);
+        return new JsonResponse([
+            'html' => $this->environment->render('/cart/includes/product-results.twig', $params),
+            'total' => $params['total'],
+        ]);
+    }
+    
     /**
      * @Route("/cart/get")
      * @param Request $request
