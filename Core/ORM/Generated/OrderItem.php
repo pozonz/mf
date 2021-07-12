@@ -14,6 +14,21 @@ class OrderItem extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $productName;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $variantName;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $brandName;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $sku;
     
     /**
@@ -75,6 +90,54 @@ class OrderItem extends Base
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getProductName()
+    {
+        return $this->productName;
+    }
+    
+    /**
+     * @param mixed productName
+     */
+    public function setProductName($productName)
+    {
+        $this->productName = $productName;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getVariantName()
+    {
+        return $this->variantName;
+    }
+    
+    /**
+     * @param mixed variantName
+     */
+    public function setVariantName($variantName)
+    {
+        $this->variantName = $variantName;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getBrandName()
+    {
+        return $this->brandName;
+    }
+    
+    /**
+     * @param mixed brandName
+     */
+    public function setBrandName($brandName)
+    {
+        $this->brandName = $brandName;
     }
     
     /**

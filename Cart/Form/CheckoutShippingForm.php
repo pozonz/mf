@@ -33,10 +33,15 @@ class CheckoutShippingForm extends AbstractType
         /** @var CartService $cartService */
         $cartService = $options['cartService'];
 
-        $countries = array_filter(array_map(function ($itm) {
+        $countryTitles = array_filter(array_map(function ($itm) {
             return $itm ? $itm->getTitle() : null;
         }, $cartService->getDeliverableCountries()));
-        $countries = array_combine(array_values($countries), array_values($countries));
+
+        $countryCodes = array_filter(array_map(function ($itm) {
+            return $itm ? $itm->getCode() : null;
+        }, $cartService->getDeliverableCountries()));
+
+        $countries = array_combine(array_values($countryTitles), array_values($countryCodes));
 
         $builder
             ->add('email', EmailType::class, [

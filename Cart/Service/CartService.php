@@ -358,7 +358,7 @@ class CartService
     {
         $country = $cart->getShippingCountry();
         $fullClass = ModelService::fullClass($this->connection, 'ShippingZone');
-        $ormCountry = $fullClass::getByField($this->connection, 'title', $country);
+        $ormCountry = $fullClass::getByField($this->connection, 'code', $country);
         if (!$ormCountry) {
             return [];
         }
@@ -428,7 +428,7 @@ class CartService
     {
         $country = $cart->getShippingCountry();
         $fullClass = ModelService::fullClass($this->connection, 'ShippingZone');
-        $ormCountry = $fullClass::getByField($this->connection, 'title', $country);
+        $ormCountry = $fullClass::getByField($this->connection, 'code', $country);
         if (!$ormCountry) {
             return null;
         }
@@ -514,7 +514,7 @@ class CartService
     public function getDeliverableRegions($cart)
     {
         $fullClass = ModelService::fullClass($this->connection, 'ShippingZone');
-        $orm = $fullClass::getByField($this->connection, 'title', $cart->getShippingCountry());
+        $orm = $fullClass::getByField($this->connection, 'code', $cart->getShippingCountry());
         if (!$orm) {
             throw new NotFoundHttpException();
         }

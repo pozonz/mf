@@ -164,7 +164,7 @@
                 <div class="related__layout section-inner--py">
                     <header class="related__header">
                         <h2 class="heading--section">Related products</h2>
-                        <a href="/shop{% if category %}?category={{ category.slug }}{% endif %}" class="button button--link">
+                        <a href="{{ getenv('SHOP_URL') }}{% if category %}?category={{ category.slug }}{% endif %}" class="button button--link">
                             <span class="button-label">View more products</span>
                             <i class="icon icon--r">{% include "/cart/svg/icon--arrow.svg" %}</i>
                         </a>

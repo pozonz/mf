@@ -115,13 +115,13 @@
                  <div class="checkout-fields--has-gutters grid-row">
                      <div class="checkout-field checkout-field--has-gutter grid-col m-6">
                          {{ form_label(formView.shippingAddress, null, {label_attr: {class: 'checkout-label'}}) }}
-                         {{ form_widget(formView.shippingAddress, {attr: {class: 'js-address checkout-input--text', placeholder: 'Enter address'}}) }}
+                         {{ form_widget(formView.shippingAddress, {attr: {class: 'js-shipping-address checkout-input--text', placeholder: 'Enter address'}}) }}
                          {{ form_errors(formView.shippingAddress) }}
                      </div>
 
                      <div class="checkout-field checkout-field--has-gutter grid-col m-6">
                          {{ form_label(formView.shippingCity, null, {label_attr: {class: 'checkout-label'}}) }}
-                         {{ form_widget(formView.shippingCity, {attr: {class: 'js-city checkout-input--text', placeholder: 'Enter city'}}) }}
+                         {{ form_widget(formView.shippingCity, {attr: {class: 'js-shipping-city checkout-input--text', placeholder: 'Enter city'}}) }}
                          {{ form_errors(formView.shippingCity) }}
                      </div>
                  </div>
@@ -129,7 +129,7 @@
                  <div class="checkout-fields--has-gutters grid-row">
                      <div class="checkout-field checkout-field--has-gutter grid-col m-6">
                          {{ form_label(formView.shippingPostcode, null, {label_attr: {class: 'checkout-label'}}) }}
-                         {{ form_widget(formView.shippingPostcode, {attr: {class: 'js-postcode checkout-input--text', placeholder: 'Enter postcode'}}) }}
+                         {{ form_widget(formView.shippingPostcode, {attr: {class: 'js-shipping-postcode checkout-input--text', placeholder: 'Enter postcode'}}) }}
                          {{ form_errors(formView.shippingPostcode) }}
                      </div>
 

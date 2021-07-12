@@ -38,7 +38,7 @@ trait CartRestfulTrait
             'total' => $params['total'],
         ]);
     }
-    
+
     /**
      * @Route("/cart/get")
      * @param Request $request
@@ -116,6 +116,11 @@ trait CartRestfulTrait
                 /** @var OrderItem $cartItem */
                 $cartItem = new $cartItemFullClass($this->connection);
                 $cartItem->setTitle($product->getTitle() . ' - ' . $variant->getTitle());
+                $cartItem->setProductName($product->getTitle());
+                $cartItem->setVariantName($variant->getTitle());
+                if ($product->objBrand()) {
+                    $cartItem->setBrandName($product->objBrand()->getTitle());
+                }
                 $cartItem->setSku($variant->getSku());
                 $cartItem->setOrderId($cart->getId());
                 $cartItem->setProductId($variant->getId());

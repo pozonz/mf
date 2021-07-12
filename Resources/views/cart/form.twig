@@ -48,3 +48,14 @@
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 {%- endblock _cart_shipping_shippingState_widget -%}
 
+{%- block _cart_shipping_shippingAddress_widget -%}
+    <div class="js-shipping-address-autocomplete-container"></div>
+
+    {%- set type = type|default('hidden') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock _cart_shipping_shippingAddress_widget -%}
+
