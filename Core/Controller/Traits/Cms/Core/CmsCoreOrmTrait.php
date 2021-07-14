@@ -181,6 +181,41 @@ trait CmsCoreOrmTrait
                     $assetOrm->setOrmId($orm->getUniqId());
                     $assetOrm->save();
                 }
+            } else if ($itm->widget == '\\MillenniumFalcon\\Core\\Form\\Type\\ContentBlock') {
+
+                $getMethod = 'get' . ucfirst($itm->field);
+                $setMethod = 'set' . ucfirst($itm->field);
+
+                $contentBlockValue = json_decode($orm->$getMethod() ?? '[]');
+                foreach ($contentBlockValue as $section) {
+                    foreach ($section->blocks as $block) {
+                        foreach ($block->values as $idx => $value) {
+                            $compareToValue = "orm_{$itm->field}@{$block->id}@{$idx}";
+                            if ($value === $compareToValue) {
+                                $block->id = 'uniq_' . uniqid() . strtotime(date("YmdHis"));
+                                $block->values->$idx = "orm_{$itm->field}@{$block->id}@{$idx}";
+
+                                $fullClass = ModelService::fullClass($this->connection, 'AssetOrm');
+                                $assetOrms = $fullClass::data($this->connection, [
+                                    'whereSql' => 'm.attributeName = ? AND m.ormId = ?',
+                                    'params' => [$value, $oldUniqid],
+                                ]);
+
+                                foreach ($assetOrms as $assetOrm) {
+                                    $assetOrm->setUniqid(Uuid::uuid4());
+                                    $assetOrm->setId(null);
+                                    $assetOrm->setAdded(date('Y-m-d H:i:s'));
+                                    $assetOrm->setModified(date('Y-m-d H:i:s'));
+                                    $assetOrm->setAttributeName($block->values->$idx);
+                                    $assetOrm->setOrmId($orm->getUniqId());
+                                    $assetOrm->save();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $orm->$setMethod(json_encode($contentBlockValue));
             }
         }
 
