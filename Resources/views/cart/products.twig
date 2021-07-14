@@ -1,0 +1,157 @@
+{% extends 'base.twig' %}
+{% block bodyClasses %}template--product-detail section--products {{ page.iconClass }}{% endblock %}
+
+{% block preload %}
+    <link href="{{ preload(asset('css/styles.css') ~ '?v=' ~ timeStamp, { as: 'style' }) }}" as="style" rel="preload">
+    <link rel="preload" href="{{ preload(asset('build/runtime.js')) }}?v={{ timeStamp }}" as="script">
+    <link rel="preload" href="{{ preload(asset('build/products.js')) }}?v={{ timeStamp }}" as="script">
+{% endblock %}
+
+{% block js %}
+    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer></script>
+    <script src="{{ asset('build/products.js') }}?v={{ timeStamp }}" defer></script>
+{% endblock %}
+
+{% block main %}
+
+    <div class="products-ui section-inner--pb">
+        <div class="products-ui__inner section-inner">
+            <div class="products-ui__layout">
+
+                {# Sidebar toggle #}
+                {% block sidebar_toggle %}
+                    <div class="products-ui__mobile-toolbar">
+                    <div class="products-ui__mobile-toolbar-col products-ui__mobile-toolbar-col--sidebar-toggle">
+                        <button type="button" class="products-ui__sidebar-toggle button js-side-panel-open">
+                            <i class="icon" aria-hidden="true">{% include "/cart/svg/icon--filter.svg" %}</i>
+                            <span class="button-label">Show filters</span>
+                        </button>
+                    </div>
+                    <div class="products-ui__mobile-toolbar-col products-ui__mobile-toolbar-col--sorting-toggle">
+                        <button type="button" class="products-ui__sidebar-toggle button js-sorting-toggle">
+                            <span class="button-label">Sort by</span>
+                            <i class="icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="5" fill="currentColor" viewBox="0 0 8 5">
+                                    <path d="M0 0v.469l3.589 4.137h.822L8 .469V0h-.743L3.99 3.234h-.023L.73 0H0z"/>
+                                </svg>
+                            </i>
+                        </button>
+                        <select class="js-sort">
+                            {% set sorts = {
+                                'most-popular': 'Most popular',
+                                'price-high-to-low': 'Price high to low',
+                                'price-low-to-high': 'Price low to high',
+                                'newest': 'Newest',
+                                'oldest': 'Oldest'
+                            } %}
+                            {% for idx, itm in sorts %}
+                                <option {% if sortby == idx %}selected{% endif %} value="{{ idx }}">{{ itm }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% endblock %}
+
+                {# Sidebar #}
+                {% block sidebar %}
+                    <div class="products-ui__sidebar side-panel">
+                        <div class="products-ui__sidebar-header side-panel__header">
+                            <h2 class="h heading--section">Filters <sup>2</sup></h2>
+                            <button type="button" class="close js-products-sidebar-close js-side-panel-close">
+                                <i class="icon">{% include "/cart/svg/icon--close-24.svg" %}</i>
+                                <span class="visuallyhidden">Close filters panel</span>
+                            </button>
+                        </div>
+                        <form method="get" action="{{ getenv('SHOP_URL') }}" class="js-filter-form">
+                            <input type="hidden" name="limit" value="20">
+                            <input type="hidden" name="sortby" class="js-filter-sortby" value="{{ sortby }}">
+                            <input type="hidden" name="pageNum" class="js-filter-paginator" value="{{ pageNum }}">
+                            <input type="text" name="keyword" class="js-filter-keyword" value="{{ productKeyword }}">
+                            <button type="button" class="js-filter-submit-button">Go</button>
+
+                            {% macro catNav(node, depth, current, parentUrl) %}
+                                <li {% if current and treeUtils.contains(node, current) %}class="selected"{% endif %}>
+                                    <a class="js-filter-category" href="{{ parentUrl }}/{{ node.slug }}">
+                                        {{ node.title }}
+                                    </a>
+                                </li>
+                                {% if treeUtils.hasActiveChildren(node) %}
+                                    <ul class="subcategory subcategory-{{ depth }}">
+                                        {% for itm in node.children %}
+                                            {{ _self.catNav(itm, depth + 1, current, parentUrl ~ '/' ~ node.slug) }}
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% endmacro %}
+
+                            <div class="filters js-filters js-sticky">
+                                <div class="filters__group">
+                                    <ul class="filters__list categories">
+                                        <li><a class="js-filter-category" href="{{ getenv('SHOP_URL') }}">All categories</a></li>
+
+                                        {% for itm in categories.rootNodes %}
+                                            {{ _self.catNav(itm, 1, selectedProductCategory, getenv('SHOP_URL')) }}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="filters js-filters js-sticky">
+                                <div class="filters__group">
+                                    <div class="filters__header">
+                                        <div class="filters__heading">
+                                            <span>Brand</span>
+                                        </div>
+                                    </div>
+
+                                    <ul class="filters__list">
+                                        <li class="filter">
+                                            <label>
+                                                <input class="js-filter-option" type="radio" name="brand" value="" checked>
+                                                <div class="filter__label">
+                                                    <i></i>
+                                                    <span class="filter__label-text">All brands</span>
+                                                </div>
+                                            </label>
+                                        </li>
+
+                                        {% for itm in brands %}
+                                            <li class="filter">
+                                                <label>
+                                                    <input class="js-filter-option" type="radio" name="brand" value="{{ itm.slug }}" {% if selectedProductBrand and selectedProductBrand.id == itm.id %}checked{% endif %}>
+                                                    <div class="filter__label">
+                                                        <i></i>
+                                                        <span class="filter__label-text">{{ itm.title }}</span>
+                                                    </div>
+                                                </label>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="filters-actions">
+                                <a href="{{ app.request.pathInfo }}" class="button button--clear">
+                                    <span>Clear</span>
+                                </a>
+                                <button type="button" class="button button--primary js-side-panel-close">
+                                    <span>Apply</span>
+                                </button>
+                            </div>
+                        </form>
+                        <div class="products-ui__sidebar-overlay side-panel__overlay js-side-panel-close"></div>
+                    </div>
+                {% endblock %}
+
+                {# Results #}
+                {% block results %}
+                    <div class="products-ui__results js-product-results">
+                        {% include '/cart/includes/product-results.twig' %}
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

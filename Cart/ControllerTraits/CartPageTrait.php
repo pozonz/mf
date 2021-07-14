@@ -23,18 +23,11 @@ trait CartPageTrait
      */
     public function displayCart(Request $request)
     {
-        $fullClass = ModelService::fullClass($this->connection, 'Page');
-        $page = new $fullClass($this->connection);
-        $page->setTitle('Cart');
-        return $this->render('cart.twig', [
-            'urlParams' => null,
-            'urlFragments' => null,
-            'theNode' => [
-                'extraInfo' => $page,
-            ],
-            'theDataGroup' => null,
-            'rootNodes' => null,
-        ]);
+        $cart = $this->cartService->getCart();
+
+        $params = $this->getTemplateParamsByUrl('/cart');
+        $params['cart'] = $cart;
+        return $this->render('/cart/cart.twig', $params);
     }
 
     /**
@@ -76,7 +69,28 @@ trait CartPageTrait
      */
     public function setShippingForCart(Request $request)
     {
-        return new RedirectResponse("/checkout/payment");
+        $cart = $this->cartService->getCart();
+        $form = $this->container->get('form.factory')->create(CheckoutShippingForm::class, $cart, [
+            'request' => $request,
+            'connection' => $this->connection,
+            'cartService' => $this->cartService,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($cart->getCategory() == $this->cartService->STATUS_NEW) {
+                $cart->setCategory($this->cartService->STATUS_CREATED);
+                $cart->setSubmitted(1);
+                $cart->setSubmittedDate(date('Y-m-d H:i:s'));
+                $cart->save();
+                return new RedirectResponse("/checkout/payment?id={$cart->getTitle()}");
+            }
+        }
+
+        $params = $this->getTemplateParamsByUrl('/cart');
+        $params['formView'] = $form->createView();
+        $params['cart'] = $cart;
+        return $this->render('/cart/checkout-shipping.twig', $params);
     }
 
     /**
@@ -87,9 +101,19 @@ trait CartPageTrait
      */
     public function setPaymentForCart(Request $request)
     {
-        $order = $this->getOrderByRequest($request);
-        $this->cartService->updateOrder($order);
+        $id = $request->get('id');
+        $order = $this->cartService->getOrderById($id);
+        if (!$order) {
+            throw new RedirectException("/checkout");
+        }
+        if ($order->getCategory() == $this->cartService->STATUS_ACCEPTED) {
+            throw new RedirectException("/checkout");
+        }
+        if (!count($order->objOrderItems())) {
+            throw new RedirectException("/");
+        }
 
+//        $order = $this->cartService->setBooleanValues($order);
         $this->initialiasePaymentGateways($request, $order);
 
         $form = $this->container->get('form.factory')->create(CheckoutPaymentForm::class, $order);
@@ -107,21 +131,11 @@ trait CartPageTrait
             }
         }
 
-        $fullClass = ModelService::fullClass($this->connection, 'Page');
-        $page = new $fullClass($this->connection);
-        $page->setTitle('Checkout');
-        return $this->render('checkout-payment.twig', [
-            'urlParams' => null,
-            'urlFragments' => null,
-            'theNode' => [
-                'extraInfo' => $page,
-            ],
-            'theDataGroup' => null,
-            'rootNodes' => null,
-            'order' => $order,
-            'gateways' => $this->cartService->getGatewayClasses(),
-            'formView' => $form->createView(),
-        ]);
+        $params = $this->getTemplateParamsByUrl('/cart');
+        $params['formView'] = $form->createView();
+        $params['order'] = $order;
+        $params['gateways'] = $this->cartService->getGatewayClasses();
+        return $this->render('/cart/checkout-payment.twig', $params);
     }
 
     /**
@@ -155,26 +169,15 @@ trait CartPageTrait
      */
     public function displayCartAccepted(Request $request)
     {
-        $orderTitle = $request->get('id');
-        $fullClass = ModelService::fullClass($this->connection, 'Order');
-        $order = $fullClass::getByField($this->connection, 'title', $orderTitle);
+        $id = $request->get('id');
+        $order = $this->cartService->getOrderById($id);
         if (!$order) {
             throw new NotFoundHttpException();
         }
 
-        $fullClass = ModelService::fullClass($this->connection, 'Page');
-        $page = new $fullClass($this->connection);
-        $page->setTitle('Confirmation');
-        return $this->render('checkout-confirm.twig', [
-            'urlParams' => null,
-            'urlFragments' => null,
-            'theNode' => [
-                'extraInfo' => $page,
-            ],
-            'theDataGroup' => null,
-            'rootNodes' => null,
-            'order' => $order,
-        ]);
+        $params = $this->getTemplateParamsByUrl('/cart');
+        $params['order'] = $order;
+        return $this->render('/cart/checkout-confirm.twig', $params);
     }
 
     /**
@@ -184,50 +187,15 @@ trait CartPageTrait
      */
     public function displayCartDeclined(Request $request)
     {
-        $orderTitle = $request->get('id');
-        $fullClass = ModelService::fullClass($this->connection, 'Order');
-        $order = $fullClass::getByField($this->connection, 'title', $orderTitle);
+        $id = $request->get('id');
+        $order = $this->cartService->getOrderById($id);
         if (!$order) {
             throw new NotFoundHttpException();
         }
 
-        $fullClass = ModelService::fullClass($this->connection, 'Page');
-        $page = new $fullClass($this->connection);
-        $page->setTitle('Confirmation');
-        return $this->render('checkout-declined.twig', [
-            'urlParams' => null,
-            'urlFragments' => null,
-            'theNode' => [
-                'extraInfo' => $page,
-            ],
-            'theDataGroup' => null,
-            'rootNodes' => null,
-            'order' => $order,
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     * @throws RedirectException
-     */
-    protected function getOrderByRequest(Request $request)
-    {
-        $orderTitle = $request->get('id');
-        $fullClass = ModelService::fullClass($this->connection, 'Order');
-        $order = $fullClass::getByField($this->connection, 'title', $orderTitle);
-        if (!$order) {
-            throw new RedirectException("/checkout");
-        }
-        if ($order->getCategory() == $this->cartService->getStatusAccepted()) {
-            throw new RedirectException("/checkout");
-        }
-        $order = $this->cartService->setBooleanValues($order);
-        if (!count($order->objOrderItems())) {
-            throw new RedirectException("/");
-        }
-
-        return $order;
+        $params = $this->getTemplateParamsByUrl('/cart');
+        $params['order'] = $order;
+        return $this->render('/cart/checkout-declined.twig', $params);
     }
 
     /**

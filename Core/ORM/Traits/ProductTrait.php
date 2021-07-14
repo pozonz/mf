@@ -11,6 +11,12 @@ trait ProductTrait
 
     protected $_variants;
 
+    protected $_brand = null;
+
+    protected $_category = null;
+
+    protected $_categories = [];
+
     /**
      * @param $variant
      */
@@ -61,6 +67,22 @@ trait ProductTrait
     }
 
     /**
+     *
+     */
+    public function objThumbnail()
+    {
+        $gallery = $this->objGallery();
+        if (count($gallery) > 0) {
+            return $gallery[0];
+        } else {
+            return [
+                'id' => getenv('PRODUCT_PLACEHOLDER_ID'),
+                'code' => null,
+            ];
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function objGallery()
@@ -86,7 +108,7 @@ trait ProductTrait
      */
     public function objVariant()
     {
-        if ($this->_variants) {
+        if (!$this->_variants) {
             $this->objVariants();
         }
         return count($this->_variants) ? array_shift($this->_variants) : null;
@@ -134,7 +156,16 @@ trait ProductTrait
     public function save($doNotSaveVersion = false, $options = [])
     {
         $this->_saveProductCachedData();
-        return parent::save($doNotSaveVersion, $options);
+        $result = parent::save($doNotSaveVersion, $options);
+
+
+        $pdo = $this->getPdo();
+        $tableName = static::getTableName();
+        $sql = "UPDATE `$tableName` SET `slug` = ? WHERE `id` = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->executeQuery([ $this->getSlug() . '-' . $this->getId(), $this->getId() ]);
+
+        return $result;
     }
 
     /**
@@ -151,25 +182,109 @@ trait ProductTrait
         $lowStock = 0;
         $outOfStock = 0;
 
-        foreach ($data as $itm) {
-            if (!$itm->objOutOfStock() && $itm->objLowStock() == 1) {
-                $lowStock++;
-            }
-
-            if ($itm->objOutOfStock() == 1) {
-                $outOfStock++;
-            }
-
-            if (!isset($options['doNotUpdatePrice']) || $options['doNotUpdatePrice'] != 1) {
-                if ($this->getPrice() == null || $this->getPrice() > $itm->getPrice()) {
-                    $this->setPrice($itm->getPrice());
-                    $this->setSalePrice($itm->getSalePrice());
-                }
+        $variant = $this->objVariant();
+        if ($variant) {
+            if ($this->objOnSaleActive()) {
+                $this->setPrice($variant->getSalePrice());
+            } else {
+                $this->setPrice($variant->getPrice());
             }
         }
 
         $this->setLowStock($lowStock > 0 ? (count($data) == $lowStock ? 1 : 2) : 0);
         $this->setOutOfStock($outOfStock > 0 ? (count($data) == $outOfStock ? 1 : 2) : 0);
+    }
+
+    /**
+     * @return array|null
+     */
+    public function objCategory()
+    {
+        if (!$this->_category) {
+            $categories = $this->objCategories();
+            $this->_category = array_shift($categories);
+        }
+        return $this->_category;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function objCategories()
+    {
+        if (!$this->_categories) {
+            $fullClass = ModelService::fullClass($this->getPdo(), 'ProductCategory');
+            $this->_categories = array_filter(array_map(function ($itm) use ($fullClass) {
+                return $fullClass::getById($this->getPdo(), $itm);
+            }, json_decode($this->getCategories() ?: '[]')));
+        }
+        return $this->_categories;
+    }
+
+    /**
+     * @param $brand
+     */
+    public function setObjBrand($brand)
+    {
+        $this->_brand = $brand;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function objBrand()
+    {
+        if (!$this->_brand) {
+            $fullClass = ModelService::fullClass($this->getPdo(), 'ProductBrand');
+            $this->_brand = $fullClass::getById($this->getPdo(), $this->getBrand());
+        }
+        return $this->_brand && $this->_brand !== -1 && $this->_brand->getStatus() ? $this->_brand : null;
+    }
+
+    /**
+     * @return array
+     */
+    public function objPriceFromAndTo()
+    {
+        $product = $this;
+
+        $variants = $product->objVariants();
+
+        $variantsPrices = array_map(function($o) use ($product) {
+            if ($product->getOnSale() == 1 && date('Y-m-d') >= $product->getSaleStart() && date('Y-m-d') <= $product->getSaleEnd()){
+                return $o->getSalePrice() === null ? $o->getPrice() : $o->getSalePrice();
+            }
+            return $o->getPrice() === null ? 0 : $o->getPrice();
+        }, $variants);
+
+        return [
+            'priceFrom' => min($variantsPrices),
+            'priceTo' => max($variantsPrices),
+        ];
+    }
+
+    /**
+     * @param $num
+     * @return array
+     */
+    public function objRelatedProducts($num = 3)
+    {
+        $fullClass = ModelService::fullClass($this->getPdo(), 'Product');
+
+        $objRelatedProducts = explode(',', $this->getRelatedProducts());
+        $objRelatedProducts = array_filter(array_map(function ($itm) use ($fullClass) {
+            return $fullClass::getById($this->getPdo(), $itm);
+        }, $objRelatedProducts));
+
+        if (!count($objRelatedProducts)) {
+            $objRelatedProducts = $fullClass::active($this->getPdo(), [
+                'whereSql' => 'm.id != ?',
+                'params' => [$this->getId()],
+                'limit' => $num,
+                'sort' => 'rand()',
+            ]);
+        }
+        return $objRelatedProducts;
     }
 
     /**

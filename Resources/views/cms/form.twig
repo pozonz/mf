@@ -184,7 +184,7 @@
         <select>
             <option value="">Create a new template...</option>
             {% for itm in data %}
-                <option value="{{ itm.id }}" {% if itm.id == value %}selected{% endif %}>{{ itm.title }}</option>
+                <option value="{{ itm.id }}" {% if itm.id == value %}selected{% endif %}>{{ itm.title }} &bull; {{ itm.fileName }}</option>
             {% endfor %}
         </select>
         <div class="template-new js-template-new" {% if not values %}style="display: none"{% endif %}>

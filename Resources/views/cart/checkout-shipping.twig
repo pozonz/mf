@@ -1,0 +1,169 @@
+{% extends '/cart/base.twig' %}
+{% block shippingValue %}Free pick-up{% endblock %}
+
+{% form_theme formView '/cart/form.twig' %}
+
+{% block js %}
+    <script>
+        window._shippingCostMode = '{{ getenv('SHIPPING_PRICE_MODE') ?: 1 }}';
+    </script>
+    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer></script>
+    <script src="{{ asset('build/checkout.js') }}?v={{ timeStamp }}" defer></script>
+{% endblock %}
+
+{#- -----------------------------------------------------------------------------------
+/Aside
+-----------------------------------------------------------------------------------  -#}
+{% block promoBlock %}
+    <aside id="order-summary" class="checkout-aside js-checkout-aside section-inner--s section-inner--py grid-col l-5">
+        {% include '/cart/includes/checkout-sidebar.twig' with { order: cart, showpromo: true } %}
+    </aside>
+{% endblock %}
+
+{% block cartHeader %}
+    <header class="checkout-header--large mw-600 mx-auto">
+        <a class="checkout-header--large__logo l-visible" href="/"><img src="/images-checkout/checkout--logo.svg" alt="{{ siteTitle }}"/></a>
+
+        <div class="section-inner--pb--s">
+            <ol class="checkout-steps list-reset">
+                <li class="checkout-step"><a href="/checkout/shipping" class="checkout-step__label active">Info & Shipping</a></li>
+                <li class="checkout-step"><a class="checkout-step__label">Payment</a></li>
+                <li class="checkout-step"><a class="checkout-step__label">Confirmation</a></li>
+            </ol>
+        </div>
+    </header>
+{% endblock %}
+
+ {% block checkoutMain %}
+     <form novalidate autocomplete="off" method="post" class="js-shipping-form" data-id="{{ cart.title }}">
+         <section class="section-inner--pb--s">
+             <header class="checkout-headings--section">
+                 <h2 class="checkout-heading--section">Your email address</h2>
+             </header>
+             <div class="checkout-field">
+                 {{ form_widget(formView.email, {attr: {class: 'checkout-input--text'}}) }}
+                 {{ form_errors(formView.email) }}
+             </div>
+         </section>
+
+         <section class="section-inner--pb--s">
+             <header class="checkout-headings--section">
+                 {% if getenv('SHIPPING_PICKUP_ALLOWED') != 1 %}
+                     <h2 class="checkout-heading--section">Delivery information</h2>
+                 {% else %}
+                     <h2 class="checkout-heading--section">Shipping methods</h2>
+                 {% endif %}
+             </header>
+
+             <div class="checkout-field js-is-pickup" {% if getenv('SHIPPING_PICKUP_ALLOWED') != 1 %}style="display: none;"{% endif %}>
+                 {{ form_row(formView.isPickup) }}
+             </div>
+
+             <div id="js-tab-content-1" class="checkout-field js-tab-content" {% if cart.isPickup != 1 %}style="display: none;"{% endif %}>
+                 <div class="checkout-fields--has-gutters grid-row">
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         {{ form_label(formView.pickupFirstName, null, {label_attr: {class: 'checkout-label'}}) }}
+                         {{ form_widget(formView.pickupFirstName, {attr: {class: 'checkout-input--text'}}) }}
+                         {{ form_errors(formView.pickupFirstName) }}
+                     </div>
+
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         {{ form_label(formView.pickupLastName, null, {label_attr: {class: 'checkout-label'}}) }}
+                         {{ form_widget(formView.pickupLastName, {attr: {class: 'checkout-input--text'}}) }}
+                         {{ form_errors(formView.pickupLastName) }}
+                     </div>
+                 </div>
+
+                 <div class="checkout-fields--has-gutters grid-row">
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         <label for="input-ph" class="checkout-label">Mobile</label>
+                         {{ form_widget(formView.pickupPhone, {attr: {class: 'checkout-input--text', pattern: '[0-9]*'}}) }}
+                         {{ form_errors(formView.pickupPhone) }}
+                     </div>
+                 </div>
+             </div>
+
+             <div id="js-tab-content-2" class="checkout-field js-tab-content" {% if cart.isPickup != 2 %}style="display: none;"{% endif %}>
+                 <div class="checkout-fields--has-gutters grid-row">
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         {{ form_label(formView.shippingFirstName, null, {label_attr: {class: 'checkout-label'}}) }}
+                         {{ form_widget(formView.shippingFirstName, {attr: {class: 'checkout-input--text'}}) }}
+                         {{ form_errors(formView.shippingFirstName) }}
+                     </div>
+
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         {{ form_label(formView.shippingLastName, null, {label_attr: {class: 'checkout-label'}}) }}
+                         {{ form_widget(formView.shippingLastName, {attr: {class: 'checkout-input--text'}}) }}
+                         {{ form_errors(formView.shippingLastName) }}
+                     </div>
+                 </div>
+
+                 <div class="checkout-fields--has-gutters grid-row">
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         <label for="input-ph" class="checkout-label">Mobile</label>
+                         {{ form_widget(formView.shippingPhone, {attr: {class: 'checkout-input--text'}}) }}
+                         {{ form_errors(formView.shippingPhone) }}
+                     </div>
+
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         <label for="input-ph" class="checkout-label">Appartment, Suite, etc <small class="checkout-label__small">(Optional)</small></label>
+                         {{ form_widget(formView.shippingApartmentNo, {attr: {class: 'checkout-input--text'}}) }}
+                         {{ form_errors(formView.shippingApartmentNo) }}
+                     </div>
+                 </div>
+
+                 <div class="checkout-fields--has-gutters grid-row">
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         {{ form_label(formView.shippingAddress, null, {label_attr: {class: 'checkout-label'}}) }}
+                         {{ form_widget(formView.shippingAddress, {attr: {class: 'js-shipping-address checkout-input--text', placeholder: 'Enter address'}}) }}
+                         {{ form_errors(formView.shippingAddress) }}
+                     </div>
+
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         {{ form_label(formView.shippingCity, null, {label_attr: {class: 'checkout-label'}}) }}
+                         {{ form_widget(formView.shippingCity, {attr: {class: 'js-shipping-city checkout-input--text', placeholder: 'Enter city'}}) }}
+                         {{ form_errors(formView.shippingCity) }}
+                     </div>
+                 </div>
+
+                 <div class="checkout-fields--has-gutters grid-row">
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         {{ form_label(formView.shippingPostcode, null, {label_attr: {class: 'checkout-label'}}) }}
+                         {{ form_widget(formView.shippingPostcode, {attr: {class: 'js-shipping-postcode checkout-input--text', placeholder: 'Enter postcode'}}) }}
+                         {{ form_errors(formView.shippingPostcode) }}
+                     </div>
+
+                     {% if getenv('SHIPPING_PRICE_MODE') == 1 %}
+                         <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                             {{ form_label(formView.shippingState, null, {label_attr: {class: 'checkout-label'}}) }}
+                             <div class="checkout-select-wrap">
+                                 {{ form_widget(formView.shippingState, {attr: {class: 'checkout-select'}}) }}
+                             </div>
+                         </div>
+                     {% endif %}
+
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-6">
+                         {{ form_label(formView.shippingCountry, null, {label_attr: {class: 'checkout-label'}}) }}
+                         <div class="checkout-select-wrap">
+                             {{ form_widget(formView.shippingCountry, {attr: {class: 'checkout-select'}}) }}
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="checkout-fields--has-gutters grid-row">
+                     <div class="checkout-field checkout-field--has-gutter grid-col m-12">
+                         {{ form_label(formView.shippingId, null, {label_attr: {class: 'checkout-label'}}) }}
+                         {{ form_widget(formView.shippingId) }}
+                         {{ form_errors(formView.shippingId) }}
+                     </div>
+                 </div>
+             </div>
+
+             <div class="checkout-field checkout-field--submit">
+                 {{ form_rest(formView) }}
+                 <button class="checkout-button checkout-button--primary" type="submit">Continue to payment</button>
+                 <div class="checkout-return-link"><a class="checkout-link" href="/cart#cart">Return to cart</a></div>
+             </div>
+         </section>
+     </form>
+ {% endblock %}

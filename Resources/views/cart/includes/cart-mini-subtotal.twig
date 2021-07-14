@@ -1,0 +1,18 @@
+{% if cart.objOrderItems|length > 0 %}
+    <div class="cart__amount">
+        <span class="cart__subtotal">Subtotal</span>
+        <span class="cart__price">${{ cart.subtotal|number_format(2) }}</span>
+    </div>
+    <div class="cart__shipping">
+        <span>Shipping</span>
+        <span>Calculated at next step</span>
+    </div>
+    <a class="cart__checkout button button--primary" href="/cart">
+        <span class="txt">View cart</span>
+        <i class="icon icon--r">{% include "/cart/svg/icon--cart-checkout.svg" %}</i>
+    </a>
+    <a class="cart__checkout button button--primary" href="/checkout">
+        <span class="txt">Checkout</span>
+        <i class="icon icon--r">{% include "/cart/svg/icon--cart-checkout.svg" %}</i>
+    </a>
+{% endif %}

@@ -1,0 +1,183 @@
+{% extends 'base.twig' %}
+{% block bodyClasses %}template--product-detail section--products{% endblock %}
+
+{% block preload %}
+    <link href="{{ preload(asset('css/styles.css') ~ '?v=' ~ timeStamp, { as: 'style' }) }}" as="style" rel="preload">
+    <link rel="preload" href="{{ preload(asset('build/runtime.js')) }}?v={{ timeStamp }}" as="script">
+    <link rel="preload" href="{{ preload(asset('build/product.js')) }}?v={{ timeStamp }}" as="script">
+{% endblock %}
+
+{% block js %}
+    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer></script>
+    <script src="{{ asset('build/product.js') }}?v={{ timeStamp }}" defer></script>
+{% endblock %}
+
+{% set gallery = orm.objGallery %}
+{% set variants = orm.objVariants %}
+{% set relatedProducts = orm.objRelatedProducts %}
+{% set category = orm.objCategory %}
+
+{% block title %}
+    <title>{{ orm.title }} by {{ orm.objBrand.title }} - {{ siteTitle }}</title>
+{% endblock title %}
+
+{% block main %}
+
+    <section class="product">
+        <div class="product__inner section-inner">
+        <div class="product__inner section-inner">
+            <div class="product__layout grid-row">
+
+                <header class="product__header product__header--mobile headings--page">
+                    <h1 class="heading--page">
+                        {{ orm.title }}
+                    </h1>
+                    {% if orm.objBrand %}
+                        <div class="product__brand heading--caps">By {{ orm.objBrand.title }}</div>
+                    {% endif %}
+                </header>
+
+                <div class="product__media grid-col col-xl-6 col-xxl-7 {% if gallery|length > 1 %}has-gallery{% endif %}">
+                    <div class="product__gallery">
+
+
+                        <div class="product__gallery-slides js-product-gallery">
+                            {% for itm in gallery %}
+                                <div class="product__gallery-slide" data-flickity-bg-lazyload="/images/assets/{{ itm.id }}/large">
+                                    <img src="/images/assets/{{ itm.id }}/large" alt="" class="visuallyhidden">
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if orm.objOnSaleActive %}
+                            <img data-src="/images/stamps/stamp--sale-red.svg" alt="Sale" class="c-prod-card__stamp lazy">
+                        {% endif %}
+
+                        {% if gallery|length > 1 %}
+                            <div class="product__gallery-nav">
+                                <div class="product__gallery-nav__lateral js-product-gallery-nav-lateral">
+                                    <button type="button" class="product__gallery-nav__lateral-button slide-prev" data-direction="prev">
+                                        {% include "/cart/svg/icon--chevron.svg" %}
+                                        <span class="visuallyhidden">Previous image</span>
+                                    </button>
+                                    <button type="button" class="product__gallery-nav__lateral-button slide-next" data-direction="next">
+                                        {% include "/cart/svg/icon--chevron.svg" %}
+                                        <span class="visuallyhidden">Next image</span>
+                                    </button>
+                                </div>
+
+                                <div class="product__gallery-thumbs js-product-gallery-thumbs">
+                                    {% for itm in gallery %}
+                                        <button type="button" class="product__gallery-thumb">
+                                            <div class="image-wrap">
+                                                <img src="/images/assets/{{ itm.id }}/small" alt="" class="object-fit">
+                                            </div>
+                                        </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="product__meta grid-col col-xl-6 col-xxl-5">
+
+                    <header class="product__header product__header--default headings--page">
+                        <h1 class="heading--page">
+                            {{ orm.title }}
+                        </h1>
+                        {% if orm.objBrand %}
+                            <div class="product__brand heading--caps">By {{ orm.objBrand.title }}</div>
+                        {% endif %}
+                    </header>
+
+                    {% if orm.description %}
+                        <div class="product__desc">
+                            <div class="wysiwyg">
+                                {{ orm.description|raw }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="product-detail__options flex items-end js-product-cart-wrapper">
+                        <div class="form-field field--choice   ">
+{#                            <label>Size<span title="This field is required">*</span></label>#}
+                            <div>
+                                <select class="js-variant">
+                                    {% for itm in variants %}
+                                        <option value="{{ itm.id }}">{{ itm.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Qty<span title="This field is required">*</span></label>
+                            <input class="js-qty" type="text" value="1">
+                        </div>
+                        <button class="js-add-to-cart" data-id="{{ orm.id }}">Add to cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{#    <section class="product-bar js-product-bar js-sticky">#}
+{#        {% for itm in variants %}#}
+{#            <div class="product-bar__variant js-variant-content-bar js-variant-content-bar-{{ itm.id }} {% if itm.objOutOfStock %}is-out-of-stock{% endif %}" {% if orm.objDefaultPriceHasStock.id != itm.id %}style="display: none;"{% endif %}>#}
+{#                <div class="product-bar__layout">#}
+{#                    <div class="product-bar__text">#}
+{#                        <div class="product-bar__title">{{ orm.title }}</div>#}
+
+{#                        <div class="product-bar__meta">#}
+{#                            <div class="product-bar__price">#}
+{#                                {% if orm.objOnSaleActive and itm.salePrice %}#}
+{#                                    ${{ itm.salePrice|number_format(0) }}#}
+{#                                {% else %}#}
+{#                                    ${{ itm.price|number_format(0) }}#}
+{#                                {% endif %}#}
+{#                            </div>#}
+{#                            <div class="product-bar__size">#}
+{#                                {{ itm.title }}#}
+{#                            </div>#}
+{#                        </div>#}
+
+{#                    </div>#}
+{#                    {% if itm.objOutOfStock %}#}
+{#                        <div class="c-prod-card__status out-of-stock">#}
+{#                            <span>Out of stock</span>#}
+{#                        </div>#}
+{#                    {% else %}#}
+{#                        <button type="button" class="product__add-to-cart button button--primary js-add-to-cart" data-placement="mobilebar">#}
+{#                            <i class="icon icon--32" aria-hidden="true">{% include "svg/icon--cart-add.svg" %}</i>#}
+{#                            <span class="button-label visuallyhidden">Add to cart</span>#}
+{#                        </button>#}
+{#                    {% endif %}#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    </section>#}
+
+    {% if relatedProducts|length %}
+        <section class="related">
+            <div class="related__inner section-inner">
+                <div class="related__layout section-inner--py">
+                    <header class="related__header">
+                        <h2 class="heading--section">Related products</h2>
+                        <a href="{{ getenv('SHOP_URL') }}{% if category %}?category={{ category.slug }}{% endif %}" class="button button--link">
+                            <span class="button-label">View more products</span>
+                            <i class="icon icon--r">{% include "/cart/svg/icon--arrow.svg" %}</i>
+                        </a>
+                    </header>
+
+                    <div class="related__products c-best__products">
+                        {% for itm in relatedProducts %}
+                            {% include '/cart/includes/card-product.twig' with { product: itm } %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+{% endblock %}

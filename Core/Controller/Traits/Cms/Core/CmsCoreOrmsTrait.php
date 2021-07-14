@@ -369,7 +369,7 @@ trait CmsCoreOrmsTrait
         $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
         $pageNum = $request->get('pageNum') ?: 1;
         $sort = $request->get('sort') ?: 'm.pageRank';
-        $order = $request->get('order') ?: 'ASC';
+        $order = $request->get('order') ?: 'DESC';
 
         $assetOrms = [];
         $assetORMFullClass = ModelService::fullClass($this->connection, 'AssetOrm');
@@ -414,9 +414,15 @@ trait CmsCoreOrmsTrait
 
         $productCategoryFullClass = ModelService::fullClass($this->connection, 'ProductCategory');
         $productBrandFullClass = ModelService::fullClass($this->connection, 'ProductBrand');
-        $params['categories'] = $productCategoryFullClass::data($this->connection, [
-            'whereSql' => 'm.code != "sale" OR m.code IS NULL',
+        $params['categories'] = new \BlueM\Tree($productCategoryFullClass::active($this->connection, [
+            "select" => 'm.id AS id, m.parentId AS parent, m.title, m.slug, m.status',
+            "sort" => 'm.rank',
+            "order" => 'ASC',
+            "orm" => 0,
+        ]), [
+            'rootId' => null,
         ]);
+
         $params['brands'] = $productBrandFullClass::data($this->connection, [
             'sort' => 'm.title',
         ]);
@@ -456,13 +462,27 @@ trait CmsCoreOrmsTrait
             $s = '';
             $p = [];
 
+            $filterCategoryIds = [];
             foreach ($filterCategories as $filterCategory) {
                 $ormCategory = $productCategoryFullClass::getBySlug($this->connection, $filterCategory);
                 if ($ormCategory) {
-                    $s .= ($s ? ' OR ' : '') .  'm.categories LIKE ?';
-                    $p[] = '%"' . $ormCategory->getId() . '"%';
+                    $nodeCategory = $params['categories']->getNodeById($ormCategory->getId());
+                    $descendants = $nodeCategory->getDescendants();
+                    $filterCategoryIds = array_merge($filterCategoryIds, [$nodeCategory->get('id')], array_map(function ($itm) {
+                        return $itm->getId();
+                    }, $descendants));
                 }
             }
+
+            $s = array_map(function ($itm) {
+                return "m.categories LIKE ?";
+            }, $filterCategoryIds);
+            $s = '(' . implode(' OR ', $s) . ')';
+
+            $p = array_map(function ($itm) {
+                return '%"' . $itm . '"%';
+            }, $filterCategoryIds);
+
             $filterSql .= ($filterSql ? ' AND ' : '') . "($s)";
             $filterParams = array_merge($filterParams, $p);
         }

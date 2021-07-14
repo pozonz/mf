@@ -18,7 +18,6 @@ trait OrderTrait
         $this->setBillingUseExisting(0);
         $this->setShippingSave(1);
         $this->setShippingUseExisting(0);
-        $this->setIsPickup(null);
 
         parent::__construct($pdo);
     }

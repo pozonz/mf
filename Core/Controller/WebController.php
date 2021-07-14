@@ -3,12 +3,13 @@
 namespace MillenniumFalcon\Core\Controller;
 
 use Doctrine\DBAL\Connection;
-use MillenniumFalcon\Core\Controller\Traits\Web\Cart\WebCartAjaxTrait;
-use MillenniumFalcon\Core\Controller\Traits\Web\Cart\WebCartPageTrait;
+use MillenniumFalcon\Cart\Service\CartService;
+use MillenniumFalcon\Cart\ControllerTraits\ShopPageTrait;
+use MillenniumFalcon\Cart\ControllerTraits\CartPageTrait;
+use MillenniumFalcon\Cart\ControllerTraits\CartRestfulTrait;
 use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreAssetTrait;
 use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreTrait;
 use MillenniumFalcon\Core\RouterController;
-use MillenniumFalcon\Core\Service\CartService;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -19,8 +20,12 @@ class WebController extends RouterController
     const AB_TEST_TOKEN_NAME = '_abt';
 
     use
+        ShopPageTrait,
+        CartPageTrait,
+        CartRestfulTrait,
         WebCoreAssetTrait,
         WebCoreTrait
+
         ;
 
     /**
@@ -42,13 +47,14 @@ class WebController extends RouterController
      * WebController constructor.
      * @param Connection $connection
      * @param KernelInterface $kernel
-     * @param CartService $cartService
      * @param Environment $environment
+     * @param CartService $cartService
      */
-    public function __construct(Connection $connection, KernelInterface $kernel, CartService $cartService)
+    public function __construct(Connection $connection, KernelInterface $kernel, Environment $environment, CartService $cartService)
     {
         $this->connection = $connection;
         $this->kernel = $kernel;
+        $this->environment = $environment;
         $this->cartService = $cartService;
     }
 }
