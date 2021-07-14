@@ -4,6 +4,7 @@ namespace MillenniumFalcon\Core\Controller;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Cart\Service\CartService;
+use MillenniumFalcon\Cart\ControllerTraits\ShopPageTrait;
 use MillenniumFalcon\Cart\ControllerTraits\CartPageTrait;
 use MillenniumFalcon\Cart\ControllerTraits\CartRestfulTrait;
 use MillenniumFalcon\Core\Controller\Traits\Web\Core\WebCoreAssetTrait;
@@ -19,6 +20,7 @@ class WebController extends RouterController
     const AB_TEST_TOKEN_NAME = '_abt';
 
     use
+        ShopPageTrait,
         CartPageTrait,
         CartRestfulTrait,
         WebCoreAssetTrait,
