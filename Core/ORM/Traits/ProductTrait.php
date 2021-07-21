@@ -163,8 +163,8 @@ trait ProductTrait
         $tableName = static::getTableName();
         $sql = "UPDATE `$tableName` SET `slug` = ? WHERE `id` = ?";
         $stmt = $pdo->prepare($sql);
-        $stmt->executeQuery([ $this->getSlug() . '-' . $this->getId(), $this->getId() ]);
-
+        $stmt->execute([ $this->getSlug() . '-' . $this->getId(), $this->getId() ]);
+ 
         return $result;
     }
 
