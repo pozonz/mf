@@ -126,7 +126,7 @@
 
 {% block externalFooter %}
     <script id="field-source" type="text/x-handlebars-template">{% include 'cms/models/handlebar/model.tr.twig' %}</script>
-    <script>
+    <script nonce="{{ nonce() }}">
         window._columns = JSON.parse('{{ form.columnsJson.vars.value|e('js') ?: '[]' }}');
         window._fields = {{ ormModel.fieldChoices|keys|json_encode|raw }};
         window._metas = {{ ormModel.parentFields|keys|json_encode|raw }};

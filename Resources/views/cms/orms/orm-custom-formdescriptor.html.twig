@@ -58,7 +58,7 @@
 {% block externalFooter %}
     {{ parent() }}
     <script id="formbuilder-source" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm-custom-formdescriptor.tr.twig' %}</script>
-    <script>
+    <script nonce="{{ nonce() }}">
         window._formWidgets = {{ utils.formWidgets()|json_encode|raw }};
     </script>
     <script src="/cms/develop/js/orm-formdescriptor.js?v=4"></script>

@@ -238,7 +238,7 @@
 	<script src="/cms/develop/js/orm.js?v={{ version }}"></script>
 
     {% if fragmentSubmitted %}
-		<script>
+		<script nonce="{{ nonce() }}">
 			$(function () {
                 parent.$.fancybox.close();
             });

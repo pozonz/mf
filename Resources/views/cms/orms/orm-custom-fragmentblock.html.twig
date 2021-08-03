@@ -42,7 +42,7 @@
 {% block externalFooter %}
 	{{ parent() }}
 	<script id="row" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm-custom-fragmentblock.tr.twig' %}</script>
-	<script>
+	<script nonce="{{ nonce() }}">
 		window._blockWidgets = {{ utils.blockWidgets|json_encode|raw }};
 	</script>
 	<script src="/cms/develop/js/orm-fragmentblock.js"></script>

@@ -38,7 +38,7 @@
 	{{ parent() }}
 
 	<script id="row" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm-custom-fragmentdefault.tr.twig' %}</script>
-	<script>
+	<script nonce="{{ nonce() }}">
 		window._blockWidgets = {{ model.active('FragmentTag')|json_encode|raw }};
 	</script>
 	<script src="/cms/develop/js/orm-fragmentdefault.js"></script>

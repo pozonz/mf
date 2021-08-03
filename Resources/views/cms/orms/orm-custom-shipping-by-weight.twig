@@ -233,7 +233,7 @@
     <script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}"></script>
     <script src="/cms/develop/js/orm.js?v={{ version }}"></script>
 
-    <script>
+    <script nonce="{{ nonce() }}">
         window._shippingCostMode = '{{ getenv('SHIPPING_PRICE_MODE') ?: 1 }}';
     </script>
     <script id="shipping-by-weight-rate" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.shipping-by-weight-rate.twig' %}</script>
@@ -241,7 +241,7 @@
     <script src="/cms/develop/js/orm-shipping-by-weight.js"></script>
 
     {% if fragmentSubmitted %}
-        <script>
+        <script nonce="{{ nonce() }}">
             $(function () {
                 parent.$.fancybox.close();
             });
