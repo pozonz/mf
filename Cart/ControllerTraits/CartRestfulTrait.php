@@ -132,7 +132,7 @@ trait CartRestfulTrait
                 $outOfStockMessage = str_replace('{{productName}}', $product->getTitle(), $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{variantName}}', $variant->getTitle(), $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{stock}}', $variant->getStock(), $outOfStockMessage);
-                $outOfStockMessage = str_replace('{{qty}}', $itm->getQuantity() + $qty, $outOfStockMessage);
+                $outOfStockMessage = str_replace('{{qty}}', $qty, $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{extra}}', "", $outOfStockMessage);
             }
         }
