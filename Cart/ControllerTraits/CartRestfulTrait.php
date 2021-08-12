@@ -115,7 +115,7 @@ trait CartRestfulTrait
             if (!$variant->getStockEnabled() || $variant->getStock() >= $qty) {
                 /** @var OrderItem $cartItem */
                 $cartItem = new $cartItemFullClass($this->connection);
-                $cartItem->setTitle($product->getTitle() . ' - ' . $variant->getTitle());
+                $cartItem->setTitle($product->getTitle() . ($variant->getTitle() ? ' - ' . $variant->getTitle() : ''));
                 $cartItem->setProductName($product->getTitle());
                 $cartItem->setVariantName($variant->getTitle());
                 if ($product->objBrand()) {

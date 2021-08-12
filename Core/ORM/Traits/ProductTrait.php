@@ -155,6 +155,9 @@ trait ProductTrait
      */
     public function save($doNotSaveVersion = false, $options = [])
     {
+        $gallery = $this->objGallery();
+        $this->setThumbnail(count($gallery) > 0 ? $gallery[0]->getId() : null);
+        
         $this->_saveProductCachedData();
         $result = parent::save($doNotSaveVersion, $options);
 
@@ -182,12 +185,20 @@ trait ProductTrait
         $lowStock = 0;
         $outOfStock = 0;
 
-        $variant = $this->objVariant();
-        if ($variant) {
-            if ($this->objOnSaleActive()) {
-                $this->setPrice($variant->getSalePrice());
-            } else {
-                $this->setPrice($variant->getPrice());
+        foreach ($data as $itm) {
+            if (!$itm->objOutOfStock() && $itm->objLowStock() == 1) {
+                $lowStock++;
+            }
+
+            if ($itm->objOutOfStock() == 1) {
+                $outOfStock++;
+            }
+
+            if (!isset($options['doNotUpdatePrice']) || $options['doNotUpdatePrice'] != 1) {
+                if ($this->getPrice() == null || $this->getPrice() > $itm->getPrice()) {
+                    $this->setPrice($itm->getPrice());
+                    $this->setSalePrice($itm->getSalePrice());
+                }
             }
         }
 

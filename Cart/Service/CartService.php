@@ -566,8 +566,10 @@ class CartService
             'order' => $order,
         ));
         $message = (new \Swift_Message())
-            ->setSubject("Invoice {$order->getTitle()}")
-            ->setFrom(getenv('EMAIL_FROM'))
+            ->setSubject((getenv('EMAIL_ORDER_SUBJECT') ?: 'Your order has been received - #') . " - #{$order->getTitle()}")
+            ->setFrom([
+                getenv('EMAIL_FROM') => getenv('EMAIL_FROM_NAME')
+            ])
             ->setTo([$order->getEmail()])
             ->setBcc(array_filter(explode(',', getenv('EMAIL_BCC_ORDER'))))
             ->setBody(

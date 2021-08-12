@@ -33,7 +33,7 @@
                         </div>
                         <div class="cart-item__info">
                             <div class="cart-item__title-make">
-                                <div class="cart-item__title">{{ itm.productName }} - {{ itm.variantName }}</div>
+                                <div class="cart-item__title">{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}</div>
                                 {% if itm.brandName %}
                                     <div class="cart-item__make">by {{ itm.brandName }}</div>
                                 {% endif %}
