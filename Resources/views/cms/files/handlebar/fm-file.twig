@@ -1,0 +1,29 @@
+
+    <li class="tableContent js-tableContent js-orm-info file-box" id="{{file.id}}" data-id="{{file.id}}" data-code="{{file.code}}" data-width="{{file.width}}" data-height="{{file.height}}" data-callback="callbackAfterDeleteFile" data-class="Asset">
+        <div class="asset-img">
+            {{#compare 0 mode operator="=="}}
+                {{#compare 1 file.isImage operator="=="}}
+                    <a class="js-cropping-options cropping-options" href="#" title="Crop this image ›">Cropping Options</a>
+                {{/compare}}
+            {{/compare}}
+            <a class="js-image-select" href="/manage/orms/Asset/{{file.id}}?returnUrl=%2Fmanage%2Ffiles" title="{{file.title}}"><img src="/images/assets/{{file.code}}/cms_small?v={{#random}}{{/random}}" alt="{{file.title}}" class="mceImage" border="0"></a>
+        </div>
+        <div class="details">
+            <a href="/downloads/assets/{{file.id}}" title="{{file.title}}" target="_blank">{{file.title}}</a>
+
+            <div class="asset-controls">
+                <a href="#" class="icon approve js-orm-status" data-status="{{ file.status }}"><img src="/cms/images/dot{{#compare 1 file.status operator="=="}}Green{{/compare}}{{#compare 0 file.status operator="=="}}Red{{/compare}}.gif" alt="" border="0"></a>
+                {{#compare 0 mode operator="=="}}<a class="icon" href="/manage/orms/Asset/{{file.id}}?returnUrl={{url}}" title="{{file.title}}"><img src="/cms/images/editIcon.gif" alt="Edit record" title="Edit record" border="0"></a>{{/compare}}
+                <a class="icon js-orm-delete" href="#"><img src="/cms/images/binIcon.gif" alt="" border="0"></a>
+
+                <div class="doc-code-meta {{#compare 2 mode operator="=="}}doc-code-meta-files{{/compare}}">
+                    <label>
+                        <input type="checkbox" class="js-select" {{#compare 1 file._selected operator="=="}}checked{{/compare}}>
+                        {{file.code}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </li>
+
+

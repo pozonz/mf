@@ -37,9 +37,11 @@
 {% block externalFooter %}
 	{{ parent() }}
 
-	<script id="row" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm-custom-fragmentdefault.tr.twig' %}</script>
-	<script nonce="{{ nonce() }}">
+	<script src="/cms/develop/templates/orm-custom-fragmentdefault.tr.handlbars.js"></script>
+    {% sha %}
+	<script>
 		window._blockWidgets = {{ model.active('FragmentTag')|json_encode|raw }};
 	</script>
+    {% endsha %}
 	<script src="/cms/develop/js/orm-fragmentdefault.js"></script>
 {% endblock %}

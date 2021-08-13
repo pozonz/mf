@@ -1,0 +1,14 @@
+
+    <li class="tableContent js-tableContent js-orm-info {{#compare 1 status operator="=="}}done{{/compare}}{{#compare 0 status operator="=="}}error{{/compare}}" data-id="{{file.id}}" id="{{file.id}}">
+        <div class="asset-img">
+            <a href="" title="{{file.title}}"><img src="/images/assets/{{file.id}}/cms_small" alt="{{file.title}}" class="mceImage" border="0"></a>
+        </div>
+        <div class="details">
+            <a href="" title="{{file.title}}">{{file.title}}</a>
+
+            <div class="asset-controls">
+                <div class="doc-code-meta">{{file.code}}</div>
+            </div>
+        </div>
+    </li>
+
