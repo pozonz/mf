@@ -187,11 +187,6 @@ class AssetService
         $orm->setWidth(null);
         $orm->setHeight(null);
 
-//        $file->move(AssetService::getImageCachePath());
-//        $tmpFile = AssetService::getImageCachePath() . $file->getFilename();
-//        $chkFile = $tmpFile . '.' . $ext;
-//        rename($tmpFile, $chkFile);
-
         $chkFile = $file->getPathName();
 
         $info = getimagesize($chkFile);
@@ -209,9 +204,8 @@ class AssetService
 
         $fnlFile = $uploadedDir . $orm->getId() . '.' . $ext;
         if ($orm->getIsImage() == 1) {
-            $command = getenv('CONVERT_CMD') . ' "' . $chkFile . '" -auto-orient ' . $fnlFile;
+            $command = getenv('CONVERT_CMD') . ' ' . escapeshellarg($chkFile) . ' -auto-orient ' . escapeshellarg($fnlFile);
             static::generateOutput($command);
-//            unlink($chkFile);
         } else {
             copy($chkFile, $fnlFile);
         }
