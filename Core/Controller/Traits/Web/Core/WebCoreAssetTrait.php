@@ -52,7 +52,6 @@ trait WebCoreAssetTrait
         $fileSize = $asset->getFileSize();
         $ext = $asset->getFileExtension();
         if ($useWebp && strtolower($ext) == 'gif') {
-//            $ext = "jpg";
         }
 
         $cachedKey = $this->getCacheKey($asset, $assetSizeCode ?: 1);
@@ -175,7 +174,7 @@ trait WebCoreAssetTrait
                 $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
             }
 
-            $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip $thumbnail";
+            $command = getenv('CONVERT_CMD') . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
         }
 
         $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
@@ -210,7 +209,7 @@ trait WebCoreAssetTrait
         }
 
         if ($useWebp && $assetSizeCode && !$returnOriginalFile && $fileType != 'image/gif') {
-            $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
+            $command = getenv('CWEBP_CMD') . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
             $returnValue = AssetService::generateOutput($command);
 
             $fileSize == filesize($webpThumbnail);
