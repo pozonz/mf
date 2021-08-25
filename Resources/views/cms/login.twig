@@ -34,6 +34,19 @@
                             <label for="">Password:</label>
                             <input type="password" name="_password" class="loginTextfield" value=""/>
                         </li>
+                        {% if app.session.get('login_annoy') %}
+                            <li>
+                                <div class="recaptcha"></div>
+                                <script nonce="{{ nonce() }}">
+                                    window.recaptchaInit = () => {
+                                        grecaptcha.render(document.querySelector('.recaptcha'), {
+                                            'sitekey' : '{{ env('RECAPTCHA_SITE_KEY') }}'
+                                        });
+                                    }
+                                </script>
+                                <script nonce="{{ nonce() }}" src='https://www.google.com/recaptcha/api.js?onload=recaptchaInit&render=explicit'></script>
+                            </li>
+                        {% endif %}
                         <li>
                             <input type="checkbox" id="remember" class="checkbox" name="_remember_me" checked />
                             <label for="remember">Remember me?</label>
