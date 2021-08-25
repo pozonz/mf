@@ -115,7 +115,7 @@ trait CartRestfulTrait
             if (!$variant->getStockEnabled() || $variant->getStock() >= $qty) {
                 /** @var OrderItem $cartItem */
                 $cartItem = new $cartItemFullClass($this->connection);
-                $cartItem->setTitle($product->getTitle() . ' - ' . $variant->getTitle());
+                $cartItem->setTitle($product->getTitle() . ($variant->getTitle() ? ' - ' . $variant->getTitle() : ''));
                 $cartItem->setProductName($product->getTitle());
                 $cartItem->setVariantName($variant->getTitle());
                 if ($product->objBrand()) {
@@ -132,7 +132,7 @@ trait CartRestfulTrait
                 $outOfStockMessage = str_replace('{{productName}}', $product->getTitle(), $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{variantName}}', $variant->getTitle(), $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{stock}}', $variant->getStock(), $outOfStockMessage);
-                $outOfStockMessage = str_replace('{{qty}}', $itm->getQuantity() + $qty, $outOfStockMessage);
+                $outOfStockMessage = str_replace('{{qty}}', $qty, $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{extra}}', "", $outOfStockMessage);
             }
         }

@@ -48,9 +48,10 @@
                             <span class="visuallyhidden">Remove product from cart</span>
                         </button>
                     </div>
+
                     <div class="mini-cart-item__info">
                         <div class="mini-cart-item__title-make">
-                            <div class="mini-cart-item__title">{{ itm.productName }} - {{ itm.variantName }}</div>
+                            <div class="mini-cart-item__title">{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}</div>
                             {% if itm.brandName %}
                                 <div class="mini-cart-item__make">by {{ itm.brandName }}</div>
                             {% endif %}
