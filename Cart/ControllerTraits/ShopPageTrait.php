@@ -54,8 +54,7 @@ trait ShopPageTrait
      */
     protected function filterProductResult(Request $request, $category = null)
     {
-        $limit = 100;
-        $limit = min($request->get('limit') ?: 20, $limit);
+        $limit = getenv('PRODUCT_LISTING_LIMIT') ?: 21;
         $productCategorySlug = $category ?? $request->get('category');
         $productBrandSlug = $request->get('brand');
         $productKeyword = $request->get('keyword');
