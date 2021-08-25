@@ -9,6 +9,7 @@ use MillenniumFalcon\Core\ORM\_Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mime\MimeTypes;
 
 class AssetService
 {
@@ -177,12 +178,18 @@ class AssetService
         static::removeCaches($pdo, $orm);
 
         $originalName = $file->getClientOriginalName();
-        $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+
+        // do not trust this fucker, it's a bad time. determine the extension from the file type
+        // $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+        $ee = $file->getExtension();
+
+        $type = $file->getMimeType();
+        $ext = current(MimeTypes::getDefault()->getExtensions($type)) ?? 'dat';
 
         $orm->setFileName($originalName);
         $orm->setFileType($file->getMimeType());
         $orm->setFileSize($file->getSize());
-        $orm->setFileExtension($file->getClientOriginalExtension());
+        $orm->setFileExtension($ext);
         $orm->setIsImage(0);
         $orm->setWidth(null);
         $orm->setHeight(null);
@@ -203,6 +210,7 @@ class AssetService
         }
 
         $fnlFile = $uploadedDir . $orm->getId() . '.' . $ext;
+
         if ($orm->getIsImage() == 1) {
             $command = getenv('CONVERT_CMD') . ' ' . escapeshellarg($chkFile) . ' -auto-orient ' . escapeshellarg($fnlFile);
             static::generateOutput($command);
