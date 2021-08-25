@@ -52,6 +52,21 @@ class User extends Base
     private $resetDate;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $lastFailedLogin;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $lastSuccessfulLogin;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $failedLoginCount;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -193,6 +208,54 @@ class User extends Base
     public function setResetDate($resetDate)
     {
         $this->resetDate = $resetDate;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getLastFailedLogin()
+    {
+        return $this->lastFailedLogin;
+    }
+    
+    /**
+     * @param mixed lastFailedLogin
+     */
+    public function setLastFailedLogin($lastFailedLogin)
+    {
+        $this->lastFailedLogin = $lastFailedLogin;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getLastSuccessfulLogin()
+    {
+        return $this->lastSuccessfulLogin;
+    }
+    
+    /**
+     * @param mixed lastSuccessfulLogin
+     */
+    public function setLastSuccessfulLogin($lastSuccessfulLogin)
+    {
+        $this->lastSuccessfulLogin = $lastSuccessfulLogin;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getFailedLoginCount()
+    {
+        return $this->failedLoginCount;
+    }
+    
+    /**
+     * @param mixed failedLoginCount
+     */
+    public function setFailedLoginCount($failedLoginCount)
+    {
+        $this->failedLoginCount = $failedLoginCount;
     }
     
 }
