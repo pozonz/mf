@@ -51,7 +51,8 @@ trait WebCoreAssetTrait
         $fileName = $asset->getFileName();
         $fileSize = $asset->getFileSize();
         $ext = $asset->getFileExtension();
-        if ($useWebp && strtolower($ext) == 'gif') {
+        if ($useWebp && strtolower($ext) === 'gif') {
+            $useWebp = false;
         }
 
         $cachedKey = $this->getCacheKey($asset, $assetSizeCode ?: 1);
@@ -149,9 +150,9 @@ trait WebCoreAssetTrait
             }
             if ($assetSize) {
                 if ($assetSize->getResizeBy() == 1) {
-                    $resizeCmd = "-resize \"x{$assetSize->getWidth()}>\"";
+                    $resizeCmd = "-resize " . escapeshellarg("x" . ($assetSize->getWidth() * 1) . ">");
                 } else {
-                    $resizeCmd = "-resize \"{$assetSize->getWidth()}>\"";
+                    $resizeCmd = "-resize " . escapeshellarg("" . ($assetSize->getWidth()) . ">");
                 }
             }
 
@@ -171,7 +172,7 @@ trait WebCoreAssetTrait
                 ));
             }
             if ($assetCrop AND $assetSizeCode !== 'cms_small') {
-                $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
+                $cropCmd = "-crop " . escapeshellarg("{$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}");
             }
 
             $command = getenv('CONVERT_CMD') . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
@@ -189,7 +190,11 @@ trait WebCoreAssetTrait
 
         if ($assetSizeCode && !$returnOriginalFile) {
             $returnValue = AssetService::generateOutput($command);
-            $fileSize == filesize($thumbnail);
+            if ($returnValue == 0 && file_exists($thumbnail)) {
+                $fileSize = filesize($thumbnail);
+            } else {
+                $fileSize = 0;
+            }
         } else {
             copy($fileLocation, $thumbnail);
         }
@@ -208,7 +213,7 @@ trait WebCoreAssetTrait
             unlink($fileLocation);
         }
 
-        if ($useWebp && $assetSizeCode && !$returnOriginalFile && $fileType != 'image/gif') {
+        if ($useWebp && $assetSizeCode && !$returnOriginalFile) {
             $command = getenv('CWEBP_CMD') . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
             $returnValue = AssetService::generateOutput($command);
 
@@ -302,7 +307,7 @@ trait WebCoreAssetTrait
      */
     private function getBinaryFileResponse($file, $header)
     {
-        $header = (array)$header;
+        $header = (array) $header;
         return BinaryFileResponse::create($file, Response::HTTP_OK, $header, true, null, false, true);
     }
 }
