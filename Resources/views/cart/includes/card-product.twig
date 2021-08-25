@@ -1,32 +1,23 @@
-<div class="c-prod-card js-product-card">
-    <a href="/product/{{ product.slug }}" class="c-prod-card__link">
-        <figure class="c-prod-card__media">
-            <div class="img-resizer"></div>
-
-            <img data-src="/images/assets/{{ product.objImage|join('/') }}" alt="" class="lazy object-fit">
-            <div class="content-placeholder content-placeholder--media"></div>
+<li class="grid-col l-4 js-product-card">
+    
+    <a class="card-link" href="/product/{{ product.slug }}">
+        <figure class="card-img aspect-ratio--4x3">
+            <img data-src="/images/assets/{{ product.objImage|join('/') }}" alt="" class="lazy object-fit object-fit--contain">
         </figure>
-        <div class="c-prod-card__text">
-            <h3 class="c-prod-card__heading heading--block">{{ product.title }}</h3>
-            {% if product.objBrand %}
-                <div class="c-prod-card__brand">By {{ product.objBrand.title }}</div>
+
+        <h3 class="heading--card">{{ product.title }}</h3>
+        {% if product.objBrand %}
+            <div class="card-link__meta">By {{ product.objBrand.title }}</div>
+        {% endif %}
+
+        {% set variant = product.objVariant %}
+        <div class="card-link__price">
+            {% if product.objOnSaleActive and variant.salePrice %}
+                <s class="card-link__price__was">${{ variant.calculatedPrice(app.user)|number_format(2) }}</s>
+                <span class="card-link__price__now">${{ variant.calculatedSalePrice(app.user)|number_format(2) }}</span>
+            {% else %}
+                <span class="card-link__price">${{ variant.calculatedPrice(app.user)|number_format(2) }}</span>
             {% endif %}
         </div>
     </a>
-
-    <div class="c-prod-card__options">
-        {% set variant = product.objVariant %}
-        <div class="c-prod-card__size-output js-variant-content js-variant-content-{{ variant.id }}">
-            <div class="c-prod-card__size-info">
-                <div class="c-prod-card__size-info-text" >
-                    {% if product.objOnSaleActive and variant.salePrice %}
-                        <span class="c-prod-card__size-info-price">${{ variant.calculatedSalePrice(app.user)|number_format(0) }}</span>
-                        <span class="c-prod-card__size-info-original-price">${{ variant.calculatedPrice(app.user)|number_format(0) }}</span>
-                    {% else %}
-                        <span class="c-prod-card__size-info-price">${{ variant.calculatedPrice(app.user)|number_format(0) }}</span>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+</li>
