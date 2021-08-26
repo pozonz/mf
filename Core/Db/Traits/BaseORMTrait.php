@@ -262,21 +262,6 @@ trait BaseORMTrait
     }
 
     /**
-     * @param $pdo
-     * @param array $options
-     * @return array|null
-     */
-    static public function active($pdo, $options = array())
-    {
-        if (isset($options['whereSql'])) {
-            $options['whereSql'] .= ($options['whereSql'] ? ' AND ' : '') . 'm.status = 1';
-        } else {
-            $options['whereSql'] = 'm.status = 1';
-        }
-        return static::data($pdo, $options);
-    }
-
-    /**
      * @param Connection $pdo
      * @param $id
      * @return array|null
@@ -308,6 +293,55 @@ trait BaseORMTrait
     static public function getBySlug(Connection $pdo, $slug)
     {
         return static::getByField($pdo, 'slug', $slug);
+    }
+    
+    /**
+     * @param $pdo
+     * @param array $options
+     * @return array|null
+     */
+    static public function active($pdo, $options = array())
+    {
+        if (isset($options['whereSql'])) {
+            $options['whereSql'] .= ($options['whereSql'] ? ' AND ' : '') . 'm.status = 1';
+        } else {
+            $options['whereSql'] = 'm.status = 1';
+        }
+        return static::data($pdo, $options);
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $id
+     * @return array|null
+     */
+    static public function getActiveByField(Connection $pdo, $field, $value)
+    {
+        return static::active($pdo, array(
+            'whereSql' => "CAST(m.`$field` AS CHAR(255)) = ?",
+            'params' => array($value),
+            'oneOrNull' => 1,
+        ));
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $id
+     * @return array|null
+     */
+    static public function getActiveById(Connection $pdo, $id)
+    {
+        return static::getActiveByField($pdo, 'id', $id);
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $slug
+     * @return array|null
+     */
+    static public function getActiveBySlug(Connection $pdo, $slug)
+    {
+        return static::getActiveByField($pdo, 'slug', $slug);
     }
 
     /**

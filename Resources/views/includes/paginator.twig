@@ -1,0 +1,38 @@
+
+
+{% if pageTotal > 1 %}
+    {% set pageRange = 5 %}
+
+    {% if pageNum == 1 %}
+        {% set minPages = 1 %}
+        {% set maxPages = min(minPages + pageRange - 1, pageTotal) %}
+    {% elseif pageNum == pageTotal %}
+        {% set minPages = max(pageTotal - pageRange + 1, 1)  %}
+        {% set maxPages = pageTotal %}
+    {% else %}
+        {% set half = (pageRange / 2)|round(0, 'floor') %}
+        {% set maxPages = min(pageNum + half, pageTotal) %}
+        {% set minPages = max(maxPages - pageRange + 1, 1) %}
+    {% endif %}
+
+    <nav class="nav-pagination section-inner--pt-s js-pagination">
+        <ul class="nav-pagination__items">
+            <li class="nav-pagination__item">
+                <a class="js-pagination-anchor nav-pagination__link nav-pagination__link--lateral{% if pageNum - 1 < 1 %} nav-pagination__link--disabled{% endif %}" data-page="{{ max(pageNum - 1, 1) }}" href="#">
+                    Previous <span class="visuallyhidden">page</span>
+                </a>
+            </li>
+
+            {% for i in minPages..maxPages %}
+                <li class="nav-pagination__item">
+                    <a class="js-pagination-anchor nav-pagination__link {{ i == pageNum ? 'active' }}" data-page="{{ i }}" href="#" ><span class="visuallyhidden">Page {{ i }}</span>{{ i }}</a>
+                </li>
+            {% endfor %}
+            <li class="nav-pagination__item">
+                <a class="js-pagination-anchor nav-pagination__link nav-pagination__link--lateral{% if pageNum + 1 > pageTotal %} nav-pagination__link--disabled{% endif %}" data-page="{{ min(pageNum + 1, pageTotal) }}" href="#">
+                    Next <span class="visuallyhidden">page</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endif %}

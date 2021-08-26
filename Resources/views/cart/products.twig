@@ -13,7 +13,6 @@
 {% endblock %}
 
 {% block main %}
-
     <section class="section-inner section-inner--pt section-inner--pb">
 
         <header class="headings--page mx-auto mw-1400"><h1 class="heading--page">{{ page.pageHeading }}</h1></header>
@@ -36,7 +35,6 @@
                         </header>
 
                         <form method="get" action="{{ getenv('SHOP_URL') }}" class="js-filter-form">
-                            <input type="hidden" name="limit" value="20">
                             <input type="hidden" name="sortby" class="js-filter-sortby" value="{{ sortby }}">
                             <input type="hidden" name="pageNum" class="js-filter-paginator" value="{{ pageNum }}">
                             
@@ -47,7 +45,7 @@
                             </div>
 
                             {% macro catNav(node, depth, current, parentUrl) %}
-                                <li {% if current and treeUtils.contains(node, current) %}class="selected"{% endif %}>
+                                <li class="{% if current and treeUtils.contains(node, current) %}selected{% endif %}">
                                     <a class="js-filter-category" href="{{ parentUrl }}/{{ node.slug }}">
                                         {{ node.title }}
                                     </a>
@@ -67,7 +65,11 @@
                                 <div class="filters__group">
                                     <h2>Categories</h2>
                                     <ul class="list-reset">
-                                        <li><a class="js-filter-category" href="{{ getenv('SHOP_URL') }}">All categories</a></li>
+                                        <li class="{% if not selectedProductCategory %}selected{% endif %}">
+                                            <a class="js-filter-category" href="{{ getenv('SHOP_URL') }}">
+                                                All categories
+                                            </a>
+                                        </li>
 
                                         {% for itm in categories.rootNodes %}
                                             {{ _self.catNav(itm, 1, selectedProductCategory, getenv('SHOP_URL')) }}
