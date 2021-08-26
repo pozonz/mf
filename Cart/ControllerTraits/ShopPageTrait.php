@@ -155,6 +155,7 @@ trait ShopPageTrait
             'pageTotal' => $pageTotal,
             'total' => $total,
             'sortby' => $sortby,
+            'limit' => $limit,
         ];
     }
 }
