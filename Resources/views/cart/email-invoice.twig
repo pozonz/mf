@@ -1,217 +1,349 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{{ getenv('INVOICE_COMPANY_TITLE') }} - Your Invoice</title>
 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bedpost - Your Invoice</title>
     <style type="text/css">
+        #outlook a {
+            padding: 0;
+        }
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            width: 100% !important;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            padding: 0;
+        }
+        .ExternalClass {
+            width: 100%;
+        }
+        .ExternalClass,
+        .ExternalClass p,
+        .ExternalClass span,
+        .ExternalClass font,
+        .ExternalClass td,
+        .ExternalClass div {
+            line-height: 100%;
+        }
+        #backgroundTable {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            line-height: 100% !important;
+        }
+        img {
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+        }
+        a img {
+            border: none;
+        }
+        .image_fix {
+            display: block;
+        }
+        p {
+            margin: 1em 0;
         }
 
-        a:link, a:visited, a:hover, a:active {
-            color: #59a2d7;
+        table td {
+            border-collapse: collapse;
+        }
+        table {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        .receipt-wrap * {
+            font-family: 'Helvetica Neue', Arial, sans-serif !important;
+        }
+
+        @media only screen and (max-device-width: 700px) {
+            .receipt-wrap {
+                width: 100%;
+                font-size: 1rem;
+            }
+            .receipt-header-wrap {
+                padding: 0 !important;
+            }
+            .receipt-header {
+                border: 0;
+            }
+            .receipt-intro {
+                padding-bottom: 20px !important;
+            }
+            .receipt-h1 {
+                font-size: 25px !important;
+            }
+            .receipt-h2 {
+                font-size: 18px !important;
+            }
+            .section-inner--x {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .receipt-cell {
+                display: block;
+                width: 100% !important;
+            }
+            .receipt-tbody,
+            .receipt-img,
+            .receipt-desc,
+            .receipt-tr {
+                display: block;
+                width: 100% !important;
+            }
+            .receipt-tbody,
+            .receipt-img,
+            .receipt-desc {
+                border: none !important;
+            }
+            .receipt-desc {
+                padding: 0 !important;
+            }
+            .receipt-qty,
+            .receipt-item-price {
+                float: left !important;
+                vertical-align: bottom !important;
+                width: 50% !important;
+                margin-right: -4px !important;
+            }
+            .receipt-cell--billing {
+                padding-top: 20px !important;
+            }
+            .total-row {
+                width: 100%;
+                text-align: right;
+                display: block;
+            }
+            .total-row__col1, .total-row__col2 {
+                display: none !important;
+            }
+            .total-row__col3, .total-row__col4 {
+                display: inline-block !important;
+                vertical-align: bottom !important;
+            }
         }
     </style>
 </head>
 
-<body marginheight="0" marginwidth="0" style="line-height: 18px;">
+    <body style="background-color: #e5e5e5;">
+        <table class="receipt-wrap" style="font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0 auto; background-color: white;" cellpadding="0" cellspacing="0" width="700">
 
 
-<font face="Helvetica, Arial, sans-serif" size="-1" color="#003876" style="font-size: 12px;">
-    <table width="100%" cellspacing="0" cellpadding="0" bgcolor="white">
-        <tr>
-            <td align="center">
-                <table width="600" bgcolor="#ffffff" align="left" border="0" cellpadding="10" cellspacing="0">
-                    <tr>
-                        <td style="text-align:left;">
+            {#----------------------------------------------------------------------------------------------------------------------------------
+                /Intro
+            ----------------------------------------------------------------------------------------------------------------------------------#}
+            <tr>
+                <td class="receipt-header-wrap section-inner--x" style="padding: 50px 50px 0;">
+                    <img class="receipt-header" src="{{ app.request.schemeAndHttpHost }}/images/email/logo--email-receipt@2x.png?v=1" width="146" height="36" alt="Bedpost" />
+                </td>
+            </tr>
+            <tr>
+                <td class="receipt-intro section-inner--x" style="padding: 30px 50px 40px;">
+                    <h1 class="receipt-h1" style="font-size: 30px; line-height: 1.2; margin: 0; color: #005EB8;">
+                        We’ve received your order.
+                    </h1>
+                    {% if order.isPickup == 1 %}
+                        <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0; color: #005EB8;">
+                            We will prepare your items for pick up.
+                        </h2>
+                    {% elseif order.isPickup == 2 %}
+                        <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0; color: #005EB8;">
+                            We’ll let you know when your items have been shipped.
+                        </h2>
+                    {% endif %}
+                </td>
+            </tr>
 
 
-                            <!-- Header -->
-                            <table width="100%" border="0" cellspacing="0" cellpadding="10" bgcolor="#005eb8" style="background-color:#005eb8;" height="10">
-                                <tr>
-                                    <td align="center"><img src="{{ app.request.schemeAndHttpHost }}/images/logo-email.jpg" alt="{{ getenv('INVOICE_COMPANY_TITLE') }}" width="230" height="64"/></td>
-                                </tr>
-                            </table>
-                            <!-- Header -->
-
-
-                            <!-- Sub-head -->
-                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
-                                <tr>
-                                    <td>
-                                        <font color="#999999"><strong>Purchase ID:</strong> {{ order.title }}</font>
-                                    </td>
-                                    <td align="right">
-                                        <font color="#999999"><strong>Date:</strong> {{ order.added|date("d/m/Y") }}</font>
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- Sub-head -->
-
-                            <hr noshade="noshade" size="1" style="border-top: 1px solid #ccc;"/>
-
-
-                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
-                                <tr>
-                                    <td>
-                                        <font color="#999999">
-                                            <b>{{ getenv('INVOICE_COMPANY_TITLE') }}</b><br/>
-
-                                            <br/>
-                                            <a href="mailto:{{ getenv('INVOICE_COMPANY_EMAIL') }}">{{ getenv('INVOICE_COMPANY_EMAIL') }}</a>
-                                        </font>
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- Sub-head -->
-
-
-                            <!-- Sub-head -->
-
-                            <!-- Sub-head -->
-
-                            <hr noshade="noshade" size="1" style="border-top: 1px solid #ccc;"/>
-
-                            <!-- Copy -->
-                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
-                                <tr>
-                                    <td colspan="3">
-                                        <p style="font-size: 16px;"><strong>Hi {{ order.shippingFirstName }}</strong></p>
-
-                                        <p style="font-size: 16px;">Thanks for your order with <b>{{ order.isPickup == 1 ? (order.objPickupStore.title ?? '') : (order.objDeliveryStore.title ?? '') }} Bedpost</b>{% if order.category == cartService.STATUS_ACCEPTED %}, your payment has been received successfully{% endif %}.</p>
-
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- Copy -->
-
-
-                            <hr noshade="noshade" size="1" style="border-top: 1px solid #ccc;"/>
-
-
-                            <!-- Details -->
-                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
-                                {% for oi in order.objOrderItems %}
-                                    <tr>
-                                        <td valign="top" width="55%">
-                                            {{ oi.title }}
-                                        </td>
-                                        <td width="35%">Qty:&nbsp;{{ oi.quantity }}</td>
-                                        <td valign="top" align="right" width="25%">
-                                            ${{ (oi.quantity * oi.price)|number_format(2) }}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-
-                                {% if order.discount %}
-                                    <tr>
-                                        <td valign="top">&nbsp;</td>
-                                        <td class="">Discount <small>({{ order.promoCode }})</small></td>
-                                        <td class="" align="right">-${{ order.discount|number_format(2) }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td valign="top">&nbsp;</td>
-                                        <td class="">After discount</td>
-                                        <td class="" align="right">${{ order.afterDiscount|number_format(2) }}</td>
-                                    </tr>
-                                {% endif %}
-
+            {#----------------------------------------------------------------------------------------------------------------------------------
+                /Order
+            -----------------------------------------------------------------------------------------------------------------------------------#}
+            <tr>
+                <td class="section-inner--x" style="padding: 0 50px;">
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td class="receipt-cell" style="width: 50%; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                    <strong>Order:</strong> #{{ order.title }}
+                                </td>
                                 {% if order.isPickup == 1 %}
-                                    <tr>
-                                        <td valign="top">&nbsp;</td>
-                                        <td>Pickup</td>
-                                        <td align="right">Free</td>
-                                    </tr>
-                                {% else %}
-                                    {% if order.shippingId %}
-                                        <tr>
-                                            <td valign="top">&nbsp;</td>
-                                            <td>Shipping <small>({{ order.shippingTitle }})</small></td>
-                                            <td align="right">{% if order.shippingCost == 0 %}Free{% else %}${{ order.shippingCost|number_format(2) }}{% endif %}</td>
-                                        </tr>
-                                    {% else %}
-                                        <tr>
-                                            <td valign="top">&nbsp;</td>
-                                            <td>Shipping</td>
-                                            <td align="right">{% block shippingValue %}Calculated at next step{% endblock %}</td>
-                                        </tr>
-                                    {% endif %}
+                                    <td class="receipt-cell" style="width: 50%; vertical-align: top; font-size: 16px; line-height: 1.6;">
+
+                                    </td>
+                                {% elseif order.isPickup == 2 %}
+                                    <td class="receipt-cell" style="width: 50%; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <hr style="border: 0; border-top: 1px solid black; margin: 40px 0 20px;" />
+
+                    <table style="width: 100%;">
+                        <tbody class="receipt-tbody">
+                            {% for oi in order.objOrderItems %}
+                                <tr class="receipt-tr">
+                                    <td class="receipt-img" style="width: 140px; vertical-align: middle; font-size: 16px; line-height: 1.6; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+                                        <img style="display:block" src="{{ app.request.schemeAndHttpHost }}{{ oi.imageUrl|replace({'/card' : '/small'}) }}" alt="{{ oi.title }}" width="120" />
+                                    </td>
+                                    <td class="receipt-desc" style="vertical-align: middle; font-size: 16px; line-height: 1.6; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+                                        {{ oi.title }}
+                                    </td>
+                                    <td class="receipt-qty" style="width: 100px; vertical-align: middle; font-size: 16px; line-height: 1.6; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+                                        Qty: {{ oi.quantity }}
+                                    </td>
+                                    <td class="receipt-item-price" style="width: 100px; vertical-align: middle; font-size: 16px; line-height: 1.6; text-align: right; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+                                        ${{ (oi.quantity * oi.price)|number_format(2) }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            <tr class="total-row">
+                                <td class="total-row__col1" style="width: 140px;"></td>
+                                <td class="total-row__col2"></td>
+                                <td class="total-row__col3" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6; padding: 20px 0 0;">
+                                    Subtotal
+                                </td>
+                                <td class="total-row__col4" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6; text-align: right; padding: 20px 0 0;">
+                                    ${{ order.subtotal|number_format(2) }}
+                                </td>
+                            </tr>
+                            {% if order.isPickup == 2 %}
+                                <tr class="total-row">
+                                    <td class="total-row__col1" style="width: 140px;"></td>
+                                    <td class="total-row__col2"></td>
+                                    <td class="total-row__col3" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                        Shipping
+                                    </td>
+                                    <td class="total-row__col4" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6; text-align: right;">
+                                        ${{ order.shippingCost|number_format(2) }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                             <tr class="total-row">
+                                <td class="total-row__col1" style="width: 140px;"></td>
+                                <td class="total-row__col2"></td>
+                                <td class="total-row__col3" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                    <strong>Total</strong>
+                                </td>
+                                <td class="total-row__col4" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6; text-align: right;">
+                                    <strong>${{ order.total|number_format(2) }}</strong><br />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="font-size: 16px; line-height: 1.6; text-align: right; padding: 20px 0 0">
+                        <small>
+                            Incl. GST: ${{ order.tax|number_format(2) }}<br />
+                            Paid with {% if order.payType == 'Stripe' %}credit card{% else %}{{ order.payType }}{% endif %}
+                        </small>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid black; margin: 40px 0;" />
+
+                </td>
+            </tr>
+
+
+            {#----------------------------------------------------------------------------------------------------------------------------------
+                /Shipping + billing
+            ----------------------------------------------------------------------------------------------------------------------------------#}
+            <tr>
+                <td class="section-inner--x" style="padding: 0 50px;">
+                    <table style="width: 100%; margin-bottom: 30px;">
+                        <tbody>
+                            <tr>
+                                {% if order.isPickup == 1 %}
+
+                                    <td class="receipt-cell" style="width: 50%; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                        <strong>Your details:</strong><br />
+                                        {{ order.pickupFirstName }} {{ order.pickupLastName }}<br/>
+                                        {% if order.pickupPhone %}{{ order.pickupPhone }}<br/>{% endif %}
+                                    </td>
+
+                                    <td class="receipt-cell receipt-cell--billing" style="width: 50%; vertical-align: top; font-size: 16px; line-height: 1.6;">
+
+                                    </td>
+
+                                {% elseif order.isPickup == 2 %}
+
+                                    <td class="receipt-cell" style="width: 50%; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                        <strong>Shipping address:</strong><br />
+                                        {{ order.shippingFirstName }} {{ order.shippingLastName }}<br/>
+                                        {{ order.shippingAddress }}<br />
+                                        {% if order.shippingAddress2 %}{{ order.shippingAddress2 }}<br />{% endif %}
+                                        {{ order.shippingCity }} {{ order.shippingPostcode }}<br />
+                                        New Zealand<br />
+                                        {% if order.shippingPhone %}{{ order.shippingPhone }}<br/>{% endif %}
+                                        {{ order.email }}<br />
+                                    </td>
+
                                 {% endif %}
 
-                                <tr>
-                                    <td valign="top">&nbsp;</td>
-                                    <td valign="top"><strong>Total:</strong></td>
-                                    <td align="right">${{ order.total|number_format(2) }}</td>
-                                </tr>
-                            </table>
 
-                            <hr noshade="noshade" size="1" style="border-top: 1px solid #ccc;"/>
-
-                            <table width="100%" border="0" cellspacing="0" cellpadding="10">
-                                <tr>
-                                    <td width="50%" valign="top">
-
-                                        {% if order.isPickup == 1 %}
-                                            <p><strong>Pickup:</strong></p>
-                                            <strong>First name:</strong> {{ order.pickupFirstName }}<br/>
-                                            <strong>Last name:</strong> {{ order.pickupLastName }}<br/>
-                                            {% if order.pickupPhone %}<strong>Phone:</strong> {{ order.pickupPhone }}<br/>{% endif %}
-                                            <strong>Pickup date:</strong> {{ order.pickupDate|date('d F Y') }}<br/>
-
-                                        {% elseif order.isPickup == 2 %}
-
-                                            <p><strong>Delivery:</strong></p>
-                                            <strong>First name:</strong> {{ order.shippingFirstName }}<br/>
-                                            <strong>Last name:</strong> {{ order.shippingLastName }}<br/>
-                                            {% if order.shippingPhone %}<strong>Phone:</strong> {{ order.shippingPhone }}<br/>{% endif %}
-                                            <strong>Address:</strong> {{ order.objShippingAddress }}<br/>
-
-                                        {% endif %}
-
-                                    </td>
-
-                                    <td width="50%" valign="top">
-                                        <p><strong>Email:</strong> {{ order.email }}<br/></p>
-
-                                        {% if order.note %}
-                                            <strong>Note:</strong> {{ order.note|nl2br }}<br/>
-                                        {% endif %}
-
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <!-- Details -->
+                                {# <td class="receipt-cell receipt-cell--billing" style="width: 50%; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                    <strong>Billing address:</strong><br />
+                                    John Smith<br />
+                                    3 Smith Street<br />
+                                    Smith, 1026<br />
+                                    New Zealand<br />
+                                    021 123 456
+                                </td>
+                                #}
 
 
-                            <br/><br/>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {% if order.note %}
+                        <div style="font-size: 16px; line-height: 1.6;">
+                            <strong>Notes:</strong> {{ order.note|nl2br }}
+                        </div>
+                    {% endif %}
+
+                    <hr style="border: 0; border-top: 1px solid black; margin: 40px 0;" />
+                </td>
+            </tr>
 
 
-                            <!-- Foot -->
-                            <table width="100%" border="0" cellspacing="0" cellpadding="10" bgcolor="#deecf7">
-                                <tr>
-                                    <td align="center">
-                                        <font color="#003876" size="-1" style="font-size: 12px;">
-                                            Bedpost &copy; {{ 'now'|date("Y") }}
-                                        </font>
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- Foot -->
+            {#----------------------------------------------------------------------------------------------------------------------------------
+                /Footer
+            ----------------------------------------------------------------------------------------------------------------------------------#}
+            <tr>
+                <td class="section-inner--x" style="padding: 0 50px 80px;">
+                    <div style="margin-bottom: 20px">
+                        <a href="https://www.facebook.com/BedpostNZ/" style="display: inline-block; margin: 0 5px 0 0;" target="_blank">
+                            <img style="display: block;" src="{{ app.request.schemeAndHttpHost }}/images/email/email--icon--fb@2x.png?v=2" width="33" height="33" alt="Facebook" style="border: 0" />
+                        </a>
+                        <a href="https://www.instagram.com/bedpostnewzealand/" style="display: inline-block;" target="_blank">
+                            <img style="display: block;" src="{{ app.request.schemeAndHttpHost }}/images/email/email--icon--ig@2x.png?v=2" width="33" height="33" alt="Instagram" style="border: 0" />
+                        </a>
+                    </div>
+
+                    <small style="font-size: 14px; line-height: 1.4;">
+                        Need assistance? <a style="color: #005EB8; font-weight: bold;" href="{{ app.request.schemeAndHttpHost }}/contact" target="_blank">Contact us</a><br />
+                        {# Phone: <a style="color: #005EB8; font-weight: bold;" href="tel:0800 233 767">0800 233 767</a><br /> #}
+                        Email: <a style="color: #005EB8; font-weight: bold;" href="mailto:info@bedpost.co.nz" target="_blank">info@bedpost.co.nz</a><br /><br />
+
+                        <span style="color: #888">
+                            This email was sent to <a style="color: #888" href="mailto:{{ order.email }}">{{ order.email }}</a><br />
+                            Bedpost, 100 Smith St, Auckland 1022
+                        </span>
+                    </small>
+                </td>
+            </tr>
+        </table>
 
 
-                        </td>
-                    </tr>
-                </table>
-                <br/>
-                <br/>
-            </td>
-        </tr>
-    </table>
-</font>
-</body>
+    </body>
 </html>
-
-
