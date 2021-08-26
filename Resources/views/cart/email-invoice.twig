@@ -1,10 +1,17 @@
+{% set siteTitle = 'Site name' %}
+{% set emailAddress = 'info@sitename.co.nz' %}
+{% set facebookUrl = 'https://www.facebook.com' %}
+{% set instagramUrl = 'https://www.instagram.com' %}
+{% set postalAddress = 'Address line 1, Address line 2, City, Postcode' %}
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bedpost - Your Invoice</title>
+    <title>{{ siteTitle }} - Your Invoice</title>
     <style type="text/css">
         #outlook a {
             padding: 0;
@@ -139,20 +146,20 @@
             ----------------------------------------------------------------------------------------------------------------------------------#}
             <tr>
                 <td class="receipt-header-wrap section-inner--x" style="padding: 50px 50px 0;">
-                    <img class="receipt-header" src="{{ app.request.schemeAndHttpHost }}/images/email/logo--email-receipt@2x.png?v=1" width="146" height="36" alt="Bedpost" />
+                    <img class="receipt-header" src="{{ app.request.schemeAndHttpHost }}/images/email/logo--email-receipt@2x.png?v=1" width="162" height="40" alt="{{ siteTitle }}" />
                 </td>
             </tr>
             <tr>
                 <td class="receipt-intro section-inner--x" style="padding: 30px 50px 40px;">
-                    <h1 class="receipt-h1" style="font-size: 30px; line-height: 1.2; margin: 0; color: #005EB8;">
+                    <h1 class="receipt-h1" style="font-size: 30px; line-height: 1.2; margin: 0;">
                         We’ve received your order.
                     </h1>
                     {% if order.isPickup == 1 %}
-                        <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0; color: #005EB8;">
+                        <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0;">
                             We will prepare your items for pick up.
                         </h2>
                     {% elseif order.isPickup == 2 %}
-                        <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0; color: #005EB8;">
+                        <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0;">
                             We’ll let you know when your items have been shipped.
                         </h2>
                     {% endif %}
@@ -288,19 +295,6 @@
 
                                 {% endif %}
 
-
-                                {# <td class="receipt-cell receipt-cell--billing" style="width: 50%; vertical-align: top; font-size: 16px; line-height: 1.6;">
-                                    <strong>Billing address:</strong><br />
-                                    John Smith<br />
-                                    3 Smith Street<br />
-                                    Smith, 1026<br />
-                                    New Zealand<br />
-                                    021 123 456
-                                </td>
-                                #}
-
-
-
                             </tr>
                         </tbody>
                     </table>
@@ -322,22 +316,22 @@
             <tr>
                 <td class="section-inner--x" style="padding: 0 50px 80px;">
                     <div style="margin-bottom: 20px">
-                        <a href="https://www.facebook.com/BedpostNZ/" style="display: inline-block; margin: 0 5px 0 0;" target="_blank">
+                        <a href="{{ facebookUrl }}" style="display: inline-block; margin: 0 5px 0 0;" target="_blank">
                             <img style="display: block;" src="{{ app.request.schemeAndHttpHost }}/images/email/email--icon--fb@2x.png?v=2" width="33" height="33" alt="Facebook" style="border: 0" />
                         </a>
-                        <a href="https://www.instagram.com/bedpostnewzealand/" style="display: inline-block;" target="_blank">
+                        <a href="{{ instagramUrl }}" style="display: inline-block;" target="_blank">
                             <img style="display: block;" src="{{ app.request.schemeAndHttpHost }}/images/email/email--icon--ig@2x.png?v=2" width="33" height="33" alt="Instagram" style="border: 0" />
                         </a>
                     </div>
 
                     <small style="font-size: 14px; line-height: 1.4;">
-                        Need assistance? <a style="color: #005EB8; font-weight: bold;" href="{{ app.request.schemeAndHttpHost }}/contact" target="_blank">Contact us</a><br />
-                        {# Phone: <a style="color: #005EB8; font-weight: bold;" href="tel:0800 233 767">0800 233 767</a><br /> #}
-                        Email: <a style="color: #005EB8; font-weight: bold;" href="mailto:info@bedpost.co.nz" target="_blank">info@bedpost.co.nz</a><br /><br />
+                        Need assistance? <a style="color: #000; font-weight: bold;" href="{{ app.request.schemeAndHttpHost }}/contact" target="_blank">Contact us</a><br />
+                        {# Phone: <a style="color: #000; font-weight: bold;" href="tel:0800 233 767">0800 233 767</a><br /> #}
+                        Email: <a style="color: #000; font-weight: bold;" href="mailto:{{ emailAddress }}" target="_blank">{{ emailAddress }}</a><br /><br />
 
                         <span style="color: #888">
                             This email was sent to <a style="color: #888" href="mailto:{{ order.email }}">{{ order.email }}</a><br />
-                            Bedpost, 100 Smith St, Auckland 1022
+                            {{ siteTitle }}, {{ postalAddress }}
                         </span>
                     </small>
                 </td>
