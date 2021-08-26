@@ -6,6 +6,7 @@
         <div class="mx-auto mw-1400">
             <header class="headings--page">
                 <h1 class="heading--page">Cart</h1>
+                Not quite ready to check out? <a class="link" href="/shop">Continue shopping</a>.
                 {# <span class="js-cart-count">{{ cart.objOrderItems|length }}</span> #}
             </header>
 
@@ -22,66 +23,77 @@
             {#---------------------------------------------------------------------------------------
                 /Cart items
             ----------------------------------------------------------------------------------------#}
-            <table>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
-                </tr>                
+            <table class="cart-table">
+                {# <tr>
+                    <th class="cart-table__col--product">Product</th>
+                    <th class="cart-table__col--price">Price</th>
+                    <th class="cart-table__col--qty">Quantity</th>
+                    <th class="cart-table__col--subtotal">Subtotal</th>
+                </tr>                 #}
                 {% for itm in cart.objOrderItems %}
                 <tr data-id="{{ itm.id }}" class="js-cart-item">
-                    <td>
-                        <img src="/images/assets/{{ itm.image }}/small" class='' alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
-                        {{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}
-                        {% if itm.brandName %}
-                            <div>by {{ itm.brandName }}</div>
-                        {% endif %}
-                        <button type="button" class="link js-cart-remove">
-                            Remove
-                        </button>
+                    <td class="cart-table__col--product">
+                        <div class="flex items-center">
+                            <div>
+                                <img class="cart-img mr-4" src="/images/assets/{{ itm.image }}/small" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
+                            </div>
+                            
+                            <div>
+                                {{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}
+                                {% if itm.brandName %}
+                                    <div><small>by {{ itm.brandName }}</small></div>
+                                {% endif %}
+                                <button type="button" class="link js-cart-remove">
+                                    <small>Remove</small>
+                                </button>
+                            </div>
+                        </div>
                     </td>
-                    <td>
+                    <td class="cart-table__col--price">
                         {% if itm.compareAtPrice %}
-                            <span class="cart-price cart-price--was">${{ itm.price|number_format(2) }}</span>
+                            <s class="cart-price cart-price--was">${{ itm.price|number_format(2) }}</s>
                             <span class="cart-price cart-price--now">${{ itm.compareAtPrice|number_format(2) }}</span>
                         {% else %}
                             <span class="cart-price">${{ itm.price|number_format(2) }}</span>
                         {% endif %}
                     </td>
-                    <td>
-                        <button type="button" class="js-cart-qty-btn minus cart-item-quantity__operator minus js-cart-minus">
+                    <td class="cart-table__col--qty">
+                        <button type="button" class="js-cart-qty-btn button--cart-qty-operator minus js-cart-minus">
                             <i class="icon">{% include "/cart/svg/icon--minus.svg" %}</i>
                             <span class="visuallyhidden">Decrease quantity of items</span>
                         </button>
 
                         <label class="cart-item-quantity__field">
-                            <input type="number" class="js-cart-qty cart-item-quantity__input" name="" value="{{ itm.quantity }}" data-price="{{ itm.price }}">
+                            <input type="number" class="js-cart-qty input--cart-qty" name="" value="{{ itm.quantity }}" data-price="{{ itm.price }}">
                         </label>
-                        <button type="button" class="js-cart-qty-btn plus cart-item-quantity__operator plus js-cart-plus">
+                        <button type="button" class="js-cart-qty-btn button--cart-qty-operator plus js-cart-plus">
                             <i class="icon">{% include "/cart/svg/icon--plus.svg" %}</i>
                             <span class="visuallyhidden">Increase quantity of items</span>
                         </button>
                     </td>
-                    <td class="js-subtotal">
+                    <td class="cart-table__col--subtotal js-subtotal">
                         ${{ (itm.price * itm.quantity)|number_format(2) }}
                     </td>                    
                 </tr>
                 {% endfor %}
                 <tr>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>
-                        <div class="js-cart-footer">
-                            {% include '/cart/includes/cart-subtotal.twig' %}
-                        </div>
-                        
-                        Shipping
-                        Shipping costs are calculated during checkout.
+                    <td colspan="3">
+                        <ul class="cart-totals list-reset">
+                            <li class="cart-totals__item flex justify-between">
+                                <div>Shipping</div>
+                                <div class="text-right">Shipping costs are calculated during&nbsp;checkout</div>
+                            </li>
+                            <li class="cart-totals__item flex justify-between">
+                                <div><strong>Subtotal</strong></div>
+                                <div class="text-right"><strong>$29.00</strong></div>
+                            </li> 
+                        </ul>
                     </td>
                 </tr> 
             </table>
+
+            <a href="/checkout" class="button button--primary">Checkout</a>
 
         </div>
     </section>
