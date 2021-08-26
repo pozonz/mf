@@ -49,8 +49,8 @@ trait ShopPageTrait
 
     /**
      * @param Request $request
+     * @param null $category
      * @return array
-     * @throws RedirectException
      */
     protected function filterProductResult(Request $request, $category = null)
     {

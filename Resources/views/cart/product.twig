@@ -68,15 +68,13 @@
                     {% endif %}
 
 
-                    {% set variant = orm.objVariant %}
-                    <div class="mt-4">
-                        {% if orm.objOnSaleActive and variant.salePrice %}
-                            <s class="product-detail__price product-detail__price__was">${{ variant.calculatedPrice(app.user)|number_format(2) }}</s>
-                            <span class="product-detail__price product-detail__price__now">${{ variant.calculatedSalePrice(app.user)|number_format(2) }}</span>
-                        {% else %}
-                            <span class="product-detail__price product-detail__price">${{ variant.calculatedPrice(app.user)|number_format(2) }}</span>
-                        {% endif %}
+                    <div class="mt-4 js-product-price">
+                        {% include 'cart/includes/product-price.twig' with {
+                            product: orm,
+                            variant: orm.objVariant,
+                        } %}
                     </div>
+
 
     
                     <div class="mt-4 js-product-cart-wrapper">
@@ -86,7 +84,7 @@
                             <div class="select">
                                 <select id="size" class="js-variant">
                                     {% for itm in variants %}
-                                        <option value="{{ itm.id }}">{{ itm.title }}</option>
+                                        <option value="{{ itm.id }}" data-uniqid="{{ itm.uniqid }}">{{ itm.title }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
