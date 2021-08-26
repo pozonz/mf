@@ -6,7 +6,7 @@
         <div class="mx-auto mw-1400">
             <header class="headings--page">
                 <h1 class="heading--page">Cart</h1>
-                Not quite ready to check out? <a class="link" href="/shop">Continue shopping</a>.
+                <span class="js-products-with-results" style="{% if cart.objOrderItems|length == 0 %}display: none;{% endif %}">Not quite ready to check out? <a class="link" href="/shop">Continue shopping</a>.</span>
                 {# <span class="js-cart-count">{{ cart.objOrderItems|length }}</span> #}
             </header>
 
@@ -14,7 +14,7 @@
             {#---------------------------------------------------------------------------------------
                 /Empty state
             ----------------------------------------------------------------------------------------#}
-            <div class="js-products-no-results {% if cart.objOrderItems|length > 0 %}hidden{% endif %}">
+            <div class="js-products-no-results" style="{% if cart.objOrderItems|length > 0 %}display: none;{% endif %}">
                 <img src="/images/icons/icon--empty-cart.svg" alt="" aria-hidden="true">
                 <h2 class="heading--block">My cart is empty. <a href="{{ getenv('SHOP_URL') }}" class="link">Shop now</a></h2>
             </div>
@@ -23,7 +23,7 @@
             {#---------------------------------------------------------------------------------------
                 /Cart items
             ----------------------------------------------------------------------------------------#}
-            <table class="cart-table">
+            <table class="cart-table js-products-with-results" style="{% if cart.objOrderItems|length == 0 %}display: none;{% endif %}">
                 {# <tr>
                     <th class="cart-table__col--product">Product</th>
                     <th class="cart-table__col--price">Price</th>
@@ -51,8 +51,8 @@
                     </td>
                     <td class="cart-table__col--price">
                         {% if itm.compareAtPrice %}
-                            <s class="cart-price cart-price--was">${{ itm.price|number_format(2) }}</s>
-                            <span class="cart-price cart-price--now">${{ itm.compareAtPrice|number_format(2) }}</span>
+                            <s class="cart-price cart-price--was">${{ itm.compareAtPrice|number_format(2) }}</s>
+                            <span class="cart-price cart-price--now">${{ itm.price|number_format(2) }}</span>
                         {% else %}
                             <span class="cart-price">${{ itm.price|number_format(2) }}</span>
                         {% endif %}
@@ -76,97 +76,14 @@
                     </td>                    
                 </tr>
                 {% endfor %}
-                <tr>
-                    <td>&nbsp;</td>
-                    <td colspan="3">
-                        <ul class="cart-totals list-reset">
-                            <li class="cart-totals__item flex justify-between">
-                                <div>Shipping</div>
-                                <div class="text-right">Shipping costs are calculated during&nbsp;checkout</div>
-                            </li>
-                            <li class="cart-totals__item flex justify-between">
-                                <div><strong>Subtotal</strong></div>
-                                <div class="text-right"><strong>$29.00</strong></div>
-                            </li> 
-                        </ul>
-                    </td>
+                <tr class="js-cart-footer">
+                    {% include 'cart/includes/cart-subtotal.twig' %}
                 </tr> 
             </table>
 
-            <a href="/checkout" class="button button--primary">Checkout</a>
+            <a href="/checkout" class="js-products-with-results button button--primary" style="{% if cart.objOrderItems|length == 0 %}display: none;{% endif %}">Checkout</a>
 
         </div>
     </section>
 
-
-
-    {# <div class="cart__inner">
-
-        <div class="cart-main">
-  
-            <ul class="cart__list">
-                {% for itm in cart.objOrderItems %}
-                    <li class="cart__item cart-item js-cart-item" data-id="{{ itm.id }}">
-
-                        <button type="button" class="cart-item__remove cart-item__remove--mobile js-cart-remove">
-                            <i class="icon">{% include "/cart/svg/icon--remove.svg" %}</i>
-                            <span class="visuallyhidden">Remove product from cart</span>
-                        </button>
-
-
-                        <div class="cart-item__image" style="background-image:url({{ itm.imageUrl|replace({'/card' : '/small'}) }})">
-                            <img src="/images/assets/{{ itm.image }}/small" class='visuallyhidden' alt="">
-                            <button type="button" class="cart-item__remove cart-item__remove--thumb js-cart-remove">
-                                <i class="icon">{% include "/cart/svg/icon--remove.svg" %}</i>
-                                <span class="visuallyhidden">Remove product from cart</span>
-                            </button>
-                        </div>
-                        <div class="cart-item__info">
-                            <div class="cart-item__title-make">
-                                <div class="cart-item__title">{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}</div>
-                                {% if itm.brandName %}
-                                    <div class="cart-item__make">by {{ itm.brandName }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="cart-item__price-size cart-item__price">
-                                <div class="cart-item__price">
-                                    {% if itm.compareAtPrice %}
-                                        <span class="price">${{ itm.price|number_format(2) }}</span>
-                                        <span class="sale-price">${{ itm.compareAtPrice|number_format(2) }}</span>
-                                    {% else %}
-                                        <span class="price">${{ itm.price|number_format(2) }}</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="cart-item__price-size">
-                                <div class="cart-item__price js-subtotal"><span>${{ (itm.price * itm.quantity)|number_format(2) }}</span></div>
-                            </div>
-                            
-                            <div class="cart-item-quantity">
-                                <div class="cart-item-quantity__wrapper">
-                                    <button type="button" class="js-cart-qty-btn minus cart-item-quantity__operator minus js-cart-minus">
-                                        <i class="icon">{% include "/cart/svg/icon--minus.svg" %}</i>
-                                        <span class="visuallyhidden">Decrease quantity of items</span>
-                                    </button>
-
-                                    <label class="cart-item-quantity__field">
-                                        <input type="number" class="js-cart-qty cart-item-quantity__input" name="" value="{{ itm.quantity }}" data-price="{{ itm.price }}">
-                                    </label>
-                                    <button type="button" class="js-cart-qty-btn plus cart-item-quantity__operator plus js-cart-plus">
-                                        <i class="icon">{% include "/cart/svg/icon--plus.svg" %}</i>
-                                        <span class="visuallyhidden">Increase quantity of items</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-
-        </div>
-
-        <div class="cart-footer js-cart-footer">
-            {% include '/cart/includes/cart-subtotal.twig' %}
-        </div>
-    </div> #}
 {% endblock %}
