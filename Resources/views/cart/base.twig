@@ -6,9 +6,16 @@
 <html lang="en">
     <head>
 
-        {% block css %}
-            {# TODO: To be removed #}
-            <link rel="stylesheet" href="/cms/css/checkout.css">
+        {% block metaDesc %}
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta name="description" content="{{ page.metaDescription|striptags }}">
+        {% endblock %}
+
+        {% block links %}
+            <link rel="stylesheet" href="/css/checkout.css?v={{ timeStamp }}">
+            <link rel="shortcut icon" href="/images/favicon.png?v={{ timeStamp }}" type="image/png" />
+            <link rel="apple-touch-icon" href="/images/apple-touch-icon.png?v={{ timeStamp }}">
         {% endblock %}
 
         {% block js %}
