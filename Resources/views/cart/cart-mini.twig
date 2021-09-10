@@ -1,91 +1,74 @@
 <div class="mini-cart__inner section-inner">
     
-    {#---------------------------------------------------------------------------------------
-        /Header
-    ----------------------------------------------------------------------------------------#}
-    <header class="mini-cart-header">
-        <button type="button" class="button--mini-cart-close js-cart-close">
-            <i class="icon">{% include "/cart/svg/icon--close-24.svg" %}</i>
-            <span class="visuallyhidden">Close cart</span>
-        </button>
-        
-        <h1 class="heading--section">
-            My cart
-            <span class="visuallyhidden">has</span>
-            <span class="mini-cart-header__qty js-cart-count">
-                 {{ cart.objOrderItems|length }} 
-            </span>
-            <span class="visuallyhidden">items</span>
-        </h1>
-    </header>
+    <button type="button" class="button--mini-cart-close js-cart-close">
+        Close <span class="visuallyhidden">cart view</span>
+    </button>
+    
 
-    
-    
-    {#---------------------------------------------------------------------------------------
-        /Main
-    ----------------------------------------------------------------------------------------#}
-    <div class="mini-cart-main">
+    <header class="headings--section">
+        <h1 class="heading--section">Your cart</h1>
+        <span class="js-cart-count">{{ cart.objOrderItems|length }}</span> item
+    </header>    
+
+
+    <div class="mini-cart__main">
+
+        {#---------------------------------------------------------------------------------------
+            /Empty
+        ----------------------------------------------------------------------------------------#}
         <div class="js-products-no-results products-no-results mini-cart__no-results {% if cart.objOrderItems|length > 0 %}hidden{% endif %}">
-            <h2 class="heading--block headings--block">My cart is empty.</h2>
-            <a href="{{ getenv('SHOP_URL') }}" class="button button--primary button--small">Shop now</a>
+            <h2 class="heading--block">Your cart is empty.</h2>
+            <a href="{{ getenv('SHOP_URL') }}" class="link">Shop now</a>
         </div>
-        <ul class="mini-cart__list">
+
+
+        {#---------------------------------------------------------------------------------------
+            /Full
+        ----------------------------------------------------------------------------------------#}
+        <ul class="list-reset">
             {% for itm in cart.objOrderItems %}
-                <li class="mini-cart__item cart-item js-cart-item" data-id="{{ itm.id }}">
+                <li class="mini-cart__product js-cart-item flex" data-id="{{ itm.id }}">
 
-                    <button type="button" class="cart-item__remove cart-item__remove--mobile js-cart-remove">
-                        <i class="icon">{% include "/cart/svg/icon--remove.svg" %}</i>
-                        <span class="visuallyhidden">Remove product from cart</span>
-                    </button>
-
-                    {#                    {{dump(itm.objNonClearCutImage)}}#}
-
-
-                    <div class="mini-cart-item__image" style="background-image:url({{ itm.imageUrl|replace({'/card' : '/small'}) }})">
-                        <img src="{{ itm.imageUrl|replace({'/card' : '/small'}) }}" class='visuallyhidden' alt="">
-                        <button type="button" class="mini-cart-item__remove mini-cart-item__remove--thumb js-cart-remove">
-                            <i class="icon">{% include "/cart/svg/icon--remove.svg" %}</i>
-                            <span class="visuallyhidden">Remove product from cart</span>
-                        </button>
+                    <div class="mini-cart__product-image">
+                        <img src="{{ itm.imageUrl|replace({'/card' : '/small'}) }}" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
                     </div>
 
-                    <div class="mini-cart-item__info">
-                        <div class="mini-cart-item__title-make">
-                            <div class="mini-cart-item__title">{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}</div>
+                    <div class="mini-cart__product-detail">               
+                        <h3 class="mini-cart__product-name">{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}</h3>
+                        <div class="heading--eyebrow mini-cart__brand">
                             {% if itm.brandName %}
-                                <div class="mini-cart-item__make">by {{ itm.brandName }}</div>
+                                by {{ itm.brandName }}
                             {% endif %}
                         </div>
-                        <div class="mini-cart-item__price-size mini-cart-item__price">
-                            <div class="mini-cart-item__price">
-                                {% if itm.compareAtPrice %}
-                                    <span class="price">${{ itm.price|number_format(2) }}</span>
-                                    <span class="sale-price">${{ itm.compareAtPrice|number_format(2) }}</span>
-                                {% else %}
-                                    <span class="price">${{ itm.price|number_format(2) }}</span>
-                                {% endif %}
-                            </div>
+                        
+                        <div class="mini-cart__qty">
+                            <button type="button" class="js-cart-qty-btn button--cart-qty-operator minus js-cart-minus">
+                                <i class="icon">{% include "/cart/svg/icon--minus.svg" %}</i>
+                                <span class="visuallyhidden">Decrease quantity of items</span>
+                            </button>
+                            <label class="cart-item-quantity__field">
+                                <input type="number" class="js-cart-qty input--cart-qty" name="" value="{{ itm.quantity }}" data-price="{{ itm.price }}">
+                            </label>
+                            <button type="button" class="js-cart-qty-btn button--cart-qty-operator plus js-cart-plus">
+                                <i class="icon">{% include "/cart/svg/icon--plus.svg" %}</i>
+                                <span class="visuallyhidden">Increase quantity of items</span>
+                            </button>
                         </div>
-                        <div class="mini-cart-item__price-size">
-                            <div class="mini-cart-item__price js-subtotal"><span>${{ (itm.price * itm.quantity)|number_format(2) }}</span></div>
-                        </div>
-                        <div class="mini-cart-item-quantity">
-                            <div class="mini-cart-item-quantity__wrapper">
-                                <button type="button" class="js-cart-qty-btn minus mini-cart-item-quantity__operator minus js-cart-minus">
-                                    <i class="icon">{% include "/cart/svg/icon--minus.svg" %}</i>
-                                    <span class="visuallyhidden">Decrease quantity of items</span>
-                                </button>
 
-                                <label class="mini-cart-item-quantity__field">
-                                    <input type="number" class="js-cart-qty mini-cart-item-quantity__input" name="" value="{{ itm.quantity }}" data-price="{{ itm.price }}">
-                                </label>
-                                <button type="button" class="js-cart-qty-btn plus mini-cart-item-quantity__operator plus js-cart-plus">
-                                    <i class="icon">{% include "/cart/svg/icon--plus.svg" %}</i>
-                                    <span class="visuallyhidden">Increase quantity of items</span>
-                                </button>
-                            </div>
-                        </div>
+                        <button class="button--mini-cart-remove link" type="button" class="js-cart-remove">Remove</button>
+
                     </div>
+
+
+                    <div class="mini-cart__product-price">
+                        {% if itm.compareAtPrice %}
+                            <s class="mini-cart__price mini-cart__price--was">${{ itm.price|number_format(2) }}</s>
+                            <div class="mini-cart__price mini-cart__price--now">${{ itm.compareAtPrice|number_format(2) }}</div>
+                        {% else %}
+                            <div class="mini-cart__price">${{ itm.price|number_format(2) }}</div>
+                        {% endif %}
+                    </div>
+
                 </li>
             {% endfor %}
         </ul>
@@ -97,7 +80,13 @@
     {#---------------------------------------------------------------------------------------
         /Footer
     ----------------------------------------------------------------------------------------#}
-    <div class="mini-cart-footer js-cart-mini-footer">
-        {% include '/cart/includes/cart-mini-subtotal.twig' %}
-    </div>
+    <footer class="mini-cart__footer mt-8">
+        <div class="js-cart-mini-footer">
+            {% include '/cart/includes/cart-mini-subtotal.twig' %}
+        </div>
+
+        {% include '/cart/includes/cart-payment-logos.twig' %}
+    
+    </footer>
+
 </div>
