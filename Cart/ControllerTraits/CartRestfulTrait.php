@@ -210,6 +210,7 @@ trait CartRestfulTrait
 
         $cart = $this->cartService->getCart();
 
+        $cartItem = null;
         $cartItems = $cart->objOrderItems();
         foreach ($cartItems as $itm) {
             if ($itm->getId() == $id) {
@@ -236,6 +237,8 @@ trait CartRestfulTrait
                     $outOfStockMessage = str_replace('{{qty}}', $qty, $outOfStockMessage);
                     $outOfStockMessage = str_replace('{{extra}}', "", $outOfStockMessage);
                 }
+
+                $cartItem = $itm;
             }
         }
 
@@ -256,6 +259,9 @@ trait CartRestfulTrait
             ]),
             'cartSubtotalHtml' => $environment->render('/cart/includes/cart-subtotal.twig', [
                 'cart' => $cart,
+            ]),
+            'cartItemSubtotalHtml' => $environment->render('/cart/includes/cart-item-subtotal.twig', [
+                'itm' => $cartItem,
             ]),
         ]);
     }
@@ -280,6 +286,7 @@ trait CartRestfulTrait
         $cart = $this->cartService->getCart();
 
         return new JsonResponse([
+            'orderTotalFormatted' => number_format($cart->getTotal(), 2),
             'cart' => $cart,
             'checkoutSidebarSubtotalHtml' => $environment->render('/cart/includes/checkout-sidebar-subtotal.twig', [
                 'cart' => $cart,

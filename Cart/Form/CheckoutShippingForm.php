@@ -48,7 +48,9 @@ class CheckoutShippingForm extends AbstractType
                 'label' => 'Your email address',
                 'required' => true,
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\NotBlank([
+                        'message' => 'Email address is required',
+                    ]),
                     new Assert\Email(),
                 ]
             ])
@@ -60,7 +62,9 @@ class CheckoutShippingForm extends AbstractType
                     'Delivery' => 2,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\NotBlank([
+                        'message' => 'Shipping method is required',
+                    ]),
                 ]
             ])
             ->add('pickupFirstName', TextType::class, [
@@ -68,6 +72,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'First name is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 1 ? 1 : 0;
@@ -81,6 +86,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'Last name is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 1 ? 1 : 0;
@@ -94,6 +100,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'Phone number is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 1 ? 1 : 0;
@@ -107,6 +114,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'First name is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -120,6 +128,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'Last name is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -133,6 +142,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'Phone number is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -152,6 +162,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'Address is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -165,6 +176,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'City is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -178,6 +190,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'Postcode is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -194,6 +207,7 @@ class CheckoutShippingForm extends AbstractType
                     'required' => true,
                     'constraints' => [
                         new NotBlankIfRequired([
+                            'message' => 'Region is required',
                             'callback' => function ($request) {
                                 $data = $request->get($this->getBlockPrefix());
                                 return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -208,6 +222,7 @@ class CheckoutShippingForm extends AbstractType
                     'choices' => $countries,
                     'constraints' => [
                         new NotBlankIfRequired([
+                            'message' => 'Country is required',
                             'callback' => function ($request) {
                                 $data = $request->get($this->getBlockPrefix());
                                 return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -224,6 +239,7 @@ class CheckoutShippingForm extends AbstractType
                     'choices' => $countries,
                     'constraints' => [
                         new NotBlankIfRequired([
+                            'message' => 'Country is required',
                             'callback' => function ($request) {
                                 $data = $request->get($this->getBlockPrefix());
                                 return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
@@ -240,6 +256,7 @@ class CheckoutShippingForm extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlankIfRequired([
+                        'message' => 'Delivery option is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
                             return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
