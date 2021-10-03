@@ -211,6 +211,7 @@
                                 </tr>
                             {% endfor %}
 
+
                             <tr class="total-row">
                                 <td class="total-row__col1" style="width: 140px;"></td>
                                 <td class="total-row__col2"></td>
@@ -221,6 +222,31 @@
                                     ${{ order.subtotal|number_format(2) }}
                                 </td>
                             </tr>
+
+                            {% if order.discount %}
+                                <tr class="total-row">
+                                    <td class="total-row__col1" style="width: 140px;"></td>
+                                    <td class="total-row__col2"></td>
+                                    <td class="total-row__col3" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                        Discount
+                                    </td>
+                                    <td class="total-row__col4" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6; text-align: right;">
+                                        -${{ order.discount|number_format(2) }}
+                                    </td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="total-row__col1" style="width: 140px;"></td>
+                                    <td class="total-row__col2"></td>
+                                    <td class="total-row__col3" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6;">
+                                        After discount
+                                    </td>
+                                    <td class="total-row__col4" style="width: 100px; vertical-align: top; font-size: 16px; line-height: 1.6; text-align: right;">
+                                        ${{ order.afterDiscount|number_format(2) }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+
                             {% if order.isPickup == 2 %}
                                 <tr class="total-row">
                                     <td class="total-row__col1" style="width: 140px;"></td>
@@ -250,7 +276,8 @@
                     <div style="font-size: 16px; line-height: 1.6; text-align: right; padding: 20px 0 0">
                         <small>
                             Incl. GST: ${{ order.tax|number_format(2) }}<br />
-                            Paid with {% if order.payType == 'Stripe' %}credit card{% else %}{{ order.payType }}{% endif %}
+                            Paid with {% if order.payType == 'Stripe' %}credit card{% else %}{{ order.payType }}{% endif %}<br />
+                            {% if order.discount and order.promoCode %}Used promo code: <small>{{ order.promoCode }}</small>{% endif %}
                         </small>
                     </div>
 

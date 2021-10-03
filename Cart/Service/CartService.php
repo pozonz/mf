@@ -217,6 +217,7 @@ class CartService
         $weight = 0;
         $discount = 0;
         $afterDiscount = 0;
+        $totalSaving = 0;
 
         $cartItems = $cart->objOrderItems();
         foreach ($cartItems as $idx => $itm) {
@@ -231,9 +232,13 @@ class CartService
                 }
 
                 $weight += $cartItemWeight;
+                if ($itm->getCompareAtPrice()) {
+                    $totalSaving += ($itm->getCompareAtPrice() - $itm->getPrice()) * $itm->getQuantity();
+                }
             }
         }
         $cart->setOrderitems(null);
+        $cart->setTotalSaving($totalSaving);
 
         if ($cart->getDiscountType() == 1) {
             $discount = min($subtotal, $cart->getDiscountValue());

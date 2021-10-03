@@ -5,10 +5,11 @@
     </button>
     
 
-    <header class="headings--section">
+
+    <header class="headings--section js-cart-mini-header" {% if cart.objOrderItems|length == 0 %}style="display: none;"{% endif %}>
         <h1 class="heading--section">Your cart</h1>
         <span class="js-cart-count">{{ cart.objOrderItems|length }}</span> item
-    </header>    
+    </header>
 
 
     <div class="mini-cart__main">
@@ -55,7 +56,7 @@
                             </button>
                         </div>
 
-                        <button class="button--mini-cart-remove link" type="button" class="js-cart-remove">Remove</button>
+                        <button class="button--mini-cart-remove link js-cart-remove" type="button">Remove</button>
 
                     </div>
 

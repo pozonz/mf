@@ -71,7 +71,7 @@
                         </button>
                     </td>
                     <td class="cart-table__col--subtotal js-subtotal">
-                        ${{ (itm.price * itm.quantity)|number_format(2) }}
+                        {% include 'cart/includes/cart-item-subtotal.twig' %}
                     </td>                    
                 </tr>
                 {% endfor %}

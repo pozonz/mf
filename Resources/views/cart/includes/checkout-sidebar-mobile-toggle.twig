@@ -1,0 +1,19 @@
+<a class="checkout-button--toggle-summary js-checkout-button--toggle-summary section-inner no-outline" type="button">
+    <div class="checkout-button--toggle-summary__inner mw-600 mx-auto">
+            <span class="checkout-button--toggle-summary__cta">
+                <svg class="checkout-button--toggle-summary__icon" width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.39393 0.0808558C0.886302 -0.1367 0.298423 0.0984517 0.0808672 0.606082C-0.136688 1.11371 0.0984632 1.70159 0.606093 1.91915L3.52603 3.17055L3.96241 14.0799C4.00531 15.1526 4.88734 16 5.96081 16H18.2793C19.1401 16 19.9044 15.4491 20.1766 14.6325L22.51 7.63245C22.9416 6.33739 21.9777 5 20.6126 5H5.60081L5.47399 1.82945L1.39393 0.0808558ZM5.96081 14L5.68081 7H20.6126L18.2793 14L5.96081 14ZM8 20C8 20.5523 7.55228 21 7 21C6.44772 21 6 20.5523 6 20C6 19.4477 6.44772 19 7 19C7.55228 19 8 19.4477 8 20ZM10 20C10 19.6494 9.93985 19.3128 9.82929 19H13.1707C13.0602 19.3128 13 19.6494 13 20C13 21.6569 14.3431 23 16 23C17.6569 23 19 21.6569 19 20C19 18.3431 17.6569 17 16 17H7C5.34315 17 4 18.3431 4 20C4 21.6569 5.34315 23 7 23C8.65685 23 10 21.6569 10 20ZM15 20C15 19.4477 15.4477 19 16 19C16.5523 19 17 19.4477 17 20C17 20.5523 16.5523 21 16 21C15.4477 21 15 20.5523 15 20Z" fill=""/>
+                </svg>
+                <span>
+                    <span class="js-checkout-button--toggle-summary__show">Show</span>
+                    <span class="js-checkout-button--toggle-summary__hide" style="display: none;">Hide</span>
+                    order summary
+                </span>
+                <svg class="checkout-button--toggle-summary__icon checkout-button--toggle-summary__icon--arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.292893 0.292893C0.683417 -0.0976311 1.31658 -0.0976311 1.70711 0.292893L5 3.58579L8.29289 0.292893C8.68342 -0.0976311 9.31658 -0.0976311 9.70711 0.292893C10.0976 0.683417 10.0976 1.31658 9.70711 1.70711L5.70711 5.70711C5.31658 6.09763 4.68342 6.09763 4.29289 5.70711L0.292893 1.70711C-0.0976311 1.31658 -0.0976311 0.683417 0.292893 0.292893Z"/>
+                </svg>
+            </span>
+
+        <span class="checkout-button--toggle-summary__total js-checkout-button--toggle-summary__total">${{ order is defined ? order.total|number_format(2) : cart.total|number_format(2) }}</span>
+    </div>
+</a>

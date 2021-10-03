@@ -4,6 +4,7 @@
 {% form_theme formView '/cart/form.twig' %}
 
 {% block promoBlock %}
+    {% include 'cart/includes/checkout-sidebar-mobile-toggle.twig' %}
     <aside id="order-summary" class="checkout-aside js-checkout-aside section-inner--s section-inner--py grid-col l-5">
         {% include '/cart/includes/checkout-sidebar.twig' with { cart: order, showpromo: false } %}
     </aside>
