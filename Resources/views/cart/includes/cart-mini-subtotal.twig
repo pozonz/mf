@@ -2,12 +2,14 @@
     <div class="mini-cart__subtotal flex justify-between">
         <span class="">Subtotal</span>
         <span class="">${{ cart.subtotal|number_format(2) }}</span>
-    </div>    
-    
-    <div class="mini-cart__savings flex justify-between">
-        <span class="">Total savings</span>
-        <span class="">${{ cart.totalSaving|number_format(2) }}</span>
     </div>
+    
+    {% if cart.totalSaving > 0 %}
+        <div class="mini-cart__savings flex justify-between">
+            <span class="">Total savings</span>
+            <span class="">${{ cart.totalSaving|number_format(2) }}</span>
+        </div>
+    {% endif %}
     
     <div class="mini-cart__shipping flex justify-between">
         <span>Shipping</span>
