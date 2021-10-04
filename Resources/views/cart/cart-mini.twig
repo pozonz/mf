@@ -6,9 +6,9 @@
     
 
 
-    <header class="headings--section js-cart-mini-header" {% if cart.objOrderItems|length == 0 %}style="display: none;"{% endif %}>
+    <header class="headings--section js-cart-mini-header js-products-with-results {% if cart.objOrderItems|length == 0 %}hidden{% endif %}">
         <h1 class="heading--section">Your cart</h1>
-        <span class="js-cart-count">{{ cart.objOrderItems|length }}</span> item
+        <span class="js-cart-count">{{ cart.objOrderItems|length }}</span> item{% if cart.objOrderItems|length > 1 %}s{% endif %}
     </header>
 
 
@@ -26,7 +26,7 @@
         {#---------------------------------------------------------------------------------------
             /Full
         ----------------------------------------------------------------------------------------#}
-        <ul class="list-reset">
+        <ul class="list-reset js-products-with-results {% if cart.objOrderItems|length == 0 %}hidden{% endif %}">
             {% for itm in cart.objOrderItems %}
                 <li class="mini-cart__product js-cart-item flex" data-id="{{ itm.id }}">
 
@@ -81,7 +81,7 @@
     {#---------------------------------------------------------------------------------------
         /Footer
     ----------------------------------------------------------------------------------------#}
-    <footer class="mini-cart__footer mt-8">
+    <footer class="mini-cart__footer mt-8 js-products-with-results {% if cart.objOrderItems|length == 0 %}hidden{% endif %}">
         <div class="js-cart-mini-footer">
             {% include '/cart/includes/cart-mini-subtotal.twig' %}
         </div>

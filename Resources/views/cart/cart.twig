@@ -82,7 +82,7 @@
 
             <a href="/checkout" class="js-products-with-results button button--primary" style="{% if cart.objOrderItems|length == 0 %}display: none;{% endif %}">Checkout</a>
 
-            <div class="mt-4">
+            <div class="mt-4 js-products-with-results" style="{% if cart.objOrderItems|length == 0 %}display: none;{% endif %}">
                 {% include '/cart/includes/cart-payment-logos.twig' %}
             </div>
 
