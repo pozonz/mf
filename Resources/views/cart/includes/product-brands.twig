@@ -3,10 +3,10 @@
 
     <div class="js-filters js-sticky">
         <h2>Brand</h2>
-        <ul class="list-reset">
-            <li>
-                <input id="brand-all" class="js-filter-option" type="radio" name="brand" value="" checked>
-                <label for="brand-all">All brands</label>
+        <ul class="filter-nav-items list-reset">
+            <li class="filter-nav-item">
+                <input class="filter-nav-input" id="brand-all" class="js-filter-option" type="radio" name="brand" value="" checked>
+                <label class="filter-nav-label" for="brand-all">All brands</label>
             </li>
 
             {% for itm in brands %}
