@@ -4,8 +4,6 @@
     <ul class="cart-payment-logos list-reset items-center flex">
         {% for itm in paymentLogos %}
             <li class="cart-payment-logo"><img class="cart-payment-logo__img" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.title }}"></li>
-
-            <li class="mr-1"><img src="/images/assets/{{ itm.image }}/1" alt="{{ itm.title }}"></li>
         {% endfor %}
     </ul>
 {% endif %}
