@@ -62,20 +62,18 @@
                             <hr class="hr--small" />
 
                             <div class="js-filters js-sticky">
-                                <div class="filters__group">
-                                    <h2>Categories</h2>
-                                    <ul class="list-reset">
-                                        <li>
-                                            <a class="js-filter-category {% if not selectedProductCategory %}active{% endif %}" href="{{ getenv('SHOP_URL') }}">
-                                                All categories
-                                            </a>
-                                        </li>
+                                <h2>Categories</h2>
+                                <ul class="filter-nav-items list-reset">
+                                    <li class="filter-nav-item">
+                                        <a class="filter-nav-link js-filter-category {% if not selectedProductCategory %}active{% endif %}" href="{{ getenv('SHOP_URL') }}">
+                                            All categories
+                                        </a>
+                                    </li>
 
-                                        {% for itm in categories.rootNodes %}
-                                            {{ _self.catNav(itm, 1, selectedProductCategory, getenv('SHOP_URL')) }}
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                                    {% for itm in categories.rootNodes %}
+                                        {{ _self.catNav(itm, 1, selectedProductCategory, getenv('SHOP_URL')) }}
+                                    {% endfor %}
+                                </ul>
                             </div>
 
                             <section class="js-filter-brands">

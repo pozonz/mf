@@ -1,9 +1,10 @@
 {% set paymentLogos = model.active('PaymentLogo') %}
 
 {% if paymentLogos|length %}
-    <ul class="list-reset items-center flex">
+    <ul class="cart-payment-logos list-reset items-center flex">
         {% for itm in paymentLogos %}
-            <li class="mr-1"><img src="/images/assets/{{ itm.image }}/1" alt="{{ itm.title }}"></li>
+            <li class="cart-payment-logo"><img class="cart-payment-logo__img" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.title }}"></li>
         {% endfor %}
     </ul>
 {% endif %}
+
