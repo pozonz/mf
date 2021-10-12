@@ -63,8 +63,8 @@
 
                     <div class="mini-cart__product-price">
                         {% if itm.compareAtPrice %}
-                            <s class="mini-cart__price mini-cart__price--was">${{ itm.price|number_format(2) }}</s>
-                            <div class="mini-cart__price mini-cart__price--now">${{ itm.compareAtPrice|number_format(2) }}</div>
+                            <s class="mini-cart__price mini-cart__price--was">${{ itm.compareAtPrice|number_format(2) }}</s>
+                            <div class="mini-cart__price mini-cart__price--now">${{ itm.price|number_format(2) }}</div>
                         {% else %}
                             <div class="mini-cart__price">${{ itm.price|number_format(2) }}</div>
                         {% endif %}

@@ -259,7 +259,18 @@ class CheckoutShippingForm extends AbstractType
                         'message' => 'Delivery option is required',
                         'callback' => function ($request) {
                             $data = $request->get($this->getBlockPrefix());
-                            return isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
+                            $shippingRequired = isset($data['isPickup']) && $data['isPickup'] == 2 ? 1 : 0;
+
+                            if ($shippingRequired) {
+                                $shippingPriceMode = getenv('SHIPPING_PRICE_MODE') ?? 1;
+                                if ($shippingPriceMode == 1) {
+                                    return isset($data['shippingState']) && $data['shippingState'] ? 1 : 0;
+                                } else if ($shippingPriceMode == 2) {
+                                    return isset($data['shippingPostcode']) && $data['shippingPostcode'] ? 1 : 0;
+                                }
+                            }
+
+                            return 0;
                         },
                         'request' => $request,
                     ]),

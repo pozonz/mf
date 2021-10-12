@@ -50,7 +50,7 @@
          <section class="section-inner--pb--s">
              <header class="checkout-headings--section">
                  {% if getenv('SHIPPING_PICKUP_ALLOWED') != 1 %}
-                     <h2 class="checkout-heading--section">Delivery information</h2>
+                     <h2 class="checkout-heading--section">Shipping information</h2>
                  {% else %}
                      <h2 class="checkout-heading--section">Shipping methods</h2>
                  {% endif %}
@@ -152,7 +152,7 @@
                      </div>
                  </div>
 
-                 <div class="checkout-fields--has-gutters grid-row">
+                 <div class="checkout-fields--has-gutters grid-row js-shipping-methods-container" style="display: none;">
                      <div class="checkout-field checkout-field--has-gutter grid-col m-12">
                          {{ form_label(formView.shippingId, null, {label_attr: {class: 'checkout-label'}}) }}
                          {{ form_widget(formView.shippingId) }}

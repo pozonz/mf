@@ -78,24 +78,9 @@
                                 </div>
                             </div>
 
-                            <hr class="hr--small" />
-
-                            <div class="js-filters js-sticky">
-                                <h2>Brand</h2>
-                                <ul class="list-reset">
-                                    <li>
-                                        <input id="brand-all" class="js-filter-option" type="radio" name="brand" value="" checked>
-                                        <label for="brand-all">All brands</label>
-                                    </li>
-
-                                    {% for itm in brands %}
-                                        <li>
-                                            <input id="brand-{{itm.id}}" class="js-filter-option" type="radio" name="brand" value="{{ itm.slug }}" {% if selectedProductBrand and selectedProductBrand.id == itm.id %}checked{% endif %}>
-                                            <label for="brand-{{itm.id}}">{{ itm.title }}</label>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
+                            <section class="js-filter-brands">
+                                {% include 'cart/includes/product-brands.twig' %}
+                            </section>
 
                             <div class="xl-hidden">
                                 <a href="{{ app.request.pathInfo }}" class="button button--clear">
