@@ -1,5 +1,5 @@
 {% verbatim %}
-    <li class="tableContent js-tableContent js-orm-info file-box" id="{{file.id}}" data-id="{{file.id}}" data-code="{{file.code}}" data-width="{{file.width}}" data-height="{{file.height}}" data-callback="callbackAfterDeleteFile" data-class="Asset">
+    <li class="tableContent js-tableContent js-orm-info file-box" id="{{file.id}}" data-id="{{file.id}}" data-code="{{file.code}}" data-width="{{file.width}}" data-height="{{file.height}}" data-filename="{{file.fileName}}" data-callback="callbackAfterDeleteFile" data-class="Asset">
         <div class="asset-img">
             {{#compare 0 mode operator="=="}}
                 {{#compare 1 file.isImage operator="=="}}
