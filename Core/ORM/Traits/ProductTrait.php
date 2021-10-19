@@ -185,6 +185,7 @@ trait ProductTrait
         $lowStock = 0;
         $outOfStock = 0;
 
+        $this->setPrice(null);
         foreach ($data as $itm) {
             if (!$itm->objOutOfStock() && $itm->objLowStock() == 1) {
                 $lowStock++;
