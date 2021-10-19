@@ -3,18 +3,16 @@
 {% if pageTotal > 1 %}
     {% set pageRange = 5 %}
 
-    {% if pageNum == 1 %}
-        {% set minPages = 1 %}
+    {% if pageNum < pageRange %}
+        {% set half = (pageRange / 2)|round(0, 'floor') %}
+        {% set minPages = max(pageNum - half, 1) %}
         {% set maxPages = min(minPages + pageRange - 1, pageTotal) %}
-    {% elseif pageNum == pageTotal %}
-        {% set minPages = max(pageTotal - pageRange + 1, 1)  %}
-        {% set maxPages = pageTotal %}
-    {% else %}
+    {% elseif pageNum >= pageRange %}
         {% set half = (pageRange / 2)|round(0, 'floor') %}
         {% set maxPages = min(pageNum + half, pageTotal) %}
         {% set minPages = max(maxPages - pageRange + 1, 1) %}
     {% endif %}
-
+    
     <nav class="nav-pagination section-inner--pt-s js-pagination">
         <ul class="nav-pagination__items">
             <li class="nav-pagination__item">
