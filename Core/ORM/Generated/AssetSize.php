@@ -29,6 +29,16 @@ class AssetSize extends Base
     /**
      * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
      */
+    private $convertRate;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $webpConvertRate;
+    
+    /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
     private $showInCrop;
     
     /**
@@ -93,6 +103,38 @@ class AssetSize extends Base
     public function setWidth($width)
     {
         $this->width = $width;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getConvertRate()
+    {
+        return $this->convertRate;
+    }
+    
+    /**
+     * @param mixed convertRate
+     */
+    public function setConvertRate($convertRate)
+    {
+        $this->convertRate = $convertRate;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getWebpConvertRate()
+    {
+        return $this->webpConvertRate;
+    }
+    
+    /**
+     * @param mixed webpConvertRate
+     */
+    public function setWebpConvertRate($webpConvertRate)
+    {
+        $this->webpConvertRate = $webpConvertRate;
     }
     
     /**

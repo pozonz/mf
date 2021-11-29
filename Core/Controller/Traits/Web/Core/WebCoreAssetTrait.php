@@ -135,7 +135,6 @@ trait WebCoreAssetTrait
         }
 
         if ($assetSizeCode) {
-            $qualityCmd = "-quality 90%";
             $colorCmd = '-colorspace sRGB';
             $resizeCmd = '';
             $cropCmd = '';
@@ -149,6 +148,10 @@ trait WebCoreAssetTrait
                 }
             }
             if ($assetSize) {
+                if ($assetSize->getConvertRate()) {
+                    $qualityCmd = "-quality {$assetSize->getConvertRate()}%";
+                }
+
                 if ($assetSize->getResizeBy() == 1) {
                     $resizeCmd = "-resize \"x{$assetSize->getWidth()}>\"";
                 } else {
@@ -211,6 +214,10 @@ trait WebCoreAssetTrait
 
         if ($useWebp && $assetSizeCode && !$returnOriginalFile && $fileType != 'image/gif') {
             $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
+            if ($assetSize && $assetSize->getWebpConvertRate()) {
+                $command = getenv('CWEBP_CMD') . " -q {$assetSize->getWebpConvertRate()} $thumbnail -o $webpThumbnail";
+            }
+
             $returnValue = AssetService::generateOutput($command);
 
             $fileSize == filesize($webpThumbnail);
