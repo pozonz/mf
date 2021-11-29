@@ -135,6 +135,7 @@ trait WebCoreAssetTrait
         }
 
         if ($assetSizeCode) {
+            $qualityCmd = "-quality 90%";
             $colorCmd = '-colorspace sRGB';
             $resizeCmd = '';
             $cropCmd = '';
