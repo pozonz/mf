@@ -156,6 +156,27 @@ class AssetService
         ));
         $min = $rank['min'] - 1;
 
+        $allowedMimeTypes = [
+            'image/png',
+            'image/jpeg',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation  ',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/pdf',
+            'audio/mpeg',
+            'audio/wav',
+            'video/x-msvideo',
+            'video/mp4',
+            'video/mpeg',
+        ];
+
+        if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
+            throw new \Exception('Mime type now allowed.');
+        }
+
         $orm = new $fullClass($pdo);
         $orm->setTitle($originalName);
         $orm->setIsFolder(0);
