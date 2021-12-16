@@ -434,6 +434,7 @@ trait CmsCoreRestFileTrait
         if (!$asset) {
             throw new NotFoundHttpException();
         }
+        $asset->save();
 
         $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
         $assetSize = $fullClass::getById($this->connection, $assetSizeId);
