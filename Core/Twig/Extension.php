@@ -153,7 +153,9 @@ class Extension extends AbstractExtension
             return '';
         }
         if (file_exists("{$this->kernel->getProjectDir()}/templates/fragments/{$block->twig}")) {
-            return $this->environment->render("fragments/{$block->twig}", array_merge($context, (array)$block->values));
+            return $this->environment->render("fragments/{$block->twig}", array_merge($context, (array)$block->values, [
+                '__block' => $block,
+            ]));
         }
         return '';
     }
@@ -189,6 +191,31 @@ class Extension extends AbstractExtension
         if (gettype($sections) == 'string') {
             $sections = json_decode($sections);
         }
+
+        foreach ($sections as $section) {
+            $result = [];
+            foreach ($section->blocks as $block) {
+                if ($block->twig == 'indexing-block-section-anchor.twig' || $block->twig == 'indexing-block-section-anchor-sublevel.twig') {
+                    if ($block->status == 1) {
+
+                        if ($block->twig == 'indexing-block-section-anchor.twig' && $block->values->headingOnly != 1) {
+
+                            $block->_idx = count($result) + 1;
+                            $block->_children = [];
+                            $result[] = $block;
+
+                        } elseif ($block->twig == 'indexing-block-section-anchor-sublevel.twig' && count($result) > 0) {
+
+                            $lastBlock = $result[count($result) - 1];
+                            $block->_idx = $lastBlock->_idx . '.' . (count($lastBlock->_children) + 1);
+                            $lastBlock->_children[] = $block;
+
+                        }
+                    }
+                }
+            }
+        }
+
 
         $html = '';
         foreach ($sections as $section) {
