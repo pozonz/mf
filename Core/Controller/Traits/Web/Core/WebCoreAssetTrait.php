@@ -192,7 +192,7 @@ trait WebCoreAssetTrait
             file_put_contents($fileLocation, $assetBinary->getContent());
         }
 
-        if ($assetSizeCode && !$returnOriginalFile) {
+        if ($assetSizeCode) {
             $returnValue = AssetService::generateOutput($command);
             $fileSize == filesize($thumbnail);
         } else {
