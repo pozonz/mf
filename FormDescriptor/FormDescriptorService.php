@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Message;
 use Twig\Environment;
 
 class FormDescriptorService
@@ -21,32 +23,30 @@ class FormDescriptorService
     /**
      * @var Connection
      */
-    protected $connection;
+    protected Connection $connection;
 
     /**
      * @var KernelInterface
      */
-    protected $kernel;
+    protected KernelInterface $kernel;
 
     /**
      * @var FormFactoryInterface
      */
-    protected $formFactory;
+    protected FormFactoryInterface $formFactory;
 
     /**
      * @var SessionInterface
      */
-    protected $session;
+    protected SessionInterface $session;
 
     /**
      * @var Environment
      */
-    protected $environment;
+    protected Environment $environment;
 
-    /**
-     * @var \Swift_Mailer
-     */
-    protected $mailer;
+    /** @var MailerInterface  */
+    protected MailerInterface $mailer;
 
     /**
      * @var string
@@ -65,7 +65,7 @@ class FormDescriptorService
         FormFactoryInterface $formFactory,
         SessionInterface $session,
         Environment $environment,
-        \Swift_Mailer $mailer
+        MailerInterface $mailer
     ) {
         $this->connection = $connection;
         $this->kernel = $kernel;
@@ -212,17 +212,19 @@ class FormDescriptorService
                         'submission' => $submission,
                     ));
 
-                    $message = (new \Swift_Message())
-                        ->setSubject("{$formDescriptor->getTitle()} {$submission->getTitle()}")
-                        ->setFrom(array($formDescriptor->getFromAddress()))
-                        ->setTo(array_filter(array_map('trim', explode(',', $formDescriptor->getRecipients()))))
-                        ->setBcc(array(getenv('EMAIL_BCC')))
+                    $message = (new Message())
+                        ->subject("{$formDescriptor->getTitle()} {$submission->getTitle()}")
+                        ->from(array($formDescriptor->getFromAddress()))
+                        ->to(array_filter(array_map('trim', explode(',', $formDescriptor->getRecipients()))))
+                        ->bcc(array(getenv('EMAIL_BCC')))
                         ->setBody(
                             $messageBody, 'text/html'
                         );
+
                     if (isset($data['email']) && $data['email'] && filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                         $message->setReplyTo(array($data['email']));
                     }
+
                     $formDescriptor->sent = $this->mailer->send($message);
 
                     $submission->setEmailStatus($formDescriptor->sent ? 1 : 2);
