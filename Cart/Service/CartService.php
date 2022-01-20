@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Message;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
@@ -29,34 +32,37 @@ class CartService
     /**
      * @var Connection
      */
-    protected $connection;
+    protected Connection $connection;
 
     /**
      * @var SessionInterface
      */
-    protected $session;
+    protected SessionInterface $session;
 
     /**
      * @var TokenStorageInterface
      */
-    protected $tokenStorage;
+    protected TokenStorageInterface $tokenStorage;
 
     /**
      * @var Environment
      */
-    protected $environment;
+    protected Environment$environment;
 
-    /**
-     * @var \Swift_Mailer
-     */
-    protected $mailer;
+    /** @var Mailer  */
+    protected Mailer $mailer;
 
     /**
      * CartService constructor.
      * @param Connection $container
      */
-    public function __construct(Connection $connection, SessionInterface $session, TokenStorageInterface $tokenStorage, Environment $environment, \Swift_Mailer $mailer)
-    {
+    public function __construct(
+        Connection $connection,
+        SessionInterface $session,
+        TokenStorageInterface $tokenStorage,
+        Environment $environment,
+        MailerInterface $mailer
+    ) {
         $this->connection = $connection;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
@@ -567,19 +573,24 @@ class CartService
      */
     public function sendEmailInvoice($order)
     {
-        $messageBody = $this->environment->render('/cart/email-invoice.twig', array(
-            'order' => $order,
-        ));
-        $message = (new \Swift_Message())
-            ->setSubject((getenv('EMAIL_ORDER_SUBJECT') ?: 'Your order has been received - #') . " - #{$order->getTitle()}")
-            ->setFrom([
+        $messageBody = $this->environment->render(
+            '/cart/email-invoice.twig',
+            [
+                'order' => $order,
+            ]
+        );
+
+        $message = new Message();
+        $message->subject((getenv('EMAIL_ORDER_SUBJECT') ?: 'Your order has been received - #') . " - #{$order->getTitle()}")
+            ->from([
                 getenv('EMAIL_FROM') => getenv('EMAIL_FROM_NAME')
             ])
-            ->setTo([$order->getEmail()])
-            ->setBcc(array_filter(explode(',', getenv('EMAIL_BCC_ORDER'))))
+            ->to([$order->getEmail()])
+            ->bcc(array_filter(explode(',', getenv('EMAIL_BCC_ORDER'))))
             ->setBody(
                 $messageBody, 'text/html'
             );
+
         return $this->mailer->send($message);
     }
 
