@@ -27,7 +27,7 @@
 {% block trackingScripts %}
     {% if order.googleTracked != 1 and order.googleTracked != "1" %}
         {{ order.updateGoogleTracked() }}
-        <script>
+        <script nonce="{{ nonce() }}">
           dataLayer = window.dataLayer || [];
 
           dataLayer.push({

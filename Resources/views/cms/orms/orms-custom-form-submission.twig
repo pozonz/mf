@@ -107,9 +107,9 @@
 {% endblock %}
 
 {% block externalFooter %}
-    <script id="gallery-file" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.gallery-file.twig' %}</script>
+    <script src="/cms/develop/templates/orm.gallery-file.handlbars.js"></script>
     <script src="/cms/redactor/redactor.min.js" language="javascript"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" nonce="{{ nonce() }}"></script>
     <script src="/cms/develop/js/orm.js"></script>
 {% endblock %}

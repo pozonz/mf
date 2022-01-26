@@ -1,7 +1,7 @@
 {
     "uniqid": "5b8f4a68a1768",
     "slug": "users",
-    "rank": 3,
+    "rank": "11",
     "added": "2018-08-25 19:21:03",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -25,14 +25,14 @@
     "title": "Users",
     "className": "User",
     "namespace": "MillenniumFalcon\\Core\\ORM",
-    "modelType": "1",
-    "dataType": "2",
+    "modelType": 1,
+    "dataType": 0,
     "dataGroups": "[]",
-    "listType": "1",
+    "listType": 1,
     "numberPerPage": "200",
     "defaultSortBy": "id",
-    "defaultOrder": "1",
-    "columnsJson": "[{\"id\":\"z1535180493499\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Username:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1535183850245\",\"column\":\"password\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\HiddenType\",\"label\":\"Password:\",\"field\":\"password\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183844503\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\PasswordType\",\"label\":\"Password:\",\"field\":\"passwordInput\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183141014\",\"column\":\"name\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Full name:\",\"field\":\"name\",\"required\":1,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183147451\",\"column\":\"email\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\EmailType\",\"label\":\"Email:\",\"field\":\"email\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1560897782444\",\"column\":\"extra10\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\ChoiceMultiJson\",\"label\":\"Accessible sections:\",\"field\":\"accessibleSections\",\"required\":0,\"unique\":0,\"sql\":\"SELECT t1.id AS `key`, t1.title AS value FROM DataGroup AS t1 ORDER BY t1.rank\"},{\"id\":\"z1535183126968\",\"column\":\"image\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\AssetPicker\",\"label\":\"Photo:\",\"field\":\"image\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183830887\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\HiddenType\",\"label\":\"Reset token:\",\"field\":\"resetToken\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183231304\",\"column\":\"date1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\HiddenType\",\"label\":\"Reset date:\",\"field\":\"resetDate\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
+    "defaultOrder": 1,
+    "columnsJson": "[{\"id\":\"z1535180493499\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Username:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1535183850245\",\"column\":\"password\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\HiddenType\",\"label\":\"Password:\",\"field\":\"password\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183844503\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\PasswordType\",\"label\":\"Password:\",\"field\":\"passwordInput\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183141014\",\"column\":\"name\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Full name:\",\"field\":\"name\",\"required\":1,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183147451\",\"column\":\"email\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\EmailType\",\"label\":\"Email:\",\"field\":\"email\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1560897782444\",\"column\":\"extra10\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\ChoiceMultiJson\",\"label\":\"Accessible sections:\",\"field\":\"accessibleSections\",\"required\":0,\"unique\":0,\"sql\":\"SELECT t1.id AS `key`, t1.title AS value FROM DataGroup AS t1 ORDER BY t1.rank\"},{\"id\":\"z1535183126968\",\"column\":\"image\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\AssetPicker\",\"label\":\"Photo:\",\"field\":\"image\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183830887\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\HiddenType\",\"label\":\"Reset token:\",\"field\":\"resetToken\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1535183231304\",\"column\":\"date1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\HiddenType\",\"label\":\"Reset date:\",\"field\":\"resetDate\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1629874629728\",\"column\":\"extra3\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\DateTimePicker\",\"label\":\"Last Failed Login\",\"field\":\"lastFailedLogin\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1629874664359\",\"column\":\"extra4\",\"widget\":\"\\\\MillenniumFalcon\\\\Core\\\\Form\\\\Type\\\\DateTimePicker\",\"label\":\"Last login\",\"field\":\"lastSuccessfulLogin\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1629874694025\",\"column\":\"extra5\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Failed Count\",\"field\":\"failedLoginCount\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
     "metadata": "[\"added\",\"modified\",\"lastEditedBy\"]",
     "presetData": "[]"
 }

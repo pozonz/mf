@@ -4,7 +4,7 @@
 {% form_theme formView '/cart/form.twig' %}
 
 {% block js %}
-    <script>
+    <script nonce="{{ nonce() }}">
         window._shippingCostMode = '{{ getenv('SHIPPING_PRICE_MODE') ?: 1 }}';
     </script>
     <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer></script>

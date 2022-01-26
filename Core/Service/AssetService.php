@@ -9,6 +9,7 @@ use MillenniumFalcon\Core\ORM\_Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mime\MimeTypes;
 
 class AssetService
 {
@@ -155,6 +156,27 @@ class AssetService
         ));
         $min = $rank['min'] - 1;
 
+        $allowedMimeTypes = [
+            'image/png',
+            'image/jpeg',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation  ',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/pdf',
+            'audio/mpeg',
+            'audio/wav',
+            'video/x-msvideo',
+            'video/mp4',
+            'video/mpeg',
+        ];
+
+        if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
+            throw new \Exception('Mime type now allowed.');
+        }
+
         $orm = new $fullClass($pdo);
         $orm->setTitle($originalName);
         $orm->setIsFolder(0);
@@ -177,20 +199,21 @@ class AssetService
         static::removeCaches($pdo, $orm);
 
         $originalName = $file->getClientOriginalName();
-        $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+
+        // do not trust this fucker, it's a bad time. determine the extension from the file type
+        // $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+        $ee = $file->getExtension();
+
+        $type = $file->getMimeType();
+        $ext = current(MimeTypes::getDefault()->getExtensions($type)) ?? 'dat';
 
         $orm->setFileName($originalName);
         $orm->setFileType($file->getMimeType());
         $orm->setFileSize($file->getSize());
-        $orm->setFileExtension($file->getClientOriginalExtension());
+        $orm->setFileExtension($ext);
         $orm->setIsImage(0);
         $orm->setWidth(null);
         $orm->setHeight(null);
-
-//        $file->move(AssetService::getImageCachePath());
-//        $tmpFile = AssetService::getImageCachePath() . $file->getFilename();
-//        $chkFile = $tmpFile . '.' . $ext;
-//        rename($tmpFile, $chkFile);
 
         $chkFile = $file->getPathName();
 
@@ -208,10 +231,10 @@ class AssetService
         }
 
         $fnlFile = $uploadedDir . $orm->getId() . '.' . $ext;
+
         if ($orm->getIsImage() == 1) {
-            $command = getenv('CONVERT_CMD') . ' "' . $chkFile . '" -auto-orient ' . $fnlFile;
+            $command = getenv('CONVERT_CMD') . ' ' . escapeshellarg($chkFile) . ' -auto-orient ' . escapeshellarg($fnlFile);
             static::generateOutput($command);
-//            unlink($chkFile);
         } else {
             copy($chkFile, $fnlFile);
         }

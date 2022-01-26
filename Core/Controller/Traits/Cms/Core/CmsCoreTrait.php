@@ -194,7 +194,9 @@ trait CmsCoreTrait
                     if (!$attachedModel) {
                         $attachedModel = _Model::getById($this->connection, $attachedModelId);
                     }
-                    $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $this->_getClass($itm) . $itm->getId(), $attachedModel->getClassname(), '/manage/pages');
+                    if ($attachedModel) {
+                        $toBeMergedNodes = $this->_addModelListingToParent($toBeMergedNodes, $this->_getClass($itm) . $itm->getId(), $attachedModel->getClassname(), '/manage/pages');
+                    }
                 }
             }
 

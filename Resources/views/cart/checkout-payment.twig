@@ -109,7 +109,7 @@
 
 {% block extraJs %}
     {% if order.category == cartService.STATUS_GATEWAY_SENT and order.payType == 'Afterpay' and order.payToken %}
-        <script>
+        <script nonce="{{ nonce() }}">
             window.onload = function() {
                 AfterPay.initialize({countryCode: "NZ"});
                 AfterPay.redirect({token: "{{ order.payToken }}"});

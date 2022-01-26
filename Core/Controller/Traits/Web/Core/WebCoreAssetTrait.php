@@ -51,8 +51,8 @@ trait WebCoreAssetTrait
         $fileName = $asset->getFileName();
         $fileSize = $asset->getFileSize();
         $ext = $asset->getFileExtension();
-        if ($useWebp && strtolower($ext) == 'gif') {
-//            $ext = "jpg";
+        if ($useWebp && strtolower($ext) === 'gif') {
+            $useWebp = false;
         }
 
         $cachedKey = $this->getCacheKey($asset, $assetSizeCode ?: 1);
@@ -86,12 +86,12 @@ trait WebCoreAssetTrait
         $isImage = $asset->getIsImage();
         $fileType = strpos($fileType, 'image/svg') !== false ? 'image/svg+xml' : $fileType;
 
-        if ($fileType == 'image/svg+xml') {
+        if ($fileType === 'image/svg+xml') {
             $isImage = 1;
             $assetSizeCode = null;
         }
 
-        if ($fileType == 'application/pdf' && !$returnOriginalFile) {
+        if ($fileType === 'application/pdf' && !$returnOriginalFile) {
             $pdfRasterToken = getenv('PDF_RASTER_TOKEN');
             $pdfRasterEndPoint = getenv('PDF_RASTER_ENDPOINT');
 
@@ -154,9 +154,9 @@ trait WebCoreAssetTrait
                 }
 
                 if ($assetSize->getResizeBy() == 1) {
-                    $resizeCmd = "-resize \"x{$assetSize->getWidth()}>\"";
+                    $resizeCmd = "-resize " . escapeshellarg("x" . ($assetSize->getWidth() * 1) . ">");
                 } else {
-                    $resizeCmd = "-resize \"{$assetSize->getWidth()}>\"";
+                    $resizeCmd = "-resize " . escapeshellarg("" . ($assetSize->getWidth()) . ">");
                 }
             }
 
@@ -176,10 +176,10 @@ trait WebCoreAssetTrait
                 ));
             }
             if ($assetCrop AND $assetSizeCode !== 'cms_small') {
-                $cropCmd = "-crop {$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}";
+                $cropCmd = "-crop " . escapeshellarg("{$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}");
             }
 
-            $command = getenv('CONVERT_CMD') . " $fileLocation {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip $thumbnail";
+            $command = getenv('CONVERT_CMD') . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
         }
 
         $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
@@ -192,9 +192,14 @@ trait WebCoreAssetTrait
             file_put_contents($fileLocation, $assetBinary->getContent());
         }
 
+
         if ($assetSizeCode && (!$returnOriginalFile || $assetSizeCode == 1)) {
             $returnValue = AssetService::generateOutput($command);
-            $fileSize == filesize($thumbnail);
+            if ($returnValue == 0 && file_exists($thumbnail)) {
+                $fileSize = filesize($thumbnail);
+            } else {
+                $fileSize = 0;
+            }
         } else {
             copy($fileLocation, $thumbnail);
         }
@@ -216,12 +221,12 @@ trait WebCoreAssetTrait
         if ($useWebp && $assetSizeCode && !$returnOriginalFile && $fileType != 'image/gif') {
             $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
             if ($assetSize && $assetSize->getWebpConvertRate()) {
-                $command = getenv('CWEBP_CMD') . " -q {$assetSize->getWebpConvertRate()} $thumbnail -o $webpThumbnail";
+                $command = getenv('CWEBP_CMD') . " -q " . escapeshellarg($assetSize->getWebpConvertRate()) . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
             }
 
-            $returnValue = AssetService::generateOutput($command);
+            AssetService::generateOutput($command);
 
-            $fileSize == filesize($webpThumbnail);
+            $fileSize = filesize($webpThumbnail);
             $fileType = 'image/webp';
 
             $webpThumbnailHeaderContent = [
@@ -311,7 +316,7 @@ trait WebCoreAssetTrait
      */
     private function getBinaryFileResponse($file, $header)
     {
-        $header = (array)$header;
+        $header = (array) $header;
         return BinaryFileResponse::create($file, Response::HTTP_OK, $header, true, null, false, true);
     }
 }

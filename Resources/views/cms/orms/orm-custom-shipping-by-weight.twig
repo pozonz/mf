@@ -210,17 +210,17 @@
         {% include 'cms/includes/file-manager.html.twig' %}
     </div>
 
-    <script id="no_content_blocks_sidebar" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.fragment-sidebar.twig' %}</script>
+    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js"></script>
 {% endblock %}
 
 {% block externalFooter %}
-    <script id="gallery-file" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.gallery-file.twig' %}</script>
+    <script src="/cms/develop/templates/orm.gallery-file.handlebars.js"></script>
     <script src="/cms/redactor/redactor.js" language="javascript"></script>
     <script src="/cms/redactor/_plugins/video/video.js" language="javascript"></script>
     <script src="/cms/redactor/_plugins/table/table.js" language="javascript"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" nonce="{{ nonce() }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js" nonce="{{ nonce() }}"></script>
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.legacy.min.css" type="text/css" media="screen" />
@@ -233,18 +233,22 @@
     <script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}"></script>
     <script src="/cms/develop/js/orm.js?v={{ version }}"></script>
 
+    {% sha %}
     <script>
         window._shippingCostMode = '{{ getenv('SHIPPING_PRICE_MODE') ?: 1 }}';
     </script>
-    <script id="shipping-by-weight-rate" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.shipping-by-weight-rate.twig' %}</script>
-    <script id="shipping-by-weight-rate-extra" type="text/x-handlebars-template">{% include 'cms/orms/handlebar/orm.shipping-by-weight-rate-extra.twig' %}</script>
+    {% endsha %}
+    <script src="/cms/develop/templates/orm.shipping-by-weight-rate.handlebars.js"></script>
+    <script src="/cms/develop/templates/orm.shipping-by-weight-rate-extra.handlebars.js"></script>
     <script src="/cms/develop/js/orm-shipping-by-weight.js"></script>
 
     {% if fragmentSubmitted %}
+        {% sha %}
         <script>
             $(function () {
                 parent.$.fancybox.close();
             });
         </script>
+        {% endsha %}
     {% endif %}
 {% endblock %}
