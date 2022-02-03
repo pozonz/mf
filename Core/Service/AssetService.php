@@ -14,15 +14,17 @@ use Symfony\Component\Mime\MimeTypes;
 class AssetService
 {
     const FOLDER_OPEN_MAX_LIMIT = 10;
+    protected Connection $connection;
+    protected static string $uploadPath  = __DIR__ . '/../../../../../uploads/';
+    protected static string $templateFilePath = __DIR__ . '/../../Resources/files/';
+    protected static string $imageCachePath = __DIR__ . '/../../../../../cache/image/';
 
-    /**
-     * AssetService constructor.
-     * @param Connection $connection
-     */
-    public function __construct(Connection $connection)
-    {
+    public function __construct(
+        Connection $connection,
+    ) {
         $this->connection = $connection;
     }
+
 
     /**
      * @param $folderRef
@@ -193,7 +195,7 @@ class AssetService
      * @param $orm
      * @return JsonResponse
      */
-    static public function processUploadedFileWithAsset(Connection $pdo, UploadedFile $file, $orm)
+    static public function processUploadedFileWithAsset(Connection $pdo, UploadedFile $file, $orm): JsonResponse
     {
         static::removeFile($orm);
         static::removeCaches($pdo, $orm);
@@ -308,7 +310,7 @@ class AssetService
      * @param $asset
      * @throws \Exception
      */
-    static public function removeAssetOrms($pdo, $asset)
+    static public function removeAssetOrms($pdo, $asset): void
     {
         $fullClass = ModelService::fullClass($pdo, 'AssetOrm');
         $assetOrms = $fullClass::data($pdo, array(
@@ -323,7 +325,7 @@ class AssetService
     /**
      * @param $asset
      */
-    static public function removeFile($asset)
+    static public function removeFile($asset): void
     {
         $link = static::getUploadPath() . $asset->getFileLocation();
         if (file_exists($link) && is_file($link)) {
@@ -335,7 +337,7 @@ class AssetService
      * @param $pdo
      * @param $asset
      */
-    static public function removeAssetBinary($pdo, $asset)
+    static public function removeAssetBinary($pdo, $asset): void
     {
         $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
         if ($SAVE_ASSETS_TO_DB) {
@@ -352,7 +354,7 @@ class AssetService
      * @param $asset
      * @throws \Exception
      */
-    static public function removeCaches($pdo, $asset)
+    static public function removeCaches($pdo, $asset): void
     {
         $fullClass = ModelService::fullClass($pdo, 'AssetSize');
         $assetSizes = $fullClass::data($pdo);
@@ -366,7 +368,7 @@ class AssetService
      * @param $asset
      * @throws \Exception
      */
-    static public function removeCachesByAssetSize($pdo, $assetSize)
+    static public function removeCachesByAssetSize($pdo, $assetSize): void
     {
         $fullClass = ModelService::fullClass($pdo, 'Asset');
         $assets = $fullClass::data($pdo, [
@@ -381,7 +383,7 @@ class AssetService
      * @param $asset
      * @param $assetSize
      */
-    static public function removeCache($asset, $assetSize)
+    static public function removeCache($asset, $assetSize): void
     {
         $ext = $asset->getFileExtension();
 
@@ -418,32 +420,38 @@ class AssetService
      * @param $assetSize
      * @return string
      */
-    static public function getCacheKey($asset, $assetSizeCode)
+    static public function getCacheKey($asset, $assetSizeCode): string
     {
         return "{$asset->getCode()}-{$assetSizeCode}";
     }
 
-    /**
-     * @return string
-     */
-    static public function getUploadPath()
+    static public function getUploadPath(): string
     {
-        return __DIR__ . '/../../../../../uploads/';
+        return static::$uploadPath;
     }
 
-    /**
-     * @return string
-     */
-    static public function getImageCachePath()
+    static public function setUploadPath(string $uploadPath): void
     {
-        return __DIR__ . '/../../../../../cache/image/';
+        static::$uploadPath = $uploadPath;
     }
 
-    /**
-     * @return string
-     */
-    static public function getTemplateFilePath()
+    static public function getImageCachePath(): string
     {
-        return __DIR__ . '/../../Resources/files/';
+        return static::$imageCachePath;
+    }
+
+    static public function setImageCachePath(string $imageCachePath): void
+    {
+        static::$imageCachePath = $imageCachePath;
+    }
+
+    static public function getTemplateFilePath(): string
+    {
+        return static::$templateFilePath;
+    }
+
+    static public function setTemplateFilePath(string $templateFilePath): void
+    {
+        static::$templateFilePath = $templateFilePath;
     }
 }
