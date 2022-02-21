@@ -23,6 +23,7 @@ class CartService
     public $STATUS_GATEWAY_SENT = 20;
     public $STATUS_ACCEPTED = 30;
     public $STATUS_DECLINED = 40;
+    public $STATUS_OFFLINE = 50;
 
     const SESSION_ID = '__order_container_id';
 

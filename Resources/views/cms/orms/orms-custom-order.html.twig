@@ -43,7 +43,17 @@
                         <td>{{ itm.submittedDate|date('d M y H:i') }}</td>
                         <td>${{ itm.total|number_format(2) }}</td>
                         <td>
-                            {% if itm.category == cartService.STATUS_ACCEPTED %}PAID{% else %}UNPAID{% endif %}
+                            {% if itm.category == cartService.STATUS_ACCEPTED %}
+                                PAID
+                            {% else %}
+                                {% if itm.category == cartService.STATUS_OFFLINE %}
+                                    <label style="font-size: 100%">
+                                        <input class="js-payment-received" type="checkbox" {% if itm.payStatus == 1 %}checked{% endif %} style="margin-top: .3em"> Received
+                                    </label>
+                                {% else %}
+                                    UNPAID
+                                {% endif %}
+                            {% endif %}
                         </td>
                         <td class="iconCell" align="right">
 {#                            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>#}
@@ -60,4 +70,24 @@
             {% include 'cms/includes/pagination.twig' %}
         {% endif %}
     {% endblock %}
+{% endblock %}
+
+{% block externalFooter %}
+    <script>
+        (function() {
+            $(document).on('click', '.js-payment-received', function() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/manage/rest/order/payment/received',
+                    data: {
+                        received: $(this).is(':checked') ? 1 : 0,
+                        orderId: $(this).closest('tr').attr('id'),
+                    },
+                    success: function (data) {
+
+                    }
+                });
+            });
+        })();
+    </script>
 {% endblock %}
