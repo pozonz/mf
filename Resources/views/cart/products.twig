@@ -114,19 +114,18 @@
     ----------------------------------------------------------------------------------------#}
     {% set recents = shopService.products(app.request.cookies.get('recents')) %}
     {% if recents|length %}
-        <section class="section-inner section-inner--pt-s section-inner--pb-s bg--white">
-            <div class="mx-auto mw-1600 grid gutter-x">
-                <div class="grid-col l-3 pr-8">
-                    <h2 class="heading--section">Recently viewed</h2>
-                </div>
-                <ul class="recently-viewed-items mini-prod-items grid-col l-9 grid gutter-x gutter-y-m list-reset">
+        <section class="section-inner section-inner--pb">
+            <div class="mx-auto mw-1400">
+                <header class="headings--section"><h2 class="heading--section">Recently viewed</h2></header>
+
+                <ul class="grid gutter-x gutter-y-m list-reset">
                     {% for itm in recents %}
                         {% set gallery = itm.objGallery %}
                         {% set image = gallery|length > 0 ? gallery.0 : null %}
 
                         <li class="mini-prod-item grid-col m-6 xxl-4">
-                            <a class="mini-prod-card flex items-center" href="/product/{{ itm.slug }}">
-                                <div class="mini-prod-item__img">
+                            <a class="mini-prod-card grid gutter-x" href="/product/{{ itm.slug }}">
+                                <div class="mini-prod-item__img grid-col xs-3">
                                     {% if image and image.clearCutImage %}
                                         <figure class="card-img--clearcut image-bg aspect-ratio--1x1">
                                             <img data-src="/images/assets/{{ image.code }}/xs" alt="{{ image.alt }}" class="card-link__image-clearcut lazy object-fit object-fit--contain">
@@ -137,7 +136,7 @@
                                         </figure>
                                     {% endif %}
                                 </div>
-                                <div>
+                                <div class="grid-col xs-9">
                                     {% if itm.objBrand %}
                                         <h3 class="mini-prod-item__title">
                                         <div class="heading--eyebrow">{{ itm.objBrand.title }} </div>

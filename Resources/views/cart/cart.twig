@@ -38,15 +38,25 @@
 
                             {% set image = model.byId('Asset', itm.image) %}
                             {% if image and image.clearCutImage %}
-                                <div>
+                                <div class="cart-table__image">
+                                    <figure class="card-img--clearcut aspect-ratio--1x1">
+                                        <img class="card-link__image-clearcut object-fit object-fit--contain" src="/images/assets/{{ image.code }}/tiny" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
+                                    </figure>
+                                </div>
+                                
+                                {# <div>
                                     <figure class="card-img--clearcut aspect-ratio--1x1 relative">
                                         <img class="card-link__image-clearcut object-fit object-fit--contain" src="/images/assets/{{ image.code }}/small" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
                                     </figure>
-                                </div>
+                                </div> #}
                             {% else %}
-                                <div>
-                                    <img class="cart-img mr-4" src="/images/assets/{{ itm.image }}/small" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
+                                <div class="cart-table__image">
+                                    <figure class="card-img aspect-ratio--1x1">
+                                        <img class="object-fit object-fit--cover" src="/images/assets/{{ itm.image }}/tiny" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
+                                    </figure>
                                 </div>
+                            {# <img class="cart-img mr-4" src="/images/assets/{{ itm.image }}/small" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
+                                </div> #}
                             {% endif %}
                             
                             <div>

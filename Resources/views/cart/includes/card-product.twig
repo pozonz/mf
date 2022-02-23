@@ -9,8 +9,8 @@
                 <img data-src="/images/assets/{{ image.code }}/small" alt="" class="card-link__image-clearcut lazy object-fit object-fit--contain">
             </figure>
         {% else %}
-            <figure class="card-img aspect-ratio--4x3">
-                <img data-src="/images/assets/{{ product.objImage|join('/') }}" alt="" class="lazy object-fit object-fit--contain">
+            <figure class="card-img aspect-ratio--1x1">
+                <img data-src="/images/assets/{{ product.objImage|join('/') }}" alt="" class="lazy object-fit object-fit--cover">
             </figure>
         {% endif %}
 
