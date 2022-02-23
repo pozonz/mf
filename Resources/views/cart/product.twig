@@ -84,7 +84,11 @@
                             <div class="select">
                                 <select id="size" class="js-variant">
                                     {% for itm in variants %}
-                                        <option value="{{ itm.id }}" data-uniqid="{{ itm.uniqid }}">{{ itm.title }}</option>
+                                        {% if itm.objOutOfStock %}
+                                            <option value="{{ itm.id }}" data-uniqid="{{ itm.uniqid }}" disabled>{{ itm.title }} (Out of stock)</option>
+                                        {% else %}
+                                            <option value="{{ itm.id }}" data-uniqid="{{ itm.uniqid }}">{{ itm.title }}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>

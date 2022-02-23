@@ -1,10 +1,53 @@
 <ul class="checkout-data-rows">
     {% for itm in gateways %}
-        {% if itm.id == 'Stripe' %}
+        {% set gatewayDescription = model.activeByTitle('PaymentGatewayDescription', itm.id) %}
+
+        {% if itm.id == 'BankTransfer' %}
+
+            <li class="js-payment-gateway-container checkout-data-row">
+                <input class="js-payment-gateway-button checkout-data-row__input" id="payment-{{ itm.id }}" type="radio" name="shipping-method" {% if order.payType == itm.id %}checked{% endif %} autocomplete="off">
+
+                <label class="checkout-data-row__inner checkout-data-row__label checkout-data-row__label--cc-details" for="payment-{{ itm.id }}">
+
+                    {# Case 4 #}
+                    {% if gatewayDescription %}
+                        {{ gatewayDescription.shortdescription }}
+                        {% if gatewayDescription.image %}
+                            <img class="checkout-data-row__finance-img" src="/images/assets/{{ gatewayDescription.image }}/1" alt="{{ itm.id }}" title="{{ itm.id }}"/>
+                        {% endif %}
+                    {% else %}
+                        {{ itm.description }}
+                    {% endif %}
+
+                </label>
+
+                <div class="js-payment-gateway-form checkout-data-row__cc-details" {% if order.payType != itm.id %}style="display: none;"{% endif %}>
+                    <div style="">
+                        {% set snippet = model.activeByTitle('ContentSnippet', 'Bank transfer message') %}
+                        {% if snippet %}
+                            {{ snippet.content|replace({'{{order.title}}': order.title})|raw }}
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+
+        {% elseif itm.id == 'Stripe' %}
 
             <li class="js-payment-gateway-container js-stripe-secret checkout-data-row stripe" data-secret="{{ order.paySecret }}" data-key="{{ getenv('STRIPE_PUBLIC_KEY') }}">
                 <input class="js-payment-gateway-button checkout-data-row__input" id="payment-{{ itm.id }}" type="radio" name="shipping-method" {% if order.payType == itm.id %}checked{% endif %} autocomplete="off">
-                <label class="checkout-data-row__inner checkout-data-row__label checkout-data-row__label--cc-details" for="payment-{{ itm.id }}">Pay by credit card</label>
+
+                <label class="checkout-data-row__inner checkout-data-row__label checkout-data-row__label--cc-details" for="payment-{{ itm.id }}">
+                    {# Case 1 #}
+                    {% if gatewayDescription %}
+                        {{ gatewayDescription.shortdescription }}
+                        {% if gatewayDescription.image %}
+                            <img class="checkout-data-row__finance-img" src="/images/assets/{{ gatewayDescription.image }}/1" alt="{{ itm.id }}" title="{{ itm.id }}"/>
+                        {% endif %}
+                    {% else %}
+                        Pay by credit card
+                    {% endif %}
+                </label>
+
                 <div class="js-payment-gateway-form checkout-data-row__cc-details" {% if order.payType != itm.id %}style="display: none;"{% endif %}>
                     <form id="payment-form">
                         <div id="card-element"></div>
@@ -17,6 +60,7 @@
             </li>
 
         {% else %}
+
             {% set logo = '/images-checkout/logo--' ~ itm.id|lower ~'.svg' %}
             {% if itm.id == 'Afterpay' %}
                 {% set logo = '/images-checkout/logo--' ~ itm.id|lower ~'.png' %}
@@ -26,10 +70,19 @@
                 <input class="js-payment-gateway-button checkout-data-row__input" id="payment-{{ itm.id }}" type="radio" name="shipping-method" {% if order.payType == itm.id %}checked{% endif %} autocomplete="off">
                 <label class="checkout-data-row__inner checkout-data-row__label" for="payment-{{ itm.id }}">
                     {% if itm.instalment > 1 %}
+                        {# Case 2 #}
                         <strong>{{ itm.instalment }}</strong> {{ itm.frequency }} payments of <strong>${{ (order.total / itm.instalment)|number_format(2) }}</strong>
                         with&nbsp;<img class="checkout-data-row__finance-img" src="{{ logo }}" alt="{{ itm.id }}" title="{{ itm.id }}"/>
                     {% else %}
-                        {{ itm.description }}
+                        {# Case 3 #}
+                        {% if gatewayDescription %}
+                            {{ gatewayDescription.shortdescription }}
+                            {% if gatewayDescription.image %}
+                                <img class="checkout-data-row__finance-img" src="/images/assets/{{ gatewayDescription.image }}/1" alt="{{ itm.id }}" title="{{ itm.id }}"/>
+                            {% endif %}
+                        {% else %}
+                            {{ itm.description }}
+                        {% endif %}
                     {% endif %}
                 </label>
 

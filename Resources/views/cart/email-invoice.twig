@@ -154,14 +154,21 @@
                     <h1 class="receipt-h1" style="font-size: 30px; line-height: 1.2; margin: 0;">
                         We’ve received your order.
                     </h1>
-                    {% if order.isPickup == 1 %}
-                        <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0;">
-                            We will prepare your items for pick up.
-                        </h2>
-                    {% elseif order.isPickup == 2 %}
-                        <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0;">
-                            We’ll let you know when your items have been shipped.
-                        </h2>
+                    {% if order.payType == 'BankTransfer' %}
+                        {% set snippet = model.activeByTitle('ContentSnippet', 'Bank transfer message') %}
+                        {% if snippet %}
+                            {{ snippet.content|replace({'{{order.title}}': order.title})|raw }}
+                        {% endif %}
+                    {% else %}
+                        {% if order.isPickup == 1 %}
+                            <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0;">
+                                We will prepare your items for pick up.
+                            </h2>
+                        {% elseif order.isPickup == 2 %}
+                            <h2 class="receipt-h2" style="font-size: 21px; font-weight: normal; line-height: 1.4; margin: 5px 0 0;">
+                                We’ll let you know when your items have been shipped.
+                            </h2>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>
