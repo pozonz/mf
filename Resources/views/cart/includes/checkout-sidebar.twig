@@ -3,10 +3,20 @@
         {% for itm in cart.objOrderItems %}
             <tr class="checkout-aside__row">
                 <td class="checkout-aside__cell checkout-aside__product-img">
-                    <div class="checkout-aside__product-img__wrap">
-                        <span class="checkout-aside__qty" title="Quantity: {{ itm.quantity }}"><span class="visuallyhidden">Quantity: </span>{{ itm.quantity }}</span>
-                        <div class="aspect-ratio--4x3 image-bg" style="background-image: url('/images/assets/{{ itm.image }}/small')"></div>
-                    </div>
+
+                    {% set image = model.byId('Asset', itm.image) %}
+                    {% if image and image.clearCutImage %}
+                        <div class="checkout-aside__product-img__wrap CLEARCUT">
+                            <span class="checkout-aside__qty" title="Quantity: {{ itm.quantity }}"><span class="visuallyhidden">Quantity: </span>{{ itm.quantity }}</span>
+                            <div class="aspect-ratio--4x3 image-bg" style="background-image: url('/images/assets/{{ itm.image ?: getenv('PRODUCT_PLACEHOLDER_ID') }}/small')"></div>
+                        </div>
+                    {% else %}
+                        <div class="checkout-aside__product-img__wrap">
+                            <span class="checkout-aside__qty" title="Quantity: {{ itm.quantity }}"><span class="visuallyhidden">Quantity: </span>{{ itm.quantity }}</span>
+                            <div class="aspect-ratio--4x3 image-bg" style="background-image: url('/images/assets/{{ itm.image }}/small')"></div>
+                        </div>
+                    {% endif %}
+
                 </td>
                 <td class="checkout-aside__cell checkout-aside__product-title">
                     <span class="checkout-aside__product-title__label">{{ itm.title }}</span>

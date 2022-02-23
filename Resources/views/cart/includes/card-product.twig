@@ -1,9 +1,19 @@
 <li class="grid-col l-4 js-product-card">
     
     <a class="card-link" href="/product/{{ product.slug }}">
-        <figure class="card-img aspect-ratio--4x3">
-            <img data-src="/images/assets/{{ product.objImage|join('/') }}" alt="" class="lazy object-fit object-fit--contain">
-        </figure>
+        {% set gallery = product.objGallery %}
+        {% set image = gallery|length > 0 ? gallery.0 : null %}
+
+        {% if image and image.clearCutImage %}
+            <figure class="card-img card-img--clearcut aspect-ratio--1x1">
+                <img data-src="/images/assets/{{ image.code }}/small" alt="" class="card-link__image-clearcut lazy object-fit object-fit--contain">
+            </figure>
+        {% else %}
+            <figure class="card-img aspect-ratio--4x3">
+                <img data-src="/images/assets/{{ product.objImage|join('/') }}" alt="" class="lazy object-fit object-fit--contain">
+            </figure>
+        {% endif %}
+
 
         <h3 class="heading--card">{{ product.title }}</h3>
         {% if product.objBrand %}

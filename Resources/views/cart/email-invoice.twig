@@ -203,9 +203,17 @@
                         <tbody class="receipt-tbody">
                             {% for oi in order.objOrderItems %}
                                 <tr class="receipt-tr">
-                                    <td class="receipt-img" style="width: 140px; vertical-align: middle; font-size: 16px; line-height: 1.6; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
-                                        <img style="display:block" src="{{ app.request.schemeAndHttpHost }}{{ oi.imageUrl|replace({'/card' : '/small'}) }}" alt="{{ oi.title }}" width="120" />
-                                    </td>
+                                    {% set image = model.byId('Asset', oi.image) %}
+                                    {% if image and image.clearCutImage %}
+                                        <td class="receipt-img CLEARCUT" style="width: 140px; vertical-align: middle; font-size: 16px; line-height: 1.6; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+                                            <img style="display:block" src="{{ app.request.schemeAndHttpHost }}/images/assets/{{ image.code }}/small" alt="{{ oi.brandName }}  {{ oi.title }}" width="120" />
+                                        </td>
+                                    {% else %}
+                                        <td class="receipt-img" style="width: 140px; vertical-align: middle; font-size: 16px; line-height: 1.6; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
+                                            <img style="display:block" src="{{ app.request.schemeAndHttpHost }}{{ oi.imageUrl|replace({'/card' : '/small'}) }}" alt="{{ oi.title }}" width="120" />
+                                        </td>
+                                    {% endif %}
+
                                     <td class="receipt-desc" style="vertical-align: middle; font-size: 16px; line-height: 1.6; padding: 20px 0; border-bottom: 1px solid #e5e5e5;">
                                         {{ oi.title }}
                                     </td>

@@ -34,9 +34,20 @@
                 <tr data-id="{{ itm.id }}" class="js-cart-item">
                     <td class="cart-table__col--product">
                         <div class="flex items-center">
-                            <div>
-                                <img class="cart-img mr-4" src="/images/assets/{{ itm.image }}/small" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
-                            </div>
+
+
+                            {% set image = model.byId('Asset', itm.image) %}
+                            {% if image and image.clearCutImage %}
+                                <div>
+                                    <figure class="card-img--clearcut aspect-ratio--1x1 relative">
+                                        <img class="card-link__image-clearcut object-fit object-fit--contain" src="/images/assets/{{ image.code }}/small" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
+                                    </figure>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <img class="cart-img mr-4" src="/images/assets/{{ itm.image }}/small" alt="{{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}">
+                                </div>
+                            {% endif %}
                             
                             <div>
                                 {{ itm.productName }}{% if itm.variantName %} - {{ itm.variantName }}{% endif %}

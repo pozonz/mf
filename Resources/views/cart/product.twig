@@ -23,7 +23,7 @@
 
 {% block main %}
 
-    <section class="section--product-detail section-inner section-inner--pt">
+    <section class="section--product-detail section-inner section-inner--pt js-product-container" data-product="{{ orm.id }}">
         <div class="mx-auto mw-1400 grid gutter-x">
                     
             {#---------------------------------------------------------------------------------------
@@ -33,10 +33,25 @@
                 <div class="product-gallery">
 
                     {% for itm in gallery %}
-                        <img src="/images/assets/{{ itm.id }}/large" alt="{{ orm.title }} image {{ loop.index }}">
+                        {% if itm.clearCutImage %}
+                            <div class="product-gallery__img-wrap {% if gallery|length == 1 %}product-gallery__img-wrap--single{% endif %}">
+                                <figure class="product-gallery__img card-img--clearcut aspect-ratio--1x1 relative">
+                                    <img class="card-link__image-clearcut lazy object-fit object-fit--contain" data-src="/images/assets/{{ itm.code }}/big" alt="{{ orm.title }}" />
+                                </figure>
+                            </div>
+                        {% else %}
+                            <div class="product-gallery__img-wrap {% if gallery|length == 1 %}product-gallery__img-wrap--single{% endif %}">
+                                <figure class="product-gallery__img aspect-ratio--1x1 relative">
+                                    <img class="image-bg lazy object-fit" data-src="/images/assets/{{ itm.id }}/big" alt="{{ orm.title }} image {{ loop.index }}"  />
+                                </figure>
+                            </div>
+                        {% endif %}
+
                     {% endfor %}
 
 
+
+                    {# does not exist in sleepgallery
 
                     {% if gallery|length > 1 %}
                         {% for itm in gallery %}
@@ -45,6 +60,7 @@
                             </div>
                         {% endfor %}
                     {% endif %}
+                    #}
                 </div>
             </div>
 
