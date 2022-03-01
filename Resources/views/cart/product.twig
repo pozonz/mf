@@ -101,7 +101,7 @@
                                 <select id="size" class="js-variant">
                                     {% for itm in variants %}
                                         {% if itm.objOutOfStock %}
-                                            <option value="{{ itm.id }}" data-uniqid="{{ itm.uniqid }}" disabled>{{ itm.title }} (Out of stock)</option>
+                                            <option value="{{ itm.id }}" data-uniqid="{{ itm.uniqid }}">{{ itm.title }} (Out of stock)</option>
                                         {% else %}
                                             <option value="{{ itm.id }}" data-uniqid="{{ itm.uniqid }}">{{ itm.title }}</option>
                                         {% endif %}
@@ -110,13 +110,35 @@
                             </div>
                         </div>
 
+                        {#
+                        The old code
                         <div class="mt-2">
                             <label for="qty">Quantity:</label>
                             <input id="qty" class="input--txt js-qty" type="text" value="1">
                         </div>
+                        #}
 
-                        <button class="mt-2 button button--primary js-add-to-cart" data-id="{{ orm.id }}">Add to cart</button>
+                        {% if orm.outOfStock != 1 %}
+                            <div class="product-detail__cart-field flex items-center js-qty-container">
+                                <label class="product-detail__label" for="qty">Quantity:</label>
+                                <div class="mini-cart__qty">
+                                    <button type="button" class="js-qty-btn button--cart-qty-operator minus js-cart-minus">
+                                        <i class="icon">{% include "/cart/svg/icon--minus.svg" %}</i>
+                                        <span class="visuallyhidden">Decrease quantity of items</span>
+                                    </button>
+                                    <label class="cart-item-quantity__field">
+                                        <input id="qty" type="number" class="js-qty input--cart-qty" value="1">
+                                    </label>
+                                    <button type="button" class="js-qty-btn button--cart-qty-operator plus">
+                                        <i class="icon">{% include "/cart/svg/icon--plus.svg" %}</i>
+                                        <span class="visuallyhidden">Increase quantity of items</span>
+                                    </button>
+                                </div>
+                            </div>
 
+                            <button class="mt-2 button button--primary js-add-to-cart" data-id="{{ orm.id }}">Add to cart</button>
+
+                        {% endif %}
                     </div>
                 </div>
 

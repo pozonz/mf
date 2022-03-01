@@ -3,7 +3,6 @@
 namespace MillenniumFalcon\Cart\Service;
 
 use Doctrine\DBAL\Connection;
-use App\ORM\ProductCategory;
 use MillenniumFalcon\Core\ORM\ShippingByWeight;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
@@ -79,7 +78,10 @@ class ShopService
     public function getCategoriesWithProductCount()
     {
         $arrayToReturn = [];
-        $categories = ProductCategory::active($this->connection);
+        $fullClass = ModelService::fullClass($this->connection, 'ProductCategory');
+        $categories = $fullClass::active($this->connection, [
+            'whereSql' => 'm.parentId IS NULL',
+        ]);
         foreach ($categories as $category) {
             $arrayToReturn[] = [
                 "title" => $category->getTitle(),

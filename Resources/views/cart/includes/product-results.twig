@@ -1,6 +1,6 @@
 <div class="flex justify-between items-center js-products-toolbar {% if total.count == 0 %}hidden{% endif %}">
     <div class="products-toolbar__results">
-        <strong class="js-total">{{ ((pageNum - 1) * limit) + 1 }} to {{ min(((pageNum - 1) * limit) + limit, total.count) }} of {{ total.count }}</strong> results
+        <strong class="js-total">{{ ((pageNum - 1) * limit) + 1 }} to {{ min(((pageNum - 1) * limit) + limit, total.count) }} of {{ total.count }}</strong> result{% if total.count != 1 %}s{% endif %}
     </div>
     <div class="flex items-center">
         <label class="mr-1" for="sort">Sort:</label>

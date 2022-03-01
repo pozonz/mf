@@ -27,6 +27,12 @@
     <body class="js-body headroom headroom--top headroom--not-bottom">
         <div class="checkout-container grid-row mw-1600 mx-auto">
 
+            <div class="checkout-header--mobile  section-inner grid-col l-hidden">
+                <div class="mw-600 mx-auto">
+                    <a class="" href="/"><img src="/images-checkout/checkout--logo.svg" alt="{{ siteTitle }}"/></a>
+                </div>
+            </div>
+
             {% block promoBlock %}
                 {% include 'cart/includes//checkout-sidebar-mobile-toggle.twig' %}
                 <aside id="order-summary" class="checkout-aside js-checkout-aside section-inner--s section-inner--py grid-col l-5">

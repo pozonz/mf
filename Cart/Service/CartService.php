@@ -632,6 +632,29 @@ class CartService
     }
 
     /**
+     * @return array
+     */
+    public function getGatewayClassesInstallments()
+    {
+        $result = [];
+
+        $gatewayClasses = $this->getGatewayClasses();
+        $fullClass = ModelService::fullClass($this->connection, 'PaymentInstallmentInfo');
+        if ($fullClass) {
+            $data = $fullClass::active($this->connection);
+            foreach ($data as $itm) {
+                foreach ($gatewayClasses as $gatewayClass) {
+                    if ($itm->getTitle() == $gatewayClass->getId()) {
+                        $result[] = $gatewayClass;
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param $type
      * @param $url
      * @param $request

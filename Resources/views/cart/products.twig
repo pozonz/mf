@@ -13,9 +13,34 @@
 {% endblock %}
 
 {% block main %}
+    {% if selectedProductCategory %}
+        {% set asset = model.byId('Asset', selectedProductCategory.image) %}
+        <section class="section--banner-hero relative js-category-banner {% if not app.request.get("page") or app.request.get("page") != "landing" %}hidden{% endif %}">
+            <div class="section-inner">
+
+                <header class="section--banner-hero__inner mx-auto mw-1600 bg--dark relative has-title-mask has-title-mask--corner-l">
+                    <div class="section--banner-hero__titles section-inner--pb-s grid">
+                        <div class="xs-start-2 xs-end-12 xl-start-2 xl-end-12">
+                            <h2 class="heading--card">Shop Online</h2>
+                            <h1 class="heading--page">{{ selectedProductCategory.getTitle() }}</h1>
+                        </div>
+                    </div>
+
+
+                    <figure class="aspect-ratio--1x1 m-aspect-ratio--1x1 l-aspect-ratio--5x2 relative bg--black">
+                        {% if asset %}<img class="image-bg lazy object-fit" data-src="/images/assets/{{ asset.getCode() }}/hero" aria-hidden="true" />
+                        {% endif %}
+
+                    </figure>
+                </header>
+
+            </div>
+        </section>
+    {% endif %}
+
     <section class="section-inner section-inner--pt section-inner--pb">
 
-        <header class="headings--page mx-auto mw-1400"><h1 class="heading--page">{{ page.pageHeading }}</h1></header>
+        <header class="headings--page mx-auto mw-1400 js-category-info {% if app.request.get("page") and app.request.get("page") == "landing" %}hidden{% endif %}"><h1 class="heading--page">{{ page.pageHeading }}</h1></header>
 
         <div class="mx-auto mw-1400 grid">
 

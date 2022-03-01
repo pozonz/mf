@@ -1,6 +1,41 @@
 {% if product.objOnSaleActive and variant.salePrice %}
+    {% set actualPrice = variant.calculatedSalePrice(app.user) %}
     <s class="product-detail__price product-detail__price__was">${{ variant.calculatedPrice(app.user)|number_format(2) }}</s>
     <span class="product-detail__price product-detail__price__now">${{ variant.calculatedSalePrice(app.user)|number_format(2) }}</span>
 {% else %}
+    {% set actualPrice = variant.calculatedPrice(app.user) %}
     <span class="product-detail__price product-detail__price">${{ variant.calculatedPrice(app.user)|number_format(2) }}</span>
 {% endif %}
+
+{% set partialPayments = cartService.getGatewayClassesInstallments %}
+
+<details>
+    {% for itm in partialPayments %}
+        {% if loop.index == 1 and itm.instalment > 1 %}
+            <summary class="summary--payments mt-2 flex items-center justify-between">
+                <div class="">
+                    <small>
+                        Or {{ itm.instalment }} {{ itm.frequency }} <strong>${{ (actualPrice / itm.instalment)|number_format(2) }}</strong> with <img class="inline-block cart-payment-logo__img" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.id }}"/>
+                    </small>
+                </div>
+                {% if partialPayments|length > 1 %}
+                    <div><small class="link">+{{ partialPayments|length - 1 }} more</small></div>
+                {% endif %}
+            </summary>
+        {% endif %}
+    {% endfor %}
+
+    {% if partialPayments|length > 1 %}
+        <ul class="list-reset mt-2">
+            {% for itm in partialPayments %}
+                {% if loop.index > 1 %}
+                    <li class="flex items-center">
+                        <small>
+                            Or {{ itm.instalment }} {{ itm.frequency }} of <strong>${{ (actualPrice / itm.instalment)|number_format(2) }}</strong> with <img class="inline-block cart-payment-logo__img" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.id }}"/>
+                        </small>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</details>

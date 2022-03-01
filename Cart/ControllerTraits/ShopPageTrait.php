@@ -125,7 +125,7 @@ trait ShopPageTrait
         $productFullClass = ModelService::fullClass($this->connection, 'Product');
 
         $categories = new \BlueM\Tree($productCategoryFullClass::active($this->connection, [
-            "select" => 'm.id AS id, m.parentId AS parent, m.title, m.slug, m.status',
+            "select" => 'm.id AS id, m.parentId AS parent, m.title, m.slug, m.status, m.image',
             "sort" => 'm.rank',
             "order" => 'ASC',
             "orm" => 0,

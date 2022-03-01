@@ -61,18 +61,13 @@
 
         {% else %}
 
-            {% set logo = '/images-checkout/logo--' ~ itm.id|lower ~'.svg' %}
-            {% if itm.id == 'Afterpay' %}
-                {% set logo = '/images-checkout/logo--' ~ itm.id|lower ~'.png' %}
-            {% endif %}
-
             <li class="js-payment-gateway-container checkout-data-row">
                 <input class="js-payment-gateway-button checkout-data-row__input" id="payment-{{ itm.id }}" type="radio" name="shipping-method" {% if order.payType == itm.id %}checked{% endif %} autocomplete="off">
                 <label class="checkout-data-row__inner checkout-data-row__label" for="payment-{{ itm.id }}">
                     {% if itm.instalment > 1 %}
                         {# Case 2 #}
-                        <strong>{{ itm.instalment }}</strong> {{ itm.frequency }} payments of <strong>${{ (order.total / itm.instalment)|number_format(2) }}</strong>
-                        with&nbsp;<img class="checkout-data-row__finance-img" src="{{ logo }}" alt="{{ itm.id }}" title="{{ itm.id }}"/>
+                        <strong>{{ itm.instalment }}</strong> {{ itm.frequency }} <strong>${{ (order.total / itm.instalment)|number_format(2) }}</strong>
+                        with&nbsp;<img class="checkout-data-row__finance-img" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.id }}" title="{{ itm.id }}"/>
                     {% else %}
                         {# Case 3 #}
                         {% if gatewayDescription %}

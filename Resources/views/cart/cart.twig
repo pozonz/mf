@@ -6,7 +6,7 @@
         <div class="mx-auto mw-1400">
             <header class="headings--page">
                 <h1 class="heading--page">Cart</h1>
-                <span class="js-products-with-results" style="{% if cart.objOrderItems|length == 0 %}display: none;{% endif %}">Not quite ready to check out? <a class="link" href="/shop">Continue shopping</a>.</span>
+                <span class="js-products-with-results" style="{% if cart.objOrderItems|length == 0 %}display: none;{% endif %}">Not quite ready to check out? <a class="link" href="{{ shopUrl }}">Continue shopping</a>.</span>
                 {# <span class="js-cart-count">{{ cart.objOrderItems|length }}</span> #}
             </header>
 
