@@ -26,7 +26,7 @@
 
 
 {% if orms|length > 0 %}
-<ul class="grid mt-12 gutter-x gutter-y list-reset">
+<ul class="grid mt-12 gutter-x gutter-y-l list-reset">
     {% for itm in orms %}
         {% include '/cart/includes/card-product.twig' with { product: itm } %}
     {% endfor %}

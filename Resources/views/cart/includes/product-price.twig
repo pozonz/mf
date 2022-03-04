@@ -15,7 +15,7 @@
             <summary class="summary--payments mt-2 flex items-center justify-between">
                 <div class="">
                     <small>
-                        Or {{ itm.instalment }} {{ itm.frequency }} <strong>${{ (actualPrice / itm.instalment)|number_format(2) }}</strong> with <img class="inline-block cart-payment-logo__img" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.id }}"/>
+                        Or {{ itm.instalment }} {{ itm.frequency }} <strong>${{ (actualPrice / itm.instalment)|number_format(2) }}</strong> with <img class="inline-block summary--payments__logo" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.id }}"/>
                     </small>
                 </div>
                 {% if partialPayments|length > 1 %}
@@ -29,9 +29,9 @@
         <ul class="list-reset mt-2">
             {% for itm in partialPayments %}
                 {% if loop.index > 1 %}
-                    <li class="flex items-center">
+                    <li class="">
                         <small>
-                            Or {{ itm.instalment }} {{ itm.frequency }} of <strong>${{ (actualPrice / itm.instalment)|number_format(2) }}</strong> with <img class="inline-block cart-payment-logo__img" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.id }}"/>
+                            Or {{ itm.instalment }} {{ itm.frequency }} of <strong>${{ (actualPrice / itm.instalment)|number_format(2) }}</strong> with <img class="inline-block summary--payments__logo" src="/images/assets/{{ itm.image }}/1" alt="{{ itm.id }}"/>
                         </small>
                     </li>
                 {% endif %}
