@@ -63,8 +63,8 @@
                             </div>
 
                             {% macro catNav(node, depth, current, parentUrl) %}
-                                <li>
-                                    <a class="js-filter-category {% if current and treeUtils.contains(node, current) %}active{% endif %}" href="{{ parentUrl }}/{{ node.slug }}">
+                                <li class="subnav__items">
+                                    <a class="subnav__link js-filter-category {% if current and treeUtils.contains(node, current) %}active{% endif %}" href="{{ parentUrl }}/{{ node.slug }}">
                                         {{ node.title }}
                                     </a>
                                 </li>
@@ -81,9 +81,9 @@
 
                             <div class="js-filters js-sticky">
                                 <h2>Categories</h2>
-                                <ul class="filter-nav-items list-reset">
-                                    <li class="filter-nav-item">
-                                        <a class="filter-nav-link js-filter-category {% if not selectedProductCategory %}active{% endif %}" href="{{ getenv('SHOP_URL') }}">
+                                <ul class="subnav__items list-reset">
+                                    <li class="subnav__item">
+                                        <a class="subnav__link js-filter-category {% if not selectedProductCategory %}active{% endif %}" href="{{ getenv('SHOP_URL') }}">
                                             All categories
                                         </a>
                                     </li>
