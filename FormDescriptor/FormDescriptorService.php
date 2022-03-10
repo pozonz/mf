@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Message;
 use Twig\Environment;
 
@@ -212,14 +213,15 @@ class FormDescriptorService
                         'submission' => $submission,
                     ));
 
-                    $message = (new Message())
+                    $message = (new Email())
                         ->subject("{$formDescriptor->getTitle()} {$submission->getTitle()}")
-                        ->from(array($formDescriptor->getFromAddress()))
-                        ->to(array_filter(array_map('trim', explode(',', $formDescriptor->getRecipients()))))
-                        ->bcc(array(getenv('EMAIL_BCC')))
-                        ->setBody(
-                            $messageBody, 'text/html'
+                        ->from($formDescriptor->getFromAddress())
+                        ->to(...array_filter(array_map('trim', explode(',', $formDescriptor->getRecipients()))))
+                        ->bcc(getenv('EMAIL_BCC'))
+                        ->html(
+                            $messageBody, 'utf-8'
                         );
+
 
                     if (isset($data['email']) && $data['email'] && filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                         $message->setReplyTo(array($data['email']));
