@@ -16,6 +16,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GatewayLaybuy extends AbstractGateway
 {
+    protected $info;
+
+    /**
+     * PaymentInterface constructor.
+     * @param Connection $connection
+     */
+    public function __construct(Connection $connection, $cartService)
+    {
+        parent::__construct($connection, $cartService);
+
+        $fullClass = ModelService::fullClass($this->connection, 'PaymentInstallmentInfo');
+        if ($fullClass) {
+            $this->info = $fullClass::getActiveByTitle($this->connection, $this->getId());
+        }
+    }
+
     /**
      * @param Request $request
      * @return mixed
@@ -162,7 +178,7 @@ class GatewayLaybuy extends AbstractGateway
      */
     public function getInstalment()
     {
-        return 6;
+        return $this->info ? $this->info->getInstallments() : 6;
     }
 
     /**
@@ -170,7 +186,12 @@ class GatewayLaybuy extends AbstractGateway
      */
     public function getFrequency()
     {
-        return 'weekly';
+        return $this->info ? $this->info->getShortdescription() : 'weekly payments of';
+    }
+
+    public function getImage()
+    {
+        return $this->info ? $this->info->getImage() : null;
     }
 
     /**

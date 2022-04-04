@@ -122,10 +122,15 @@ trait ProductTrait
     {
         if (!$this->_variants) {
             $fullClass = ModelService::fullClass($this->getPdo(), 'ProductVariant');
-            $this->_variants = $fullClass::active($this->getPdo(), [
-                'whereSql' => 'm.productUniqid = ? AND m.status = 1',
+            $inStock = $fullClass::active($this->getPdo(), [
+                'whereSql' => 'm.productUniqid = ? AND m.status = 1 AND (m.stockEnabled != 1 OR m.stock > 0)',
                 'params' => [$this->getUniqid()],
             ]);
+            $outOfStock = $fullClass::active($this->getPdo(), [
+                'whereSql' => 'm.productUniqid = ? AND m.status = 1 AND (m.stockEnabled = 1 AND m.stock <= 0)',
+                'params' => [$this->getUniqid()],
+            ]);
+            $this->_variants = array_merge($inStock, $outOfStock);
         }
         return $this->_variants;
     }

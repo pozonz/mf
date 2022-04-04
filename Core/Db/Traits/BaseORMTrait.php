@@ -277,6 +277,16 @@ trait BaseORMTrait
 
     /**
      * @param Connection $pdo
+     * @param $title
+     * @return array|null
+     */
+    static public function getByTitle(Connection $pdo, $title)
+    {
+        return static::getByField($pdo, 'title', $title);
+    }
+
+    /**
+     * @param Connection $pdo
      * @param $id
      * @return array|null
      */
@@ -322,6 +332,16 @@ trait BaseORMTrait
             'params' => array($value),
             'oneOrNull' => 1,
         ));
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $title
+     * @return array|null
+     */
+    static public function getActiveByTitle(Connection $pdo, $title)
+    {
+        return static::getActiveByField($pdo, 'title', $title);
     }
 
     /**

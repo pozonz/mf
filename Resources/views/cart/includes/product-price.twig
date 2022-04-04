@@ -1,6 +1,0 @@
-{% if product.objOnSaleActive and variant.salePrice %}
-    <s class="product-detail__price product-detail__price__was">${{ variant.calculatedPrice(app.user)|number_format(2) }}</s>
-    <span class="product-detail__price product-detail__price__now">${{ variant.calculatedSalePrice(app.user)|number_format(2) }}</span>
-{% else %}
-    <span class="product-detail__price product-detail__price">${{ variant.calculatedPrice(app.user)|number_format(2) }}</span>
-{% endif %}

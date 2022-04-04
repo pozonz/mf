@@ -123,9 +123,9 @@ class GatewayWindCave extends AbstractGateway
             'PxPayKey' => getenv('PX_ACCESS_KEY'),
             'UrlFail' => $request->getSchemeAndHttpHost() . '/checkout/finalise',
             'UrlSuccess' => $request->getSchemeAndHttpHost() . '/checkout/finalise',
-            'AmountInput' => number_format($order->getTotal(), 2),
+            'AmountInput' => sprintf("%9.2f", $order->getTotal()),
             'EmailAddress' => $order->getEmail(),
-            'BillingId' => "{$order->getShippingFirstName()} {$order->getShippingLastName()}",
+            'BillingId' => substr("{$order->getShippingFirstName()} {$order->getShippingLastName()}", 0, 32),
             'TxnId' => null,
             'MerchantReference' => $order->getTitle(),
         ]);

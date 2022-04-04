@@ -26,6 +26,7 @@ class CartService
     public $STATUS_GATEWAY_SENT = 20;
     public $STATUS_ACCEPTED = 30;
     public $STATUS_DECLINED = 40;
+    public $STATUS_OFFLINE = 50;
 
     const SESSION_ID = '__order_container_id';
 
@@ -639,6 +640,29 @@ class CartService
             }
         }
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGatewayClassesInstallments()
+    {
+        $result = [];
+
+        $gatewayClasses = $this->getGatewayClasses();
+        $fullClass = ModelService::fullClass($this->connection, 'PaymentInstallmentInfo');
+        if ($fullClass) {
+            $data = $fullClass::active($this->connection);
+            foreach ($data as $itm) {
+                foreach ($gatewayClasses as $gatewayClass) {
+                    if ($itm->getTitle() == $gatewayClass->getId()) {
+                        $result[] = $gatewayClass;
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
