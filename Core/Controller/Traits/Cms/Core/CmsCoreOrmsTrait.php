@@ -389,6 +389,7 @@ trait CmsCoreOrmsTrait
         $result = $productVariantFullClass::active($this->connection, [
             "select" => 'm.productUniqid, COUNT(m.productUniqid) AS count',
             'orm' => 0,
+            "sort" => 'm.productUniqid',
             'groupby' => 'm.productUniqid',
         ]);
         foreach ($result as $itm) {
@@ -399,6 +400,7 @@ trait CmsCoreOrmsTrait
             "whereSql" => 'm.status IS NULL OR m.status != 1',
             "select" => 'm.productUniqid, COUNT(m.productUniqid) AS count',
             'orm' => 0,
+            "sort" => 'm.productUniqid',
             'groupby' => 'm.productUniqid',
         ]);
         foreach ($result as $itm) {

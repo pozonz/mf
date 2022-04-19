@@ -14,7 +14,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Message;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
@@ -48,9 +49,9 @@ class CartService
     /**
      * @var Environment
      */
-    protected Environment$environment;
+    protected Environment $environment;
 
-    /** @var Mailer  */
+    /** @var Mailer */
     protected Mailer $mailer;
 
     /**
@@ -58,12 +59,13 @@ class CartService
      * @param Connection $container
      */
     public function __construct(
-        Connection $connection,
-        SessionInterface $session,
+        Connection            $connection,
+        SessionInterface      $session,
         TokenStorageInterface $tokenStorage,
-        Environment $environment,
-        MailerInterface $mailer
-    ) {
+        Environment           $environment,
+        MailerInterface       $mailer
+    )
+    {
         $this->connection = $connection;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
@@ -445,7 +447,7 @@ class CartService
             return null;
         }
 
-        if ($deliveryOption->getCountry() !== $ormCountry->getId()) {
+        if ($deliveryOption->getCountry() != $ormCountry->getId()) {
             return null;
         }
 
@@ -581,15 +583,13 @@ class CartService
             ]
         );
 
-        $message = new Message();
-        $message->subject((getenv('EMAIL_ORDER_SUBJECT') ?: 'Your order has been received - #') . " - #{$order->getTitle()}")
-            ->from([
-                getenv('EMAIL_FROM') => getenv('EMAIL_FROM_NAME')
-            ])
-            ->to([$order->getEmail()])
-            ->bcc(array_filter(explode(',', getenv('EMAIL_BCC_ORDER'))))
-            ->setBody(
-                $messageBody, 'text/html'
+        $message = (new Email());
+        $message->subject((getenv('EMAIL_ORDER_SUBJECT') ?: 'Your order has been received') . " - #{$order->getTitle()}")
+            ->from(new Address(getenv('EMAIL_FROM'), getenv('EMAIL_FROM_NAME')))
+            ->to(...array_filter(array_map('trim', [$order->getEmail()])))
+            ->bcc(...array_filter(array_map('trim', explode(',', getenv('EMAIL_BCC_ORDER')))))
+            ->html(
+                $messageBody, 'utf-8'
             );
 
         return $this->mailer->send($message);

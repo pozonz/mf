@@ -39,21 +39,15 @@ class ShopService
     protected $environment;
 
     /**
-     * @var \Swift_Mailer
-     */
-    protected $mailer;
-
-    /**
      * CartService constructor.
      * @param Connection $container
      */
-    public function __construct(Connection $connection, SessionInterface $session, TokenStorageInterface $tokenStorage, Environment $environment, \Swift_Mailer $mailer)
+    public function __construct(Connection $connection, SessionInterface $session, TokenStorageInterface $tokenStorage, Environment $environment)
     {
         $this->connection = $connection;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
         $this->environment = $environment;
-        $this->mailer = $mailer;
     }
 
     /**
