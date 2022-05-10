@@ -82,6 +82,11 @@ class Asset extends Base
     private $height;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $clearCutImage;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -319,6 +324,22 @@ class Asset extends Base
     public function setHeight($height)
     {
         $this->height = $height;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getClearCutImage()
+    {
+        return $this->clearCutImage;
+    }
+    
+    /**
+     * @param mixed clearCutImage
+     */
+    public function setClearCutImage($clearCutImage)
+    {
+        $this->clearCutImage = $clearCutImage;
     }
     
 }

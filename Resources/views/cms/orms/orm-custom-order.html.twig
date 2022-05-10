@@ -3,7 +3,22 @@
 {% block formWidgets %}
 	<h2>Order Detail</h2>
 	<div class="formStyle textarea">
-		<label>Status:</label> {% if orm.category == 0 %}NEW{% elseif orm.category == cartService.STATUS_ACCEPTED %}PAID by {{ orm.paytype }}{% else %}UNPAID{% endif %}
+		<label>Status:</label>
+		{% if orm.category == 0 %}
+			NEW
+		{% elseif orm.category == cartService.STATUS_ACCEPTED %}
+			PAID by {{ orm.paytype }}
+		{% else %}
+			{% if orm.category == cartService.STATUS_OFFLINE %}
+				{% if orm.payStatus == 1 %}
+					Payment received
+				{% else %}
+					Payment not received yet
+				{% endif %}
+			{% else %}
+				UNPAID
+			{% endif %}
+		{% endif %}
 	</div>
 	<div class="formStyle textarea">
 		<label>ID:</label> {{ orm.title }}
@@ -97,86 +112,86 @@
 
 	<table class="table" style="margin-top: 50px;">
 		<tbody>
-			<tr>
-				<td class="tableHead">Product</td>
-				<td class="tableHead" style="width: 10em">Price</td>
-				<td class="tableHead">Qty</td>
-				<td class="tableHead" style="width: 10em">Subtotal</th>
-			</tr>
+		<tr>
+			<td class="tableHead">Product</td>
+			<td class="tableHead" style="width: 10em">Price</td>
+			<td class="tableHead">Qty</td>
+			<td class="tableHead" style="width: 10em">Subtotal</th>
+		</tr>
 		</tbody>
 
 		<tbody>
-			{% for itm in orm.objOrderItems %}
-				<tr>
-					<td>
-						<p>{{ itm.title }}</p>
-						<small>{{ itm.sku }}</small>
-					</td>
-					<td class="text-right">
-						{% if itm.compareAtPrice %}
-							<del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>
-							<small>$</small>
-							{{ itm.price|number_format(2, '.', ',') }}
-						{% else %}
-							<small>$</small>
-							{{ itm.price|number_format(2, '.', ',') }}
-						{% endif %}
-					</td>
-					<td class="text-right">{{ itm.quantity }}</td>
-					<td class="text-right">${{ (itm.price * itm.quantity)|number_format(2, '.', ',') }}</td>
-				</tr>
-			{% endfor %}
+		{% for itm in orm.objOrderItems %}
+			<tr>
+				<td>
+					<p>{{ itm.title }}</p>
+					<small>{{ itm.sku }}</small>
+				</td>
+				<td class="text-right">
+					{% if itm.compareAtPrice %}
+						<del><small>${{ itm.compareAtPrice|number_format(2, '.', ',') }}</small></del>
+						<small>$</small>
+						{{ itm.price|number_format(2, '.', ',') }}
+					{% else %}
+						<small>$</small>
+						{{ itm.price|number_format(2, '.', ',') }}
+					{% endif %}
+				</td>
+				<td class="text-right">{{ itm.quantity }}</td>
+				<td class="text-right">${{ (itm.price * itm.quantity)|number_format(2, '.', ',') }}</td>
+			</tr>
+		{% endfor %}
 
-			{% if orm.discount %}
-				<tr>
-					<td style="border: none;"></td>
-					<td class="text-right font-weight-bold" colspan="2">Subtotal:</td>
-					<td class="text-right font-weight-bold">
-						${{ orm.subtotal|number_format(2, '.', ',') }}
-					</td>
-				</tr>
-
-				<tr>
-					<td style="border: none;"></td>
-					<td class="text-right font-weight-bold" colspan="2">Discount:</td>
-					<td class="text-right font-weight-bold">
-						-${{ orm.discount|number_format(2, '.', ',') }}
-					</td>
-				</tr>
-
-				<tr>
-					<td style="border: none;"></td>
-					<td class="text-right font-weight-bold" colspan="2">After discount:</td>
-					<td class="text-right font-weight-bold">
-						${{ orm.afterDiscount|number_format(2, '.', ',') }}
-					</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td style="border: none;"></td>
-					<td class="text-right font-weight-bold" colspan="2">Subtotal:</td>
-					<td class="text-right font-weight-bold">
-						${{ orm.subtotal|number_format(2, '.', ',') }}
-					</td>
-				</tr>
-			{% endif %}
+		{% if orm.discount %}
+			<tr>
+				<td style="border: none;"></td>
+				<td class="text-right font-weight-bold" colspan="2">Subtotal:</td>
+				<td class="text-right font-weight-bold">
+					${{ orm.subtotal|number_format(2, '.', ',') }}
+				</td>
+			</tr>
 
 			<tr>
 				<td style="border: none;"></td>
-				<td class="text-right font-weight-bold" colspan="2">Delivery fee:</td>
+				<td class="text-right font-weight-bold" colspan="2">Discount:</td>
 				<td class="text-right font-weight-bold">
-					${{ orm.shippingCost|number_format(2, '.', ',') }}
-					{% if orm.shippingTitle %}<div><small>({{ orm.shippingTitle }})</small></div>{% endif %}
+					-${{ orm.discount|number_format(2, '.', ',') }}
 				</td>
 			</tr>
+
 			<tr>
 				<td style="border: none;"></td>
-				<td class="text-right font-weight-bold" colspan="2">Total:</td>
+				<td class="text-right font-weight-bold" colspan="2">After discount:</td>
 				<td class="text-right font-weight-bold">
-					${{ orm.total|number_format(2, '.', ',') }}
-					<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
+					${{ orm.afterDiscount|number_format(2, '.', ',') }}
 				</td>
 			</tr>
+		{% else %}
+			<tr>
+				<td style="border: none;"></td>
+				<td class="text-right font-weight-bold" colspan="2">Subtotal:</td>
+				<td class="text-right font-weight-bold">
+					${{ orm.subtotal|number_format(2, '.', ',') }}
+				</td>
+			</tr>
+		{% endif %}
+
+		<tr>
+			<td style="border: none;"></td>
+			<td class="text-right font-weight-bold" colspan="2">Delivery fee:</td>
+			<td class="text-right font-weight-bold">
+				${{ orm.shippingCost|number_format(2, '.', ',') }}
+				{% if orm.shippingTitle %}<div><small>({{ orm.shippingTitle }})</small></div>{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td style="border: none;"></td>
+			<td class="text-right font-weight-bold" colspan="2">Total:</td>
+			<td class="text-right font-weight-bold">
+				${{ orm.total|number_format(2, '.', ',') }}
+				<div><small>(Incl. GST ${{ orm.tax|number_format(2, '.', ',') }})</small></div>
+			</td>
+		</tr>
 		</tbody>
 	</table>
 

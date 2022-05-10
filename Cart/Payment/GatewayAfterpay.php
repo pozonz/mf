@@ -17,6 +17,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GatewayAfterpay extends AbstractGateway
 {
+    protected $info;
+
+    /**
+     * PaymentInterface constructor.
+     * @param Connection $connection
+     */
+    public function __construct(Connection $connection, $cartService)
+    {
+        parent::__construct($connection, $cartService);
+
+        $fullClass = ModelService::fullClass($this->connection, 'PaymentInstallmentInfo');
+        if ($fullClass) {
+            $this->info = $fullClass::getActiveByTitle($this->connection, $this->getId());
+        }
+    }
+
     /**
      * @param Request $request
      * @return mixed
@@ -177,7 +193,7 @@ class GatewayAfterpay extends AbstractGateway
      */
     public function getInstalment()
     {
-        return 4;
+        return $this->info ? $this->info->getInstallments() : 4;
     }
 
     /**
@@ -185,7 +201,12 @@ class GatewayAfterpay extends AbstractGateway
      */
     public function getFrequency()
     {
-        return 'fortnightly';
+        return $this->info ? $this->info->getShortdescription() : 'fortnightly payments of';
+    }
+
+    public function getImage()
+    {
+        return $this->info ? $this->info->getImage() : null;
     }
 
     /**
