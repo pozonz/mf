@@ -195,6 +195,10 @@ trait ShopPageTrait
 
         $pageTotal = ceil($total['count'] / $limit);
 
+        if ($pageNum > $pageTotal) {
+            throw new RedirectException('/shop');
+        }
+
         return [
             'orms' => $products,
             'categories' => $categories,
