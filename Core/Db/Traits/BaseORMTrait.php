@@ -73,7 +73,7 @@ trait BaseORMTrait
         $tableName = static::getTableName();
         $sql = "DELETE FROM `{$tableName}` WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute(array($this->getId()));
+        return $stmt->executeQuery(array($this->getId()));
     }
 
     /**
@@ -120,12 +120,13 @@ trait BaseORMTrait
                 $part1 .= "`$field`, ";
                 $part2 .= "?, ";
                 $method = 'get' . ucfirst($field);
-                $params[] = $this->$method();
+                $v = $this->$method();
+                $params[] = $v instanceof \BackedEnum ? $v->value : $v;
             }
             $part1 = rtrim($part1, ', ') . ')';
             $part2 = rtrim($part2, ', ') . ')';
             $sql = $sql . $part1 . $part2;
-//            var_dump('<pre>', $sql, $params, '</pre>');exit;
+
         } else {
             $sql = "UPDATE `{$tableName}` SET ";
             foreach ($fields as $field) {
@@ -134,26 +135,20 @@ trait BaseORMTrait
                 }
                 $sql .= "`$field` = ?, ";
                 $method = 'get' . ucfirst($field);
-                $params[] = $this->$method();
+                $v = $this->$method();
+                $params[] = $v instanceof \BackedEnum ? $v->value : $v;
             }
             $sql = rtrim($sql, ', ') . ' WHERE id = ?';
             $params[] = $this->id;
         }
 
-        try {
-//            var_dump($params, $sql);exit;
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute($params);
-            if (!$this->getId()) {
-                $this->setId($this->pdo->lastInsertId());
-            }
-            return $this->getId();
-        } catch (\Exception $ex) {
-            echo($ex->getMessage());
-            exit;
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->executeQuery($params);
+        if (!$this->getId()) {
+            $this->setId($this->pdo->lastInsertId());
         }
+        return $this->getId();
 
-        return null;
     }
 
     /**
@@ -232,8 +227,8 @@ trait BaseORMTrait
         }
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($options['params']);
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmtResult = $stmt->executeQuery($options['params']);
+        $result = $stmtResult->fetchAllAssociative();
 
         if ($options['orm']) {
             $orms = array();
@@ -304,7 +299,7 @@ trait BaseORMTrait
     {
         return static::getByField($pdo, 'slug', $slug);
     }
-    
+
     /**
      * @param $pdo
      * @param array $options
