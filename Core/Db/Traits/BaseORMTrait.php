@@ -121,7 +121,7 @@ trait BaseORMTrait
                 $part2 .= "?, ";
                 $method = 'get' . ucfirst($field);
                 $v = $this->$method();
-                $params[] = $v instanceof \BackedEnum ? $v->value : $v;
+                $params[] = static::valueMap($this->$method());
             }
             $part1 = rtrim($part1, ', ') . ')';
             $part2 = rtrim($part2, ', ') . ')';
@@ -135,8 +135,7 @@ trait BaseORMTrait
                 }
                 $sql .= "`$field` = ?, ";
                 $method = 'get' . ucfirst($field);
-                $v = $this->$method();
-                $params[] = $v instanceof \BackedEnum ? $v->value : $v;
+                $params[] = static::valueMap($this->$method());
             }
             $sql = rtrim($sql, ', ') . ' WHERE id = ?';
             $params[] = $this->id;
@@ -374,5 +373,15 @@ trait BaseORMTrait
             'orm' => 0,
         ));
         return $result['rank'] + 1;
+    }
+
+    protected static function valueMap(mixed $value): mixed
+    {
+        return match (true) {
+            $value instanceof \BackedEnum => $value->value,
+            $value instanceof \DateTimeInterface => $value->format("Y-m-d H:i:s"),
+            is_array($value), is_object($value) => json_encode($value),
+            default => $value
+        };
     }
 }

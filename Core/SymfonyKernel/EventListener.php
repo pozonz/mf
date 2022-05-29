@@ -108,7 +108,7 @@ class EventListener
             }
 
             $fullClass = ModelService::fullClass($this->connection, 'Page');
-            $page404Id = getenv('PAGE_404_ID');
+            $page404Id = ($_ENV['PAGE_404_ID'] ?? false);
             if ($page404Id) {
                 $page = $fullClass::getById($this->connection, $page404Id);
                 if ($page) {

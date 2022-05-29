@@ -92,8 +92,8 @@ trait WebCoreAssetTrait
         }
 
         if ($fileType === 'application/pdf' && !$returnOriginalFile) {
-            $pdfRasterToken = getenv('PDF_RASTER_TOKEN');
-            $pdfRasterEndPoint = getenv('PDF_RASTER_ENDPOINT');
+            $pdfRasterToken = ($_ENV['PDF_RASTER_TOKEN'] ?? false);
+            $pdfRasterEndPoint = ($_ENV['PDF_RASTER_ENDPOINT'] ?? false);
 
             if ($pdfRasterToken && $pdfRasterEndPoint) {
                 $url = $request->getSchemeAndHttpHost() . "/downloads/assets/{$assetCode}";
@@ -179,10 +179,10 @@ trait WebCoreAssetTrait
                 $cropCmd = "-crop " . escapeshellarg("{$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}");
             }
 
-            $command = getenv('CONVERT_CMD') . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
+            $command = ($_ENV['CONVERT_CMD'] ?? false) . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
         }
 
-        $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+        $SAVE_ASSETS_TO_DB = ($_ENV['SAVE_ASSETS_TO_DB'] ?? false);
         if ($SAVE_ASSETS_TO_DB && !file_exists($fileLocation)) {
             $assetBinaryFullClass = ModelService::fullClass($this->connection, 'AssetBinary');
             $assetBinary = $assetBinaryFullClass::getByField($this->connection, 'title', $asset->getId());
@@ -219,9 +219,9 @@ trait WebCoreAssetTrait
         }
 
         if ($useWebp && $assetSizeCode && !$returnOriginalFile && $fileType != 'image/gif') {
-            $command = getenv('CWEBP_CMD') . " $thumbnail -o $webpThumbnail";
+            $command = ($_ENV['CWEBP_CMD'] ?? false) . " $thumbnail -o $webpThumbnail";
             if ($assetSize && $assetSize->getWebpConvertRate()) {
-                $command = getenv('CWEBP_CMD') . " -q " . escapeshellarg($assetSize->getWebpConvertRate()) . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
+                $command = ($_ENV['CWEBP_CMD'] ?? false) . " -q " . escapeshellarg($assetSize->getWebpConvertRate()) . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
             }
 
             AssetService::generateOutput($command);

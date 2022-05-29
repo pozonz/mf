@@ -42,7 +42,7 @@ class GatewayStripe extends AbstractGateway
                 'currency' => 'nzd',
             ];
             try {
-                Stripe::setApiKey(getenv('STRIPE_SERVER_KEY'));
+                Stripe::setApiKey(($_ENV['STRIPE_SERVER_KEY'] ?? false));
                 $result = PaymentIntent::create($query);
             } catch (\Exception $ex) {
                 $result = $ex->getMessage();
@@ -72,7 +72,7 @@ class GatewayStripe extends AbstractGateway
                 'currency' => 'nzd',
             ];
             try {
-                Stripe::setApiKey(getenv('STRIPE_SERVER_KEY'));
+                Stripe::setApiKey(($_ENV['STRIPE_SERVER_KEY'] ?? false));
                 $result = PaymentIntent::update($order->getPayToken(), $query);
             } catch (\Exception $ex) {
                 $result = $ex->getMessage();
@@ -105,7 +105,7 @@ class GatewayStripe extends AbstractGateway
     {
         $start = time();
         try {
-            Stripe::setApiKey(getenv('STRIPE_SERVER_KEY'));
+            Stripe::setApiKey(($_ENV['STRIPE_SERVER_KEY'] ?? false));
             $result = PaymentIntent::retrieve($order->getPayToken());
             $status = $result->status == 'succeeded' ? 1 : 0;
 

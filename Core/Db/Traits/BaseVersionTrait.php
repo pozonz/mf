@@ -13,10 +13,14 @@ trait BaseVersionTrait
      */
     public function getFrontendUrlByCustomUrl($customUrl)
     {
-        $fields = array_keys(static::getFields());
-        foreach ($fields as $field) {
-            $method = 'get' . ucfirst($field);
-            $customUrl = str_replace("{{{$field}}}", $this->$method(), $customUrl);
+        if (strlen($customUrl)) {
+            $fields = array_keys(static::getFields());
+            foreach ($fields as $field) {
+                $method    = 'get' . ucfirst($field);
+                $v = $this->$method();
+                $v = $v instanceof \BackedEnum ? $v->value : $v;
+                $customUrl = str_replace("{{{$field}}}", $v, $customUrl);
+            }
         }
         return $customUrl;
     }

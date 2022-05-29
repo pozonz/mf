@@ -4,6 +4,7 @@ namespace MillenniumFalcon\Core\Form\Builder;
 
 use BlueM\Tree;
 use Cocur\Slugify\Slugify;
+use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Form\Constraints\ConstraintUnique;
 use MillenniumFalcon\Core\Form\Type\ChoiceMultiJson;
 use MillenniumFalcon\Core\Form\Type\ChoiceTree;
@@ -117,16 +118,29 @@ class OrmForm extends AbstractType
      * @param $column
      * @return array
      */
-    protected function getOpts($pdo, $column, $orm)
+    protected function getOpts(Connection $pdo, $column, $orm)
     {
         $opts = array(
             'label' => $column->label,
         );
 
         switch ($column->widget) {
+            case '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\EnumType':
+                $opts['placeholder'] = 'Choose an option';
+                $r = new \ReflectionClass($column->sql);
+                $opts['class'] = $r->getName();
+                break;
+
+            case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceEnumMultiJson':
+                $r = new \ReflectionClass($column->sql);
+                $opts['class'] = $r->getName();
+                break;
+
+
             case '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType':
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceMultiJson':
             case '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceSortable':
+
                 $slugify = new Slugify(['trim' => false]);
                 preg_match('/\bfrom\b\s*(\w+)/i', $column->sql, $matches);
                 if (count($matches) == 2) {
@@ -138,31 +152,34 @@ class OrmForm extends AbstractType
 
                     $column->sql = str_replace($matches[0], "FROM $tablename", $column->sql);
 
-                    $model = $orm->getModel();
+                    $model     = $orm->getModel();
                     $fullClass = ModelService::fullClass($pdo, $model->getClassName());
-                    $fields = array_keys($fullClass::getFields());
+                    $fields    = array_keys($fullClass::getFields());
                     foreach ($fields as $itm) {
-                        $getMethod = "get" . ucfirst($itm);
+                        $getMethod   = "get" . ucfirst($itm);
                         $column->sql = str_replace("{{{$itm}}}", "'{$orm->$getMethod()}'", $column->sql);
                     }
                 }
 
                 $result = [];
+
                 if ($column->sql) {
-                    $stmt = $pdo->prepare($column->sql);
-                    $stmt->execute();
-                    $result = $stmt->fetchAll(\PDO::FETCH_OBJ);
+                    $stmt       = $pdo->prepare($column->sql);
+                    $stmtResult = $stmt->executeQuery();
+                    $result     = $stmtResult->fetchAllAssociative();
 
                     $result = array_filter(array_map(function ($itm) {
-                        if (!isset($itm->value) || !isset($itm->key)) {
+                        $itm = (object) $itm;
+                        if ( ! isset($itm->value) || ! isset($itm->key)) {
                             return null;
                         }
+
                         return $itm;
                     }, $result));
                 }
 
                 $opts['choices'] = array();
-                foreach ($result as $key => $val) {
+                foreach ($result as $val) {
                     $opts['choices'][$val->value] = $val->key;
                 }
 
@@ -203,12 +220,14 @@ class OrmForm extends AbstractType
                 $result = [];
                 if ($column->sql) {
                     $stmt = $pdo->prepare($column->sql);
-                    $stmt->execute();
-                    $result = $stmt->fetchAll(\PDO::FETCH_OBJ);
+                    $stmtResult = $stmt->executeQuery();
+                    $result = $stmtResult->fetchAllAssociativeIndexed();
                 }
 
                 $nodes = array();
                 foreach ($result as $key => $val) {
+                    $val = (object)$val;
+
                     $nodes[] = [
                         'id' => $val->key,
                         'parent' => $val->parentId ?: 0, $key,

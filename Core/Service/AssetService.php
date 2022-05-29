@@ -235,7 +235,7 @@ class AssetService
         $fnlFile = $uploadedDir . $orm->getId() . '.' . $ext;
 
         if ($orm->getIsImage() == 1) {
-            $command = getenv('CONVERT_CMD') . ' ' . escapeshellarg($chkFile) . ' -auto-orient ' . escapeshellarg($fnlFile);
+            $command = ($_ENV['CONVERT_CMD'] ?? false) . ' ' . escapeshellarg($chkFile) . ' -auto-orient ' . escapeshellarg($fnlFile);
             static::generateOutput($command);
         } else {
             copy($chkFile, $fnlFile);
@@ -244,7 +244,7 @@ class AssetService
         $orm->setFileLocation($orm->getId() . '.' . $ext);
         $orm->save();
 
-        $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+        $SAVE_ASSETS_TO_DB = ($_ENV['SAVE_ASSETS_TO_DB'] ?? false);
         if ($SAVE_ASSETS_TO_DB) {
             $fileLocation = $uploadedDir . $orm->getFileLocation();
             if (file_exists($fileLocation)) {
@@ -339,7 +339,7 @@ class AssetService
      */
     static public function removeAssetBinary($pdo, $asset): void
     {
-        $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+        $SAVE_ASSETS_TO_DB = ($_ENV['SAVE_ASSETS_TO_DB'] ?? false);
         if ($SAVE_ASSETS_TO_DB) {
             $assetBinaryFullClass = ModelService::fullClass($pdo, 'AssetBinary');
             $assetBinary = $assetBinaryFullClass::getByField($pdo, 'title', $asset->getId());
