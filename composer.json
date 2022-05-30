@@ -34,7 +34,7 @@
   "suggest": {
     "stripe/stripe-php": "^7.75",
     "phpoffice/phpspreadsheet": "^1.2",
-    "campaignmonitor/createsend-php": "^6.0",
+    "campaignmonitor/createsend-php": "^7.0",
     "facebook/graph-sdk": "^5.7",
     "google/apiclient": "^2.2",
     "paypal/paypal-checkout-sdk": "^1.0",
