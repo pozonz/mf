@@ -164,7 +164,7 @@ class CartService
             $cart->setEmail($cart->getEmail() && filter_var($cart->getEmail(), FILTER_VALIDATE_EMAIL) ? $cart->getEmail() : $customer->getTitle());
         }
 
-        if (getenv('SHIPPING_PICKUP_ALLOWED') != 1) {
+        if (($_ENV['SHIPPING_PICKUP_ALLOWED'] ?? false) != 1) {
             $cart->setIsPickup(2);
         }
 
@@ -383,7 +383,7 @@ class CartService
             'params' => [$ormCountry->getId()],
         ]);
 
-        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+        if (($_ENV['SHIPPING_PRICE_MODE'] ?? false) == 1) {
             $region = $cart->getShippingState();
             $ormRegion = $fullClass::getByField($this->connection, 'title', $region);
             $data = array_filter($data, function ($itm) use ($ormRegion) {
@@ -399,7 +399,7 @@ class CartService
                 return 0;
             });
 
-        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+        } else if (($_ENV['SHIPPING_PRICE_MODE'] ?? false) == 2) {
             $postcode = $cart->getShippingPostcode();
 
             $data = array_filter($data, function ($itm) use ($postcode) {
@@ -451,7 +451,7 @@ class CartService
             return null;
         }
 
-        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+        if (($_ENV['SHIPPING_PRICE_MODE'] ?? false) == 1) {
             $region = $cart->getShippingState();
             $ormRegion = $fullClass::getByField($this->connection, 'title', $region);
 
@@ -479,7 +479,7 @@ class CartService
                 }
             }
 
-        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+        } else if (($_ENV['SHIPPING_PRICE_MODE'] ?? false) == 2) {
             $postcode = $cart->getShippingPostcode();
 
             $objShippingCostRates = $deliveryOption->objShippingCostRates();
@@ -584,10 +584,10 @@ class CartService
         );
 
         $message = (new Email());
-        $message->subject((getenv('EMAIL_ORDER_SUBJECT') ?: 'Your order has been received') . " - #{$order->getTitle()}")
-            ->from(new Address(getenv('EMAIL_FROM'), getenv('EMAIL_FROM_NAME')))
+        $message->subject(($_ENV['EMAIL_ORDER_SUBJECT'] ?? 'Your order has been received') . " - #{$order->getTitle()}")
+            ->from(new Address(($_ENV['EMAIL_FROM'] ?? false), ($_ENV['EMAIL_FROM_NAME'] ?? false)))
             ->to(...array_filter(array_map('trim', [$order->getEmail()])))
-            ->bcc(...array_filter(array_map('trim', explode(',', getenv('EMAIL_BCC_ORDER')))))
+            ->bcc(...array_filter(array_map('trim', explode(',', ($_ENV['EMAIL_BCC_ORDER'] ?? false)))))
             ->html(
                 $messageBody, 'utf-8'
             );
@@ -616,7 +616,7 @@ class CartService
     {
         $gatewayClasses = [];
 
-        $paymentMethods = explode(',', getenv('PAYMENT_METHODS'));
+        $paymentMethods = explode(',', ($_ENV['PAYMENT_METHODS'] ?? false));
         foreach ($paymentMethods as $paymentMethod) {
             $gatewayClasses[] = $this->getGatewayClass($paymentMethod);
         }

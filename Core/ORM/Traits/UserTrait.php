@@ -154,7 +154,7 @@ trait UserTrait
         }
 
         $conn = \Doctrine\DBAL\DriverManager::getConnection(array(
-            'url' => getenv('DATABASE_URL'),
+            'url' => ($_ENV['DATABASE_URL'] ?? false),
         ), new \Doctrine\DBAL\Configuration());
         $this->setPdo($conn);
     }

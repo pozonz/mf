@@ -380,7 +380,7 @@ trait CartRestfulTrait
         $regions = $this->cartService->getDeliverableRegions($cart);
         $deliveryOptions = $this->cartService->getDeliveryOptions($cart);
         return new JsonResponse([
-            'shippingPriceMode' => getenv('SHIPPING_PRICE_MODE') ?? 1,
+            'shippingPriceMode' => ($_ENV['SHIPPING_PRICE_MODE'] ?? 1),
             'cart' => $cart,
             'regions' => $regions,
             'deliveryOptions' => $deliveryOptions,

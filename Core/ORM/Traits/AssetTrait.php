@@ -43,15 +43,15 @@ trait AssetTrait
         }
 
         if ($this->getId()) {
-            if (getenv('FASTLY_API_KEY') && getenv('FASTLY_SERVICE_ID')) {
+            if (($_ENV['FASTLY_API_KEY'] ?? false) && ($_ENV['FASTLY_SERVICE_ID'] ?? false)) {
                 $clientParams = [
                     'base_uri' => 'https://api.fastly.com',
                     'headers' => [
-                        'Fastly-Key' => getenv('FASTLY_API_KEY'),
+                        'Fastly-Key' => ($_ENV['FASTLY_API_KEY'] ?? false),
                         'Accept' => 'application/json',
                     ]
                 ];
-                $url = "/service/" . getenv('FASTLY_SERVICE_ID') . "/purge/asset" . $this->getId();
+                $url = "/service/" . ($_ENV['FASTLY_SERVICE_ID'] ?? false) . "/purge/asset" . $this->getId();
 
                 $client = new Client($clientParams);
                 $response = $client->request('POST', $url);

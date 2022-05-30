@@ -35,7 +35,7 @@ trait ProductTrait
     public function objImageUrl()
     {
         $gallery = $this->objGallery();
-        return count($gallery) > 0 ? "/images/assets/{$gallery[0]->getId()}/medium" : "/images/assets/" . getenv('PRODUCT_PLACEHOLDER_ID') . "/1";
+        return count($gallery) > 0 ? "/images/assets/{$gallery[0]->getId()}/medium" : "/images/assets/" . ($_ENV['PRODUCT_PLACEHOLDER_ID'] ?? false) . "/1";
     }
 
     /**
@@ -52,7 +52,7 @@ trait ProductTrait
             ];
         } else {
             return [
-                getenv('PRODUCT_PLACEHOLDER_ID'),
+                ($_ENV['PRODUCT_PLACEHOLDER_ID'] ?? false),
                 1,
             ];
         }
@@ -76,7 +76,7 @@ trait ProductTrait
             return $gallery[0];
         } else {
             return [
-                'id' => getenv('PRODUCT_PLACEHOLDER_ID'),
+                'id' => ($_ENV['PRODUCT_PLACEHOLDER_ID'] ?? false),
                 'code' => null,
             ];
         }

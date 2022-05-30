@@ -68,8 +68,8 @@ class Sql
         $fields = array();
         $sql = "DESCRIBE `{$this->table}`";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmtResult = $stmt->executeQuery();
+        $result = $stmtResult->fetchAllAssociative();
         foreach ($result as $itm) {
             $fields[$itm['Field']] = $itm['Type'] . ($itm['Null'] == 'NO' ? ' NOT NULL' : ' NULL');
         }

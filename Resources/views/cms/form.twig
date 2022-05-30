@@ -58,6 +58,15 @@
     </select>
 {% endblock %}
 
+{% block choice_enum_multi_json_widget %}
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ value|json_encode }}"/>
+    <select id="{{ id }}_select" class="js-choice_multi_json" multiple>
+        {% for choice in choices %}
+            <option value="{{ choice.value }}" {% if choice in value %}selected{% endif %}>{{ choice.value }}</option>
+        {% endfor %}
+    </select>
+{% endblock %}
+
 {% block choice_multi_json_tree_widget %}
     <input type="hidden" {{ block('widget_attributes') }} value="{{ value }}"/>
     <select id="{{ id }}_select" class="js-choice_multi_json" multiple>

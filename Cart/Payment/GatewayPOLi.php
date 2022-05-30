@@ -37,7 +37,7 @@ class GatewayPOLi extends AbstractGateway
     public function retrieveRedirectUrl(Request $request, $order)
     {
         $start = time();
-        $authorization = base64_encode(getenv('POLI_MERCHANT_CODE') . ':' . getenv('POLI_AUTHENTICATION_CODE'));
+        $authorization = base64_encode(($_ENV['POLI_MERCHANT_CODE'] ?? false) . ':' . ($_ENV['POLI_AUTHENTICATION_CODE'] ?? false));
         $query = [
             RequestOptions::JSON => [
                 "Amount" => $order->getTotal(),
@@ -109,7 +109,7 @@ class GatewayPOLi extends AbstractGateway
     public function finalise(Request $request, $order)
     {
         $start = time();
-        $authorization = base64_encode(getenv('POLI_MERCHANT_CODE') . ':' . getenv('POLI_AUTHENTICATION_CODE'));
+        $authorization = base64_encode(($_ENV['POLI_MERCHANT_CODE'] ?? false) . ':' . ($_ENV['POLI_AUTHENTICATION_CODE'] ?? false));
         $query = [
             'query' => [
                 "token" => $order->getPayToken(),
@@ -157,7 +157,7 @@ class GatewayPOLi extends AbstractGateway
     protected function getClient()
     {
         return new Client([
-            'base_uri' => getenv('POLI_ENDPOINT'),
+            'base_uri' => ($_ENV['POLI_ENDPOINT'] ?? false),
         ]);
     }
 }
