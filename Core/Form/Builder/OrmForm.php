@@ -217,6 +217,7 @@ class OrmForm extends AbstractType
                     $column->sql = str_replace($matches[0], "FROM $tablename", $column->sql);
                 }
 
+
                 $result = [];
                 if ($column->sql) {
                     $stmt = $pdo->prepare($column->sql);
@@ -226,10 +227,11 @@ class OrmForm extends AbstractType
 
                 $nodes = array();
                 foreach ($result as $key => $val) {
-                    $val = (object)$val;
+                    $val = (object) $val;
 
                     $nodes[] = [
-                        'id' => $val->key,
+//                        'id' => $val->key,
+                        'id' => $key,
                         'parent' => $val->parentId ?: 0, $key,
                         'title' => $val->value,
                     ];
