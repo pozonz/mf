@@ -21,8 +21,6 @@ class AssetService
 
     public function __construct(
         protected readonly Connection $connection,
-        protected readonly array $allowedMimeTypes,
-
     ) {
     }
 
