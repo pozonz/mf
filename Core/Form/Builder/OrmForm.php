@@ -230,7 +230,6 @@ class OrmForm extends AbstractType
                     $val = (object) $val;
 
                     $nodes[] = [
-//                        'id' => $val->key,
                         'id' => $key,
                         'parent' => $val->parentId ?: 0, $key,
                         'title' => $val->value,

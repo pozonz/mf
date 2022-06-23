@@ -17,7 +17,7 @@
     "php": ">=8.1.0",
     "cocur/slugify": "^3.1",
     "sensio/framework-extra-bundle": "^6.2.0",
-    "doctrine/dbal": "^2.9",
+    "doctrine/dbal": "^3.3.6",
     "symfony/orm-pack": "^1.0",
     "symfony/twig-bundle": "^5.4",
     "symfony/form": "^5.4",
@@ -34,7 +34,7 @@
   "suggest": {
     "stripe/stripe-php": "^7.75",
     "phpoffice/phpspreadsheet": "^1.2",
-    "campaignmonitor/createsend-php": "^6.0",
+    "campaignmonitor/createsend-php": "^7.0",
     "facebook/graph-sdk": "^5.7",
     "google/apiclient": "^2.2",
     "paypal/paypal-checkout-sdk": "^1.0",
