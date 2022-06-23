@@ -14,15 +14,16 @@ use Symfony\Component\Mime\MimeTypes;
 class AssetService
 {
     const FOLDER_OPEN_MAX_LIMIT = 10;
-    protected Connection $connection;
+
     protected static string $uploadPath  = __DIR__ . '/../../../../../uploads/';
     protected static string $templateFilePath = __DIR__ . '/../../Resources/files/';
     protected static string $imageCachePath = __DIR__ . '/../../../../../cache/image/';
 
     public function __construct(
-        Connection $connection,
+        protected readonly Connection $connection,
+        protected readonly array $allowedMimeTypes,
+
     ) {
-        $this->connection = $connection;
     }
 
 
@@ -169,6 +170,7 @@ class AssetService
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'application/pdf',
             'audio/mpeg',
+            'image/svg+xml',
             'audio/wav',
             'video/x-msvideo',
             'video/mp4',
