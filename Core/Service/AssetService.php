@@ -6,6 +6,7 @@ use BlueM\Tree;
 use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,8 +22,8 @@ class AssetService
 
     public function __construct(
         protected readonly Connection $connection,
-    ) {
-    }
+        protected readonly LoggerInterface $assetLogger,
+    ) {}
 
 
     /**
@@ -78,6 +79,7 @@ class AssetService
             "order" => 'ASC',
             "orm" => 0,
         ));
+
         foreach ($data as &$itm) {
             if ($itm['id'] == $currentFolderId) {
                 $itm['state'] = [
@@ -96,6 +98,7 @@ class AssetService
 
         $assetRoot = static::getAssetFolderRoot();
         $assetRoot->children = $tree->jsonSerialize();
+
         return $assetRoot;
     }
 
@@ -174,6 +177,7 @@ class AssetService
             'video/mp4',
             'video/mpeg',
         ];
+
 
         if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
             throw new \Exception('Mime type now allowed.');
