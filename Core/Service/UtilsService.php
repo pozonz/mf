@@ -360,7 +360,6 @@ class UtilsService
      */
     static public function ip_info(Request $request)
     {
-        xdebug_break();
         $ip = ($_ENV['TEST_CLIENT_IP'] ?? false) ?: $request->getClientIp();
         if (($_ENV['GEOIP_DB_PATH'] ?? false)) {
             $geoDbPath = ($_ENV['GEOIP_DB_PATH'] ?? false);
