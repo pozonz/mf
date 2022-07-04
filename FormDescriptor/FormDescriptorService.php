@@ -224,7 +224,8 @@ class FormDescriptorService
 
 
                     if (isset($data['email']) && $data['email'] && filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                        $message->setReplyTo(array($data['email']));
+                        //$message->setReplyTo(array($data['email']));
+                        $message->addReplyTo($data['email']);
                     }
 
                     $formDescriptor->sent = $this->mailer->send($message);
