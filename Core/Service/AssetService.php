@@ -16,13 +16,9 @@ class AssetService
 {
     const FOLDER_OPEN_MAX_LIMIT = 10;
 
-//    protected static string $uploadPath  = __DIR__ . '/../../../../../uploads/';
-//    protected static string $templateFilePath = __DIR__ . '/../../Resources/files/';
-//    protected static string $imageCachePath = __DIR__ . '/../../../../../cache/image/';
-
-    protected static string $uploadPath  = '/Users/john/Projects/php/bootstrap7/uploads';
+    protected static string $uploadPath  = __DIR__ . '/../../../../../uploads/';
     protected static string $templateFilePath = __DIR__ . '/../../Resources/files/';
-    protected static string $imageCachePath = '/Users/john/Projects/php/bootstrap7/cache/image/';
+    protected static string $imageCachePath = __DIR__ . '/../../../../../cache/image/';
 
     public function __construct(
         protected readonly Connection $connection,
