@@ -6,27 +6,27 @@
 
         <main style="font: 1rem 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; max-width: 37.5rem; display: block;">
             <h1 style="font-size: 1.2rem">{{ formDescriptor.title }}</h1>
-        
+
             <strong>Email ID:</strong> #{{ submission.uniqueId }}<br />
             <strong>Date:</strong> {{ submission.date|date("d/m/Y") }}
-        
+
             <hr style=" border: none;
                         border-top: 1px solid #e5e5e5;
                         margin: 1.5rem 0;" />
-        
+
             <ol style="margin: 0 0 0 2rem; padding: 0;">
             {% for itm in submission.content|json_decode %}
-                <li style="margin-bottom: .2rem;"><strong>{{ itm.0 }}</strong> {{ utils.formData(itm)|raw }}</li>
+                {#  fix this to strip tags and ensure that the values are encoded. sigh. #}
+                <li style="margin-bottom: .2rem;"><strong>{{ itm.0 }}</strong> {{ utils.formData(itm)|striptags }}</li>
             {% endfor %}
             </ol>
-        
+
             <hr style=" border: none;
                         border-top: 1px solid #e5e5e5;
                         margin: 1.5rem 0;" />
-        
+
             <small>{{ getenv('PROJECT_NAME') }} &copy; {{ 'now'|date('Y') }}</small>
         </main>
 
     </body>
 </html>
-                              
