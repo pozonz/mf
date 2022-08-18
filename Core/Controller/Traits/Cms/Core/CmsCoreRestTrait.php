@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsCoreRestTrait
 {
     /**
-     * @route("/manage/rest/model/note")
+     * @route("/manage/rest/model/note", methods={"POST"})
      * @return Response
      */
     public function cmsRestModelNote(Request $request)
@@ -40,7 +40,7 @@ trait CmsCoreRestTrait
     }
 
     /**
-     * @route("/manage/rest/version/delete")
+     * @route("/manage/rest/version/delete", methods={"DELETE"})
      * @return Response
      */
     public function cmsRestVersionDelete(Request $request)
@@ -62,7 +62,7 @@ trait CmsCoreRestTrait
     }
 
     /**
-     * @route("/manage/rest/column/sort")
+     * @route("/manage/rest/column/sort", methods={"POST"})
      * @return Response
      */
     public function cmsRestColumnSort(Request $request)
@@ -87,7 +87,7 @@ trait CmsCoreRestTrait
     }
 
     /**
-     * @route("/manage/rest/nestable/sort")
+     * @route("/manage/rest/nestable/sort", methods={"POST"})
      * @return Response
      */
     public function cmsRestNestableSort(Request $request)
@@ -108,7 +108,7 @@ trait CmsCoreRestTrait
     }
 
     /**
-     * @route("/manage/rest/nestable/closed")
+     * @route("/manage/rest/nestable/closed", methods={"POST"})
      * @return Response
      */
     public function cmsRestNestableClosed(Request $request)
@@ -130,7 +130,7 @@ trait CmsCoreRestTrait
     }
 
     /**
-     * @route("/manage/rest/status")
+     * @route("/manage/rest/status", methods={"POST"})
      * @return Response
      */
     public function cmsRestStatus(Request $request)
@@ -149,7 +149,7 @@ trait CmsCoreRestTrait
     }
 
     /**
-     * @route("/manage/rest/delete")
+     * @route("/manage/rest/delete", methods={"DELETE"})
      * @return Response
      */
     public function cmsRestDelete(Request $request)
@@ -167,7 +167,7 @@ trait CmsCoreRestTrait
     }
 
     /**
-     * @route("/manage/rest/shipping/regions")
+     * @route("/manage/rest/shipping/regions", methods={"GET"})
      * @return Response
      */
     public function cmsRestShippingRegions(Request $request)

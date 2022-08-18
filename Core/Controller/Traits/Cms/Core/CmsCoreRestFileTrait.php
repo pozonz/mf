@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsCoreRestFileTrait
 {
     /**
-     * @route("/manage/rest/asset/file/current-folder")
+     * @route("/manage/rest/asset/file/current-folder", methods={"GET"})
      * @return Response
      */
     public function assetAjaxFilesCurrentFolderSet(Request $request)
@@ -67,7 +67,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files/chosen/rank")
+     * @route("/manage/rest/asset/files/chosen/rank", methods={"POST"})
      * @return Response
      */
     public function assetAjaxFilesChosenRank(Request $request)
@@ -93,7 +93,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files/chosen")
+     * @route("/manage/rest/asset/files/chosen", methods={"GET"})
      * @return Response
      */
     public function assetAjaxFilesChosen(Request $request)
@@ -121,7 +121,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files")
+     * @route("/manage/rest/asset/files", methods={"GET"})
      * @return Response
      */
     public function assetAjaxFiles(Request $request)
@@ -194,7 +194,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/folders")
+     * @route("/manage/rest/asset/folders", methods={"GET"})
      * @return Response
      */
     public function assetAjaxFolders(Request $request)
@@ -208,7 +208,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/nav")
+     * @route("/manage/rest/asset/nav", methods={"POST"})
      * @return Response
      */
     public function assetAjaxNav(Request $request)
@@ -234,7 +234,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files/add/folder")
+     * @route("/manage/rest/asset/files/add/folder", methods={"POST"})
      * @return Response
      */
     public function assetAjaxAddFolder(Request $request)
@@ -262,7 +262,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files/edit/folder")
+     * @route("/manage/rest/asset/files/edit/folder", methods={"POST"})
      * @return Response
      */
     public function assetAjaxEditFolder(Request $request)
@@ -279,7 +279,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/folders/update")
+     * @route("/manage/rest/asset/folders/update", methods={"POST"})
      * @return Response
      */
     public function assetAjaxFoldersUpdate(Request $request)
@@ -296,7 +296,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/file/move")
+     * @route("/manage/rest/asset/file/move", methods={"POST"})
      * @return Response
      */
     public function assetAjaxFileMove(Request $request)
@@ -312,7 +312,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files/delete/folder")
+     * @route("/manage/rest/asset/files/delete/folder", methods={"DELETE"})
      * @return Response
      */
     public function assetAjaxDeleteFolder(Request $request)
@@ -329,7 +329,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files/delete/file")
+     * @route("/manage/rest/asset/files/delete/file", methods={"DELETE"})
      * @return Response
      */
     public function assetAjaxDeleteFile(Request $request)
@@ -345,7 +345,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files/get/file")
+     * @route("/manage/rest/asset/files/get/file", methods={"GET"})
      * @return Response
      */
     public function assetAjaxGetFile(Request $request)
@@ -362,7 +362,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/files/upload")
+     * @route("/manage/rest/asset/files/upload", methods={"POST"})
      * @return Response
      */
     public function assetAjaxUpload(Request $request)
@@ -382,7 +382,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/file/size")
+     * @route("/manage/rest/asset/file/size", methods={"GET"})
      * @return Response
      */
     public function assetAjaxImageSize(Request $request)
@@ -414,7 +414,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/file/crop")
+     * @route("/manage/rest/asset/file/crop", methods={"POST"})
      * @return Response
      */
     public function assetAjaxImageCrop(Request $request)
@@ -489,7 +489,7 @@ trait CmsCoreRestFileTrait
     }
 
     /**
-     * @route("/manage/rest/asset/folders/file/select")
+     * @route("/manage/rest/asset/folders/file/select", methods={"POST"})
      * @return Response
      */
     public function assetAjaxFoldersFileSelect(Request $request)

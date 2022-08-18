@@ -180,6 +180,11 @@
         {% sha %}
         <script>
             $(function () {
+                window.rest_token = {{ csrf_token('session-rest-token')|json_encode|raw }};
+                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                    jqXHR.setRequestHeader('session-rest-token', window.rest_token);
+                });
+
                 window._imageSizes = [];
                 {% set AssetSizes = model.active('AssetSize', {
                     whereSql: 'showInCrop = 1'
@@ -211,6 +216,8 @@
                 }
                 fm.renderFiles();
             };
+
+
         </script>
         {% endsha %}
 
