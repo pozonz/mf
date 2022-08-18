@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsCoreRestPageTrait
 {
     /**
-     * @route("/manage/rest/cat/count")
+     * @route("/manage/rest/cat/count", methods={"GET"})
      * @return Response
      */
     public function cmsRestCatCount()
@@ -56,7 +56,7 @@ trait CmsCoreRestPageTrait
     }
 
     /**
-     * @route("/manage/rest/pages/sort")
+     * @route("/manage/rest/pages/sort", methods={"POST"})
      * @return Response
      */
     public function cmsRestPagesSort(Request $request)
@@ -89,7 +89,7 @@ trait CmsCoreRestPageTrait
     }
 
     /**
-     * @route("/manage/rest/page/change")
+     * @route("/manage/rest/page/change", methods={"POST"})
      * @return Response
      */
     public function cmsRestPageChange(Request $request)
@@ -134,7 +134,7 @@ trait CmsCoreRestPageTrait
     }
 
     /**
-     * @route("/manage/rest/page/closed")
+     * @route("/manage/rest/page/closed", methods={"POST"})
      * @return Response
      */
     public function cmsRestPageClosed(Request $request)
