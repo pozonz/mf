@@ -40,7 +40,7 @@
                                 <script nonce="{{ nonce() }}">
                                     window.recaptchaInit = () => {
                                         grecaptcha.render(document.querySelector('.recaptcha'), {
-                                            'sitekey' : '{{ env('RECAPTCHA_SITE_KEY') }}'
+                                            'sitekey' : '{{ getenv('RECAPTCHA_SITE_KEY') }}'
                                         });
                                     }
                                 </script>
