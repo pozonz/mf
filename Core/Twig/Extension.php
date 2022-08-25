@@ -53,21 +53,12 @@ class Extension extends AbstractExtension
     public function getFunctions(): array
     {
         return array(
-            'getenv' => new TwigFunction('getenv', [$this, 'getenv']),
+            'getenv' => new TwigFunction('getenv', fn($arg) => $_ENV[$arg] ?? null),
             'redirect' => new TwigFunction('redirect', [$this, 'throwRedirectException']),
             'not_found' => new TwigFunction('not_found', [$this, 'throwNotFoundException']),
             'http_exception' => new TwigFunction('http_exception', [$this, 'throwHttpException']),
             'file_exists' => new TwigFunction('file_exists', [$this, 'file_exists']),
         );
-    }
-
-    /**
-     * @param $arg
-     * @return array|false|string
-     */
-    public function getenv($arg)
-    {
-        return $_ENV[$arg] ?? null;
     }
 
     /**
