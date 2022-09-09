@@ -38,7 +38,7 @@ abstract class Base implements \JsonSerializable
     {
         $this->pdo = $pdo;
 
-        $this->uniqid = Uuid::uuid4();
+        $this->uniqid = Uuid::uuid4()->toString();
         $this->rank = 0;
         $this->added = date('Y-m-d H:i:s');
         $this->modified = date('Y-m-d H:i:s');
