@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\Twig;
 use BlueM\Tree;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
+use MillenniumFalcon\Core\ORM\FragmentBlock;
 use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 
 use MillenniumFalcon\Core\Tree\RawData;
@@ -143,8 +144,12 @@ class Extension extends AbstractExtension
         if (!isset($block->status) || !$block->status || $block->status == 0) {
             return '';
         }
-        if (file_exists("{$this->kernel->getProjectDir()}/templates/fragments/{$block->twig}")) {
-            return $this->environment->render("fragments/{$block->twig}", array_merge($context, (array)$block->values, [
+
+        /** @var FragmentBlock $blockOrig */
+        $blockOrig = FragmentBlock::getById($this->connection, $block->block);
+
+        if (file_exists("{$this->kernel->getProjectDir()}/templates/fragments/{$blockOrig->getTwig()}")) {
+            return $this->environment->render("fragments/{$blockOrig->getTwig()}", array_merge($context, (array)$block->values, [
                 '__block' => $block,
             ]));
         }
