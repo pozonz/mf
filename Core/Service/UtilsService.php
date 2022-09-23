@@ -62,8 +62,8 @@ class UtilsService
                     }
                     if ($item->sql) {
                         $stmt = $pdo->prepare($item->sql);
-                        $stmt->execute();
-                        foreach ($stmt->fetchAll() as $key => $val) {
+                        $stmtResult= $stmt->executeQuery();
+                        foreach ($stmtResult->fetchAllAssociative() as $key => $val) {
                             $choices[] = $val['key'] . "-" . $val['value'];
                         }
                     }
@@ -80,10 +80,11 @@ class UtilsService
                     }
                     if ($item->sql) {
                         $stmt = $pdo->prepare($item->sql);
-                        $stmt->execute();
+                        $stmtResult = $stmt->executeQuery();
+
 
                         $nodes = [];
-                        foreach ($stmt->fetchAll() as $key => $val) {
+                        foreach ($stmtResult->fetchAllAssociative() as $key => $val) {
                             $nodes[] = (array)new RawData([
                                 'id' => $val['key'],
                                 'parent' => $val['parentId'],
@@ -154,6 +155,7 @@ class UtilsService
             12 => 'Choice tree',
             13 => 'Choice multi json tree',
             14 => 'Choice sortable',
+            15 => 'MKVP',
         );
         asort($widgets);
         return array_flip($widgets);
@@ -358,9 +360,9 @@ class UtilsService
      */
     static public function ip_info(Request $request)
     {
-        $ip = getenv('TEST_CLIENT_IP') ?: $request->getClientIp();
-        if (getenv('GEOIP_DB_PATH')) {
-            $geoDbPath = getenv('GEOIP_DB_PATH');
+        $ip = ($_ENV['TEST_CLIENT_IP'] ?? false) ?: $request->getClientIp();
+        if (($_ENV['GEOIP_DB_PATH'] ?? false)) {
+            $geoDbPath = ($_ENV['GEOIP_DB_PATH'] ?? false);
             if (file_exists($geoDbPath)) {
                 $geoipReader = new Reader($geoDbPath);
                 try {

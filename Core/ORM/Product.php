@@ -10,5 +10,5 @@ use MillenniumFalcon\Core\Pattern\Version\VersionTrait;
 
 class Product extends \MillenniumFalcon\Core\ORM\Generated\Product
 {
-    use ProductTrait, VersionTrait;
+    use ProductTrait;
 }

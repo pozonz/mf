@@ -35,7 +35,7 @@ trait ProductTrait
     public function objImageUrl()
     {
         $gallery = $this->objGallery();
-        return count($gallery) > 0 ? "/images/assets/{$gallery[0]->getId()}/medium" : "/images/assets/" . getenv('PRODUCT_PLACEHOLDER_ID') . "/1";
+        return count($gallery) > 0 ? "/images/assets/{$gallery[0]->getId()}/medium" : "/images/assets/" . ($_ENV['PRODUCT_PLACEHOLDER_ID'] ?? false) . "/1";
     }
 
     /**
@@ -52,7 +52,7 @@ trait ProductTrait
             ];
         } else {
             return [
-                getenv('PRODUCT_PLACEHOLDER_ID'),
+                ($_ENV['PRODUCT_PLACEHOLDER_ID'] ?? false),
                 1,
             ];
         }
@@ -76,7 +76,7 @@ trait ProductTrait
             return $gallery[0];
         } else {
             return [
-                'id' => getenv('PRODUCT_PLACEHOLDER_ID'),
+                'id' => ($_ENV['PRODUCT_PLACEHOLDER_ID'] ?? false),
                 'code' => null,
             ];
         }
@@ -122,10 +122,15 @@ trait ProductTrait
     {
         if (!$this->_variants) {
             $fullClass = ModelService::fullClass($this->getPdo(), 'ProductVariant');
-            $this->_variants = $fullClass::active($this->getPdo(), [
-                'whereSql' => 'm.productUniqid = ? AND m.status = 1',
+            $inStock = $fullClass::active($this->getPdo(), [
+                'whereSql' => 'm.productUniqid = ? AND m.status = 1 AND (m.stockEnabled != 1 OR m.stock > 0)',
                 'params' => [$this->getUniqid()],
             ]);
+            $outOfStock = $fullClass::active($this->getPdo(), [
+                'whereSql' => 'm.productUniqid = ? AND m.status = 1 AND (m.stockEnabled = 1 AND m.stock <= 0)',
+                'params' => [$this->getUniqid()],
+            ]);
+            $this->_variants = array_merge($inStock, $outOfStock);
         }
         return $this->_variants;
     }
@@ -155,6 +160,9 @@ trait ProductTrait
      */
     public function save($doNotSaveVersion = false, $options = [])
     {
+        $gallery = $this->objGallery();
+        $this->setThumbnail(count($gallery) > 0 ? $gallery[0]->getId() : null);
+        
         $this->_saveProductCachedData();
         $result = parent::save($doNotSaveVersion, $options);
 
@@ -182,12 +190,21 @@ trait ProductTrait
         $lowStock = 0;
         $outOfStock = 0;
 
-        $variant = $this->objVariant();
-        if ($variant) {
-            if ($this->objOnSaleActive()) {
-                $this->setPrice($variant->getSalePrice());
-            } else {
-                $this->setPrice($variant->getPrice());
+        $this->setPrice(null);
+        foreach ($data as $itm) {
+            if (!$itm->objOutOfStock() && $itm->objLowStock() == 1) {
+                $lowStock++;
+            }
+
+            if ($itm->objOutOfStock() == 1) {
+                $outOfStock++;
+            }
+
+            if (!isset($options['doNotUpdatePrice']) || $options['doNotUpdatePrice'] != 1) {
+                if ($this->getPrice() == null || $this->getPrice() > $itm->getPrice()) {
+                    $this->setPrice($itm->getPrice());
+                    $this->setSalePrice($itm->getSalePrice());
+                }
             }
         }
 

@@ -97,6 +97,11 @@ class Product extends Base
     private $lowStock;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $thumbnail;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -382,6 +387,22 @@ class Product extends Base
     public function setLowStock($lowStock)
     {
         $this->lowStock = $lowStock;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+    
+    /**
+     * @param mixed thumbnail
+     */
+    public function setThumbnail($thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
     }
     
 }

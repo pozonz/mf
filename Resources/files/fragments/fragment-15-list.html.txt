@@ -1,0 +1,8 @@
+{% set [value] = [value]|json_decode %}
+{% if [value]|length %}
+    <ul>
+        {% for itm in [value] %}
+            <li>{{itm.key}} / {{itm.value}}</li>
+        {% endfor %}
+    </ul>
+{% endif %}

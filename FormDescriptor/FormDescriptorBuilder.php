@@ -67,7 +67,7 @@ class FormDescriptorBuilder extends AbstractType
         }
 
         if ($formDescriptor->getAntispam()) {
-            $safeCountries = getenv('SAFE_COUNTRIES') ?: 'NZ,AU';
+            $safeCountries = ($_ENV['SAFE_COUNTRIES'] ?? 'NZ,AU');
             if (!isset($countryInfo['country_code']) || !in_array($countryInfo['country_code'], explode(',', $safeCountries))) {
                 $builder->add('robot', RobotType::class, array(
                     "mapped" => false,

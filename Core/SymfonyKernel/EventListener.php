@@ -10,6 +10,7 @@ use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -79,9 +80,9 @@ class EventListener
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event)
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if (!($exception instanceof RedirectException) && !($exception instanceof NotFoundHttpException)) {
             $exception = $exception->getPrevious();
@@ -107,7 +108,7 @@ class EventListener
             }
 
             $fullClass = ModelService::fullClass($this->connection, 'Page');
-            $page404Id = getenv('PAGE_404_ID');
+            $page404Id = ($_ENV['PAGE_404_ID'] ?? false);
             if ($page404Id) {
                 $page = $fullClass::getById($this->connection, $page404Id);
                 if ($page) {

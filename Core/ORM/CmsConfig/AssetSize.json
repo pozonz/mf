@@ -1,7 +1,7 @@
 {
     "uniqid": "5b8f5a43dd02e",
     "slug": "image-sizes",
-    "rank": 10,
+    "rank": 9,
     "added": "2018-09-03 19:44:02",
     "modified": "2021-01-01 11:55:44",
     "publishFrom": null,
@@ -32,7 +32,7 @@
     "numberPerPage": "200",
     "defaultSortBy": "id",
     "defaultOrder": "1",
-    "columnsJson": "[{\"id\":\"z1535960623556\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1557218372067\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Code:\",\"field\":\"code\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1601251519334\",\"column\":\"extra3\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\ChoiceType\",\"label\":\"Resize by:\",\"field\":\"resizeBy\",\"required\":1,\"unique\":0,\"sql\":\"SELECT 0 AS `key`, 'Width' AS value \\nUNION SELECT 1 AS `key`, 'Height'\"},{\"id\":\"z1535962076537\",\"column\":\"latitude\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Width or height:\",\"field\":\"width\",\"required\":1,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1556875227873\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\CheckboxType\",\"label\":\"Show in cropping:\",\"field\":\"showInCrop\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
+    "columnsJson": "[{\"id\":\"z1535960623556\",\"column\":\"title\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Title:\",\"field\":\"title\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1557218372067\",\"column\":\"extra2\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Code:\",\"field\":\"code\",\"required\":1,\"unique\":1,\"sql\":\"\"},{\"id\":\"z1601251519334\",\"column\":\"extra3\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\ChoiceType\",\"label\":\"Resize by:\",\"field\":\"resizeBy\",\"required\":1,\"unique\":0,\"sql\":\"SELECT 0 AS `key`, 'Width' AS value \\nUNION SELECT 1 AS `key`, 'Height'\"},{\"id\":\"z1535962076537\",\"column\":\"latitude\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Width or height:\",\"field\":\"width\",\"required\":1,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1638229940638\",\"column\":\"extra4\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"Convert rate (default 90):\",\"field\":\"convertRate\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1638229941971\",\"column\":\"extra5\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\TextType\",\"label\":\"WebP convert rate (default 75):\",\"field\":\"webpConvertRate\",\"required\":0,\"unique\":0,\"sql\":\"\"},{\"id\":\"z1556875227873\",\"column\":\"extra1\",\"widget\":\"\\\\Symfony\\\\Component\\\\Form\\\\Extension\\\\Core\\\\Type\\\\CheckboxType\",\"label\":\"Show in cropping:\",\"field\":\"showInCrop\",\"required\":0,\"unique\":0,\"sql\":\"\"}]",
     "metadata": "[\"isBuiltIn\"]",
     "presetData": "[]"
 }

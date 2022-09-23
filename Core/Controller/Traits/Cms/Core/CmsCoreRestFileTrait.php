@@ -225,7 +225,7 @@ trait CmsCoreRestFileTrait
         } else {
             $path = $orm->getFolderPath();
         }
-        
+
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
         return new JsonResponse([
             'currentFolder' => end($path),
@@ -424,7 +424,7 @@ trait CmsCoreRestFileTrait
         $width = $request->get('width');
         $height = $request->get('height');
         $assetId = $request->get('assetId');
-        $assetSizeId = $request->get('assetSizeId');
+        $assetSizeIds = array_filter(explode(',', $request->get('assetSizeId')));
 
         $fullClass = ModelService::fullClass($this->connection, 'Asset');
         $asset = $fullClass::getById($this->connection, $assetId);
@@ -435,57 +435,68 @@ trait CmsCoreRestFileTrait
             throw new NotFoundHttpException();
         }
 
-        $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
-        $assetSize = $fullClass::getById($this->connection, $assetSizeId);
-        if (!$assetSize) {
+        $assetSizeFullClass = ModelService::fullClass($this->connection, 'AssetSize');
+        foreach ($assetSizeIds as $assetSizeId) {
+            $assetSize = $assetSizeFullClass::getById($this->connection, $assetSizeId);
+            if (!$assetSize) {
 //            throw new NotFoundHttpException();
-        }
-
-        $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
-        $orm = $fullClass::data($this->connection, array(
-            'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
-            'params' => array($asset->getId(), $assetSizeId),
-            'limit' => 1,
-            'oneOrNull' => 1,
-        ));
-        if (!$orm) {
-            $orm = new $fullClass($this->connection);
-            $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . ($assetSize ? $assetSize->getTitle() : 'all'));
-        }
-
-        if ($assetSize) {
-            AssetService::removeCache($asset, $assetSize);
-        } else {
-            $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
-            $allAssetSizes = $fullClass::data($this->connection);
-            foreach ($allAssetSizes as $itm) {
-                AssetService::removeCache($asset, $itm);
             }
-
-            //bite me
-            $allSizeCode = new $fullClass($this->connection);
-            $allSizeCode->setCode(1);
-            AssetService::removeCache($asset, $allSizeCode);
 
             $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
-            $result = $fullClass::data($this->connection, [
-                'whereSql' => 'm.assetId = ? AND assetSizeId != ?',
-                'params' => [$asset->getId(), 'All sizes'],
-            ]);
-            foreach ($result as $itm) {
-                $itm->delete();
+            $orm = $fullClass::data($this->connection, array(
+                'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
+                'params' => array($asset->getId(), $assetSizeId),
+                'limit' => 1,
+                'oneOrNull' => 1,
+            ));
+            if (!$orm) {
+                $orm = new $fullClass($this->connection);
+                $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . ($assetSize ? $assetSize->getTitle() : 'all'));
             }
+
+            if ($assetSize) {
+                $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
+                $result = $fullClass::data($this->connection, [
+                    'whereSql' => 'm.assetId = ? AND assetSizeId = ?',
+                    'params' => [$asset->getId(), 'All sizes'],
+                ]);
+                foreach ($result as $itm) {
+                    $itm->delete();
+                }
+
+                AssetService::removeCache($asset, $assetSize);
+            } else {
+                $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
+                $result = $fullClass::data($this->connection, [
+                    'whereSql' => 'm.assetId = ? AND assetSizeId != ?',
+                    'params' => [$asset->getId(), 'All sizes'],
+                ]);
+                foreach ($result as $itm) {
+                    $itm->delete();
+                }
+
+                $fullClass = ModelService::fullClass($this->connection, 'AssetSize');
+                $allAssetSizes = $fullClass::data($this->connection);
+                foreach ($allAssetSizes as $itm) {
+                    AssetService::removeCache($asset, $itm);
+                }
+
+                //bite me
+                $allSizeCode = new $fullClass($this->connection);
+                $allSizeCode->setCode(1);
+                AssetService::removeCache($asset, $allSizeCode);
+            }
+
+            $orm->setX($x);
+            $orm->setY($y);
+            $orm->setWidth($width);
+            $orm->setHeight($height);
+            $orm->setAssetId($asset->getId());
+            $orm->setAssetSizeId($assetSizeId);
+            $orm->save(true);
         }
 
-        $orm->setX($x);
-        $orm->setY($y);
-        $orm->setWidth($width);
-        $orm->setHeight($height);
-        $orm->setAssetId($asset->getId());
-        $orm->setAssetSizeId($assetSizeId);
-        $orm->save(true);
         return new Response('OK');
-
     }
 
     /**
@@ -544,5 +555,38 @@ trait CmsCoreRestFileTrait
         }
 
         return new JsonResponse($ids);
+    }
+
+    /**
+     * @param Request $request
+     * @param $asset
+     * @param $assetSize
+     * @return void
+     */
+    protected function cropAssetByAssetSize(Request $request, $asset, $assetSize)
+    {
+
+
+        $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
+        $orm = $fullClass::data($this->connection, array(
+            'whereSql' => 'm.assetId = ? AND m.assetSizeId = ?',
+            'params' => array($asset->getId(), $assetSizeId),
+            'limit' => 1,
+            'oneOrNull' => 1,
+        ));
+        if (!$orm) {
+            $orm = new $fullClass($this->connection);
+            $orm->setTitle(($asset ? $asset->getCode() : '') . ' - ' . ($assetSize ? $assetSize->getTitle() : 'all'));
+        }
+
+        $orm->setX($x);
+        $orm->setY($y);
+        $orm->setWidth($width);
+        $orm->setHeight($height);
+        $orm->setAssetId($asset->getId());
+        $orm->setAssetSizeId($assetSize->getId());
+        $orm->save(true);
+
+        AssetService::removeCache($asset, $assetSize);
     }
 }

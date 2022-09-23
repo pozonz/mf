@@ -17,6 +17,11 @@ class ProductCategory extends Base
     private $parentId;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $image;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -46,6 +51,22 @@ class ProductCategory extends Base
     public function setParentId($parentId)
     {
         $this->parentId = $parentId;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+    
+    /**
+     * @param mixed image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
     }
     
 }

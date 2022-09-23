@@ -34,4 +34,22 @@ trait CmsCoreRestProductTrait
         ]);
         return new JsonResponse($data);
     }
+
+
+    /**
+     * @route("/manage/rest/order/payment/received")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function orderPaymentReceived(Request $request)
+    {
+        $received = $request->get('received');
+        $orderId = $request->get('orderId');
+
+        $fullClass = ModelService::fullClass($this->connection, 'Order');
+        $order = $fullClass::getById($this->connection, $orderId);
+        $order->setPayStatus($received);
+        $order->save();
+        return new JsonResponse($order);
+    }
 }

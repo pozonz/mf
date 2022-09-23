@@ -52,8 +52,8 @@ class GatewayWindCave extends AbstractGateway
         }
 
         $this->params = array_merge($this->params, [
-            'PxPayUserId' => getenv('PX_ACCESS_USERID'),
-            'PxPayKey' => getenv('PX_ACCESS_KEY'),
+            'PxPayUserId' => ($_ENV['PX_ACCESS_USERID'] ?? false),
+            'PxPayKey' => ($_ENV['PX_ACCESS_KEY'] ?? false),
             'Response' => $token,
         ]);
         $xmlRequest = $this->toGatewayXmlRequest('<ProcessResponse/>');
@@ -119,13 +119,13 @@ class GatewayWindCave extends AbstractGateway
         $start = time();
 
         $this->params = array_merge($this->params, [
-            'PxPayUserId' => getenv('PX_ACCESS_USERID'),
-            'PxPayKey' => getenv('PX_ACCESS_KEY'),
+            'PxPayUserId' => ($_ENV['PX_ACCESS_USERID'] ?? false),
+            'PxPayKey' => ($_ENV['PX_ACCESS_KEY'] ?? false),
             'UrlFail' => $request->getSchemeAndHttpHost() . '/checkout/finalise',
             'UrlSuccess' => $request->getSchemeAndHttpHost() . '/checkout/finalise',
-            'AmountInput' => number_format($order->getTotal(), 2),
+            'AmountInput' => sprintf("%9.2f", $order->getTotal()),
             'EmailAddress' => $order->getEmail(),
-            'BillingId' => "{$order->getShippingFirstName()} {$order->getShippingLastName()}",
+            'BillingId' => substr("{$order->getShippingFirstName()} {$order->getShippingLastName()}", 0, 32),
             'TxnId' => null,
             'MerchantReference' => $order->getTitle(),
         ]);
@@ -189,7 +189,7 @@ class GatewayWindCave extends AbstractGateway
     private function getClient()
     {
         return new Client([
-            'base_uri' => getenv('PX_ACCESS_URL')
+            'base_uri' => ($_ENV['PX_ACCESS_URL'] ?? false)
         ]);
     }
 

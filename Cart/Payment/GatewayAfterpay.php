@@ -17,6 +17,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GatewayAfterpay extends AbstractGateway
 {
+    protected $info;
+
+    /**
+     * PaymentInterface constructor.
+     * @param Connection $connection
+     */
+    public function __construct(Connection $connection, $cartService)
+    {
+        parent::__construct($connection, $cartService);
+
+        $fullClass = ModelService::fullClass($this->connection, 'PaymentInstallmentInfo');
+        if ($fullClass) {
+            $this->info = $fullClass::getActiveByTitle($this->connection, $this->getId());
+        }
+    }
+
     /**
      * @param Request $request
      * @return mixed
@@ -37,7 +53,7 @@ class GatewayAfterpay extends AbstractGateway
     public function retrieveRedirectUrl(Request $request, $order)
     {
         $start = time();
-        $authorization = base64_encode(getenv('AFTERPAY_MID') . ':' . getenv('AFTERPAY_MKEY'));
+        $authorization = base64_encode(($_ENV['AFTERPAY_MID'] ?? false) . ':' . ($_ENV['AFTERPAY_MKEY'] ?? false));
         $query = [
             RequestOptions::JSON => [
                 "totalAmount" => [
@@ -75,7 +91,7 @@ class GatewayAfterpay extends AbstractGateway
                 "merchantReference" => $order->getTitle(),
             ],
             'headers' => [
-                "User-Agent" => "MyAfterpayModule/1.0.0 (Custom E-Commerce Platform/1.0.0; PHP/7.3; Merchant/" . getenv('AFTERPAY_MID') . ') ' . $request->getSchemeAndHttpHost(),
+                "User-Agent" => "MyAfterpayModule/1.0.0 (Custom E-Commerce Platform/1.0.0; PHP/7.3; Merchant/" . ($_ENV['AFTERPAY_MID'] ?? false) . ') ' . $request->getSchemeAndHttpHost(),
                 "Accept" => "application/json",
                 "Content-Type" => "application/json",
                 "Authorization" => "Basic " . $authorization
@@ -128,13 +144,13 @@ class GatewayAfterpay extends AbstractGateway
     public function finalise(Request $request, $order)
     {
         $start = time();
-        $authorization = base64_encode(getenv('AFTERPAY_MID') . ':' . getenv('AFTERPAY_MKEY'));
+        $authorization = base64_encode(($_ENV['AFTERPAY_MID'] ?? false) . ':' . ($_ENV['AFTERPAY_MKEY'] ?? false));
         $query = [
             RequestOptions::JSON => [
                 "token" => $order->getPayToken(),
             ],
             'headers' => [
-                "User-Agent" => "MyAfterpayModule/1.0.0 (Custom E-Commerce Platform/1.0.0; PHP/7.3; Merchant/" . getenv('AFTERPAY_MID') . ') ' . $request->getSchemeAndHttpHost(),
+                "User-Agent" => "MyAfterpayModule/1.0.0 (Custom E-Commerce Platform/1.0.0; PHP/7.3; Merchant/" . ($_ENV['AFTERPAY_MID'] ?? false) . ') ' . $request->getSchemeAndHttpHost(),
                 "Accept" => "application/json",
                 "Content-Type" => "application/json",
                 "Authorization" => "Basic " . $authorization
@@ -177,7 +193,7 @@ class GatewayAfterpay extends AbstractGateway
      */
     public function getInstalment()
     {
-        return 4;
+        return $this->info ? $this->info->getInstallments() : 4;
     }
 
     /**
@@ -185,7 +201,12 @@ class GatewayAfterpay extends AbstractGateway
      */
     public function getFrequency()
     {
-        return 'fortnightly';
+        return $this->info ? $this->info->getShortdescription() : 'fortnightly payments of';
+    }
+
+    public function getImage()
+    {
+        return $this->info ? $this->info->getImage() : null;
     }
 
     /**
@@ -194,7 +215,7 @@ class GatewayAfterpay extends AbstractGateway
     protected function getClient()
     {
         return new Client([
-            'base_uri' => getenv('AFTERPAY_ENDPOINT'),
+            'base_uri' => ($_ENV['AFTERPAY_ENDPOINT'] ?? false),
         ]);
     }
 }

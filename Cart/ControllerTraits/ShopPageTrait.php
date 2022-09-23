@@ -49,13 +49,12 @@ trait ShopPageTrait
 
     /**
      * @param Request $request
+     * @param null $category
      * @return array
-     * @throws RedirectException
      */
     protected function filterProductResult(Request $request, $category = null)
     {
-        $limit = 100;
-        $limit = min($request->get('limit') ?: 20, $limit);
+        $limit = ($_ENV['PRODUCT_LISTING_LIMIT'] ?? 21);
         $productCategorySlug = $category ?? $request->get('category');
         $productBrandSlug = $request->get('brand');
         $productKeyword = $request->get('keyword');
@@ -82,9 +81,51 @@ trait ShopPageTrait
         $productBrandFullClass = ModelService::fullClass($this->connection, 'ProductBrand');
         $productFullClass = ModelService::fullClass($this->connection, 'Product');
 
-        $brands = $productBrandFullClass::active($this->connection);
+        $allBrands = $productBrandFullClass::active($this->connection);
+        $brands = array_filter($allBrands, function ($itm) use ($limit, $productCategorySlug, $productKeyword, $pageNum, $sortby, $sort, $order, $allBrands) {
+            $result = $this->_filterProductResult($limit, $productCategorySlug, $itm->getSlug(), $productKeyword, $pageNum, $sortby, $sort, $order, $allBrands, true);
+            return $result['total']['count'] > 0 ? 1 : 0;
+        });
+
+        return array_merge($this->_filterProductResult($limit, $productCategorySlug, $productBrandSlug, $productKeyword, $pageNum, $sortby, $sort, $order, $brands), [
+            'brands' => $brands,
+        ]);
+    }
+
+    /**
+     * @param $limit
+     * @param $productCategorySlug
+     * @param $productBrandSlug
+     * @param $productKeyword
+     * @param $pageNum
+     * @param $sortby
+     * @param $sort
+     * @param $order
+     * @param $brands
+     * @return array
+     */
+    protected function _filterProductResult($limit, $productCategorySlug, $productBrandSlug, $productKeyword, $pageNum, $sortby, $sort, $order, $brands, $productCountOnly = false)
+    {
+        if ($sortby == 'price-high-to-low') {
+            $sort = 'CAST(m.price AS UNSIGNED)';
+            $order = 'DESC';
+        } elseif ($sortby == 'price-low-to-high') {
+            $sort = 'CAST(m.price AS UNSIGNED)';
+            $order = 'ASC';
+        } elseif ($sortby == 'newest') {
+            $sort = 'm.added';
+            $order = 'DESC';
+        } elseif ($sortby == 'oldest') {
+            $sort = 'm.added';
+            $order = 'ASC';
+        }
+
+        $productCategoryFullClass = ModelService::fullClass($this->connection, 'ProductCategory');
+        $productBrandFullClass = ModelService::fullClass($this->connection, 'ProductBrand');
+        $productFullClass = ModelService::fullClass($this->connection, 'Product');
+
         $categories = new \BlueM\Tree($productCategoryFullClass::active($this->connection, [
-            "select" => 'm.id AS id, m.parentId AS parent, m.title, m.slug, m.status',
+            "select" => 'm.id AS id, m.parentId AS parent, m.title, m.slug, m.status, m.image',
             "sort" => 'm.rank',
             "order" => 'ASC',
             "orm" => 0,
@@ -96,7 +137,13 @@ trait ShopPageTrait
         if ($selectedProductCategory) {
             $selectedProductCategory = $categories->getNodeById($selectedProductCategory->getId());
         }
-        $selectedProductBrand = $productBrandFullClass::getBySlug($this->connection, $productBrandSlug);
+
+        $selectedProductBrand = null;
+        foreach ($brands as $itm) {
+            if ($itm->getSlug() == $productBrandSlug) {
+                $selectedProductBrand = $itm;
+            }
+        }
 
         $whereSql = '';
         $params = [];
@@ -127,15 +174,18 @@ trait ShopPageTrait
             $params = array_merge($params, ['%' . $productKeyword . '%', '%' . $productKeyword . '%', '%' . $productKeyword . '%']);
         }
 
-        $products = $productFullClass::active($this->connection, [
-            'whereSql' => $whereSql,
-            'params' => $params,
-            'page' => $pageNum,
-            'limit' => $limit,
-            'sort' => $sort,
-            'order' => $order,
-            'debug' => 0,
-        ]);
+        $products = null;
+        if (!$productCountOnly) {
+            $products = $productFullClass::active($this->connection, [
+                'whereSql' => $whereSql,
+                'params' => $params,
+                'page' => $pageNum,
+                'limit' => $limit,
+                'sort' => $sort,
+                'order' => $order,
+                'debug' => 0,
+            ]);
+        }
 
         $total = $productFullClass::active($this->connection, [
             'whereSql' => $whereSql,
@@ -145,9 +195,12 @@ trait ShopPageTrait
 
         $pageTotal = ceil($total['count'] / $limit);
 
+        if ($pageNum > $pageTotal) {
+            throw new RedirectException('/shop');
+        }
+
         return [
             'orms' => $products,
-            'brands' => $brands,
             'categories' => $categories,
             'selectedProductCategory' => $selectedProductCategory,
             'selectedProductBrand' => $selectedProductBrand,
@@ -156,6 +209,7 @@ trait ShopPageTrait
             'pageTotal' => $pageTotal,
             'total' => $total,
             'sortby' => $sortby,
+            'limit' => $limit,
         ];
     }
 }

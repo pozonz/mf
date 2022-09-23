@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\ORM;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Db\Base;
 use MillenniumFalcon\Core\Service\ModelService;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -406,7 +407,10 @@ EOD;
             'Hidden' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\HiddenType',
             'MKVP' => '\\MillenniumFalcon\\Core\\Form\\Type\\MkvpType',
             'A/B test pages' => '\\MillenniumFalcon\\Core\\Form\\Type\\ABTestType',
+            'Choice enum' => '\\Symfony\\Component\\Form\\Extension\\Core\\Type\\EnumType',
+            'Choice enum multi json' => '\\MillenniumFalcon\\Core\\Form\\Type\\ChoiceEnumMultiJson',
         );
+
         global $CUSTOM_WIDGETS;
         if ($CUSTOM_WIDGETS) {
             $result = array_merge($result, $CUSTOM_WIDGETS);

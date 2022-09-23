@@ -17,6 +17,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GatewayHumm extends AbstractGateway
 {
+    protected $info;
+
+    /**
+     * PaymentInterface constructor.
+     * @param Connection $connection
+     */
+    public function __construct(Connection $connection, $cartService)
+    {
+        parent::__construct($connection, $cartService);
+
+        $fullClass = ModelService::fullClass($this->connection, 'PaymentInstallmentInfo');
+        if ($fullClass) {
+            $this->info = $fullClass::getActiveByTitle($this->connection, $this->getId());
+        }
+    }
+
     /**
      * @param Request $request
      * @return mixed
@@ -38,12 +54,12 @@ class GatewayHumm extends AbstractGateway
     {
         $start = time();
         $query = [
-            "x_account_id" => getenv('HUMM_ACCOUNT'),
+            "x_account_id" => ($_ENV['HUMM_ACCOUNT'] ?? false),
             "x_amount" => $order->getTotal(),
             "x_currency" => "NZD",
             "x_reference" => $order->getTitle(),
             "x_shop_country" => "NZ",
-            "x_shop_name" => getenv('HUMM_SHOP'),
+            "x_shop_name" => ($_ENV['HUMM_SHOP'] ?? false),
             "x_url_callback" => $request->getSchemeAndHttpHost() . '/checkout/finalise',
             "x_url_cancel" => $request->getSchemeAndHttpHost() . '/checkout/finalise',
             "x_url_complete" => $request->getSchemeAndHttpHost() . '/checkout/finalise',
@@ -113,7 +129,7 @@ class GatewayHumm extends AbstractGateway
      */
     public function getInstalment()
     {
-        return 5;
+        return $this->info ? $this->info->getInstallments() : 5;
     }
 
     /**
@@ -121,7 +137,12 @@ class GatewayHumm extends AbstractGateway
      */
     public function getFrequency()
     {
-        return 'fortnightly';
+        return $this->info ? $this->info->getShortdescription() : 'fortnightly payments of';
+    }
+
+    public function getImage()
+    {
+        return $this->info ? $this->info->getImage() : null;
     }
 
     /**
@@ -130,7 +151,7 @@ class GatewayHumm extends AbstractGateway
      */
     protected function humm_sign_without_key($query)
     {
-        return $this->humm_sign($query, getenv('HUMM_KEY'));
+        return $this->humm_sign($query, ($_ENV['HUMM_KEY'] ?? false));
     }
 
     /**

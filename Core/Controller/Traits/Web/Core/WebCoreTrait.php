@@ -38,6 +38,9 @@ trait WebCoreTrait
             if ($model->getSiteMapUrl()) {
                 $url = $model->getSiteMapUrl();
                 $fullClass = ModelService::fullClass($this->connection, $model->getClassName());
+                if (!$fullClass) {
+                    continue;
+                }
                 $fields = array_keys($fullClass::getFields());
                 $orms = $fullClass::active($this->connection);
                 foreach ($orms as $orm) {

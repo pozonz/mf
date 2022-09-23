@@ -327,6 +327,11 @@ class Order extends Base
     private $gatewaySentDate;
     
     /**
+     * #pz text COLLATE utf8mb4_unicode_ci DEFAULT NULL
+     */
+    private $totalSaving;
+    
+    /**
      * @return mixed
      */
     public function getTitle()
@@ -1348,6 +1353,22 @@ class Order extends Base
     public function setGatewaySentDate($gatewaySentDate)
     {
         $this->gatewaySentDate = $gatewaySentDate;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getTotalSaving()
+    {
+        return $this->totalSaving;
+    }
+    
+    /**
+     * @param mixed totalSaving
+     */
+    public function setTotalSaving($totalSaving)
+    {
+        $this->totalSaving = $totalSaving;
     }
     
 }

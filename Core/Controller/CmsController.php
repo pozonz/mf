@@ -21,9 +21,7 @@ use Symfony\Component\Security\Core\Security;
 
 class CmsController extends RouterController
 {
-    use
-        CmsCoreProductTrait,
-        
+    use CmsCoreProductTrait,
         CmsInstallTrait,
         CmsCoreLoginTrait,
         CmsCoreModelTrait,
@@ -33,23 +31,12 @@ class CmsController extends RouterController
         CmsCoreRestFileTrait,
         CmsCoreRestPageTrait,
         CmsCoreRestProductTrait,
-        CmsCoreTrait
-        ;
+        CmsCoreTrait;
 
-    /**
-     * @var Connection
-     */
-    protected $connection;
 
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
-     * @var Security
-     */
-    protected $security;
+    protected Connection $connection;
+    protected KernelInterface $kernel;
+    protected Security $security;
 
     /**
      * CmsController constructor.

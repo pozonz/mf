@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
@@ -23,39 +27,44 @@ class CartService
     public $STATUS_GATEWAY_SENT = 20;
     public $STATUS_ACCEPTED = 30;
     public $STATUS_DECLINED = 40;
+    public $STATUS_OFFLINE = 50;
 
     const SESSION_ID = '__order_container_id';
 
     /**
      * @var Connection
      */
-    protected $connection;
+    protected Connection $connection;
 
     /**
      * @var SessionInterface
      */
-    protected $session;
+    protected SessionInterface $session;
 
     /**
      * @var TokenStorageInterface
      */
-    protected $tokenStorage;
+    protected TokenStorageInterface $tokenStorage;
 
     /**
      * @var Environment
      */
-    protected $environment;
+    protected Environment $environment;
 
-    /**
-     * @var \Swift_Mailer
-     */
-    protected $mailer;
+    /** @var Mailer */
+    protected Mailer $mailer;
 
     /**
      * CartService constructor.
      * @param Connection $container
      */
-    public function __construct(Connection $connection, SessionInterface $session, TokenStorageInterface $tokenStorage, Environment $environment, \Swift_Mailer $mailer)
+    public function __construct(
+        Connection            $connection,
+        SessionInterface      $session,
+        TokenStorageInterface $tokenStorage,
+        Environment           $environment,
+        MailerInterface       $mailer
+    )
     {
         $this->connection = $connection;
         $this->session = $session;
@@ -155,7 +164,7 @@ class CartService
             $cart->setEmail($cart->getEmail() && filter_var($cart->getEmail(), FILTER_VALIDATE_EMAIL) ? $cart->getEmail() : $customer->getTitle());
         }
 
-        if (getenv('SHIPPING_PICKUP_ALLOWED') != 1) {
+        if (($_ENV['SHIPPING_PICKUP_ALLOWED'] ?? false) != 1) {
             $cart->setIsPickup(2);
         }
 
@@ -217,6 +226,7 @@ class CartService
         $weight = 0;
         $discount = 0;
         $afterDiscount = 0;
+        $totalSaving = 0;
 
         $cartItems = $cart->objOrderItems();
         foreach ($cartItems as $idx => $itm) {
@@ -231,9 +241,13 @@ class CartService
                 }
 
                 $weight += $cartItemWeight;
+                if ($itm->getCompareAtPrice()) {
+                    $totalSaving += ($itm->getCompareAtPrice() - $itm->getPrice()) * $itm->getQuantity();
+                }
             }
         }
         $cart->setOrderitems(null);
+        $cart->setTotalSaving($totalSaving);
 
         if ($cart->getDiscountType() == 1) {
             $discount = min($subtotal, $cart->getDiscountValue());
@@ -369,7 +383,7 @@ class CartService
             'params' => [$ormCountry->getId()],
         ]);
 
-        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+        if (($_ENV['SHIPPING_PRICE_MODE'] ?? false) == 1) {
             $region = $cart->getShippingState();
             $ormRegion = $fullClass::getByField($this->connection, 'title', $region);
             $data = array_filter($data, function ($itm) use ($ormRegion) {
@@ -385,7 +399,7 @@ class CartService
                 return 0;
             });
 
-        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+        } else if (($_ENV['SHIPPING_PRICE_MODE'] ?? false) == 2) {
             $postcode = $cart->getShippingPostcode();
 
             $data = array_filter($data, function ($itm) use ($postcode) {
@@ -433,11 +447,11 @@ class CartService
             return null;
         }
 
-        if ($deliveryOption->getCountry() !== $ormCountry->getId()) {
+        if ($deliveryOption->getCountry() != $ormCountry->getId()) {
             return null;
         }
 
-        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+        if (($_ENV['SHIPPING_PRICE_MODE'] ?? false) == 1) {
             $region = $cart->getShippingState();
             $ormRegion = $fullClass::getByField($this->connection, 'title', $region);
 
@@ -465,7 +479,7 @@ class CartService
                 }
             }
 
-        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+        } else if (($_ENV['SHIPPING_PRICE_MODE'] ?? false) == 2) {
             $postcode = $cart->getShippingPostcode();
 
             $objShippingCostRates = $deliveryOption->objShippingCostRates();
@@ -562,17 +576,22 @@ class CartService
      */
     public function sendEmailInvoice($order)
     {
-        $messageBody = $this->environment->render('/cart/email-invoice.twig', array(
-            'order' => $order,
-        ));
-        $message = (new \Swift_Message())
-            ->setSubject("Invoice {$order->getTitle()}")
-            ->setFrom(getenv('EMAIL_FROM'))
-            ->setTo([$order->getEmail()])
-            ->setBcc(array_filter(explode(',', getenv('EMAIL_BCC_ORDER'))))
-            ->setBody(
-                $messageBody, 'text/html'
+        $messageBody = $this->environment->render(
+            '/cart/email-invoice.twig',
+            [
+                'order' => $order,
+            ]
+        );
+
+        $message = (new Email());
+        $message->subject(($_ENV['EMAIL_ORDER_SUBJECT'] ?? 'Your order has been received') . " - #{$order->getTitle()}")
+            ->from(new Address(($_ENV['EMAIL_FROM'] ?? false), ($_ENV['EMAIL_FROM_NAME'] ?? false)))
+            ->to(...array_filter(array_map('trim', [$order->getEmail()])))
+            ->bcc(...array_filter(array_map('trim', explode(',', ($_ENV['EMAIL_BCC_ORDER'] ?? false)))))
+            ->html(
+                $messageBody, 'utf-8'
             );
+
         return $this->mailer->send($message);
     }
 
@@ -597,7 +616,7 @@ class CartService
     {
         $gatewayClasses = [];
 
-        $paymentMethods = explode(',', getenv('PAYMENT_METHODS'));
+        $paymentMethods = explode(',', ($_ENV['PAYMENT_METHODS'] ?? false));
         foreach ($paymentMethods as $paymentMethod) {
             $gatewayClasses[] = $this->getGatewayClass($paymentMethod);
         }
@@ -621,6 +640,29 @@ class CartService
             }
         }
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGatewayClassesInstallments()
+    {
+        $result = [];
+
+        $gatewayClasses = $this->getGatewayClasses();
+        $fullClass = ModelService::fullClass($this->connection, 'PaymentInstallmentInfo');
+        if ($fullClass) {
+            $data = $fullClass::active($this->connection);
+            foreach ($data as $itm) {
+                foreach ($gatewayClasses as $gatewayClass) {
+                    if ($itm->getTitle() == $gatewayClass->getId()) {
+                        $result[] = $gatewayClass;
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**

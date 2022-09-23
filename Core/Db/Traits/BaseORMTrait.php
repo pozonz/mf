@@ -28,7 +28,7 @@ trait BaseORMTrait
      */
     public function updateBuildInFile()
     {
-        if ($this->getIsBuiltIn() && !$this->getVersionId() && getenv('ALLOW_CHANGE_BUILTIN') == 1) {
+        if ($this->getIsBuiltIn() && !$this->getVersionId() && ($_ENV['ALLOW_CHANGE_BUILTIN'] ?? false) == 1) {
             $path = explode('\\', get_called_class());
             $className = array_pop($path);
 
@@ -73,7 +73,7 @@ trait BaseORMTrait
         $tableName = static::getTableName();
         $sql = "DELETE FROM `{$tableName}` WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute(array($this->getId()));
+        return $stmt->executeQuery(array($this->getId()));
     }
 
     /**
@@ -120,12 +120,13 @@ trait BaseORMTrait
                 $part1 .= "`$field`, ";
                 $part2 .= "?, ";
                 $method = 'get' . ucfirst($field);
-                $params[] = $this->$method();
+                $v = $this->$method();
+                $params[] = static::valueMap($this->$method());
             }
             $part1 = rtrim($part1, ', ') . ')';
             $part2 = rtrim($part2, ', ') . ')';
             $sql = $sql . $part1 . $part2;
-//            var_dump('<pre>', $sql, $params, '</pre>');exit;
+
         } else {
             $sql = "UPDATE `{$tableName}` SET ";
             foreach ($fields as $field) {
@@ -134,26 +135,19 @@ trait BaseORMTrait
                 }
                 $sql .= "`$field` = ?, ";
                 $method = 'get' . ucfirst($field);
-                $params[] = $this->$method();
+                $params[] = static::valueMap($this->$method());
             }
             $sql = rtrim($sql, ', ') . ' WHERE id = ?';
             $params[] = $this->id;
         }
 
-        try {
-//            var_dump($params, $sql);exit;
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute($params);
-            if (!$this->getId()) {
-                $this->setId($this->pdo->lastInsertId());
-            }
-            return $this->getId();
-        } catch (\Exception $ex) {
-            echo($ex->getMessage());
-            exit;
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->executeQuery($params);
+        if (!$this->getId()) {
+            $this->setId($this->pdo->lastInsertId());
         }
+        return $this->getId();
 
-        return null;
     }
 
     /**
@@ -232,8 +226,8 @@ trait BaseORMTrait
         }
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($options['params']);
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmtResult = $stmt->executeQuery($options['params']);
+        $result = $stmtResult->fetchAllAssociative();
 
         if ($options['orm']) {
             $orms = array();
@@ -262,21 +256,6 @@ trait BaseORMTrait
     }
 
     /**
-     * @param $pdo
-     * @param array $options
-     * @return array|null
-     */
-    static public function active($pdo, $options = array())
-    {
-        if (isset($options['whereSql'])) {
-            $options['whereSql'] .= ($options['whereSql'] ? ' AND ' : '') . 'm.status = 1';
-        } else {
-            $options['whereSql'] = 'm.status = 1';
-        }
-        return static::data($pdo, $options);
-    }
-
-    /**
      * @param Connection $pdo
      * @param $id
      * @return array|null
@@ -288,6 +267,16 @@ trait BaseORMTrait
             'params' => array($value),
             'oneOrNull' => 1,
         ));
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $title
+     * @return array|null
+     */
+    static public function getByTitle(Connection $pdo, $title)
+    {
+        return static::getByField($pdo, 'title', $title);
     }
 
     /**
@@ -312,6 +301,65 @@ trait BaseORMTrait
 
     /**
      * @param $pdo
+     * @param array $options
+     * @return array|null
+     */
+    static public function active($pdo, $options = array())
+    {
+        if (isset($options['whereSql'])) {
+            $options['whereSql'] .= ($options['whereSql'] ? ' AND ' : '') . 'm.status = 1';
+        } else {
+            $options['whereSql'] = 'm.status = 1';
+        }
+        return static::data($pdo, $options);
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $id
+     * @return array|null
+     */
+    static public function getActiveByField(Connection $pdo, $field, $value)
+    {
+        return static::active($pdo, array(
+            'whereSql' => "CAST(m.`$field` AS CHAR(255)) = ?",
+            'params' => array($value),
+            'oneOrNull' => 1,
+        ));
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $title
+     * @return array|null
+     */
+    static public function getActiveByTitle(Connection $pdo, $title)
+    {
+        return static::getActiveByField($pdo, 'title', $title);
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $id
+     * @return array|null
+     */
+    static public function getActiveById(Connection $pdo, $id)
+    {
+        return static::getActiveByField($pdo, 'id', $id);
+    }
+
+    /**
+     * @param Connection $pdo
+     * @param $slug
+     * @return array|null
+     */
+    static public function getActiveBySlug(Connection $pdo, $slug)
+    {
+        return static::getActiveByField($pdo, 'slug', $slug);
+    }
+
+    /**
+     * @param $pdo
      * @return array|null
      */
     static public function lastRank($pdo)
@@ -325,5 +373,15 @@ trait BaseORMTrait
             'orm' => 0,
         ));
         return $result['rank'] + 1;
+    }
+
+    protected static function valueMap(mixed $value): mixed
+    {
+        return match (true) {
+            $value instanceof \BackedEnum => $value->value,
+            $value instanceof \DateTimeInterface => $value->format("Y-m-d H:i:s"),
+            is_array($value), is_object($value) => json_encode($value),
+            default => $value
+        };
     }
 }

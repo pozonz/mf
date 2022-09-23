@@ -34,7 +34,8 @@ trait CartRestfulTrait
         }
         $params = $this->filterProductResult($request, $category);
         return new JsonResponse([
-            'html' => $this->environment->render('/cart/includes/product-results.twig', $params),
+            'productHtml' => $this->environment->render('/cart/includes/product-results.twig', $params),
+            'brandHtml' => $this->environment->render('/cart/includes/product-brands.twig', $params),
             'total' => $params['total'],
         ]);
     }
@@ -115,7 +116,7 @@ trait CartRestfulTrait
             if (!$variant->getStockEnabled() || $variant->getStock() >= $qty) {
                 /** @var OrderItem $cartItem */
                 $cartItem = new $cartItemFullClass($this->connection);
-                $cartItem->setTitle($product->getTitle() . ' - ' . $variant->getTitle());
+                $cartItem->setTitle($product->getTitle() . ($variant->getTitle() ? ' - ' . $variant->getTitle() : ''));
                 $cartItem->setProductName($product->getTitle());
                 $cartItem->setVariantName($variant->getTitle());
                 if ($product->objBrand()) {
@@ -132,7 +133,7 @@ trait CartRestfulTrait
                 $outOfStockMessage = str_replace('{{productName}}', $product->getTitle(), $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{variantName}}', $variant->getTitle(), $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{stock}}', $variant->getStock(), $outOfStockMessage);
-                $outOfStockMessage = str_replace('{{qty}}', $itm->getQuantity() + $qty, $outOfStockMessage);
+                $outOfStockMessage = str_replace('{{qty}}', $qty, $outOfStockMessage);
                 $outOfStockMessage = str_replace('{{extra}}', "", $outOfStockMessage);
             }
         }
@@ -210,6 +211,7 @@ trait CartRestfulTrait
 
         $cart = $this->cartService->getCart();
 
+        $cartItem = null;
         $cartItems = $cart->objOrderItems();
         foreach ($cartItems as $itm) {
             if ($itm->getId() == $id) {
@@ -236,6 +238,8 @@ trait CartRestfulTrait
                     $outOfStockMessage = str_replace('{{qty}}', $qty, $outOfStockMessage);
                     $outOfStockMessage = str_replace('{{extra}}', "", $outOfStockMessage);
                 }
+
+                $cartItem = $itm;
             }
         }
 
@@ -256,6 +260,9 @@ trait CartRestfulTrait
             ]),
             'cartSubtotalHtml' => $environment->render('/cart/includes/cart-subtotal.twig', [
                 'cart' => $cart,
+            ]),
+            'cartItemSubtotalHtml' => $environment->render('/cart/includes/cart-item-subtotal.twig', [
+                'itm' => $cartItem,
             ]),
         ]);
     }
@@ -280,6 +287,7 @@ trait CartRestfulTrait
         $cart = $this->cartService->getCart();
 
         return new JsonResponse([
+            'orderTotalFormatted' => number_format($cart->getTotal(), 2),
             'cart' => $cart,
             'checkoutSidebarSubtotalHtml' => $environment->render('/cart/includes/checkout-sidebar-subtotal.twig', [
                 'cart' => $cart,
@@ -372,6 +380,7 @@ trait CartRestfulTrait
         $regions = $this->cartService->getDeliverableRegions($cart);
         $deliveryOptions = $this->cartService->getDeliveryOptions($cart);
         return new JsonResponse([
+            'shippingPriceMode' => ($_ENV['SHIPPING_PRICE_MODE'] ?? 1),
             'cart' => $cart,
             'regions' => $regions,
             'deliveryOptions' => $deliveryOptions,

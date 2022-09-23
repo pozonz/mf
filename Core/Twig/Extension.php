@@ -5,6 +5,7 @@ namespace MillenniumFalcon\Core\Twig;
 use BlueM\Tree;
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\ORM\_Model;
+use MillenniumFalcon\Core\ORM\FragmentBlock;
 use MillenniumFalcon\Core\SymfonyKernel\RedirectException;
 
 use MillenniumFalcon\Core\Tree\RawData;
@@ -53,21 +54,12 @@ class Extension extends AbstractExtension
     public function getFunctions(): array
     {
         return array(
-            'getenv' => new TwigFunction('getenv', [$this, 'getenv']),
+            'getenv' => new TwigFunction('getenv', fn($arg) => $_ENV[$arg] ?? null),
             'redirect' => new TwigFunction('redirect', [$this, 'throwRedirectException']),
             'not_found' => new TwigFunction('not_found', [$this, 'throwNotFoundException']),
             'http_exception' => new TwigFunction('http_exception', [$this, 'throwHttpException']),
             'file_exists' => new TwigFunction('file_exists', [$this, 'file_exists']),
         );
-    }
-
-    /**
-     * @param $arg
-     * @return array|false|string
-     */
-    public function getenv($arg)
-    {
-        return getenv($arg);
     }
 
     /**
@@ -152,8 +144,14 @@ class Extension extends AbstractExtension
         if (!isset($block->status) || !$block->status || $block->status == 0) {
             return '';
         }
-        if (file_exists("{$this->kernel->getProjectDir()}/templates/fragments/{$block->twig}")) {
-            return $this->environment->render("fragments/{$block->twig}", array_merge($context, (array)$block->values));
+
+        /** @var FragmentBlock $blockOrig */
+        $blockOrig = FragmentBlock::getById($this->connection, $block->block);
+
+        if (file_exists("{$this->kernel->getProjectDir()}/templates/fragments/{$blockOrig->getTwig()}")) {
+            return $this->environment->render("fragments/{$blockOrig->getTwig()}", array_merge($context, (array)$block->values, [
+                '__block' => $block,
+            ]));
         }
         return '';
     }
@@ -189,6 +187,31 @@ class Extension extends AbstractExtension
         if (gettype($sections) == 'string') {
             $sections = json_decode($sections);
         }
+
+        foreach ($sections as $section) {
+            $result = [];
+            foreach ($section->blocks as $block) {
+                if ($block->twig == 'indexing-block-section-anchor.twig' || $block->twig == 'indexing-block-section-anchor-sublevel.twig') {
+                    if ($block->status == 1) {
+
+                        if ($block->twig == 'indexing-block-section-anchor.twig' && $block->values->headingOnly != 1) {
+
+                            $block->_idx = count($result) + 1;
+                            $block->_children = [];
+                            $result[] = $block;
+
+                        } elseif ($block->twig == 'indexing-block-section-anchor-sublevel.twig' && count($result) > 0) {
+
+                            $lastBlock = $result[count($result) - 1];
+                            $block->_idx = $lastBlock->_idx . '.' . (count($lastBlock->_children) + 1);
+                            $lastBlock->_children[] = $block;
+
+                        }
+                    }
+                }
+            }
+        }
+
 
         $html = '';
         foreach ($sections as $section) {

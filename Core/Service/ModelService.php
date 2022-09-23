@@ -21,6 +21,51 @@ class ModelService
      * @param $value
      * @return mixed
      */
+    public function getActiveByField($className, $field, $value)
+    {
+        return $this->active($className, array(
+            'whereSql' => "m.$field = ?",
+            'params' => array($value),
+            'oneOrNull' => 1,
+        ));
+    }
+
+    /**
+     * @param $className
+     * @param $id
+     * @return mixed
+     */
+    public function gettActiveById($className, $id)
+    {
+        return $this->getActiveByField($className, 'id', $id);
+    }
+
+    /**
+     * @param $className
+     * @param $slug
+     * @return mixed
+     */
+    public function gettActiveBySlug($className, $slug)
+    {
+        return $this->getActiveByField($className, 'slug', $slug);
+    }
+
+    /**
+     * @param $className
+     * @param $title
+     * @return mixed
+     */
+    public function getActiveByTitle($className, $title)
+    {
+        return $this->getActiveByField($className, 'title', $title);
+    }
+
+    /**
+     * @param $className
+     * @param $field
+     * @param $value
+     * @return mixed
+     */
     public function getByField($className, $field, $value)
     {
         return $this->data($className, array(
@@ -48,6 +93,16 @@ class ModelService
     public function getBySlug($className, $slug)
     {
         return $this->getByField($className, 'slug', $slug);
+    }
+
+    /**
+     * @param $className
+     * @param $title
+     * @return mixed
+     */
+    public function getByTitle($className, $title)
+    {
+        return $this->getByField($className, 'title', $title);
     }
 
     /**

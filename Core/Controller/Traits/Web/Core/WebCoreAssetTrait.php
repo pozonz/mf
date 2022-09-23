@@ -86,14 +86,14 @@ trait WebCoreAssetTrait
         $isImage = $asset->getIsImage();
         $fileType = strpos($fileType, 'image/svg') !== false ? 'image/svg+xml' : $fileType;
 
-        if ($fileType == 'image/svg+xml') {
+        if ($fileType === 'image/svg+xml') {
             $isImage = 1;
             $assetSizeCode = null;
         }
 
-        if ($fileType == 'application/pdf' && !$returnOriginalFile) {
-            $pdfRasterToken = getenv('PDF_RASTER_TOKEN');
-            $pdfRasterEndPoint = getenv('PDF_RASTER_ENDPOINT');
+        if ($fileType === 'application/pdf' && !$returnOriginalFile) {
+            $pdfRasterToken = ($_ENV['PDF_RASTER_TOKEN'] ?? false);
+            $pdfRasterEndPoint = ($_ENV['PDF_RASTER_ENDPOINT'] ?? false);
 
             if ($pdfRasterToken && $pdfRasterEndPoint) {
                 $url = $request->getSchemeAndHttpHost() . "/downloads/assets/{$assetCode}";
@@ -149,6 +149,10 @@ trait WebCoreAssetTrait
                 }
             }
             if ($assetSize) {
+                if ($assetSize->getConvertRate()) {
+                    $qualityCmd = "-quality {$assetSize->getConvertRate()}%";
+                }
+
                 if ($assetSize->getResizeBy() == 1) {
                     $resizeCmd = "-resize " . escapeshellarg("x" . ($assetSize->getWidth() * 1) . ">");
                 } else {
@@ -175,10 +179,10 @@ trait WebCoreAssetTrait
                 $cropCmd = "-crop " . escapeshellarg("{$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}");
             }
 
-            $command = getenv('CONVERT_CMD') . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
+            $command = ($_ENV['CONVERT_CMD'] ?? false) . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
         }
 
-        $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+        $SAVE_ASSETS_TO_DB = ($_ENV['SAVE_ASSETS_TO_DB'] ?? false);
         if ($SAVE_ASSETS_TO_DB && !file_exists($fileLocation)) {
             $assetBinaryFullClass = ModelService::fullClass($this->connection, 'AssetBinary');
             $assetBinary = $assetBinaryFullClass::getByField($this->connection, 'title', $asset->getId());
@@ -188,7 +192,8 @@ trait WebCoreAssetTrait
             file_put_contents($fileLocation, $assetBinary->getContent());
         }
 
-        if ($assetSizeCode && !$returnOriginalFile) {
+
+        if ($assetSizeCode && (!$returnOriginalFile || $assetSizeCode == 1)) {
             $returnValue = AssetService::generateOutput($command);
             if ($returnValue == 0 && file_exists($thumbnail)) {
                 $fileSize = filesize($thumbnail);
@@ -213,11 +218,15 @@ trait WebCoreAssetTrait
             unlink($fileLocation);
         }
 
-        if ($useWebp && $assetSizeCode && !$returnOriginalFile) {
-            $command = getenv('CWEBP_CMD') . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
-            $returnValue = AssetService::generateOutput($command);
+        if ($useWebp && $assetSizeCode && !$returnOriginalFile && $fileType != 'image/gif') {
+            $command = ($_ENV['CWEBP_CMD'] ?? false) . " $thumbnail -o $webpThumbnail";
+            if ($assetSize && $assetSize->getWebpConvertRate()) {
+                $command = ($_ENV['CWEBP_CMD'] ?? false) . " -q " . escapeshellarg($assetSize->getWebpConvertRate()) . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
+            }
 
-            $fileSize == filesize($webpThumbnail);
+            AssetService::generateOutput($command);
+
+            $fileSize = filesize($webpThumbnail);
             $fileType = 'image/webp';
 
             $webpThumbnailHeaderContent = [

@@ -24,24 +24,11 @@ class WebController extends RouterController
         CartPageTrait,
         CartRestfulTrait,
         WebCoreAssetTrait,
-        WebCoreTrait
+        WebCoreTrait;
 
-        ;
-
-    /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
-     * @var CartService
-     */
-    protected $cartService;
+    protected Connection $connection;
+    protected KernelInterface $kernel;
+    protected CartService $cartService;
 
     /**
      * WebController constructor.
