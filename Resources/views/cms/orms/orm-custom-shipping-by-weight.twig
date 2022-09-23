@@ -228,21 +228,21 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js" nonce="{{ nonce() }}"></script>
 
     {% if file_exists('/js/core/custom_widget.js') %}
-        <script src="/js/core/custom_widget.js"></script>
+        <script src="/js/core/custom_widget.js" nonce="{{ nonce() }}"></script>
     {% endif %}
 
-    <script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}"></script>
-    <script src="/cms/develop/js/orm.js?v={{ version }}"></script>
+    <script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}"  nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/js/orm.js?v={{ version }}" nonce="{{ nonce() }}"></script>
 
-    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.gallery-file.handlebars.js"></script>
+    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.gallery-file.handlebars.js" nonce="{{ nonce() }}"></script>
 
 
-    <script src="/cms/develop/templates/orm.fragment-section.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.fragment-block.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.fragment-modal-section.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.fragment-modal-block.handlebars.js"></script>
+    <script src="/cms/develop/templates/orm.fragment-section.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.fragment-block.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.fragment-modal-section.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.fragment-modal-block.handlebars.js" nonce="{{ nonce() }}"></script>
 
 
     {% if fragmentSubmitted %}
@@ -272,5 +272,5 @@
         {% endsha %}
     {% endif %}
 
-    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js"></script>
+    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js"  nonce="{{ nonce() }}"></script>
 {% endblock %}

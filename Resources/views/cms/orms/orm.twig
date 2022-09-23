@@ -17,7 +17,7 @@
 {% endif %}
 
 {% block externalHead %}
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"/>
 	<link rel="stylesheet" href="/cms/redactor/redactor.min.css" />
 {% endblock %}
 
@@ -214,12 +214,12 @@
 
 {% block externalFooter %}
 
-	<script src="/cms/redactor/redactor.js" language="javascript"></script>
-    <script src="/cms/redactor/_plugins/video/video.js" language="javascript"></script>
-    <script src="/cms/redactor/_plugins/table/table.js" language="javascript"></script>
-	<script src="/cms/redactor/_plugins/counter/counter.js" language="javascript"></script>
-	<script src="/cms/redactor/_plugins/alignment/alignment.js" language="javascript"></script>
-	<script src="/cms/redactor/_plugins/properties/properties.js" language="javascript"></script>
+	<script src="/cms/redactor/redactor.js" language="javascript"  nonce="{{ nonce() }}"></script>
+    <script src="/cms/redactor/_plugins/video/video.js" language="javascript" nonce="{{ nonce() }}"></script>
+    <script src="/cms/redactor/_plugins/table/table.js" language="javascript" nonce="{{ nonce() }}"></script>
+	<script src="/cms/redactor/_plugins/counter/counter.js" language="javascript" nonce="{{ nonce() }}"></script>
+	<script src="/cms/redactor/_plugins/alignment/alignment.js" language="javascript" nonce="{{ nonce() }}"></script>
+	<script src="/cms/redactor/_plugins/properties/properties.js" language="javascript" nonce="{{ nonce() }}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" nonce="{{ nonce() }}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js" nonce="{{ nonce() }}"></script>
@@ -229,21 +229,21 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js" nonce="{{ nonce() }}"></script>
 
 	{% if file_exists('/js/core/custom_widget.js') %}
-		<script src="/js/core/custom_widget.js"></script>
+		<script src="/js/core/custom_widget.js" nonce="{{ nonce() }}"></script>
 	{% endif %}
 
-	<script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}"></script>
-	<script src="/cms/develop/js/orm.js?v={{ version }}"></script>
+	<script src="/cms/develop/js/orm.redactor.module.image.js?v={{ version }}" nonce="{{ nonce() }}"></script>
+	<script src="/cms/develop/js/orm.js?v={{ version }}"  nonce="{{ nonce() }}"></script>
 
-    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.gallery-file.handlebars.js"></script>
+    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.gallery-file.handlebars.js" nonce="{{ nonce() }}"></script>
 
 
-    <script src="/cms/develop/templates/orm.fragment-section.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.fragment-block.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.fragment-modal-section.handlebars.js"></script>
-    <script src="/cms/develop/templates/orm.fragment-modal-block.handlebars.js"></script>
+    <script src="/cms/develop/templates/orm.fragment-section.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.fragment-block.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.fragment-sidebar.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.fragment-modal-section.handlebars.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/templates/orm.fragment-modal-block.handlebars.js" nonce="{{ nonce() }}"></script>
 
 
     {% if fragmentSubmitted %}
