@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 trait CmsCoreRestProductTrait
 {
     /**
-     * @route("/manage/rest/product-variants")
+     * @route("/manage/rest/product-variants", methods={"GET"})
      * @return Response
      */
     public function cmsProductVariants()
