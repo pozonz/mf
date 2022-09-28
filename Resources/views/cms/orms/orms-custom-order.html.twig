@@ -73,6 +73,7 @@
 {% endblock %}
 
 {% block externalFooter %}
+    {% sha %}
     <script>
         (function() {
             $(document).on('click', '.js-payment-received', function() {
@@ -90,4 +91,5 @@
             });
         })();
     </script>
+    {% endsha %}
 {% endblock %}

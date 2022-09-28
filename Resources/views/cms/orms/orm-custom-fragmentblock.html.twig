@@ -41,11 +41,11 @@
 
 {% block externalFooter %}
 	{{ parent() }}
-	<script src="/cms/develop/templates/orm-custom-fragmentblock.tr.handlebars.js"></script>
+	<script src="/cms/develop/templates/orm-custom-fragmentblock.tr.handlebars.js" nonce="{{ nonce() }}"></script>
     {% sha %}
 	<script>
 		window._blockWidgets = {{ utils.blockWidgets|json_encode|raw }};
 	</script>
     {% endsha %}
-	<script src="/cms/develop/js/orm-fragmentblock.js"></script>
+	<script src="/cms/develop/js/orm-fragmentblock.js" nonce="{{ nonce() }}"></script>
 {% endblock %}

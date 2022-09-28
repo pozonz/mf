@@ -19,6 +19,6 @@
 {% block externalFooter %}
     {{ parent() }}
 
-    <script src="/cms/develop/js/jquery.nestable.js?v={{ version }}"></script>
-    <script src="/cms/develop/js/orms-tree.js"></script>
+    <script src="/cms/develop/js/jquery.nestable.js?v={{ version }}" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/js/orms-tree.js" nonce="{{ nonce() }}"></script>
 {% endblock %}
