@@ -10,11 +10,11 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer></script>
-    <script src="{{ asset('build/checkout-payment.js') }}?v={{ timeStamp }}" defer></script>
+    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer nonce="{{ nonce() }}"></script>
+    <script src="{{ asset('build/checkout-payment.js') }}?v={{ timeStamp }}" defer nonce="{{ nonce() }}"></script>
 
     {% if order.category == cartService.STATUS_GATEWAY_SENT and order.payType == 'Afterpay' and order.payToken %}
-        <script src="{{ getenv('AFTERPAY_JS') }}" async></script>
+        <script src="{{ getenv('AFTERPAY_JS') }}" async nonce="{{ nonce() }}"></script>
     {% endif %}
 {% endblock %}
 
@@ -108,11 +108,13 @@
 
 {% block extraJs %}
     {% if order.category == cartService.STATUS_GATEWAY_SENT and order.payType == 'Afterpay' and order.payToken %}
-        <script nonce="{{ nonce() }}">
+        {% sha %}
+        <script>
             window.onload = function() {
                 AfterPay.initialize({countryCode: "NZ"});
                 AfterPay.redirect({token: "{{ order.payToken }}"});
             };
         </script>
+        {% endsha %}
     {% endif %}
 {% endblock %}

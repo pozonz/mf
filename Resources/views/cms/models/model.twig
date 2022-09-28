@@ -125,7 +125,7 @@
 
 
 {% block externalFooter %}
-    <script src="/cms/develop/templates/model.tr.handlebars.js"></script>
+    <script src="/cms/develop/templates/model.tr.handlebars.js" nonce="{{ nonce() }}"></script>
     {% sha %}
     <script>
         window._columns = JSON.parse('{{ form.columnsJson.vars.value|e('js') ?: '[]' }}');
@@ -136,5 +136,5 @@
     </script>
     {% endsha %}
 
-    <script src="/cms/develop/js/model.js?v={{ version }}"></script>
+    <script src="/cms/develop/js/model.js?v={{ version }}" nonce="{{ nonce() }}"></script>
 {% endblock %}

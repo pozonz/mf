@@ -4,11 +4,13 @@
 {% form_theme formView '/cart/form.twig' %}
 
 {% block js %}
-    <script nonce="{{ nonce() }}">
+    {% sha %}
+    <script>
         window._shippingCostMode = '{{ getenv('SHIPPING_PRICE_MODE') ?: 1 }}';
     </script>
-    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer></script>
-    <script src="{{ asset('build/checkout.js') }}?v={{ timeStamp }}" defer></script>
+    {% endsha %}
+    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer nonce="{{ nonce() }}"></script>
+    <script src="{{ asset('build/checkout.js') }}?v={{ timeStamp }}" defer nonce="{{ nonce() }}"></script>
 {% endblock %}
 
 {#- -----------------------------------------------------------------------------------

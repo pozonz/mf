@@ -8,8 +8,8 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer></script>
-    <script src="{{ asset('build/products.js') }}?v={{ timeStamp }}" defer></script>
+    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer nonce="{{ nonce() }}"></script>
+    <script src="{{ asset('build/products.js') }}?v={{ timeStamp }}" defer nonce="{{ nonce() }}"></script>
 {% endblock %}
 
 {% block main %}

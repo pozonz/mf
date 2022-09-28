@@ -5,7 +5,7 @@
     {{ parent() }}
     <div id="product-vairant" class="modal fade" aria-hidden="true" role="dialog" tabindex="-1" style="display: none;"></div>
 
-    <script src="/cms/develop/templates/orm-custom-productvariant.tr.handlebars.js" ></script>
+    <script src="/cms/develop/templates/orm-custom-productvariant.tr.handlebars.js" nonce="{{ nonce() }}" ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js" nonce="{{ nonce() }}"></script>
-    <script src="/cms/develop/js/orm-product.js?v={{ version }}"></script>
+    <script src="/cms/develop/js/orm-product.js?v={{ version }}" nonce="{{ nonce() }}"></script>
 {% endblock %}
