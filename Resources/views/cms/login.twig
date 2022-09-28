@@ -37,13 +37,15 @@
                         {% if app.session.get('login_annoy') %}
                             <li>
                                 <div class="recaptcha"></div>
-                                <script nonce="{{ nonce() }}">
+                                {% sha %}
+                                <script>
                                     window.recaptchaInit = () => {
                                         grecaptcha.render(document.querySelector('.recaptcha'), {
                                             'sitekey' : '{{ getenv('RECAPTCHA_SITE_KEY') }}'
                                         });
                                     }
                                 </script>
+                                {% endsha %}
                                 <script nonce="{{ nonce() }}" src='https://www.google.com/recaptcha/api.js?onload=recaptchaInit&render=explicit'></script>
                             </li>
                         {% endif %}

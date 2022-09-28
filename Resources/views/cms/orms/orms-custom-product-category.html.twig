@@ -26,6 +26,6 @@
     {{ parent() }}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Nestable/2012-10-15/jquery.nestable.min.js" nonce="{{ nonce() }}"></script>
-    <script src="/cms/develop/js/orms-tree.js"></script>
-    <script src="/cms/develop/js/orms-product-category.js"></script>
+    <script src="/cms/develop/js/orms-tree.js" nonce="{{ nonce() }}"></script>
+    <script src="/cms/develop/js/orms-product-category.js" nonce="{{ nonce() }}"></script>
 {% endblock %}

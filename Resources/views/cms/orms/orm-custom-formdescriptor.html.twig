@@ -4,7 +4,7 @@
 
 {% block asset %}
     {#<link rel="stylesheet" href="{{ asset('build/cms-orm-formbuilder.css') }}" as="style" rel="preload">#}
-    {#<script src="{{ asset('build/cms-orm-formbuilder.js') }}" async defer></script>#}
+    {#<script src="{{ asset('build/cms-orm-formbuilder.js') }}" async defer nonce="{{ nonce() }}" nonce="{{ nonce() }}"></script>#}
 {% endblock %}
 
 {% block extraHead %}
@@ -57,12 +57,12 @@
 
 {% block externalFooter %}
     {{ parent() }}
-    <script src="/cms/develop/templates/orm-custom-formdescriptor.tr.handlebars.js"></script>
+    <script src="/cms/develop/templates/orm-custom-formdescriptor.tr.handlebars.js" nonce="{{ nonce() }}"></script>
     {% sha %}
     <script>
         window._formWidgets = {{ utils.formWidgets()|json_encode|raw }};
     </script>
     {% endsha %}
-    <script src="/cms/develop/js/orm-formdescriptor.js?v=4"></script>
+    <script src="/cms/develop/js/orm-formdescriptor.js?v=4" nonce="{{ nonce() }}"></script>
 {% endblock %}
 

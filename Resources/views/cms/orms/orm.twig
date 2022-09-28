@@ -247,10 +247,12 @@
 
 
     {% if fragmentSubmitted %}
-		<script nonce="{{ nonce() }}">
+        {% sha %}
+		<script>
 			$(function () {
                 parent.$.fancybox.close();
             });
 		</script>
+        {% endsha %}
     {% endif %}
 {% endblock %}

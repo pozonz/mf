@@ -87,5 +87,5 @@
 
 {% block externalFooter %}
 	{{ parent() }}
-	<script src="/cms/develop/js/asset.js"></script>
+	<script src="/cms/develop/js/asset.js" nonce="{{ nonce() }}"></script>
 {% endblock %}
