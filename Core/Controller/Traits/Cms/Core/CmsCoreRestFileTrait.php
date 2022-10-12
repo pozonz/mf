@@ -455,14 +455,14 @@ trait CmsCoreRestFileTrait
             }
 
             if ($assetSize) {
-                $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
-                $result = $fullClass::data($this->connection, [
-                    'whereSql' => 'm.assetId = ? AND assetSizeId = ?',
-                    'params' => [$asset->getId(), 'All sizes'],
-                ]);
-                foreach ($result as $itm) {
-                    $itm->delete();
-                }
+//                $fullClass = ModelService::fullClass($this->connection, 'AssetCrop');
+//                $result = $fullClass::data($this->connection, [
+//                    'whereSql' => 'm.assetId = ? AND assetSizeId = ?',
+//                    'params' => [$asset->getId(), 'All sizes'],
+//                ]);
+//                foreach ($result as $itm) {
+//                    $itm->delete();
+//                }
 
                 AssetService::removeCache($asset, $assetSize);
             } else {
