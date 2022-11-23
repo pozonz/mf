@@ -155,9 +155,13 @@ class OrmForm extends AbstractType
                     $model     = $orm->getModel();
                     $fullClass = ModelService::fullClass($pdo, $model->getClassName());
                     $fields    = array_keys($fullClass::getFields());
+
                     foreach ($fields as $itm) {
                         $getMethod   = "get" . ucfirst($itm);
-                        $column->sql = str_replace("{{{$itm}}}", "'{$orm->$getMethod()}'", $column->sql);
+                        $value = $orm->$getMethod();
+                        if(is_scalar($value)) {
+                            $column->sql = str_replace("{{{$itm}}}", "'{$value}'", $column->sql);
+                        }
                     }
                 }
 
