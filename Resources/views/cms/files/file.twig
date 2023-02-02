@@ -44,7 +44,7 @@
 
 			<div class="buttons">
 				{#<input style="display: none;" type="file" class="cms_form_file" id="cms_form_content" name="content" onchange="handleFiles(this.files);">#}
-				<button class="button" onclick="$('#orm_file').click(); return false;">Replace file ›</button>
+				<button id="replace-file" class="button" type="button">Replace file ›</button>
 			</div>
 
 			<div class="visuallyhidden">
@@ -86,5 +86,5 @@
 
 {% block externalFooter %}
 	{{ parent() }}
-	<script src="/cms/develop/js/asset.js" nonce="{{ nonce() }}"></script>
+	<script src="/cms/develop/js/asset.js?v={{ version }}" nonce="{{ nonce() }}"></script>
 {% endblock %}
