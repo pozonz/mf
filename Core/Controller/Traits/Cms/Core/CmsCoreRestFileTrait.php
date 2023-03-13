@@ -496,6 +496,8 @@ trait CmsCoreRestFileTrait
             $orm->save(true);
         }
 
+        $asset->save();
+        
         return new Response('OK');
     }
 
