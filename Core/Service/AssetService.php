@@ -171,6 +171,7 @@ class AssetService
             'video/x-msvideo',
             'video/mp4',
             'video/mpeg',
+            'image/svg+xml',
         ];
 
         if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
