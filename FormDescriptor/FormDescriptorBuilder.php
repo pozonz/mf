@@ -154,11 +154,10 @@ class FormDescriptorBuilder extends AbstractType
             }
 
             $pdo = $this->connection;
-            $stmt = $pdo->executeQuery($field->sql);
-            $stmt->execute();
+            $result = $pdo->executeQuery($field->sql);
             $choices = [];
-            foreach ($stmt->fetchAll() as $key => $val) {
-                $choices[$val['value']] = $val['key'];
+            foreach ($result->fetchAll() as $key => $val) {
+                 $choices[$val['value']] = $val['key'];
             }
             return $choices;
         } else {
