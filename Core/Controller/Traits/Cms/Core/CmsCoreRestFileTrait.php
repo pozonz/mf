@@ -109,7 +109,7 @@ trait CmsCoreRestFileTrait
             $result = $fullClass::data($this->connection, array(
                 'whereSql' => 'm.modelName = ? AND m.attributeName = ? AND ormId = ?',
                 'params' => array($modelName, $attributeName, $ormId),
-                'sort' => 'm.myRank',
+                'sort' => 'CAST(m.myRank AS UNSIGNED)',
             ));
 
             foreach ($result as $itm) {
@@ -497,7 +497,7 @@ trait CmsCoreRestFileTrait
         }
 
         $asset->save();
-        
+
         return new Response('OK');
     }
 
