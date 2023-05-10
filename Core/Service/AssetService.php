@@ -176,8 +176,8 @@ class AssetService
             'video/x-msvideo',
             'video/mp4',
             'video/mpeg',
+            'application/zip',
         ];
-
 
         if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
             throw new \Exception('Mime type now allowed.');
