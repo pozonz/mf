@@ -121,6 +121,13 @@ class FormDescriptorBuilder extends AbstractType
                 $options['empty_data'] = null;
                 $options['placeholder'] = false;
                 break;
+            case '\\MillenniumFalcon\\FormDescriptor\\Type\\MultipleDropdownType':
+                $options['choices'] = $this->getChoicesForField($field);
+                $options['multiple'] = true;
+                $options['expanded'] = false;
+                $options['empty_data'] = [];
+                $options['placeholder'] = 'Choose...';
+                break;
             case 'repeated':
                 $options['type'] = 'password';
                 $options['invalid_message'] = 'The password fields must match.';
