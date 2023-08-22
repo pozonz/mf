@@ -28,7 +28,7 @@ trait BaseORMTrait
      */
     public function updateBuildInFile()
     {
-        if ($this->getIsBuiltIn() && !$this->getVersionId() && getenv('ALLOW_CHANGE_BUILTIN') == 1) {
+        if ($this->getIsBuiltIn() && !$this->getVersionId() && $_ENV['ALLOW_CHANGE_BUILTIN'] == 1) {
             $path = explode('\\', get_called_class());
             $className = array_pop($path);
 

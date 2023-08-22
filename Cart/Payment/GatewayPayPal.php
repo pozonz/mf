@@ -191,10 +191,10 @@ class GatewayPayPal extends AbstractGateway
      */
     private function getClient()
     {
-        if (getenv('PAYPAL_CLIENT_TEST') == 1) {
-            $env = new SandboxEnvironment(getenv('PAYPAL_CLIENT_ID'), getenv('PAYPAL_CLIENT_SECRET'));
+        if ($_ENV['PAYPAL_CLIENT_TEST'] == 1) {
+            $env = new SandboxEnvironment($_ENV['PAYPAL_CLIENT_ID'] ?? null, $_ENV['PAYPAL_CLIENT_SECRET'] ?? null);
         } else {
-            $env = new ProductionEnvironment(getenv('PAYPAL_CLIENT_ID'), getenv('PAYPAL_CLIENT_SECRET'));
+            $env = new ProductionEnvironment($_ENV['PAYPAL_CLIENT_ID'] ?? null, $_ENV['PAYPAL_CLIENT_SECRET'] ?? null);
         }
         return new PayPalHttpClient($env);
     }

@@ -187,7 +187,7 @@ class CheckoutShippingForm extends AbstractType
                 ]
             ]);
 
-        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+        if ($_ENV['SHIPPING_PRICE_MODE'] == 1) {
             $builder
                 ->add('shippingState', TextType::class, [
                     'label' => 'Region',
@@ -216,7 +216,7 @@ class CheckoutShippingForm extends AbstractType
                         ]),
                     ]
                 ]);
-        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+        } else if ($_ENV['SHIPPING_PRICE_MODE'] == 2) {
             $builder
                 ->add('shippingCountry', ChoiceType::class, [
                     'label' => 'Country',

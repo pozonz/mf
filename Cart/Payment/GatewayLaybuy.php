@@ -179,10 +179,10 @@ class GatewayLaybuy extends AbstractGateway
     private function getClient()
     {
         return new Client([
-            'base_uri' => getenv('LAYBUY_ENDPOINT'),
+            'base_uri' => $_ENV['LAYBUY_ENDPOINT'] ?? null,
             'auth' => [
-                getenv('LAYBUY_USERNAME'),
-                getenv('LAYBUY_KEY')
+                $_ENV['LAYBUY_USERNAME'] ?? null,
+                $_ENV['LAYBUY_KEY'] ?? null
             ]
         ]);
     }

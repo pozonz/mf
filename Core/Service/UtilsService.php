@@ -358,9 +358,9 @@ class UtilsService
      */
     static public function ip_info(Request $request)
     {
-        $ip = getenv('TEST_CLIENT_IP') ?: $request->getClientIp();
-        if (getenv('GEOIP_DB_PATH')) {
-            $geoDbPath = getenv('GEOIP_DB_PATH');
+        $ip = $_ENV['TEST_CLIENT_IP'] ?: $request->getClientIp();
+        if ($_ENV['GEOIP_DB_PATH']) {
+            $geoDbPath = $_ENV['GEOIP_DB_PATH'] ?? null;
             if (file_exists($geoDbPath)) {
                 $geoipReader = new Reader($geoDbPath);
                 try {

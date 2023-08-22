@@ -170,7 +170,7 @@ class FormDescriptorService
                     }
 
                     $result[] = [
-                        $field->label, $value, $field->widget
+                        $field->label, strip_tags($value), $field->widget
                     ];
                 }
 
@@ -181,7 +181,7 @@ class FormDescriptorService
                     /**
                     if (!$countryInfo) {
                         $request = Request::createFromGlobals();
-                        $countryInfo = UtilsService::ip_info(getenv('TEST_CLIENT_IP') ?: $request->getClientIp());
+                        $countryInfo = UtilsService::ip_info($_ENV['TEST_CLIENT_IP'] ?: $request->getClientIp());
                         $countryInfo = $countryInfo ?: [];
                         $this->session->set(static::COUNTRY_SESSION_KEY, $countryInfo);
                     }
@@ -216,7 +216,7 @@ class FormDescriptorService
                         ->setSubject("{$formDescriptor->getTitle()} {$submission->getTitle()}")
                         ->setFrom(array($formDescriptor->getFromAddress()))
                         ->setTo(array_filter(array_map('trim', explode(',', $formDescriptor->getRecipients()))))
-                        ->setBcc(array(getenv('EMAIL_BCC')))
+                        ->setBcc(array($_ENV['EMAIL_BCC'] ?? null))
                         ->setBody(
                             $messageBody, 'text/html'
                         );

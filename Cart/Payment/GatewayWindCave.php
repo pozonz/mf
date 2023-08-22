@@ -52,8 +52,8 @@ class GatewayWindCave extends AbstractGateway
         }
 
         $this->params = array_merge($this->params, [
-            'PxPayUserId' => getenv('PX_ACCESS_USERID'),
-            'PxPayKey' => getenv('PX_ACCESS_KEY'),
+            'PxPayUserId' => $_ENV['PX_ACCESS_USERID'] ?? null,
+            'PxPayKey' => $_ENV['PX_ACCESS_KEY'] ?? null,
             'Response' => $token,
         ]);
         $xmlRequest = $this->toGatewayXmlRequest('<ProcessResponse/>');
@@ -119,8 +119,8 @@ class GatewayWindCave extends AbstractGateway
         $start = time();
 
         $this->params = array_merge($this->params, [
-            'PxPayUserId' => getenv('PX_ACCESS_USERID'),
-            'PxPayKey' => getenv('PX_ACCESS_KEY'),
+            'PxPayUserId' => $_ENV['PX_ACCESS_USERID'] ?? null,
+            'PxPayKey' => $_ENV['PX_ACCESS_KEY'] ?? null,
             'UrlFail' => $request->getSchemeAndHttpHost() . '/checkout/finalise',
             'UrlSuccess' => $request->getSchemeAndHttpHost() . '/checkout/finalise',
             'AmountInput' => number_format($order->getTotal(), 2),
@@ -189,7 +189,7 @@ class GatewayWindCave extends AbstractGateway
     private function getClient()
     {
         return new Client([
-            'base_uri' => getenv('PX_ACCESS_URL')
+            'base_uri' => $_ENV['PX_ACCESS_URL'] ?? null
         ]);
     }
 

@@ -38,12 +38,12 @@ class GatewayHumm extends AbstractGateway
     {
         $start = time();
         $query = [
-            "x_account_id" => getenv('HUMM_ACCOUNT'),
+            "x_account_id" => $_ENV['HUMM_ACCOUNT'] ?? null,
             "x_amount" => $order->getTotal(),
             "x_currency" => "NZD",
             "x_reference" => $order->getTitle(),
             "x_shop_country" => "NZ",
-            "x_shop_name" => getenv('HUMM_SHOP'),
+            "x_shop_name" => $_ENV['HUMM_SHOP'] ?? null,
             "x_url_callback" => $request->getSchemeAndHttpHost() . '/checkout/finalise',
             "x_url_cancel" => $request->getSchemeAndHttpHost() . '/checkout/finalise',
             "x_url_complete" => $request->getSchemeAndHttpHost() . '/checkout/finalise',
@@ -130,7 +130,7 @@ class GatewayHumm extends AbstractGateway
      */
     protected function humm_sign_without_key($query)
     {
-        return $this->humm_sign($query, getenv('HUMM_KEY'));
+        return $this->humm_sign($query, $_ENV['HUMM_KEY'] ?? null);
     }
 
     /**

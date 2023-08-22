@@ -37,7 +37,7 @@ class GatewayAfterpay extends AbstractGateway
     public function retrieveRedirectUrl(Request $request, $order)
     {
         $start = time();
-        $authorization = base64_encode(getenv('AFTERPAY_MID') . ':' . getenv('AFTERPAY_MKEY'));
+        $authorization = base64_encode($_ENV['AFTERPAY_MID'] ?? null . ':' . $_ENV['AFTERPAY_MKEY'] ?? null);
         $query = [
             RequestOptions::JSON => [
                 "totalAmount" => [
@@ -75,7 +75,7 @@ class GatewayAfterpay extends AbstractGateway
                 "merchantReference" => $order->getTitle(),
             ],
             'headers' => [
-                "User-Agent" => "MyAfterpayModule/1.0.0 (Custom E-Commerce Platform/1.0.0; PHP/7.3; Merchant/" . getenv('AFTERPAY_MID') . ') ' . $request->getSchemeAndHttpHost(),
+                "User-Agent" => "MyAfterpayModule/1.0.0 (Custom E-Commerce Platform/1.0.0; PHP/7.3; Merchant/" . $_ENV['AFTERPAY_MID'] ?? null . ') ' . $request->getSchemeAndHttpHost(),
                 "Accept" => "application/json",
                 "Content-Type" => "application/json",
                 "Authorization" => "Basic " . $authorization
@@ -128,13 +128,13 @@ class GatewayAfterpay extends AbstractGateway
     public function finalise(Request $request, $order)
     {
         $start = time();
-        $authorization = base64_encode(getenv('AFTERPAY_MID') . ':' . getenv('AFTERPAY_MKEY'));
+        $authorization = base64_encode($_ENV['AFTERPAY_MID'] ?? null . ':' . $_ENV['AFTERPAY_MKEY'] ?? null);
         $query = [
             RequestOptions::JSON => [
                 "token" => $order->getPayToken(),
             ],
             'headers' => [
-                "User-Agent" => "MyAfterpayModule/1.0.0 (Custom E-Commerce Platform/1.0.0; PHP/7.3; Merchant/" . getenv('AFTERPAY_MID') . ') ' . $request->getSchemeAndHttpHost(),
+                "User-Agent" => "MyAfterpayModule/1.0.0 (Custom E-Commerce Platform/1.0.0; PHP/7.3; Merchant/" . $_ENV['AFTERPAY_MID'] ?? null . ') ' . $request->getSchemeAndHttpHost(),
                 "Accept" => "application/json",
                 "Content-Type" => "application/json",
                 "Authorization" => "Basic " . $authorization
@@ -194,7 +194,7 @@ class GatewayAfterpay extends AbstractGateway
     protected function getClient()
     {
         return new Client([
-            'base_uri' => getenv('AFTERPAY_ENDPOINT'),
+            'base_uri' => $_ENV['AFTERPAY_ENDPOINT'] ?? null,
         ]);
     }
 }
