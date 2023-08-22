@@ -155,7 +155,7 @@ class CartService
             $cart->setEmail($cart->getEmail() && filter_var($cart->getEmail(), FILTER_VALIDATE_EMAIL) ? $cart->getEmail() : $customer->getTitle());
         }
 
-        if (getenv('SHIPPING_PICKUP_ALLOWED') != 1) {
+        if ($_ENV['SHIPPING_PICKUP_ALLOWED'] != 1) {
             $cart->setIsPickup(2);
         }
 
@@ -369,7 +369,7 @@ class CartService
             'params' => [$ormCountry->getId()],
         ]);
 
-        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+        if ($_ENV['SHIPPING_PRICE_MODE'] == 1) {
             $region = $cart->getShippingState();
             $ormRegion = $fullClass::getByField($this->connection, 'title', $region);
             $data = array_filter($data, function ($itm) use ($ormRegion) {
@@ -385,7 +385,7 @@ class CartService
                 return 0;
             });
 
-        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+        } else if ($_ENV['SHIPPING_PRICE_MODE'] == 2) {
             $postcode = $cart->getShippingPostcode();
 
             $data = array_filter($data, function ($itm) use ($postcode) {
@@ -437,7 +437,7 @@ class CartService
             return null;
         }
 
-        if (getenv('SHIPPING_PRICE_MODE') == 1) {
+        if ($_ENV['SHIPPING_PRICE_MODE'] == 1) {
             $region = $cart->getShippingState();
             $ormRegion = $fullClass::getByField($this->connection, 'title', $region);
 
@@ -465,7 +465,7 @@ class CartService
                 }
             }
 
-        } else if (getenv('SHIPPING_PRICE_MODE') == 2) {
+        } else if ($_ENV['SHIPPING_PRICE_MODE'] == 2) {
             $postcode = $cart->getShippingPostcode();
 
             $objShippingCostRates = $deliveryOption->objShippingCostRates();
@@ -567,9 +567,9 @@ class CartService
         ));
         $message = (new \Swift_Message())
             ->setSubject("Invoice {$order->getTitle()}")
-            ->setFrom(getenv('EMAIL_FROM'))
+            ->setFrom($_ENV['EMAIL_FROM'] ?? null)
             ->setTo([$order->getEmail()])
-            ->setBcc(array_filter(explode(',', getenv('EMAIL_BCC_ORDER'))))
+            ->setBcc(array_filter(explode(',', $_ENV['EMAIL_BCC_ORDER'] ?? null)))
             ->setBody(
                 $messageBody, 'text/html'
             );
@@ -597,7 +597,7 @@ class CartService
     {
         $gatewayClasses = [];
 
-        $paymentMethods = explode(',', getenv('PAYMENT_METHODS'));
+        $paymentMethods = explode(',', $_ENV['PAYMENT_METHODS'] ?? null);
         foreach ($paymentMethods as $paymentMethod) {
             $gatewayClasses[] = $this->getGatewayClass($paymentMethod);
         }

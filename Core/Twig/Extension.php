@@ -67,7 +67,7 @@ class Extension extends AbstractExtension
      */
     public function getenv($arg)
     {
-        return getenv($arg);
+        return $_ENV[$arg] ?? null;
     }
 
     /**

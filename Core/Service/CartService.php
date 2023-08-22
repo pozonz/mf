@@ -173,7 +173,7 @@ class CartService
     {
         $gatewayClasses = [];
 
-        $paymentMethods = explode(',', getenv('PAYMENT_METHODS'));
+        $paymentMethods = explode(',', $_ENV['PAYMENT_METHODS'] ?? null);
         foreach ($paymentMethods as $paymentMethod) {
             $gatewayClasses[] = $this->getGatewayClass($paymentMethod);
         }
@@ -308,7 +308,7 @@ class CartService
      */
     static public function getProductClassName()
     {
-        return getenv('PRODUCT_CLASSNAME') ?: 'Product';
+        return $_ENV['PRODUCT_CLASSNAME'] ?: 'Product';
     }
 
     /**
@@ -316,6 +316,6 @@ class CartService
      */
     static public function getProductVariantClassName()
     {
-        return getenv('PRODUCT_VARIANT_CLASSNAME') ?: 'ProductVariant';
+        return $_ENV['PRODUCT_VARIANT_CLASSNAME'] ?: 'ProductVariant';
     }
 }

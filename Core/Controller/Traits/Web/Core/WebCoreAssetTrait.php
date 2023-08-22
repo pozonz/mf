@@ -92,8 +92,8 @@ trait WebCoreAssetTrait
         }
 
         if ($fileType == 'application/pdf' && !$returnOriginalFile) {
-            $pdfRasterToken = getenv('PDF_RASTER_TOKEN');
-            $pdfRasterEndPoint = getenv('PDF_RASTER_ENDPOINT');
+            $pdfRasterToken = $_ENV['PDF_RASTER_TOKEN'] ?? null;
+            $pdfRasterEndPoint = $_ENV['PDF_RASTER_ENDPOINT'] ?? null;
 
             if ($pdfRasterToken && $pdfRasterEndPoint) {
                 $url = $request->getSchemeAndHttpHost() . "/downloads/assets/{$assetCode}";
@@ -175,10 +175,10 @@ trait WebCoreAssetTrait
                 $cropCmd = "-crop " . escapeshellarg("{$assetCrop->getWidth()}x{$assetCrop->getHeight()}+{$assetCrop->getX()}+{$assetCrop->getY()}");
             }
 
-            $command = getenv('CONVERT_CMD') . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
+            $command = $_ENV['CONVERT_CMD'] ?? null . " " . escapeshellarg($fileLocation) . " {$qualityCmd} {$cropCmd} {$resizeCmd} {$colorCmd} -strip " . escapeshellarg($thumbnail);
         }
 
-        $SAVE_ASSETS_TO_DB = getenv('SAVE_ASSETS_TO_DB');
+        $SAVE_ASSETS_TO_DB = $_ENV['SAVE_ASSETS_TO_DB'] ?? null;
         if ($SAVE_ASSETS_TO_DB && !file_exists($fileLocation)) {
             $assetBinaryFullClass = ModelService::fullClass($this->connection, 'AssetBinary');
             $assetBinary = $assetBinaryFullClass::getByField($this->connection, 'title', $asset->getId());
@@ -214,7 +214,7 @@ trait WebCoreAssetTrait
         }
 
         if ($useWebp && $assetSizeCode && !$returnOriginalFile) {
-            $command = getenv('CWEBP_CMD') . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
+            $command = $_ENV['CWEBP_CMD'] ?? null . " " . escapeshellarg($thumbnail) . " -o " . escapeshellarg($webpThumbnail);
             $returnValue = AssetService::generateOutput($command);
 
             $fileSize == filesize($webpThumbnail);

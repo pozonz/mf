@@ -27,7 +27,7 @@ trait CmsInstallTrait
     ];
 
     /**
-     * @Route("/install/model/sync")
+     * @Route("/manage/install/model/sync")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function sync()
@@ -45,7 +45,7 @@ trait CmsInstallTrait
     }
 
     /**
-     * @Route("/install/model/extra/zones")
+     * @Route("/manage/install/model/extra/zones")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function extraZones()
@@ -90,7 +90,7 @@ trait CmsInstallTrait
     }
 
     /**
-     * @Route("/install/model/data/files")
+     * @Route("/manage/install/model/data/files")
      * @return JsonResponse
      */
     public function updateInitDataFiles()
@@ -262,12 +262,15 @@ trait CmsInstallTrait
      */
     protected function tableExists($tableName)
     {
-        $results = $this->connection->query("SHOW TABLES LIKE '$tableName'");
-        if (!$results) {
-            return false;
-        }
-        if ($results->rowCount() > 0) {
+        $query = "SHOW TABLES LIKE :tableName";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':tableName', $tableName, \PDO::PARAM_STR);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
             return true;
+        } else {
+            return false;
         }
     }
 }
