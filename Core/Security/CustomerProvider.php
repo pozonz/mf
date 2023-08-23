@@ -3,13 +3,15 @@
 namespace MillenniumFalcon\Core\Security;
 
 use Doctrine\DBAL\Connection;
+use MillenniumFalcon\Core\ORM\Customer;
 use MillenniumFalcon\Core\Service\ModelService;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
-class CustomerProvider implements UserProviderInterface
+class CustomerProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     public function __construct(Connection $conn)
     {
@@ -54,4 +56,15 @@ class CustomerProvider implements UserProviderInterface
 
         return $user;
     }
+
+    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    {
+        if (!$user instanceof Customer) {
+            throw new UnsupportedUserException();
+        }
+
+        $user->setPassword($newHashedPassword);
+        $user->save();
+    }
+
 }
