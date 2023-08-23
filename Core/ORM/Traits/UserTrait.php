@@ -4,6 +4,7 @@ namespace MillenniumFalcon\Core\ORM\Traits;
 
 use Doctrine\DBAL\Connection;
 use MillenniumFalcon\Core\Service\ModelService;
+use Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -24,9 +25,11 @@ trait UserTrait
     public function save($doNotSaveVersion = false, $options = [])
     {
         if ($this->getPasswordInput()) {
-            $encoder = new MessageDigestPasswordEncoder();
-            $this->setPassword($encoder->encodePassword($this->getPasswordInput(), ''));
+            $encoder = new NativePasswordHasher();
+
+            $this->setPassword($encoder->hash($this->getPasswordInput()));
             $this->setPasswordInput(null);
+
         }
         return parent::save($doNotSaveVersion, $options);
     }
