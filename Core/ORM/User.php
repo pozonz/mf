@@ -31,13 +31,16 @@ class User extends \MillenniumFalcon\Core\ORM\Generated\User implements UserInte
         parent::setPasswordInput($passwordInput);
     }
 
-    public function incrementFailedLogins(?\DateTimeInterface $time = null): void
+    public function incrementFailedLogins(?\DateTimeInterface $time = null): int
     {
-        $this->setFailedLoginCount(($this->getFailedLoginCount() ?? 0) + 1);
+        $count = ($this->getFailedLoginCount() ?? 0) + 1;
+        $this->setFailedLoginCount($count);
         $this->setLastFailedLogin(
             date('Y-m-d H:i:s')
         );
         $this->save();
+         
+        return $count;
     }
 
     public function clearLoginAttempts(): void
