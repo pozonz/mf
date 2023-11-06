@@ -51,7 +51,7 @@ trait AssetTrait
                         'Accept' => 'application/json',
                     ]
                 ];
-                $url = "/service/" . $_ENV['FASTLY_SERVICE_ID'] ?? null . "/purge/asset" . $this->getId();
+                $url = "/service/" . ($_ENV['FASTLY_SERVICE_ID'] ?? null) . "/purge/asset" . $this->getId();
 
                 $client = new Client($clientParams);
                 $response = $client->request('POST', $url);
@@ -139,7 +139,7 @@ trait AssetTrait
             return 'B';
         }
     }
-    
+
     /**
      * @return mixed
      */
