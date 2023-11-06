@@ -235,7 +235,7 @@ class AssetService
         $fnlFile = $uploadedDir . $orm->getId() . '.' . $ext;
 
         if ($orm->getIsImage() == 1) {
-            $command = $_ENV['CONVERT_CMD'] ?? null . ' ' . escapeshellarg($chkFile) . ' -auto-orient ' . escapeshellarg($fnlFile);
+            $command = ($_ENV['CONVERT_CMD'] ?? null) . ' ' . escapeshellarg($chkFile) . ' -auto-orient ' . escapeshellarg($fnlFile);
             static::generateOutput($command);
         } else {
             copy($chkFile, $fnlFile);
