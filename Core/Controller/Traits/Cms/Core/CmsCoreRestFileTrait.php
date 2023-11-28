@@ -225,7 +225,7 @@ trait CmsCoreRestFileTrait
         } else {
             $path = $orm->getFolderPath();
         }
-        
+
         $this->container->get('session')->set('currentFolderId', $currentFolderId);
         return new JsonResponse([
             'currentFolder' => end($path),
@@ -367,6 +367,8 @@ trait CmsCoreRestFileTrait
      */
     public function assetAjaxUpload(Request $request)
     {
+        ini_set('memory_limit', '512M');
+
         $file = $files = $request->files->get('file');
         if ($file) {
             return AssetService::processUploadedFile($this->connection, $file);

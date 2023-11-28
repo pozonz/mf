@@ -41,6 +41,8 @@ trait CmsCoreOrmTrait
      */
     public function asset(Request $request, $ormId)
     {
+        ini_set('memory_limit', '512M');
+
         $className = 'Asset';
 
         $orm = $this->_orm($request, $className, $ormId);
