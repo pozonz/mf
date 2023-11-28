@@ -173,6 +173,7 @@ class AssetService
             'video/mpeg',
             'image/svg+xml',
             'image/svg',
+            'application/zip',
         ];
 
         if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
