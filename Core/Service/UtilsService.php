@@ -60,13 +60,16 @@ class UtilsService
 
                         $item->sql = str_replace($matches[0], "FROM $tablename", $item->sql);
                     }
+
                     if ($item->sql) {
                         $stmt = $pdo->prepare($item->sql);
                         $stmtResult= $stmt->executeQuery();
                         foreach ($stmtResult->fetchAllAssociative() as $key => $val) {
-                            $choices[] = $val['key'] . "-" . $val['value'];
+                            //$choices[] = $val['key'] . "-" . $val['value'];
+                            $choices[] = [$val['key'], $val['value']];
                         }
                     }
+
                 } else if (($item->widget == 12 || $item->widget == 13) && isset($item->sql)) {
                     preg_match('/\bfrom\b\s*(\w+)/i', $item->sql, $matches);
                     if (count($matches) == 2) {
