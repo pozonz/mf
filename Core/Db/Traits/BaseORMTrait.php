@@ -220,10 +220,10 @@ trait BaseORMTrait
         if ($options['sort']) {
             $sql .= " ORDER BY {$options['sort']} {$options['order']}";
         }
-        
+
         if ($options['limit'] && $options['page']) {
             $limit = (int) $options['limit'];
-            $page = max(0,  ((int)$options['page'] - 1) * $options['limit']);
+            $page = max(0,  ((int)$options['page'] - 1) * $limit);
             $sql .= " LIMIT {$page}, {$limit}";
         }
 
