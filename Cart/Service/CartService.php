@@ -3,6 +3,8 @@
 namespace MillenniumFalcon\Cart\Service;
 
 use Doctrine\DBAL\Connection;
+use Google\Service\Monitoring\Custom;
+use MillenniumFalcon\Core\ORM\Customer;
 use MillenniumFalcon\Core\Service\ModelService;
 use MillenniumFalcon\Core\Service\UtilsService;
 use Ramsey\Uuid\Uuid;
@@ -67,12 +69,12 @@ class CartService
     /**
      * @return string|\Stringable|\Symfony\Component\Security\Core\User\UserInterface|null
      */
-    public function getCustomer()
+    public function getCustomer(): ?Customer
     {
         $token = $this->tokenStorage->getToken();
         if ($token) {
             $customer = $token->getUser();
-            if (gettype($customer) == 'object') {
+            if ($customer instanceof Customer) {
                 return $customer;
             }
         }
