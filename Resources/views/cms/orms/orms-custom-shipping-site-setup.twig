@@ -1,0 +1,46 @@
+{% extends 'cms/orms/orms-pagination.twig' %}
+
+{% set setup = {
+    1: 'Flat cost',
+    2: 'Cost by weight',
+    3: 'Cost by total price'
+} %}
+
+{% block ormModelTitle %}
+    <h1 style="margin-bottom: 0">{{ ormModel.title }}</h1>
+    <p>You have chosen the shipping method below</p>
+    <div>&nbsp;</div>
+{% endblock %}
+{% block ormModelAdd %}{% endblock %}
+{% block totalItemsFound %}{% endblock %}
+
+{% block tableHead %}
+    <tbody>
+        <tr>
+            <td class="tableHead" width="100px">Modified</td>
+            <td class="tableHead">Title</td>
+            <td class="tableHead" width="100px">Added</td>
+            <td class="tableHead" width="120px" align="right">Action</td>
+        </tr>
+    </tbody>
+{% endblock %}
+
+{% block tableRow %}
+    <tr id="{{ itm.id }}" class="js-orm-info">
+        <td>{{ itm.modified|date('d M y') }}</td>
+        <td title="{{ itm.title }}">
+            {{ itm.title ? setup[itm.title] : 'Please setup...' }}
+        </td>
+        <td>{{ itm.added|date('d M y') }}</td>
+        <td class="iconCell" align="right">
+            <a href="#" class="js-orm-status" data-status="{{ itm.status }}"><img src="/cms/images/dot{{ itm.status ? 'Green' : 'Red' }}.gif" alt="" border="0"></a>
+            <a href="{{ theNode.url }}/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/editIcon.gif" alt="Edit Record" title="Edit Record" border="0"></a>
+            <a href="{{ theNode.url }}/copy/{{ itm.id }}?returnUrl={{ app.request.uri|url_encode }}"><img src="/cms/images/cloneIcon.gif" alt="Copy Record" title="Copy Record" border="0"></a>
+            <a href="#" class="js-orm-delete"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block extraColumns %}class="js-sort-column"{% endblock %}
+{% block dataPagination %}{% endblock %}
+

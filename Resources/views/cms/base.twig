@@ -1,0 +1,221 @@
+{% set isFragment = app.request.get('fragment') == 1 ? 1 : 0 %}
+{% set version = 10 %}
+
+{% macro sideNavItem(node, depth, current) %}
+    {% if node.status == 1 %}
+        {% if node.url %}
+            <li {% if treeUtils.contains(node, current) %}class="selected"{% endif %}>
+                <a href="{{ node.url }}">
+                    {{ node.title }}
+                    {% if treeUtils.hasActiveChildren(node) %}
+                        <button data-target="{{ node.id }}" class="toggle-icon {% if treeUtils.contains(node, current) %}selected{% endif %}">&nbsp;</button>
+                    {% endif %}
+                </a>
+                {% if treeUtils.hasActiveChildren(node) %}
+                    <ul data-source="{{ node.id }}" class="subcategory sub-{{ depth }}" {% if treeUtils.contains(node, current) %}style="display: block;"{% endif %}>
+                        {% for itm in node.children %}
+                            {{ _self.sideNavItem(itm, depth + 1, current) }}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% else %}
+            </ul>
+            <strong class="menuHeading">{{ node.title }}</strong>
+            <ul class="verticalMenu">
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="author" content="Gravitate - www.gravitate.co.nz">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE"/>
+    <meta http-equiv="EXPIRES" content="Mon, 22 Jul 2002 11:12:01 GMT"/>
+    <meta http-equiv="PRAGMA" content="NO-CACHE"/>
+    <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+
+    <title>CMS</title>
+
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/css/jquery.Jcrop.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/themes/default/style.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    {#<link href="/cms/css/cms.css" rel="stylesheet" type="text/css" media="screen"/>#}
+    <link href="/cms/css/dropzone.css?v={{ version }}" rel="stylesheet" type="text/css"/>
+    <link href="/cms/css/originate.form.builder.css?v={{ version }}" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/cms/css/styles.css?v={{ version }}" rel="stylesheet" type="text/css"/>
+
+    <link href="/cms/develop/styles.css?v={{ version }}" rel="stylesheet" type="text/css"/>
+
+    {% if file_exists('/css/cms.css') %}
+        <link href="/css/cms.css" rel="stylesheet" type="text/css"/>
+    {% endif %}
+    {% block externalHead %}{% endblock %}
+</head>
+
+
+<body {% block extraBody %}{% endblock %} class="{% if theDataGroup is defined and treeUtils.hasActiveChildren(theDataGroup) %}has-sidebar{% else %}has-no-sidebar{% endif %} {% if isFragment %}fragment-base{% endif %} {% block extraBodyClass %}{% endblock %}">
+<div class="">
+    {% block bodyContainer %}
+        <!--[if lt IE 10]>
+        <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+        <![endif]-->
+
+        <div class="header" id="headContainer">
+            <div id="head" style="{% if file_exists('/images/head.jpg') %}background: url('/images/head.jpg') no-repeat #000;{% else %}background: #000;{% endif %}">
+                <a class="logo" href="/" target="_blank" title="View my site &rsaquo;"></a>
+            </div>
+        </div>
+
+
+        <div id="menuContainer">
+            <div id="menuTop">
+                <ul class="menuTop">
+                    {#<li><a href="#">Home</a></li>#}
+                    {#<li><a href="#">Contact</a></li>#}
+                    <li><a href="/manage/current-user">My account</a></li>
+                    {#<li><a href="#">Help</a></li>#}
+                    <li><a href="/manage/logout">Logout</a></li>
+                </ul>
+
+                <ul id="viewModes" class="icon">
+                    {% for itm in rootNodes %}
+                        {% if itm.status == 1 %}
+                            <li id="{{ itm.icon }}" {% if treeUtils.contains(itm, theNode) %}class="selected"{% endif %}>
+                                <a href="{{ itm.url }}"> <span>{{ itm.title }}</span> </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div id="contentContainer">
+            <div id="maincontent">
+                {% if app.request.pathInfo == '/manage/current-user' %}
+                    <div id="verticalMenu">
+                        <div id="cms_sidebarIndex">
+                            <ul class="verticalMenu">
+                                <li class="menuHeading">My account</li>
+                                <li class="selected">
+                                    <a href="/manage/current-user">
+                                        Profile
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if treeUtils.hasActiveChildren(theDataGroup) %}
+                    <div id="verticalMenu">
+                        <div id="cms_sidebarIndex">
+                            {% for child in theDataGroup.children %}
+                                {% if loop.first and child.url %}<ul class="verticalMenu">{% endif %}
+                                {{ _self.sideNavItem(child, 1, theNode) }}
+                                {% if loop.last %}</div>{% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% endif %}
+
+                <div id="bodyContent" {% if not treeUtils.hasActiveChildren(theDataGroup) and app.request.pathInfo != '/manage/current-user' %}style="padding-left: 9em !important;"{% endif %}>
+                    {% block container %}
+                        <div id="h1">
+                            <h1>CMS</h1>
+                        </div>
+                        <p>The CMS allows you to update content on your website.</p>
+                        <p>Use the menu to the left to navigate to the correct page or record. Where appropriate, navigation links to sub-pages will open out when you click on a menu item.</p>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/js/jquery.Jcrop.min.js"></script>
+        {#<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.8.7/jquery.timepicker.min.js" language="javascript"></script>#}
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+        <script src="/cms/develop/js/handlebar-helpers.js?v=6"></script>
+
+        <script id="loading" type="text/x-handlebars-template">{% include 'cms/files/handlebar/loading.twig' %}</script>
+        <script id="folder" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-folders.twig' %}</script>
+        <script id="file" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-file.twig' %}</script>
+        <script id="files" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-files.twig' %}</script>
+        <script id="nav" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-nav.twig' %}</script>
+        <script id="file-progress" type="text/x-handlebars-template">{% include 'cms/files/handlebar/fm-file-progress.twig' %}</script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/jstree.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.30.0/js/jquery.fileupload.min.js"></script>
+        <script src="/cms/develop/js/fc.js"></script>
+        <script src="/cms/develop/js/fm.js"></script>
+        <script src="/cms/develop/js/main.js"></script>
+
+        <script id="crop-image" type="text/x-handlebars-template">{% include 'cms/handlebar/base.crop-image.twig' %}</script>
+        <script id="crop-image-redactor" type="text/x-handlebars-template">{% include 'cms/handlebar/base.crop-image-redactor.twig' %}</script>
+        <script id="crop-image-redactor-img-with-figure" type="text/x-handlebars-template">{% include 'cms/handlebar/base.crop-image-redactor-img-with-figure.twig' %}</script>
+
+        <script>
+            $(function () {
+                window._imageSizes = [];
+                {% set AssetSizes = model.active('AssetSize', {
+                    whereSql: 'showInCrop = 1'
+                }) %}
+                {% for itm in AssetSizes %}
+                window._imageSizes.push({
+                    id: '{{ itm.id }}',
+                    title: '{{ itm.title }}',
+                    code: '{{ itm.code }}',
+                })
+                {% endfor %}
+            });
+
+            function callbackAfterDeleteFolder() {
+                fm.filesPageNum = 1;
+
+                fm.selectFolder($(this).data('parent'));
+                fm.getFolders();
+                fm.getNav();
+                fm.getFiles();
+            };
+
+            function callbackAfterDeleteFile() {
+                for (var idx in fm.files) {
+                    var itm = fm.files[idx];
+                    if (itm.id == $(this).data('id')) {
+                        fm.files.splice(idx, 1)
+                    }
+                }
+                fm.renderFiles();
+            };
+        </script>
+        <div id="crop-image-modal" style="display: none;"></div>
+
+        {% block externalFooter %}{% endblock %}
+    {% endblock %}
+</div>
+
+<input id="var_wysiwyg_no_image_video_buttons" value="{{ getenv('WYSIWYG_NO_IMAGE_VIDEO_BUTTONS') }}" type="hidden">
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% if totalPages is defined and pageNum is defined and url is defined and totalPages > 1 %}
+    {% set all = 13 %}
+    {% set half = (all - 1) / 2 %}
+    {% if totalPages > pageNum + half %}
+        {% set start = max(pageNum - half, 1) %}
+        {% set end = min(start + all - 1, totalPages) %}
+    {% else %}
+        {% set end = totalPages %}
+        {% set start = max(totalPages - all + 1, 1) %}
+    {% endif %}
+
+    <ul class="nav pagination" style="border-top: none;">
+{#        <li class="prev"><a href="?navigationNodeToView=5&amp;fileNo=1&amp;formid=-31&amp;sort=rank&amp;order=ASC&amp;pageNum=1&amp;query=null" data-page="1"></a></li>#}
+        {% for i in start..end %}
+            <li class="{{ pageNum == i ? 'selected' : '' }}"><a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ i }}">{{ i }}</a></li>
+        {% endfor %}
+        <li class="next {{ pageNum == totalPages ? 'disabled' : '' }}"><a href="{{ url }}{{ '?' in url ? '&' : '?' }}pageNum={{ pageNum + 1 }}"></a></li>
+    </ul>
+{% endif %}

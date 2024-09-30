@@ -1,0 +1,4 @@
+{% set asset = model.byId('Asset', [value]) %}
+{% if asset %}
+    <img src="/images/assets/{{asset.code}}/medium" />
+{% endif %}

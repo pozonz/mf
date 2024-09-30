@@ -1,0 +1,28 @@
+{% extends 'cms/form.twig' %}
+
+{% block _orm_shippingCostRates_row %}
+    {% apply spaceless %}
+        <div class="formStyle {{ block_prefixes[block_prefixes|length - 2] }} type34 shipping-cost-rates">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% endapply %}
+{% endblock %}
+
+{% block _orm_shippingCostRates_label %}
+{% endblock _orm_shippingCostRates_label %}
+
+{% block _orm_shippingCostRates_widget %}
+    <textarea {{ block('widget_attributes') }} style="display: none;">{{ value }}</textarea>
+
+    <h2 class="section-title section-first">
+        <span class="js-title">Rates</span>
+    </h2>
+    <div class="section-toolbar">
+        <a href="#" class="js-add-rate section-edit section-edit-button" title="Edit section"><img src="/cms/images/add-plus.png"></a>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="js-rates">
+    </div>
+{% endblock _orm_shippingCostRates_widget %}

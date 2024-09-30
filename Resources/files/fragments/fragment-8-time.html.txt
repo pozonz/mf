@@ -1,0 +1,1 @@
+<div>{{[value]|date('H:i')}}</div>

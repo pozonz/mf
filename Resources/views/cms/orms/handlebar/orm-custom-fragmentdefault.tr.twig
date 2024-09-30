@@ -1,0 +1,25 @@
+{% verbatim %}
+    <tbody class="js-row" data-idx="{{idx}}">
+        <tr>
+            <td class="col-md-3">
+                <input type="text" class="form-control js-cbi-item js-cbi-id" value="{{data.id}}" />
+            </td>
+            <td class="col-md-5">
+                <input type="text" class="form-control js-cbi-item js-cbi-title" value="{{data.title}}" />
+            </td>
+            <td class="col-md-5">
+                <select class="form-control js-cbi-item js-cbi-tags" multiple>
+                    {{#each tags}}
+                        <option {{#ifHasIt ../data.tags id}}selected{{/ifHasIt}} value="{{id}}">{{title}}</option>
+                  {{/each}}
+                </select>
+            </td>
+            <td class="col-md-1">
+                <a href="#" class="js-remove"><img alt="Delete Record" title="Delete Record" src="/cms/images/binIcon.gif" border="0"></a>
+            </td>
+        </tr>
+        <tr id="js-sql" style="{{#compare 9 data.widget operator='!='}}{{#compare 10 data.widget operator='!='}}display: none;{{/compare}}{{/compare}}">
+            <td colspan="3"><textarea class="form-control js-cbi-item js-cbi-sql" placeholder="SQL statement">{{ data.sql }}</textarea></td>
+        </tr>
+    </tbody>
+{% endverbatim %}

@@ -1,0 +1,3 @@
+globals:
+    model: '@MillenniumFalcon\Core\Service\ModelService'
+    utils: '@MillenniumFalcon\Core\Service\UtilsService'

@@ -1,0 +1,61 @@
+{% block _cart_shipping_isPickup_row %}
+    {% apply spaceless %}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    {% endapply %}
+{% endblock %}
+
+{%- block choice_widget_expanded -%}
+    <ul class="checkout-data-rows">
+        {%- for child in form %}
+            <li class="checkout-data-row js-tab" data-href="#option-{{ child.vars.id }}">
+                {{- form_widget(child, {attr: {class: 'checkout-data-row__input'}}) -}}
+                {{- form_label(child, null, {translation_domain: choice_translation_domain, label_attr: {class: 'checkout-data-row__inner checkout-data-row__label'}}) -}}
+            </li>
+        {% endfor -%}
+    </ul>
+{%- endblock choice_widget_expanded -%}
+
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <ul class="validationErrors">
+            {% for error in errors %}
+                <li class="formValidationError">{{ error.message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock form_errors %}
+
+{%- block _cart_shipping_shippingId_widget -%}
+    <div class="js-shipping-methods"></div>
+
+    {%- set type = type|default('hidden') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock _cart_shipping_shippingId_widget -%}
+
+{%- block _cart_shipping_shippingState_widget -%}
+    <select class="checkout-select js-shipping-regions"></select>
+
+    {%- set type = type|default('hidden') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock _cart_shipping_shippingState_widget -%}
+
+{%- block _cart_shipping_shippingAddress_widget -%}
+    <div class="js-shipping-address-autocomplete-container"></div>
+
+    {%- set type = type|default('hidden') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock _cart_shipping_shippingAddress_widget -%}
+

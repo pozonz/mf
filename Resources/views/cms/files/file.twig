@@ -1,0 +1,90 @@
+{% extends 'cms/orms/orm.twig' %}
+
+{% block extraBodyClass %}page-orm mode-asset{% endblock %}
+
+{% set path = orm.folderPath %}
+
+{% block heading %}
+	<div class="asset-edit-single">
+		<div id="h1">
+			<h1>
+				Assets - {{ orm.title }}
+				<span class="formStyle id type14 doccode">URL Code: <strong name="documentcode" class="cms_form_textlabel">{{ orm.code }}</strong></span>
+				<div class="asset-path">
+					Path:
+					{% for itm in path %}
+						{% if not loop.last %}
+							<a href="/manage/files?currentFolderId={{ itm.id }}">{{ itm.title }}</a> /
+						{% else %}
+							{{ itm.title }}
+						{% endif %}
+					{% endfor %}
+				</div>
+			</h1>
+		</div>
+	</div>
+{% endblock %}
+
+{% block formWidgets %}
+	{% form_theme form 'cms/form-file.twig' %}
+
+	<div class="asset-edit-single">
+		<div class="asset-record-fields">
+			{{ form_row(form.title) }}
+			{{ form_row(form.code) }}
+            {{ form_row(form.alt) }}
+            {{ form_row(form.description) }}
+			{{ form_row(form.url) }}
+		</div>
+
+		<div class="asset-image-area">
+			<div id="preview" class="img-wrap">
+				<img src="/images/assets/{{ orm.code }}/cms_small/?v={{ random() }}" class="asset-detail	">
+			</div>
+
+			<div class="buttons">
+				{#<input style="display: none;" type="file" class="cms_form_file" id="cms_form_content" name="content" onchange="handleFiles(this.files);">#}
+				<button class="button" onclick="$('#orm_file').click(); return false;">Replace file ›</button>
+			</div>
+
+			<div class="visuallyhidden">
+				{{ form_widget(form.file) }}
+			</div>
+
+			<ul class="nav asset-image-meta">
+				<li id="file-download">Preview URL:<br /><a target="_blank" href="{{ app.request.schemeAndHttpHost }}/images/assets/{{ orm.code }}/1/{{ orm.filename|url_encode }}">{{ orm.fileName }}</a></li>
+				<li>&nbsp;</li>
+				<li id="file-download">Download URL:<br /><a target="_blank" href="{{ app.request.schemeAndHttpHost }}/downloads/assets/{{ orm.code }}/{{ orm.filename|url_encode }}">{{ orm.fileName }}</a></li>
+				<li>&nbsp;</li>
+				<li>&nbsp;</li>
+{#				<li id="file-name" >Original file: <a  target="_blank" href="{{ app.request.schemeAndHttpHost }}/images/assets/{{ orm.code }}/1/{{ orm.filename|url_encode }}"class="file-name" title=" ↓ Download original file">{{ orm.fileName }}<i class="icon"></i></a></li>#}
+				<li>Size: <span id="file-size">{{ orm.formattedSize }}</span><span id="file-size-unit">{{ orm.formattedSizeUnit }}</span></li>
+				<li>Mime Type: <span id="file-type">{{ orm.fileType }}</span></li>
+			</ul>
+
+		</div>
+
+
+
+		<div style="display: none;">
+			{{ form_row(form.parentId) }}
+
+			{{ form_row(form.fileName) }}
+			{{ form_row(form.fileSize) }}
+			{{ form_row(form.fileExtension) }}
+			{{ form_row(form.fileType) }}
+			{{ form_row(form.fileLocation) }}
+			{{ form_row(form.isImage) }}
+			{{ form_row(form.width) }}
+			{{ form_row(form.height) }}
+		</div>
+
+		{{ form_rest(form) }}
+	</div>
+
+{% endblock %}
+
+{% block externalFooter %}
+	{{ parent() }}
+	<script src="/cms/develop/js/asset.js"></script>
+{% endblock %}

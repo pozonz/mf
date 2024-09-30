@@ -1,0 +1,118 @@
+{% extends '/cart/base.twig' %}
+{% block shippingValue %}Free pick-up{% endblock %}
+
+{% form_theme formView '/cart/form.twig' %}
+
+{% block promoBlock %}
+    <aside id="order-summary" class="checkout-aside js-checkout-aside section-inner--s section-inner--py grid-col l-5">
+        {% include '/cart/includes/checkout-sidebar.twig' with { cart: order, showpromo: false } %}
+    </aside>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ asset('build/runtime.js') }}?v={{ timeStamp }}" defer></script>
+    <script src="{{ asset('build/checkout-payment.js') }}?v={{ timeStamp }}" defer></script>
+
+    {% if order.category == cartService.STATUS_GATEWAY_SENT and order.payType == 'Afterpay' and order.payToken %}
+        <script src="{{ getenv('AFTERPAY_JS') }}" async></script>
+    {% endif %}
+{% endblock %}
+
+{% block cartHeader %}
+    <header class="checkout-header--large mw-600 mx-auto">
+        <a class="checkout-header--large__logo l-visible" href="/"><img src="/images-checkout/checkout--logo.svg" alt="{{ siteTitle }}"/></a>
+
+        <div class="section-inner--pb--s">
+            <ol class="checkout-steps list-reset">
+                <li class="checkout-step"><a href="/checkout/shipping" class="checkout-step__label">Info & Shipping</a></li>
+                <li class="checkout-step"><a href="/checkout/payment" class="checkout-step__label active">Payment</a></li>
+                <li class="checkout-step"><a class="checkout-step__label">Confirmation</a></li>
+            </ol>
+        </div>
+    </header>
+{% endblock %}
+
+{% block checkoutMain %}
+    <div>
+        <section class="section-inner--pb--s">
+            <ul class="checkout-data-rows checkout-data-rows--no-border">
+                <li class="checkout-data-row">
+                    <div class="checkout-data-row__inner grid-row">
+                        <div class="grid-col m-3"><label class="checkout-heading--tiny checkout-heading--caps">Email</label></div>
+                        <div class="grid-col m-7">{{ order.email }}</div>
+                        <div class="checkout-data-col--align-right grid-col m-2"><a class="checkout-link checkout-heading--tiny" href="/checkout/shipping">Change</a></div>
+                    </div>
+                </li>
+
+                <li class="checkout-data-row">
+                    <div class="checkout-data-row__inner grid-row">
+                        <div class="grid-col m-3"><label class="checkout-heading--tiny checkout-heading--caps">Shipping</label></div>
+                        <div class="grid-col m-7">{{ order.isPickup == 1 ? 'Free pick-up' : 'Delivery' }}</div>
+                        <div class="checkout-data-col--align-right grid-col m-2"><a class="checkout-link checkout-heading--tiny" href="/checkout/shipping">Change</a></div>
+                    </div>
+                </li>
+
+                {% if not order.isPickup  %}
+                    <li class="checkout-data-row">
+                        <div class="checkout-data-row__inner grid-row">
+                            <div class="grid-col m-3"><label class="checkout-heading--tiny checkout-heading--caps">Address</label></div>
+                            <div class="grid-col m-7">{{ order.shippingAddress }}</div>
+                            <div class="checkout-data-col--align-right grid-col m-2"><a class="checkout-link checkout-heading--tiny" href="/checkout/shipping">Change</a></div>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </section>
+
+        <section class="section-inner--pb--s">
+            <header class="checkout-headings--section">
+                <h2 class="checkout-heading--section">Payment method</h2>
+            </header>
+
+            <div class="checkout-field js-checkout-payment-methods">
+                {% include '/cart/includes/checkout-payment-methods.twig' with { gateways: gateways } %}
+            </div>
+
+            <form name="cart_payment" method="post" novalidate autocomplete="off" data-id="{{ order.title }}">
+                <div class="checkout-field" style="display: none;">
+                    {{ form_label(formView.payType) }}
+                    {{ form_widget(formView.payType) }}
+                    {{ form_errors(formView.payType) }}
+                </div>
+
+                <div class="checkout-field">
+                    <label for="cart_payment_note">Additional notes <small class="checkout-label__small">(Optional)</small></label>
+                    {{ form_widget(formView.note, { attr: { class: "checkout-input--text" } }) }}
+                    {{ form_errors(formView.note) }}
+                </div>
+
+                {{ form_rest(formView) }}
+            </form>
+
+            <div class="checkout-field checkout-field--submit">
+                <button class="js-checkout-button checkout-button checkout-button--primary" type="submit">Pay now</button>
+                <div class="checkout-return-link"><a class="checkout-link" href="/checkout/shipping">Return to shipping</a></div>
+            </div>
+
+        </section>
+    </div>
+{% endblock %}
+
+{#{% block promoField %}#}
+{#    <div class="checkout-aside__promo-field">#}
+{#        <label for="input-promo" class="checkout-aside__promo-label">Promo code</label>#}
+{#        <input id="input-promo" class="checkout-aside__promo-input checkout-input--text" type="text"/>#}
+{#        <button class="checkout-button checkout-aside__promo-submit" type="submit">Apply</button>#}
+{#    </div>#}
+{#{% endblock %}#}
+
+{% block extraJs %}
+    {% if order.category == cartService.STATUS_GATEWAY_SENT and order.payType == 'Afterpay' and order.payToken %}
+        <script>
+            window.onload = function() {
+                AfterPay.initialize({countryCode: "NZ"});
+                AfterPay.redirect({token: "{{ order.payToken }}"});
+            };
+        </script>
+    {% endif %}
+{% endblock %}

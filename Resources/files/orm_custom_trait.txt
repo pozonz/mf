@@ -1,0 +1,15 @@
+<?php
+
+namespace {namespace}\Traits;
+
+trait {classname}Trait
+{
+    /**
+     * @param $pdo
+     */
+    static public function initData($pdo)
+    {
+
+    }
+
+}

@@ -1,0 +1,37 @@
+<div class="checkout-aside__inner mx-auto mw-600">
+    <table class="checkout-aside__products">
+        {% for itm in cart.objOrderItems %}
+            <tr class="checkout-aside__row">
+                <td class="checkout-aside__cell checkout-aside__product-img">
+                    <div class="checkout-aside__product-img__wrap">
+                        <span class="checkout-aside__qty" title="Quantity: {{ itm.quantity }}"><span class="visuallyhidden">Quantity: </span>{{ itm.quantity }}</span>
+                        <div class="aspect-ratio--4x3 image-bg" style="background-image: url('/images/assets/{{ itm.image }}/small')"></div>
+                    </div>
+                </td>
+                <td class="checkout-aside__cell checkout-aside__product-title">
+                    <span class="checkout-aside__product-title__label">{{ itm.title }}</span>
+                </td>
+                <td class="checkout-aside__cell checkout-aside__product-price">
+                    <span class="checkout-aside__product-price__label">${{ (itm.price * itm.quantity)|number_format(2) }}</span>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% block promoField %}
+        {% if showpromo is defined and showpromo and cart.category < cartService.STATUS_GATEWAY_SENT %}
+            <div class="checkout-aside__promo-field">
+                <label for="input-promo" class="checkout-aside__promo-label">Promo code</label>
+                <input id="input-promo" class="js-cart-promo-code checkout-aside__promo-input checkout-input--text" type="text" />
+                <button class="js-cart-promo-code-apply checkout-button checkout-aside__promo-submit" type="submit" data-id="{{ cart.title }}">Apply</button>
+            </div>
+            <ul class="js-promo-validate validationErrors visuallyhidden">
+                <li class="formValidationError">The promocode is not valid.</li>
+            </ul>
+        {% endif %}
+    {% endblock %}
+
+    <div class="js-checkout-sidebar-subtotal">
+        {% include '/cart/includes/checkout-sidebar-subtotal.twig' with { order: cart } %}
+    </div>
+</div>

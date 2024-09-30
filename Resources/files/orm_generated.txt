@@ -1,0 +1,11 @@
+<?php
+
+namespace {namespace};
+
+use MillenniumFalcon\Core\Db\Base;
+
+class {classname} extends Base
+{
+{fields}
+{methods}
+}

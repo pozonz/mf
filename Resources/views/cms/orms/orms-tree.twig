@@ -1,0 +1,24 @@
+{% extends 'cms/orms/orms-pagination.twig' %}
+{% from "cms/includes/nestable.twig" import nest as nest %}
+
+{% block tableContainer %}
+    <div class="nestable-lists js-model-wrapper" data-modelname="{{ ormModel.className }}">
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+                {% for itm in orms %}
+                    {{ nest(itm, ormModel, 1) }}
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
+{% block dataPaginationTop %}{% endblock %}
+{% block dataPaginationBottom %}{% endblock %}
+
+{% block externalFooter %}
+    {{ parent() }}
+
+    <script src="/cms/develop/js/jquery.nestable.js?v={{ version }}"></script>
+    <script src="/cms/develop/js/orms-tree.js"></script>
+{% endblock %}

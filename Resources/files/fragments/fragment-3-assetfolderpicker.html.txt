@@ -1,0 +1,12 @@
+<div>
+    {% set data = model.active('AssetOrm', {
+        whereSql: 'm.attributeName = ?',
+        params: [[value]],
+    }) %}
+    {% for itm in data %}
+        {% set objAsset = itm.objAsset %}
+        {% if objAsset %}
+            <img src="/images/assets/{{objAsset.code}}/medium" alt="{{objAsset.title}}"/>
+        {% endif %}
+    {% endfor %}
+</div>

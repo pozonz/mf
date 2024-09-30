@@ -1,0 +1,31 @@
+{% extends 'cms/orms/orms.twig' %}
+{% from "cms/includes/nestable.twig" import nest as nest %}
+
+{% block container %}
+    <div id="h1">
+        <h1>{{ ormModel.title }}</h1>
+        <a class="addForm button" href="{{ theNode.url }}/new?returnUrl={{ app.request.uri|url_encode }}">Add new record ›</a>
+    </div>
+
+{#    <button class="js-update-category">Update product categories</button>#}
+    <div>&nbsp;</div>
+
+    <div class="nestable-lists js-model-wrapper" data-modelname="{{ ormModel.className }}">
+        <div class="dd" id="nestable">
+            <ol class="dd-list">
+                {% for itm in orms %}
+                    {{ nest(itm, ormModel, 1) }}
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block externalFooter %}
+    {{ parent() }}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Nestable/2012-10-15/jquery.nestable.min.js"></script>
+    <script src="/cms/develop/js/orms-tree.js"></script>
+    <script src="/cms/develop/js/orms-product-category.js"></script>
+{% endblock %}
