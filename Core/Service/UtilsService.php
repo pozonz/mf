@@ -154,6 +154,7 @@ class UtilsService
             12 => 'Choice tree',
             13 => 'Choice multi json tree',
             14 => 'Choice sortable',
+            15 => 'MKVP',
         );
         asort($widgets);
         return array_flip($widgets);
